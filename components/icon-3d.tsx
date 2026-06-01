@@ -10,7 +10,7 @@ interface Icon3DProps {
 }
 
 const gradientColors = {
-  green: "from-emerald-500 to-green-600",
+  green: "from-emerald-500 to-green-600", 
   gold: "from-amber-400 to-yellow-500",
   sky: "from-sky-400 to-blue-500",
   earth: "from-amber-700 to-orange-800",
