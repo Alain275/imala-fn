@@ -106,6 +106,7 @@ const marketInsights = [
 export default function MarketPage() {
   return (
     <div className="min-h-screen">
+    <h1>test    </h1>
       <Header 
         title="Market Intelligence" 
         subtitle="Real-time crop prices, market trends, and buyer connections"
