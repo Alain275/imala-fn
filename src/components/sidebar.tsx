@@ -1,7 +1,4 @@
-"use client"
-
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { Link, useLocation } from "react-router-dom"
 import { cn } from "@/lib/utils"
 import { 
   LayoutDashboard, 
@@ -31,7 +28,8 @@ const navigation = [
 ]
 
 export function Sidebar() {
-  const pathname = usePathname()
+  const location = useLocation()
+  const pathname = location.pathname
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
@@ -80,7 +78,7 @@ export function Sidebar() {
               return (
                 <Link
                   key={item.name}
-                  href={item.href}
+                  to={item.href}
                   onClick={() => setMobileOpen(false)}
                   className={cn(
                     "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200",
@@ -103,7 +101,7 @@ export function Sidebar() {
           {/* Bottom section */}
           <div className="px-4 py-4 border-t border-sidebar-border space-y-1">
             <Link
-              href="/dashboard/settings"
+              to="/dashboard/settings"
               className="flex items-center gap-3 px-4 py-3 rounded-xl text-sidebar-foreground/80 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-all duration-200"
             >
               <Settings className="w-5 h-5" />

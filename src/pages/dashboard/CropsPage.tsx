@@ -1,5 +1,3 @@
-"use client"
-
 import { Header } from "@/components/header"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Icon3D } from "@/components/icon-3d"
@@ -27,7 +25,6 @@ const recommendedCrops = [
     plantingWindow: "Mar - Apr",
     harvestTime: "90-120 days",
     waterNeed: "Medium",
-    image: "https://images.unsplash.com/photo-1551754655-cd27e38d2076?w=400&h=300&fit=crop",
     tips: ["Plant in well-drained soil", "Requires full sun", "Apply nitrogen fertilizer"]
   },
   {
@@ -37,7 +34,6 @@ const recommendedCrops = [
     plantingWindow: "Feb - Mar",
     harvestTime: "60-90 days",
     waterNeed: "Low-Medium",
-    image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&h=300&fit=crop",
     tips: ["Good for nitrogen fixation", "Rotate with cereals", "Avoid waterlogging"]
   },
   {
@@ -47,7 +43,6 @@ const recommendedCrops = [
     plantingWindow: "Sep - Oct",
     harvestTime: "90-120 days",
     waterNeed: "Medium-High",
-    image: "https://images.unsplash.com/photo-1518977676601-b53f82ber85?w=400&h=300&fit=crop",
     tips: ["Plant in cool season", "Hill soil around plants", "Watch for blight"]
   },
   {
@@ -57,7 +52,6 @@ const recommendedCrops = [
     plantingWindow: "Year-round",
     harvestTime: "70-80 days",
     waterNeed: "High",
-    image: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400&h=300&fit=crop",
     tips: ["Stake plants for support", "Regular watering essential", "Prune suckers"]
   },
 ]

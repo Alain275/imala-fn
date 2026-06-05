@@ -1,6 +1,4 @@
-"use client"
-
-import Link from "next/link"
+import { Link } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -122,7 +120,7 @@ export default function HomePage() {
       >
         <nav className="container mx-auto px-4 py-4 sm:px-6 lg:px-8">
           <div className={`flex items-center justify-between pb-4 h-16 ${isScrolled ? "hidden" : ""}`}>
-            <Link href="/" className="flex items-center gap-3">
+            <Link to="/" className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center shadow-lg">
                 <Leaf className="w-6 h-6 text-white" />
               </div>
@@ -152,10 +150,10 @@ export default function HomePage() {
                 className={isScrolled ? "text-primary-foreground" : undefined}
                 asChild
               >
-                <Link href="/sign-in">Sign In</Link>
+                <Link to="/sign-in">Sign In</Link>
               </Button>
               <Button className={isScrolled ? "text-primary-foreground" : undefined} asChild>
-                <Link href="/dashboard">Get Started</Link>
+                <Link to="/dashboard">Get Started</Link>
               </Button>
             </div>
           </div>
@@ -170,7 +168,7 @@ export default function HomePage() {
                   <span className="text-sm font-semibold text-primary-foreground">IMARA</span>
                 </div>
               )}
-              <Link
+              <a
                 href="#features"
                 className={`transition-colors ${
                   isScrolled
@@ -179,8 +177,8 @@ export default function HomePage() {
                 }`}
               >
                 Crop Advisory
-              </Link>
-              <Link
+              </a>
+              <a
                 href="#how-it-works"
                 className={`transition-colors ${
                   isScrolled
@@ -189,8 +187,8 @@ export default function HomePage() {
                 }`}
               >
                 Disease Detection
-              </Link>
-              <Link
+              </a>
+              <a
                 href="#testimonials"
                 className={`transition-colors ${
                   isScrolled
@@ -199,8 +197,8 @@ export default function HomePage() {
                 }`}
               >
                 Weather Intelligence
-              </Link>
-              <Link
+              </a>
+              <a
                 href="#contact"
                 className={`transition-colors ${
                   isScrolled
@@ -209,8 +207,8 @@ export default function HomePage() {
                 }`}
               >
                 Soil Analysis
-              </Link>
-               <Link
+              </a>
+               <a
                 href="#contact"
                 className={`transition-colors ${
                   isScrolled
@@ -219,8 +217,8 @@ export default function HomePage() {
                 }`}
               >
                 Market Prices
-              </Link>
-              <Link
+              </a>
+              <a
                 href="#contact"
                 className={`transition-colors ${
                   isScrolled
@@ -229,7 +227,7 @@ export default function HomePage() {
                 }`}
               >
                 Training & Education
-              </Link>
+              </a>
             </div>
           </div>
         </nav>
@@ -259,7 +257,7 @@ export default function HomePage() {
               
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button size="lg" className="gap-2 text-base" asChild>
-                  <Link href="/dashboard">
+                  <Link to="/dashboard">
                     Start Farming Smarter
                     <ArrowRight className="w-5 h-5" />
                   </Link>
@@ -482,7 +480,7 @@ export default function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" variant="secondary" className="gap-2 text-base" asChild>
-              <Link href="/dashboard">
+              <Link to="/dashboard">
                 Get Started Free
                 <ArrowRight className="w-5 h-5" />
               </Link>
@@ -513,10 +511,10 @@ export default function HomePage() {
             <div>
               <h4 className="font-semibold mb-4">Features</h4>
               <ul className="space-y-2 text-background/70">
-                <li><Link href="/dashboard/crops" className="hover:text-background transition-colors">Crop Advisory</Link></li>
-                <li><Link href="/dashboard/disease" className="hover:text-background transition-colors">Disease Detection</Link></li>
-                <li><Link href="/dashboard/weather" className="hover:text-background transition-colors">Weather Intelligence</Link></li>
-                <li><Link href="/dashboard/market" className="hover:text-background transition-colors">Market Prices</Link></li>
+                <li><Link to="/dashboard/crops" className="hover:text-background transition-colors">Crop Advisory</Link></li>
+                <li><Link to="/dashboard/disease" className="hover:text-background transition-colors">Disease Detection</Link></li>
+                <li><Link to="/dashboard/weather" className="hover:text-background transition-colors">Weather Intelligence</Link></li>
+                <li><Link to="/dashboard/market" className="hover:text-background transition-colors">Market Prices</Link></li>
               </ul>
             </div>
             

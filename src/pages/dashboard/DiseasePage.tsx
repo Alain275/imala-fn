@@ -1,5 +1,3 @@
-"use client"
-
 import { Header } from "@/components/header"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Icon3D } from "@/components/icon-3d"
