@@ -5,12 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { 
   Leaf, 
-  Sprout, 
-  Bug, 
-  CloudSun, 
-  Mountain, 
-  TrendingUp,
-  BookOpen,
+  Sprout,
   Users,
   Smartphone,
   Globe,
@@ -22,40 +17,37 @@ import {
 
 const features = [
   {
-    icon: Sprout,
+    icon: "/crop advisory.png",
     title: "Crop Advisory",
-    description: "AI-powered recommendations for optimal crop selection based on your soil and climate conditions.",
-    gradient: "from-emerald-500 to-green-600"
+    description: "Match the right crop to your soil, climate, and yield goals.",
+    details: [
+      "Soil-based matching",
+      "Climate analysis",
+      "Yield optimization",
+      "Planting schedules",
+    ],
   },
   {
-    icon: Bug,
+    icon: "/Disease Detection.png",
     title: "Disease Detection",
-    description: "Upload photos of your crops to instantly identify diseases and get treatment recommendations.",
-    gradient: "from-amber-600 to-orange-700"
+    description: "Catch crop issues early with guided photo diagnosis and action steps.",
+    details: [
+      "Photo diagnosis",
+      "Early detection",
+      "Treatment recommendations",
+      "History tracking",
+    ],
   },
   {
-    icon: CloudSun,
+    icon: "/Weather Intelligence.png",
     title: "Weather Intelligence",
-    description: "Accurate weather forecasts with farming-specific alerts to protect your crops.",
-    gradient: "from-sky-500 to-blue-600"
-  },
-  {
-    icon: Mountain,
-    title: "Soil Analysis",
-    description: "Comprehensive soil health assessments with fertilizer and amendment recommendations.",
-    gradient: "from-amber-700 to-yellow-800"
-  },
-  {
-    icon: TrendingUp,
-    title: "Market Prices",
-    description: "Real-time crop prices and market trends to help you sell at the best time.",
-    gradient: "from-emerald-600 to-teal-700"
-  },
-  {
-    icon: BookOpen,
-    title: "Training & Education",
-    description: "Video tutorials and courses in local languages to improve your farming skills.",
-    gradient: "from-violet-500 to-purple-600"
+    description: "Stay ahead of changing conditions with localized farm alerts.",
+    details: [
+      "Hyperlocal forecasts",
+      "Real-time alerts",
+      "Task scheduling",
+      "Irrigation sync",
+    ],
   },
 ]
 
@@ -370,26 +362,64 @@ export default function HomePage() {
       <section id="features" className="py-20 lg:py-32">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4 text-balance">
+            <h4 className="text-xl font-semibold text-emerald-500 uppercase tracking-wider">
+              WE GIVE YOU
+            </h4>
+            <h2 className="text-3xl mt-2 sm:text-4xl font-bold text-foreground text-gray-700 mb-4 text-balance">
               Everything You Need to Farm Smarter
             </h2>
-            <p className="text-lg text-muted-foreground text-pretty">
-              IMARA combines AI technology with agricultural expertise to provide you with 
-              actionable insights for every aspect of your farming journey.
-            </p>
+            
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-6">
             {features.map((feature, i) => (
-              <Card key={i} className="border-0 shadow-lg card-hover overflow-hidden group">
-                <CardContent className="p-6">
-                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 transition-transform`}>
-                    <feature.icon className="w-7 h-7 text-white" />
+              <div
+                key={i}
+                className="group relative min-h-[34rem] overflow-hidden rounded-sm bg-white px-6 py-8 text-center transition-all duration-500 ease-out hover:-translate-y-2"
+                style={{ transitionDelay: `${i * 100}ms` }}
+              >
+                <div className="relative z-10 flex h-full flex-col items-center justify-center transition-all duration-500 group-hover:-translate-y-8 group-hover:opacity-0">
+                  <div className="mb-6 flex h-56 w-full items-center justify-center md:h-64">
+                    <img
+                      src={feature.icon}
+                      alt={feature.title}
+                      loading="eager"
+                      decoding="sync"
+                      width="200"
+                      height="200"
+                      className="object-contain transition-transform duration-500 drop-shadow-xl group-hover:scale-110"
+                    />
                   </div>
-                  <h3 className="text-xl font-semibold text-foreground mb-2">{feature.title}</h3>
-                  <p className="text-muted-foreground">{feature.description}</p>
-                </CardContent>
-              </Card>
+
+                  <h3 className="w-full text-[3rem] font-bold text-emerald-950 transition-colors duration-300 md:text-[2rem] group-hover:text-slate-900">
+                    {feature.title}
+                  </h3>
+                </div>
+
+                <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center p-6 opacity-0 transition-all duration-300 group-hover:pointer-events-auto group-hover:opacity-100">
+                  <div className="w-full max-w-sm rounded-[1.5rem] bg-white/98 p-4 backdrop-blur-sm">
+                    <div className="mb-4 flex justify-center">
+                      <img
+                        src={feature.icon}
+                        alt={feature.title}
+                        loading="eager"
+                        decoding="sync"
+                        width="96"
+                        height="96"
+                        className="h-24 w-24 object-contain"
+                      />
+                    </div>
+
+                    <div className="divide-y divide-emerald-200">
+                      {feature.details.map((detail) => (
+                        <div key={detail} className="py-4 text-center text-lg font-medium text-emerald-700 md:text-xl">
+                          {detail}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         </div>
