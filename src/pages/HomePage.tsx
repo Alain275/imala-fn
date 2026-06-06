@@ -389,7 +389,7 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 lg:py-32">
+      <section id="features" className="py-12 lg:py-12">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h4 className="text-xl font-semibold text-emerald-500 uppercase tracking-wider">
@@ -456,7 +456,7 @@ export default function HomePage() {
       </section>
 
       {/* How it Works */}
-      <section id="how-it-works" className="py-20 lg:py-32 bg-muted/50">
+      <section id="how-it-works" className="py-12 lg:py-12 bg-muted/50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-foreground text-gray-800 mb-4 text-balance">
