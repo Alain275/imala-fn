@@ -375,7 +375,7 @@ export default function HomePage() {
             {features.map((feature, i) => (
               <div
                 key={i}
-                className="group relative min-h-[34rem] overflow-hidden rounded-sm bg-white px-6 py-8 text-center transition-all duration-500 ease-out hover:-translate-y-2"
+                className="group relative min-h-[30rem] overflow-hidden rounded-sm bg-white px-6 py-8 text-center transition-all duration-500 ease-out hover:-translate-y-2"
                 style={{ transitionDelay: `${i * 100}ms` }}
               >
                 <div className="relative z-10 flex h-full flex-col items-center justify-center transition-all duration-500 group-hover:-translate-y-8 group-hover:opacity-0">
