@@ -6,9 +6,6 @@ import { Card, CardContent } from "@/components/ui/card"
 import { 
   Leaf, 
   Sprout,
-  Users,
-  Smartphone,
-  Globe,
   CheckCircle,
   ArrowRight,
   Play,
@@ -76,6 +73,39 @@ const testimonials = [
     role: "Cooperative Leader, Northern Province",
     content: "Our cooperative now uses IMARA for all our farming decisions. The market price alerts have improved our profits by 40%.",
     rating: 5
+  },
+]
+
+const howItWorksSteps = [
+  {
+    step: "01",
+    title: "Create Your Profile",
+    description: "Tell us about your farm location, size, and the crops you grow.",
+    icon: "/Create.png",
+    accent: "from-emerald-500 to-green-500",
+    lineColor: "bg-emerald-500",
+    borderColor: "border-emerald-500",
+    innerTint: "from-emerald-500/15 to-transparent",
+  },
+  {
+    step: "02",
+    title: "Get Recommendations",
+    description: "Our AI analyzes your data and provides personalized farming advice.",
+    icon: "/Recommendations.png",
+    accent: "from-blue-500 to-indigo-500",
+    lineColor: "bg-blue-500",
+    borderColor: "border-blue-500",
+    innerTint: "from-blue-500/15 to-transparent",
+  },
+  {
+    step: "03",
+    title: "Grow & Succeed",
+    description: "Follow the recommendations, track your progress, and increase your yields.",
+    icon: "/Grow.png",
+    accent: "from-fuchsia-500 to-pink-500",
+    lineColor: "bg-fuchsia-500",
+    borderColor: "border-fuchsia-500",
+    innerTint: "from-fuchsia-500/15 to-transparent",
   },
 ]
 
@@ -429,33 +459,60 @@ export default function HomePage() {
       <section id="how-it-works" className="py-20 lg:py-32 bg-muted/50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4 text-balance">
+            <h2 className="text-3xl sm:text-4xl font-bold text-foreground text-gray-800 mb-4 text-balance">
               How IMARA Works
             </h2>
             <p className="text-lg text-muted-foreground text-pretty">
               Get started in minutes and transform your farming practices
             </p>
           </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              { step: "01", title: "Create Your Profile", description: "Tell us about your farm location, size, and the crops you grow.", icon: Users },
-              { step: "02", title: "Get Recommendations", description: "Our AI analyzes your data and provides personalized farming advice.", icon: Smartphone },
-              { step: "03", title: "Grow & Succeed", description: "Follow the recommendations, track your progress, and increase your yields.", icon: Globe },
-            ].map((item, i) => (
-              <div key={i} className="relative">
-                <div className="text-6xl font-bold text-primary absolute -top-4 -left-2">
-                  {item.step}
-                </div>
-                <div className="relative bg-card rounded-2xl p-8 shadow-lg">
-                  <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
-                    <item.icon className="w-7 h-7 text-primary" />
+
+          <div className="relative mx-auto max-w-5xl">
+            <div className="relative z-10 grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-8">
+              {howItWorksSteps.map((step, idx) => (
+                <div
+                  key={step.step}
+                  className="flex flex-col items-center"
+                  style={{ transitionDelay: `${idx * 150}ms` }}
+                >
+                  <div className="relative mb-10 w-full rounded-2xl border border-white/70 bg-white p-6 text-center shadow-[0_4px_20px_rgba(0,0,0,0.05)]">
+                    <h3 className="mb-2 text-lg font-bold text-slate-900">{step.title}</h3>
+                    <p className="text-sm leading-relaxed text-slate-500">{step.description}</p>
+
+                    <div className="absolute -bottom-3 left-1/2 hidden h-6 w-6 -translate-x-1/2 rotate-45 border-r border-b border-white/70 bg-white md:block" />
                   </div>
-                  <h3 className="text-xl font-semibold text-foreground mb-2">{item.title}</h3>
-                  <p className="text-muted-foreground">{item.description}</p>
+
+                  <div className="relative mb-10 flex w-full items-center justify-center">
+                    <div className={`absolute left-0 right-0 top-1/2 z-0 h-0.5 -translate-y-1/2 ${step.lineColor}`} />
+                    <div className={`absolute left-0 top-1/2 z-10 h-4 w-4 -translate-y-1/2 rounded-full border-2 bg-white ${step.borderColor}`} />
+                    <div className={`relative z-20 flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r ${step.accent} text-sm font-bold text-white shadow-lg`}>
+                      {step.step}
+                    </div>
+                    <div className={`absolute right-0 top-1/2 z-10 h-4 w-4 -translate-y-1/2 rounded-full border-2 bg-white ${step.borderColor}`} />
+                    <div className={`absolute top-full left-1/2 z-0 h-10 w-0.5 -translate-x-1/2 ${step.lineColor}`} />
+                  </div>
+
+                  <div className="group relative mt-2 flex h-40 w-40 cursor-pointer items-center justify-center transition-transform duration-500 hover:scale-[1.03]">
+                    <div className={`absolute inset-0 rounded-full bg-gradient-to-b ${step.accent} p-[14px] shadow-[0_15px_30px_rgba(0,0,0,0.15)] transition-transform duration-500 group-hover:scale-105`}>
+                      <div className="h-full w-full rounded-full bg-gradient-to-t from-black/20 to-transparent p-1">
+                        <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-white shadow-inner">
+                          <div className={`absolute inset-0 bg-gradient-to-b ${step.innerTint} opacity-[0.14]`} />
+                          <img
+                            src={step.icon}
+                            alt={step.title}
+                            loading="eager"
+                            decoding="sync"
+                            width="64"
+                            height="64"
+                            className="relative z-10 h-16 w-16 object-contain transition-transform duration-500 group-hover:scale-110"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
