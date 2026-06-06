@@ -138,8 +138,8 @@ export default function HomePage() {
                 placeholder="Search..."
                 className={
                   isScrolled
-                    ? "max-w-md bg-white/10 text-primary-foreground placeholder:text-primary-foreground/70 border-primary-foreground/30 focus-visible:ring-primary-foreground rounded-full border-1 focus-visible:ring-primary"
-                    : "max-w-lg rounded-full border-1 focus-visible:ring-primary"
+                    ? "max-w-md h-11 rounded-full border border-primary-foreground/20 bg-white/10 px-4 text-primary-foreground placeholder:text-primary-foreground/70 shadow-sm backdrop-blur-md focus-visible:border-primary-foreground focus-visible:ring-0"
+                    : "max-w-lg h-11 rounded-full border border-input bg-background/90 px-4 shadow-sm focus-visible:border-primary focus-visible:ring-0"
                 }
               />
             </div>
@@ -359,7 +359,7 @@ export default function HomePage() {
             {stats.map((stat, i) => (
               <div key={i} className="text-center">
                 <p className="text-3xl sm:text-4xl font-bold text-primary-foreground">{stat.value}</p>
-                <p className="text-primary-foreground/80 mt-1">{stat.label}</p>
+                <p className="text-primary-foreground mt-1">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -414,7 +414,7 @@ export default function HomePage() {
               { step: "03", title: "Grow & Succeed", description: "Follow the recommendations, track your progress, and increase your yields.", icon: Globe },
             ].map((item, i) => (
               <div key={i} className="relative">
-                <div className="text-6xl font-bold text-primary/10 absolute -top-4 -left-2">
+                <div className="text-6xl font-bold text-primary absolute -top-4 -left-2">
                   {item.step}
                 </div>
                 <div className="relative bg-card rounded-2xl p-8 shadow-lg">
