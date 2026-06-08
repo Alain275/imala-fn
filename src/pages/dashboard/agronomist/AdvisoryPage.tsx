@@ -1,14 +1,16 @@
 import { useState } from "react"
+import { Header } from "@/components/header"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Icon3D } from "@/components/icon-3d"
 import {
-  BarChart3, Calculator, TrendingUp, TrendingDown,
-  Minus, ArrowUpRight, ArrowDownRight, RefreshCw,
-  Sliders, AlertTriangle, CheckCircle2, MapPin,
-  ChevronUp, ChevronDown, Leaf, Info, BarChart2,
-  Clock, Package, Truck, DollarSign
+  BarChart3, Calculator, TrendingUp,
+  Minus, ArrowUpRight, ArrowDownRight,
+  Sliders, CheckCircle2, MapPin,
+  ChevronDown, Clock, Truck, Info
 } from "lucide-react"
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, BarChart, Bar, ReferenceLine
+  ResponsiveContainer
 } from "recharts"
 
 const marketData = [
@@ -102,80 +104,64 @@ export default function AdvisoryPage() {
 
   const npk = calculateNPK(soilN, soilP, soilK, targetCrop, areaHa)
   const riskProfile = riskLevel < 35 ? yieldProjection[0] : riskLevel < 65 ? yieldProjection[1] : yieldProjection[2]
-
   const selectedCropMarkets = marketArbitrage.find(m => m.crop === selectedCropRow)?.markets ?? []
   const bestHub = selectedCropMarkets.reduce((best, m) => m.price > (best?.price ?? 0) ? m : best, selectedCropMarkets[0])
 
   const trendIcon = (t: string) => {
-    if (t === "up") return <ArrowUpRight className="w-3.5 h-3.5 text-emerald-400" />
-    if (t === "down") return <ArrowDownRight className="w-3.5 h-3.5 text-rose-400" />
-    return <Minus className="w-3.5 h-3.5 text-slate-400" />
+    if (t === "up") return <ArrowUpRight className="w-3.5 h-3.5 text-emerald-500" />
+    if (t === "down") return <ArrowDownRight className="w-3.5 h-3.5 text-rose-500" />
+    return <Minus className="w-3.5 h-3.5 text-muted-foreground" />
   }
 
   const demandBadge = (d: string) => {
-    if (d === "high") return "bg-emerald-500/10 border-emerald-500/30 text-emerald-400"
-    if (d === "medium") return "bg-amber-500/10 border-amber-500/30 text-amber-400"
-    return "bg-slate-700 border-slate-600 text-slate-400"
+    if (d === "high") return "bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400"
+    if (d === "medium") return "bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400"
+    return "bg-muted border-border text-muted-foreground"
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col">
-      {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-900">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-amber-600/20 border border-amber-600/30 flex items-center justify-center">
-            <BarChart3 className="w-5 h-5 text-amber-400" />
-          </div>
-          <div>
-            <h2 className="text-base font-semibold text-white">Agronomic Input & Market Advisory Hub</h2>
-            <p className="text-xs text-slate-400">NPK Calculator · Risk Profiler · Regional Market Arbitrage</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-slate-500">Last price update:</span>
-          <span className="text-xs text-emerald-400 font-medium">09:30 AM · Live</span>
-          <button className="flex items-center gap-1.5 text-xs text-slate-300 bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg border border-slate-700 transition-colors">
-            <RefreshCw className="w-3.5 h-3.5" /> Refresh Prices
-          </button>
-        </div>
-      </div>
+    <div className="min-h-screen bg-background">
+      <Header
+        title="Input & Market Advisory"
+        subtitle="NPK Calculator · Risk Profiler · Regional Market Arbitrage"
+      />
 
-      <div className="flex-1 overflow-y-auto p-5 space-y-5">
+      <div className="p-6 space-y-6">
 
-        {/* ROW 1: NPK Calculator + Risk Slider */}
-        <div className="grid grid-cols-3 gap-5">
+        {/* Row 1: NPK Calculator + Risk Profiler */}
+        <div className="grid grid-cols-3 gap-6">
 
           {/* NPK Calculator */}
-          <div className="col-span-2 bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden">
-            <div className="flex items-center gap-2 px-5 py-3.5 border-b border-slate-800">
-              <Calculator className="w-4 h-4 text-amber-400" />
-              <h3 className="text-sm font-semibold text-slate-200">Custom NPK Formulation Calculator</h3>
-              <span className="ml-auto text-[10px] text-slate-500">Based on soil test results</span>
-            </div>
-
-            <div className="p-5">
-              {/* Inputs */}
-              <div className="grid grid-cols-2 gap-5 mb-5">
-                {/* Soil test inputs */}
-                <div className="space-y-3">
-                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">Soil Test Results (ppm)</p>
-
+          <Card className="col-span-2 border-0 shadow-md">
+            <CardHeader className="pb-3 border-b border-border">
+              <CardTitle className="flex items-center gap-3 text-base">
+                <Icon3D gradient="gold" size="sm">
+                  <Calculator className="w-4 h-4" />
+                </Icon3D>
+                Custom NPK Formulation Calculator
+                <span className="ml-auto text-xs text-muted-foreground font-normal">Based on soil test results</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-5">
+              <div className="grid grid-cols-2 gap-6">
+                {/* Soil Inputs */}
+                <div className="space-y-4">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Soil Test Results (ppm)</p>
                   {[
                     { label: "Nitrogen (N)", val: soilN, setter: setSoilN, color: "emerald", min: 0, max: 120 },
                     { label: "Phosphorus (P)", val: soilP, setter: setSoilP, color: "sky", min: 0, max: 80 },
                     { label: "Potassium (K)", val: soilK, setter: setSoilK, color: "violet", min: 0, max: 150 },
                   ].map(input => (
                     <div key={input.label}>
-                      <div className="flex items-center justify-between mb-1">
-                        <label className="text-xs text-slate-400">{input.label}</label>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <label className="text-xs text-muted-foreground">{input.label}</label>
                         <div className="flex items-center gap-1.5">
                           <input
-                            type="number"
-                            value={input.val}
+                            type="number" value={input.val}
                             onChange={e => input.setter(Number(e.target.value))}
-                            className="w-14 text-center bg-slate-800 border border-slate-700 text-slate-200 text-xs px-1.5 py-1 rounded focus:outline-none focus:border-amber-500/50"
+                            className="w-14 text-center bg-muted border border-border text-foreground text-xs px-1.5 py-1 rounded-lg focus:outline-none"
                           />
-                          <span className="text-[10px] text-slate-500">ppm</span>
+                          <span className="text-[10px] text-muted-foreground">ppm</span>
                         </div>
                       </div>
                       <input
@@ -183,242 +169,225 @@ export default function AdvisoryPage() {
                         onChange={e => input.setter(Number(e.target.value))}
                         className={`w-full h-1.5 accent-${input.color}-500`}
                       />
-                      <div className="flex justify-between text-[10px] text-slate-600 mt-0.5">
-                        <span>{input.min}</span><span>{input.max}</span>
-                      </div>
                     </div>
                   ))}
-
-                  <div className="grid grid-cols-2 gap-2 mt-1">
+                  <div className="grid grid-cols-2 gap-2 pt-1">
                     <div>
-                      <label className="text-[10px] text-slate-500 block mb-1">Target Crop</label>
+                      <label className="text-[10px] text-muted-foreground block mb-1">Target Crop</label>
                       <div className="relative">
                         <select value={targetCrop} onChange={e => setTargetCrop(e.target.value)}
-                          className="w-full bg-slate-800 border border-slate-700 text-slate-200 text-xs px-2 py-2 rounded-lg appearance-none focus:outline-none focus:border-amber-500/40">
+                          className="w-full bg-muted border border-border text-foreground text-xs px-2 py-2 rounded-lg appearance-none focus:outline-none">
                           {["Maize", "Irish Potato", "Beans", "Sorghum", "Rice", "Cassava"].map(c => <option key={c}>{c}</option>)}
                         </select>
-                        <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-400 pointer-events-none" />
+                        <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground pointer-events-none" />
                       </div>
                     </div>
                     <div>
-                      <label className="text-[10px] text-slate-500 block mb-1">Area (ha)</label>
+                      <label className="text-[10px] text-muted-foreground block mb-1">Area (ha)</label>
                       <input type="number" value={areaHa} min={0.1} max={50} step={0.1}
                         onChange={e => setAreaHa(Number(e.target.value))}
-                        className="w-full bg-slate-800 border border-slate-700 text-slate-200 text-xs px-2 py-2 rounded-lg focus:outline-none focus:border-amber-500/50" />
+                        className="w-full bg-muted border border-border text-foreground text-xs px-2 py-2 rounded-lg focus:outline-none" />
                     </div>
                   </div>
                 </div>
 
                 {/* NPK Output */}
                 <div>
-                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3">Computed Application Rate</p>
-
-                  <div className="space-y-2.5 mb-3">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-4">Computed Application Rate</p>
+                  <div className="space-y-3 mb-4">
                     {[
-                      { label: "Nitrogen (N)", val: npk.n, color: "emerald", max: 150 },
-                      { label: "Phosphorus (P)", val: npk.p, color: "sky", max: 100 },
-                      { label: "Potassium (K)", val: npk.k, color: "violet", max: 130 },
+                      { label: "Nitrogen (N)", val: npk.n, colorClass: "bg-emerald-500", textClass: "text-emerald-600 dark:text-emerald-400", max: 150 },
+                      { label: "Phosphorus (P)", val: npk.p, colorClass: "bg-sky-500", textClass: "text-sky-600 dark:text-sky-400", max: 100 },
+                      { label: "Potassium (K)", val: npk.k, colorClass: "bg-violet-500", textClass: "text-violet-600 dark:text-violet-400", max: 130 },
                     ].map(r => (
                       <div key={r.label}>
                         <div className="flex justify-between items-center mb-1">
-                          <span className="text-xs text-slate-400">{r.label}</span>
-                          <span className={`text-sm font-black text-${r.color}-400`}>{r.val} kg/ha</span>
+                          <span className="text-xs text-muted-foreground">{r.label}</span>
+                          <span className={`text-sm font-black ${r.textClass}`}>{r.val} kg/ha</span>
                         </div>
-                        <div className="h-2.5 bg-slate-800 rounded-full overflow-hidden">
-                          <div
-                            className={`h-full bg-${r.color}-500 rounded-full transition-all duration-500`}
-                            style={{ width: `${Math.min((r.val / r.max) * 100, 100)}%` }}
-                          />
+                        <div className="h-2.5 bg-muted rounded-full overflow-hidden">
+                          <div className={`h-full ${r.colorClass} rounded-full transition-all duration-500`}
+                            style={{ width: `${Math.min((r.val / r.max) * 100, 100)}%` }} />
                         </div>
                       </div>
                     ))}
                   </div>
 
-                  {/* Summary cards */}
                   <div className="grid grid-cols-2 gap-2 mb-3">
-                    <div className="bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-center">
-                      <p className="text-[10px] text-slate-500">Total Rate</p>
-                      <p className="text-xl font-black text-white">{npk.totalKgHa}</p>
-                      <p className="text-[10px] text-slate-500">kg / ha</p>
+                    <div className="bg-muted/50 border border-border rounded-xl p-2.5 text-center">
+                      <p className="text-[10px] text-muted-foreground">Total Rate</p>
+                      <p className="text-xl font-black text-foreground">{npk.totalKgHa}</p>
+                      <p className="text-[10px] text-muted-foreground">kg / ha</p>
                     </div>
-                    <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-2.5 text-center">
-                      <p className="text-[10px] text-slate-500">Est. Input Cost</p>
-                      <p className="text-xl font-black text-amber-400">${npk.estimatedCost}</p>
-                      <p className="text-[10px] text-slate-500">for {areaHa} ha</p>
+                    <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-2.5 text-center">
+                      <p className="text-[10px] text-muted-foreground">Est. Input Cost</p>
+                      <p className="text-xl font-black text-amber-600 dark:text-amber-400">${npk.estimatedCost}</p>
+                      <p className="text-[10px] text-muted-foreground">for {areaHa} ha</p>
                     </div>
                   </div>
 
                   <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3">
                     <div className="flex items-start gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
                       <div>
-                        <p className="text-xs font-semibold text-emerald-300">Recommended Blend</p>
-                        <p className="text-xs text-slate-400 mt-0.5">{npk.recommendation}</p>
+                        <p className="text-xs font-semibold text-emerald-700 dark:text-emerald-300">Recommended Blend</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">{npk.recommendation}</p>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
-          {/* Risk Profile Slider */}
-          <div className="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden">
-            <div className="flex items-center gap-2 px-4 py-3.5 border-b border-slate-800">
-              <Sliders className="w-4 h-4 text-violet-400" />
-              <h3 className="text-sm font-semibold text-slate-200">Risk-Yield Profiler</h3>
-            </div>
-            <div className="p-4 space-y-4">
-              {/* Risk Slider */}
+          {/* Risk-Yield Profiler */}
+          <Card className="border-0 shadow-md">
+            <CardHeader className="pb-3 border-b border-border">
+              <CardTitle className="flex items-center gap-3 text-base">
+                <Icon3D gradient="leaf" size="sm">
+                  <Sliders className="w-4 h-4" />
+                </Icon3D>
+                Risk-Yield Profiler
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-4 space-y-4">
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs text-slate-400">Risk Tolerance</span>
+                  <span className="text-xs text-muted-foreground">Risk Tolerance</span>
                   <span className={`text-xs font-bold px-2 py-0.5 rounded-lg border ${
-                    riskLevel < 35 ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400" :
-                    riskLevel < 65 ? "bg-amber-500/10 border-amber-500/30 text-amber-400" :
-                    "bg-rose-500/10 border-rose-500/30 text-rose-400"
+                    riskLevel < 35 ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400" :
+                    riskLevel < 65 ? "bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400" :
+                    "bg-rose-500/10 border-rose-500/20 text-rose-600 dark:text-rose-400"
                   }`}>
                     {riskLevel < 35 ? "Conservative" : riskLevel < 65 ? "Moderate" : "Aggressive"}
                   </span>
                 </div>
                 <div className="relative">
                   <div className="h-3 rounded-full" style={{ background: "linear-gradient(to right, #22c55e, #f59e0b, #ef4444)" }} />
-                  <input
-                    type="range" min={0} max={100} value={riskLevel}
+                  <input type="range" min={0} max={100} value={riskLevel}
                     onChange={e => setRiskLevel(Number(e.target.value))}
-                    className="absolute inset-0 w-full opacity-0 cursor-pointer h-3"
-                  />
-                  <div className="absolute top-1/2 -translate-y-1/2 w-5 h-5 bg-white rounded-full shadow-lg border-2 border-slate-600 pointer-events-none"
+                    className="absolute inset-0 w-full opacity-0 cursor-pointer h-3" />
+                  <div className="absolute top-1/2 -translate-y-1/2 w-5 h-5 bg-white rounded-full shadow-lg border-2 border-border pointer-events-none"
                     style={{ left: `calc(${riskLevel}% - 10px)` }} />
                 </div>
-                <div className="flex justify-between text-[10px] text-slate-600 mt-1">
+                <div className="flex justify-between text-[10px] text-muted-foreground mt-1">
                   <span>Low Risk</span><span>High Yield</span>
                 </div>
               </div>
 
-              {/* Profile cards */}
               {yieldProjection.map(p => (
                 <div key={p.risk} className={`p-3 rounded-xl border transition-all ${
-                  riskProfile.risk === p.risk
-                    ? "bg-slate-700 border-slate-500 ring-1 ring-offset-1 ring-offset-slate-900"
-                    : "bg-slate-800/60 border-slate-700/60"
-                }`} style={{ ringColor: p.color }}>
+                  riskProfile.risk === p.risk ? "bg-muted border-muted-foreground/30" : "bg-muted/40 border-border"
+                }`}>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-semibold text-slate-200">{p.risk}</span>
+                    <span className="text-xs font-semibold text-foreground">{p.risk}</span>
                     {riskProfile.risk === p.risk && <CheckCircle2 className="w-3.5 h-3.5" style={{ color: p.color }} />}
                   </div>
                   <div className="flex items-end justify-between gap-2">
                     <div>
                       <p className="text-xl font-black" style={{ color: p.color }}>{p.yield.toLocaleString()}</p>
-                      <p className="text-[10px] text-slate-500">kg / ha projected</p>
+                      <p className="text-[10px] text-muted-foreground">kg / ha projected</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-bold text-white">RWF {(p.revenue / 1000).toFixed(0)}K</p>
-                      <p className="text-[10px] text-slate-500">Est. revenue</p>
+                      <p className="text-sm font-bold text-foreground">RWF {(p.revenue / 1000).toFixed(0)}K</p>
+                      <p className="text-[10px] text-muted-foreground">Est. revenue</p>
                     </div>
                   </div>
                 </div>
               ))}
 
-              <div className="bg-slate-800 border border-slate-700 rounded-xl p-3">
+              <div className="bg-muted/50 border border-border rounded-xl p-3">
                 <div className="flex items-start gap-2">
-                  <Info className="w-3.5 h-3.5 text-slate-500 flex-shrink-0 mt-0.5" />
-                  <p className="text-[10px] text-slate-500 leading-relaxed">
-                    Risk profile influences fertilizer application rate, planting density, and irrigation frequency. Conservative profiles use 70% of calculated input rates.
+                  <Info className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0 mt-0.5" />
+                  <p className="text-[10px] text-muted-foreground leading-relaxed">
+                    Risk profile influences fertilizer rate, planting density, and irrigation frequency. Conservative profiles use 70% of calculated input rates.
                   </p>
                 </div>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
 
-        {/* ROW 2: Market Arbitrage Table */}
-        <div className="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden">
-          <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-800">
-            <div className="flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-emerald-400" />
-              <h3 className="text-sm font-semibold text-slate-200">Regional Market Arbitrage Comparison</h3>
-              <span className="text-[10px] bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full font-medium">Live Prices · RWF/kg</span>
+        {/* Market Arbitrage */}
+        <Card className="border-0 shadow-md">
+          <CardHeader className="pb-3 border-b border-border">
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center gap-3 text-base">
+                <Icon3D gradient="green" size="sm">
+                  <TrendingUp className="w-4 h-4" />
+                </Icon3D>
+                Regional Market Arbitrage
+                <span className="text-[10px] bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-full font-medium">Live · RWF/kg</span>
+              </CardTitle>
+              <div className="flex gap-2">
+                {marketArbitrage.map(m => (
+                  <button key={m.crop} onClick={() => setSelectedCropRow(m.crop)}
+                    className={`text-xs px-2.5 py-1.5 rounded-lg font-medium border transition-colors ${
+                      selectedCropRow === m.crop
+                        ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400"
+                        : "border-border text-muted-foreground hover:border-muted-foreground/30 hover:text-foreground"
+                    }`}>
+                    {m.crop}
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className="flex gap-2">
-              {marketArbitrage.map(m => (
-                <button
-                  key={m.crop}
-                  onClick={() => setSelectedCropRow(m.crop)}
-                  className={`text-xs px-2.5 py-1.5 rounded-lg font-medium border transition-colors ${
-                    selectedCropRow === m.crop ? "bg-emerald-600/20 border-emerald-600/40 text-emerald-300" : "bg-transparent border-slate-700 text-slate-500 hover:border-slate-600 hover:text-slate-300"
-                  }`}
-                >
-                  {m.crop}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="p-5">
-            {/* Best arbitrage banner */}
+          </CardHeader>
+          <CardContent className="p-5">
             {bestHub && (
-              <div className="mb-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3.5 flex items-center justify-between">
+              <div className="mb-5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3.5 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-emerald-600/20 border border-emerald-600/30 flex items-center justify-center">
-                    <TrendingUp className="w-4 h-4 text-emerald-400" />
+                  <div className="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-500/20 flex items-center justify-center">
+                    <TrendingUp className="w-4 h-4 text-emerald-500" />
                   </div>
                   <div>
-                    <p className="text-xs text-slate-400">Best market for <span className="text-white font-semibold">{selectedCropRow}</span> today</p>
-                    <p className="text-base font-black text-emerald-400">{bestHub.hub} Market Hub — RWF {bestHub.price}/kg</p>
+                    <p className="text-xs text-muted-foreground">Best market for <span className="text-foreground font-semibold">{selectedCropRow}</span> today</p>
+                    <p className="text-base font-black text-emerald-600 dark:text-emerald-400">{bestHub.hub} Market Hub — RWF {bestHub.price}/kg</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-4 text-right">
-                  <div>
-                    <p className="text-[10px] text-slate-500">vs. lowest market</p>
-                    <p className="text-sm font-bold text-emerald-300">
+                <div className="flex items-center gap-4">
+                  <div className="text-right">
+                    <p className="text-[10px] text-muted-foreground">vs. lowest market</p>
+                    <p className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
                       +RWF {bestHub.price - Math.min(...selectedCropMarkets.map(m => m.price))}/kg arbitrage
                     </p>
                   </div>
-                  <button className="flex items-center gap-1.5 text-xs bg-emerald-600/20 border border-emerald-600/30 text-emerald-300 px-3 py-2 rounded-lg hover:bg-emerald-600/30 transition-colors font-medium">
+                  <button className="flex items-center gap-1.5 text-xs bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-3 py-2 rounded-lg hover:bg-emerald-500/20 transition-colors font-medium">
                     <Truck className="w-3.5 h-3.5" /> Advise Cooperative
                   </button>
                 </div>
               </div>
             )}
 
-            {/* Market table */}
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-slate-800">
-                    {["Market Hub", "Price (RWF/kg)", "7d Trend", "Change", "Demand", "Delivery", "Recommendation"].map(h => (
-                      <th key={h} className="text-left pb-3 pr-4 text-[10px] font-semibold text-slate-500 uppercase tracking-widest">{h}</th>
+                  <tr className="border-b border-border">
+                    {["Market Hub", "Price (RWF/kg)", "Trend", "Change", "Demand", "Delivery", "Signal"].map(h => (
+                      <th key={h} className="text-left pb-3 pr-4 text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">{h}</th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800">
+                <tbody className="divide-y divide-border">
                   {selectedCropMarkets.map(m => (
-                    <tr
-                      key={m.hub}
-                      onClick={() => setSelectedHub(selectedHub === m.hub ? null : m.hub)}
+                    <tr key={m.hub} onClick={() => setSelectedHub(selectedHub === m.hub ? null : m.hub)}
                       className={`cursor-pointer transition-colors ${
                         m.hub === bestHub?.hub ? "bg-emerald-500/5" :
-                        selectedHub === m.hub ? "bg-slate-800" : "hover:bg-slate-800/50"
-                      }`}
-                    >
+                        selectedHub === m.hub ? "bg-muted/50" : "hover:bg-muted/30"
+                      }`}>
                       <td className="py-3 pr-4">
                         <div className="flex items-center gap-2">
-                          <MapPin className={`w-3.5 h-3.5 ${m.hub === bestHub?.hub ? "text-emerald-400" : "text-slate-500"}`} />
-                          <span className="font-semibold text-slate-200">{m.hub}</span>
+                          <MapPin className={`w-3.5 h-3.5 ${m.hub === bestHub?.hub ? "text-emerald-500" : "text-muted-foreground"}`} />
+                          <span className="font-semibold text-foreground">{m.hub}</span>
                           {m.hub === bestHub?.hub && (
-                            <span className="text-[10px] bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 px-1.5 py-0.5 rounded-full font-bold">BEST</span>
+                            <span className="text-[10px] bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-1.5 py-0.5 rounded-full font-bold">BEST</span>
                           )}
                         </div>
                       </td>
+                      <td className="py-3 pr-4"><span className="text-lg font-black text-foreground">{m.price}</span></td>
+                      <td className="py-3 pr-4">{trendIcon(m.trend)}</td>
                       <td className="py-3 pr-4">
-                        <span className="text-lg font-black text-white">{m.price}</span>
-                      </td>
-                      <td className="py-3 pr-4">
-                        {trendIcon(m.trend)}
-                      </td>
-                      <td className="py-3 pr-4">
-                        <span className={`text-sm font-bold ${m.change > 0 ? "text-emerald-400" : m.change < 0 ? "text-rose-400" : "text-slate-400"}`}>
+                        <span className={`text-sm font-bold ${m.change > 0 ? "text-emerald-500" : m.change < 0 ? "text-rose-500" : "text-muted-foreground"}`}>
                           {m.change > 0 ? "+" : ""}{m.change}%
                         </span>
                       </td>
@@ -426,16 +395,13 @@ export default function AdvisoryPage() {
                         <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${demandBadge(m.demand)}`}>{m.demand}</span>
                       </td>
                       <td className="py-3 pr-4">
-                        <div className="flex items-center gap-1 text-xs text-slate-400">
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
                           <Clock className="w-3 h-3" /> {m.delivery}
                         </div>
                       </td>
-                      <td className="py-3">
-                        <span className="text-xs text-slate-400">
-                          {m.demand === "high" && m.trend === "up" ? "🟢 Sell now" :
-                           m.demand === "low" && m.trend === "down" ? "🔴 Hold stock" :
-                           "🟡 Monitor"}
-                        </span>
+                      <td className="py-3 text-xs text-muted-foreground">
+                        {m.demand === "high" && m.trend === "up" ? "🟢 Sell now" :
+                         m.demand === "low" && m.trend === "down" ? "🔴 Hold stock" : "🟡 Monitor"}
                       </td>
                     </tr>
                   ))}
@@ -443,39 +409,33 @@ export default function AdvisoryPage() {
               </table>
             </div>
 
-            {/* Price trend chart */}
-            <div className="mt-5 bg-slate-950 rounded-xl border border-slate-800 p-4">
+            <div className="mt-5 bg-muted/40 rounded-xl border border-border p-4">
               <div className="flex items-center justify-between mb-3">
-                <p className="text-xs font-semibold text-slate-300">6-Month Price Trend · All Hubs · {selectedCropRow} (RWF/kg)</p>
+                <p className="text-xs font-semibold text-foreground">6-Month Price Trend · All Hubs · {selectedCropRow} (RWF/kg)</p>
                 <div className="flex items-center gap-3">
-                  {[
-                    { label: "Kigali", color: "#22c55e" },
-                    { label: "Musanze", color: "#f59e0b" },
-                    { label: "Rubavu", color: "#38bdf8" },
-                    { label: "Karongi", color: "#a78bfa" },
-                  ].map(l => (
+                  {[{ label: "Kigali", color: "#22c55e" }, { label: "Musanze", color: "#f59e0b" }, { label: "Rubavu", color: "#38bdf8" }, { label: "Karongi", color: "#a78bfa" }].map(l => (
                     <div key={l.label} className="flex items-center gap-1.5">
                       <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: l.color }} />
-                      <span className="text-[10px] text-slate-500">{l.label}</span>
+                      <span className="text-[10px] text-muted-foreground">{l.label}</span>
                     </div>
                   ))}
                 </div>
               </div>
-              <div className="h-40">
+              <div className="h-44">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={marketData}>
                     <defs>
                       {[{ id: "kg", color: "#22c55e" }, { id: "mu", color: "#f59e0b" }, { id: "ru", color: "#38bdf8" }, { id: "ka", color: "#a78bfa" }].map(g => (
                         <linearGradient key={g.id} id={g.id} x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor={g.color} stopOpacity={0.15} />
+                          <stop offset="5%" stopColor={g.color} stopOpacity={0.2} />
                           <stop offset="95%" stopColor={g.color} stopOpacity={0} />
                         </linearGradient>
                       ))}
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                    <XAxis dataKey="month" stroke="#475569" fontSize={11} />
-                    <YAxis stroke="#475569" fontSize={11} />
-                    <Tooltip contentStyle={{ backgroundColor: "#0f172a", border: "1px solid #334155", borderRadius: "8px", fontSize: "12px" }} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                    <XAxis dataKey="month" stroke="#9ca3af" fontSize={11} />
+                    <YAxis stroke="#9ca3af" fontSize={11} />
+                    <Tooltip contentStyle={{ backgroundColor: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }} />
                     <Area type="monotone" dataKey="kigali" stroke="#22c55e" fill="url(#kg)" name="Kigali" strokeWidth={2} />
                     <Area type="monotone" dataKey="musanze" stroke="#f59e0b" fill="url(#mu)" name="Musanze" strokeWidth={2} />
                     <Area type="monotone" dataKey="rubavu" stroke="#38bdf8" fill="url(#ru)" name="Rubavu" strokeWidth={2} />
@@ -484,8 +444,8 @@ export default function AdvisoryPage() {
                 </ResponsiveContainer>
               </div>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )

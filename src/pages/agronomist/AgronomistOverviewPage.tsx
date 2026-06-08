@@ -1,13 +1,15 @@
 import { Link } from "react-router-dom"
+import { Header } from "@/components/header"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Icon3D } from "@/components/icon-3d"
+import { Button } from "@/components/ui/button"
 import {
   Map, BrainCircuit, MessageSquare, FlaskConical,
   BarChart3, Users2, AlertTriangle, CheckCircle2,
-  Clock, TrendingUp, ArrowUpRight, Wifi, Zap,
-  Activity, Sprout
+  Clock, TrendingUp, ArrowUpRight, Activity, Sprout, ArrowRight
 } from "lucide-react"
 import {
-  AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, BarChart, Bar
+  ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip
 } from "recharts"
 
 const weeklyActivity = [
@@ -27,12 +29,8 @@ const modules = [
     icon: Map,
     description: "Monitor field boundaries, drone scans & route optimization",
     stat: "8 active zones",
-    statColor: "text-emerald-400",
     alert: "3 critical pins",
-    alertColor: "text-rose-400",
-    accent: "from-emerald-600/20 to-emerald-900/10",
-    border: "border-emerald-600/20",
-    iconBg: "bg-emerald-600/20 border-emerald-600/30 text-emerald-400",
+    gradient: "green",
   },
   {
     name: "AI Validation Engine",
@@ -40,12 +38,8 @@ const modules = [
     icon: BrainCircuit,
     description: "Review low-confidence crop recommendations before dispatch",
     stat: "12 pending review",
-    statColor: "text-amber-400",
     alert: "85% threshold active",
-    alertColor: "text-amber-400",
-    accent: "from-amber-600/20 to-amber-900/10",
-    border: "border-amber-600/20",
-    iconBg: "bg-amber-600/20 border-amber-600/30 text-amber-400",
+    gradient: "gold",
   },
   {
     name: "Comms Studio",
@@ -53,12 +47,8 @@ const modules = [
     icon: MessageSquare,
     description: "Bulk SMS/USSD messaging with Kinyarwanda translation",
     stat: "1,204 sent today",
-    statColor: "text-sky-400",
     alert: "4 open tickets",
-    alertColor: "text-rose-400",
-    accent: "from-sky-600/20 to-sky-900/10",
-    border: "border-sky-600/20",
-    iconBg: "bg-sky-600/20 border-sky-600/30 text-sky-400",
+    gradient: "sky",
   },
   {
     name: "Pathology Lab",
@@ -66,12 +56,8 @@ const modules = [
     icon: FlaskConical,
     description: "Diagnose crop diseases and build treatment prescriptions",
     stat: "8 cases today",
-    statColor: "text-violet-400",
     alert: "88% avg match",
-    alertColor: "text-emerald-400",
-    accent: "from-violet-600/20 to-violet-900/10",
-    border: "border-violet-600/20",
-    iconBg: "bg-violet-600/20 border-violet-600/30 text-violet-400",
+    gradient: "violet",
   },
   {
     name: "Advisory Hub",
@@ -79,12 +65,8 @@ const modules = [
     icon: BarChart3,
     description: "NPK fertilizer calculator and regional market arbitrage",
     stat: "Kigali: RWF 480/kg",
-    statColor: "text-amber-400",
     alert: "Maize up +4.2%",
-    alertColor: "text-emerald-400",
-    accent: "from-amber-600/20 to-orange-900/10",
-    border: "border-amber-600/20",
-    iconBg: "bg-amber-600/20 border-amber-600/30 text-amber-400",
+    gradient: "earth",
   },
   {
     name: "Workforce Desk",
@@ -92,166 +74,140 @@ const modules = [
     icon: Users2,
     description: "Track field visits, offline sync, and team KPI metrics",
     stat: "5 active agents",
-    statColor: "text-sky-400",
     alert: "28/30 visits done",
-    alertColor: "text-emerald-400",
-    accent: "from-sky-600/20 to-slate-900/10",
-    border: "border-sky-600/20",
-    iconBg: "bg-sky-600/20 border-sky-600/30 text-sky-400",
+    gradient: "green",
   },
 ]
 
 const recentActivity = [
-  { icon: AlertTriangle, text: "Uwimana E. reported leaf blight — Bugesera", time: "9m ago", color: "text-rose-400" },
-  { icon: CheckCircle2, text: "AI recommendation approved for Habimana P.", time: "22m ago", color: "text-emerald-400" },
-  { icon: MessageSquare, text: "Bulk SMS dispatched to 847 COOPAC members", time: "1h ago", color: "text-sky-400" },
-  { icon: BrainCircuit, text: "6 validation items flagged for review", time: "1.5h ago", color: "text-amber-400" },
-  { icon: FlaskConical, text: "Mancozeb prescription sent to Niyonzima J.", time: "2h ago", color: "text-violet-400" },
-  { icon: Map, text: "Drone scan uploaded — Bugesera Sector A (847 tiles)", time: "3h ago", color: "text-emerald-400" },
+  { icon: AlertTriangle, text: "Uwimana E. reported leaf blight — Bugesera", time: "9m ago", color: "text-rose-500" },
+  { icon: CheckCircle2, text: "AI recommendation approved for Habimana P.", time: "22m ago", color: "text-emerald-500" },
+  { icon: MessageSquare, text: "Bulk SMS dispatched to 847 COOPAC members", time: "1h ago", color: "text-sky-500" },
+  { icon: BrainCircuit, text: "6 validation items flagged for review", time: "1.5h ago", color: "text-amber-500" },
+  { icon: FlaskConical, text: "Mancozeb prescription sent to Niyonzima J.", time: "2h ago", color: "text-indigo-500" },
+  { icon: Map, text: "Drone scan uploaded — Bugesera Sector A", time: "3h ago", color: "text-emerald-500" },
 ]
 
 export default function AgronomistOverviewPage() {
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col">
-      {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-900">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-sky-600/20 border border-sky-600/30 flex items-center justify-center">
-            <Sprout className="w-5 h-5 text-sky-400" />
-          </div>
-          <div>
-            <h2 className="text-base font-semibold text-white">Agronomist Command Centre</h2>
-            <p className="text-xs text-slate-400">Welcome back, Jean · Rwanda Agricultural System</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-4 text-xs">
-          {[
-            { label: "Farmers Active", val: "2,847", color: "text-emerald-400" },
-            { label: "AI Queue", val: "12", color: "text-amber-400" },
-            { label: "Open Tickets", val: "4", color: "text-rose-400" },
-            { label: "Field Agents", val: "5", color: "text-sky-400" },
-          ].map(s => (
-            <div key={s.label} className="text-center border-l border-slate-800 pl-4 first:border-0 first:pl-0">
-              <p className={`text-lg font-bold ${s.color}`}>{s.val}</p>
-              <p className="text-slate-500">{s.label}</p>
-            </div>
-          ))}
-          <div className="flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-3 py-1.5 rounded-lg text-xs font-medium">
-            <Wifi className="w-3.5 h-3.5" />
-            System Online
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-background">
+      <Header
+        title="Agronomist Command Centre"
+        subtitle="Rwanda Agricultural System · Overview & Regional Operations"
+      />
 
-      <div className="flex-1 overflow-y-auto p-5 space-y-5">
-
+      <div className="p-6 space-y-6">
         {/* KPI Strip */}
-        <div className="grid grid-cols-5 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           {[
-            { label: "Tickets Resolved", val: "97", trend: "+18%", icon: CheckCircle2, color: "emerald" },
-            { label: "Field Visits", val: "28", trend: "93%", icon: Map, color: "sky" },
-            { label: "Messages Sent", val: "1.2K", trend: "98% delivery", icon: MessageSquare, color: "violet" },
-            { label: "Avg Confidence", val: "82%", trend: "+3% this week", icon: BrainCircuit, color: "amber" },
-            { label: "Yield Improvement", val: "+12%", trend: "Kigali avg", icon: TrendingUp, color: "emerald" },
-          ].map(k => (
-            <div key={k.label} className={`bg-${k.color}-500/5 border border-${k.color}-500/20 rounded-xl p-4`}>
-              <div className="flex items-center justify-between mb-2">
-                <k.icon className={`w-4 h-4 text-${k.color}-400`} />
-                <ArrowUpRight className={`w-3.5 h-3.5 text-${k.color}-400 opacity-60`} />
-              </div>
-              <p className={`text-2xl font-black text-${k.color}-400`}>{k.val}</p>
-              <p className="text-[10px] text-slate-500 mt-0.5">{k.label}</p>
-              <p className={`text-[10px] text-${k.color}-400 mt-0.5 font-medium`}>{k.trend}</p>
-            </div>
+            { label: "Tickets Resolved", val: "97", trend: "+18%", icon: CheckCircle2, gradient: "green" },
+            { label: "Field Visits", val: "28", trend: "93%", icon: Map, gradient: "sky" },
+            { label: "Messages Sent", val: "1.2K", trend: "98% delivery", icon: MessageSquare, gradient: "sky" },
+            { label: "Avg Confidence", val: "82%", trend: "+3% this week", icon: BrainCircuit, gradient: "gold" },
+            { label: "Yield Improvement", val: "+12%", trend: "Kigali Province", icon: TrendingUp, gradient: "green" },
+          ].map((k) => (
+            <Card key={k.label} className="border-0 shadow-md">
+              <CardContent className="p-4 flex flex-col justify-between h-32">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-muted-foreground font-medium">{k.label}</span>
+                  <Icon3D gradient={k.gradient as any} size="sm">
+                    <k.icon className="w-4 h-4 text-white" />
+                  </Icon3D>
+                </div>
+                <div className="mt-2">
+                  <p className="text-2xl font-bold text-foreground">{k.val}</p>
+                  <p className="text-xs text-emerald-600 font-semibold mt-0.5">{k.trend}</p>
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
 
-        {/* Module Cards Grid */}
+        {/* Modules Grid */}
         <div>
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-semibold text-slate-200 flex items-center gap-2">
-              <Zap className="w-4 h-4 text-amber-400" /> Core Modules
-            </h3>
-            <span className="text-xs text-slate-500">Click a module to enter</span>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold text-foreground">Core Modules</h2>
+            <span className="text-xs text-muted-foreground">Select a module to manage</span>
           </div>
-          <div className="grid grid-cols-3 gap-3">
-            {modules.map(mod => (
-              <Link
-                key={mod.name}
-                to={mod.href}
-                className={`group relative bg-gradient-to-br ${mod.accent} border ${mod.border} rounded-2xl p-5 hover:border-opacity-60 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20`}
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className={`w-11 h-11 rounded-xl border flex items-center justify-center ${mod.iconBg}`}>
-                    <mod.icon className="w-5 h-5" />
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {modules.map((mod) => (
+              <Card key={mod.name} className="card-hover border-0 shadow-md overflow-hidden flex flex-col justify-between">
+                <div>
+                  <div className="h-24 bg-gradient-to-br from-muted/50 to-muted flex items-center justify-center border-b border-border">
+                    <Icon3D gradient={mod.gradient as any} size="lg">
+                      <mod.icon className="w-6 h-6 text-white" />
+                    </Icon3D>
                   </div>
-                  <ArrowUpRight className="w-4 h-4 text-slate-600 group-hover:text-slate-300 transition-colors" />
+                  <CardContent className="p-5 space-y-2">
+                    <h3 className="font-semibold text-foreground text-base">{mod.name}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{mod.description}</p>
+                  </CardContent>
                 </div>
-                <h4 className="text-sm font-bold text-white mb-1 group-hover:text-slate-100">{mod.name}</h4>
-                <p className="text-xs text-slate-500 leading-relaxed mb-4">{mod.description}</p>
-                <div className="flex items-center justify-between pt-3 border-t border-white/5">
-                  <span className={`text-xs font-semibold ${mod.statColor}`}>{mod.stat}</span>
-                  <span className={`text-xs ${mod.alertColor}`}>{mod.alert}</span>
+                <div className="px-5 pb-5 pt-2 flex items-center justify-between border-t border-border/50">
+                  <span className="text-xs font-semibold text-primary">{mod.stat}</span>
+                  <Button variant="ghost" size="sm" className="gap-1.5 p-0 hover:bg-transparent text-muted-foreground hover:text-foreground" asChild>
+                    <Link to={mod.href}>
+                      Open Desk <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </Button>
                 </div>
-              </Link>
+              </Card>
             ))}
           </div>
         </div>
 
-        {/* Bottom row: Chart + Activity */}
-        <div className="grid grid-cols-5 gap-5">
+        {/* Weekly Activity + Logs */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
           {/* Weekly activity chart */}
-          <div className="col-span-3 bg-slate-900 rounded-2xl border border-slate-800 p-5">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <Activity className="w-4 h-4 text-sky-400" />
-                <h3 className="text-sm font-semibold text-slate-200">Weekly Activity</h3>
+          <Card className="lg:col-span-3 border-0 shadow-md">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Activity className="w-5 h-5 text-emerald-500" />
+                <span>Weekly Activity</span>
+              </CardTitle>
+              <CardDescription>Field operations and support ticket diagnostics</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={weeklyActivity} barGap={4}>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-muted" />
+                    <XAxis dataKey="day" className="fill-muted-foreground" fontSize={11} tickLine={false} />
+                    <YAxis className="fill-muted-foreground" fontSize={11} tickLine={false} axisLine={false} />
+                    <Tooltip contentStyle={{ borderRadius: "8px", border: "1px solid var(--border)", backgroundColor: "var(--background)" }} />
+                    <Bar dataKey="visits" fill="#10b981" radius={[4, 4, 0, 0]} name="Field Visits" />
+                    <Bar dataKey="tickets" fill="#f59e0b" radius={[4, 4, 0, 0]} name="New Tickets" />
+                    <Bar dataKey="resolved" fill="#0ea5e9" radius={[4, 4, 0, 0]} name="Resolved" />
+                  </BarChart>
+                </ResponsiveContainer>
               </div>
-              <div className="flex items-center gap-4 text-xs">
-                {[{ label: "Field Visits", color: "#22c55e" }, { label: "New Tickets", color: "#f59e0b" }, { label: "Resolved", color: "#38bdf8" }].map(l => (
-                  <div key={l.label} className="flex items-center gap-1.5">
-                    <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: l.color }} />
-                    <span className="text-slate-500">{l.label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="h-48">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={weeklyActivity} barGap={3}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                  <XAxis dataKey="day" stroke="#475569" fontSize={11} />
-                  <YAxis stroke="#475569" fontSize={11} />
-                  <Tooltip contentStyle={{ backgroundColor: "#0f172a", border: "1px solid #334155", borderRadius: "8px", fontSize: "12px" }} />
-                  <Bar dataKey="visits" fill="#22c55e" radius={[3, 3, 0, 0]} name="Field Visits" />
-                  <Bar dataKey="tickets" fill="#f59e0b" radius={[3, 3, 0, 0]} name="New Tickets" />
-                  <Bar dataKey="resolved" fill="#38bdf8" radius={[3, 3, 0, 0]} name="Resolved" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
-          {/* Recent activity feed */}
-          <div className="col-span-2 bg-slate-900 rounded-2xl border border-slate-800 p-5">
-            <div className="flex items-center gap-2 mb-4">
-              <Clock className="w-4 h-4 text-slate-400" />
-              <h3 className="text-sm font-semibold text-slate-200">Activity Feed</h3>
-              <span className="ml-auto text-xs text-slate-500">Today</span>
-            </div>
-            <div className="space-y-3">
+          {/* Activity feed */}
+          <Card className="lg:col-span-2 border-0 shadow-md">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Clock className="w-5 h-5 text-muted-foreground" />
+                <span>Operations Feed</span>
+              </CardTitle>
+              <CardDescription>Real-time field logs & telemetry events</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
               {recentActivity.map((activity, i) => (
-                <div key={i} className="flex items-start gap-3">
-                  <div className={`w-6 h-6 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center flex-shrink-0 mt-0.5`}>
-                    <activity.icon className={`w-3.5 h-3.5 ${activity.color}`} />
+                <div key={i} className="flex items-start gap-3 text-sm">
+                  <div className="w-7 h-7 rounded-lg bg-muted flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <activity.icon className={`w-4 h-4 ${activity.color}`} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs text-slate-300 leading-relaxed">{activity.text}</p>
-                    <p className="text-[10px] text-slate-600 mt-0.5">{activity.time}</p>
+                    <p className="text-foreground font-medium leading-normal">{activity.text}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{activity.time}</p>
                   </div>
                 </div>
               ))}
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
