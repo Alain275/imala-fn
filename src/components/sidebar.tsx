@@ -71,6 +71,22 @@ export function Sidebar() {
             </div>
           </div>
 
+          {/* Role switcher */}
+          <div className="px-6 py-3 border-b border-sidebar-border bg-sidebar-accent/20">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-xs text-sidebar-foreground/80 font-medium">Farmer View</span>
+              </div>
+              <Link
+                to="/agronomist"
+                className="text-[10px] text-sky-400 hover:text-sky-300 font-semibold border border-sky-500/30 bg-sky-500/10 px-2.5 py-0.5 rounded-full transition-colors"
+              >
+                Agronomist Portal →
+              </Link>
+            </div>
+          </div>
+
           {/* Navigation */}
           <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
             {navigation.map((item) => {

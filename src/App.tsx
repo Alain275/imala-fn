@@ -10,6 +10,16 @@ import MarketPage from './pages/dashboard/MarketPage'
 import TrainingPage from './pages/dashboard/TrainingPage'
 import SettingsPage from './pages/dashboard/SettingsPage'
 
+// Agronomist Dashboard Modules
+import AgronomistLayout from './pages/agronomist/AgronomistLayout'
+import AgronomistOverviewPage from './pages/agronomist/AgronomistOverviewPage'
+import GISPage from './pages/dashboard/agronomist/GISPage'
+import AIValidationPage from './pages/dashboard/agronomist/AIValidationPage'
+import CommsPage from './pages/dashboard/agronomist/CommsPage'
+import PathologyPage from './pages/dashboard/agronomist/PathologyPage'
+import AdvisoryPage from './pages/dashboard/agronomist/AdvisoryPage'
+import WorkforcePage from './pages/dashboard/agronomist/WorkforcePage'
+
 function App() {
   return (
     <Routes>
@@ -22,6 +32,18 @@ function App() {
         <Route path="soil" element={<SoilPage />} />
         <Route path="market" element={<MarketPage />} />
         <Route path="training" element={<TrainingPage />} />
+        <Route path="settings" element={<SettingsPage />} />
+      </Route>
+
+      {/* Agronomist Dashboard Portal */}
+      <Route path="/agronomist" element={<AgronomistLayout />}>
+        <Route index element={<AgronomistOverviewPage />} />
+        <Route path="gis" element={<GISPage />} />
+        <Route path="ai-validation" element={<AIValidationPage />} />
+        <Route path="comms" element={<CommsPage />} />
+        <Route path="pathology" element={<PathologyPage />} />
+        <Route path="advisory" element={<AdvisoryPage />} />
+        <Route path="workforce" element={<WorkforcePage />} />
         <Route path="settings" element={<SettingsPage />} />
       </Route>
     </Routes>
