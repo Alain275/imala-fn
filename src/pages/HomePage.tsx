@@ -405,30 +405,59 @@ export default function HomePage() {
             {features.map((feature, i) => (
               <div
                 key={i}
-                className="group relative min-h-[30rem] overflow-hidden rounded-sm bg-white px-6 py-8 text-center transition-all duration-500 ease-out hover:-translate-y-2"
-                style={{ transitionDelay: `${i * 100}ms` }}
+                className="h-[30rem] cursor-pointer perspective"
+                style={{ 
+                  perspective: '1000px',
+                  transitionDelay: `${i * 100}ms`
+                }}
               >
-                <div className="relative z-10 flex h-full flex-col items-center justify-center transition-all duration-500 group-hover:-translate-y-8 group-hover:opacity-0">
-                  <div className="mb-6 flex h-56 w-full items-center justify-center md:h-64">
-                    <img
-                      src={feature.icon}
-                      alt={feature.title}
-                      loading="eager"
-                      decoding="sync"
-                      width="200"
-                      height="200"
-                      className="object-contain transition-transform duration-500 drop-shadow-xl group-hover:scale-110"
-                    />
+                <div
+                  className="group relative w-full h-full transition-transform duration-700 ease-out"
+                  style={{
+                    transformStyle: 'preserve-3d',
+                    transform: 'rotateY(0deg)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'rotateY(180deg)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'rotateY(0deg)';
+                  }}
+                >
+                  {/* Front of card */}
+                  <div
+                    className="absolute w-full h-full bg-white rounded-sm px-6 py-8 flex flex-col items-center justify-center text-center"
+                    style={{
+                      backfaceVisibility: 'hidden',
+                      WebkitBackfaceVisibility: 'hidden'
+                    }}
+                  >
+                    <div className="mb-6 flex h-56 w-full items-center justify-center md:h-64">
+                      <img
+                        src={feature.icon}
+                        alt={feature.title}
+                        loading="eager"
+                        decoding="sync"
+                        width="200"
+                        height="200"
+                        className="object-contain drop-shadow-xl"
+                      />
+                    </div>
+                    <h3 className="w-full text-[3rem] font-bold text-emerald-950 md:text-[2rem]">
+                      {feature.title}
+                    </h3>
                   </div>
 
-                  <h3 className="w-full text-[3rem] font-bold text-emerald-950 transition-colors duration-300 md:text-[2rem] group-hover:text-slate-900">
-                    {feature.title}
-                  </h3>
-                </div>
-
-                <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center p-6 opacity-0 transition-all duration-300 group-hover:pointer-events-auto group-hover:opacity-100">
-                  <div className="w-full max-w-sm rounded-[1.5rem] bg-white/98 p-4 backdrop-blur-sm">
-                    <div className="mb-4 flex justify-center">
+                  {/* Back of card */}
+                  <div
+                    className="absolute w-full h-full bg-primary rounded-sm px-6 py-8 flex flex-col items-center justify-center text-center"
+                    style={{
+                      backfaceVisibility: 'hidden',
+                      WebkitBackfaceVisibility: 'hidden',
+                      transform: 'rotateY(180deg)'
+                    }}
+                  >
+                    <div className="mb-6 flex justify-center">
                       <img
                         src={feature.icon}
                         alt={feature.title}
@@ -440,9 +469,12 @@ export default function HomePage() {
                       />
                     </div>
 
-                    <div className="divide-y divide-emerald-200">
+                    <div className="divide-y divide-primary-foreground/30 space-y-3 w-full">
                       {feature.details.map((detail) => (
-                        <div key={detail} className="py-4 text-center text-lg font-medium text-emerald-700 md:text-xl">
+                        <div 
+                          key={detail} 
+                          className="py-3 text-center text-sm font-medium text-primary-foreground md:text-base"
+                        >
                           {detail}
                         </div>
                       ))}
