@@ -175,7 +175,7 @@ export default function HomePage() {
                 <Link to="/sign-in">Sign In</Link>
               </Button>
               <Button className={isScrolled ? "text-primary-foreground" : undefined} asChild>
-                <Link to="/dashboard">Get Started</Link>
+                <Link to="/register">Get Started</Link>
               </Button>
             </div>
           </div>
@@ -279,7 +279,7 @@ export default function HomePage() {
               
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button size="lg" className="gap-2 text-base" asChild>
-                  <Link to="/dashboard">
+                  <Link to="/register">
                     Start Farming Smarter
                     <ArrowRight className="w-5 h-5" />
                   </Link>
@@ -567,7 +567,7 @@ export default function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" variant="secondary" className="gap-2 text-base" asChild>
-              <Link to="/dashboard">
+              <Link to="/register">
                 Get Started Free
                 <ArrowRight className="w-5 h-5" />
               </Link>

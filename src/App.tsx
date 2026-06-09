@@ -20,10 +20,16 @@ import PathologyPage from './pages/dashboard/agronomist/PathologyPage'
 import AdvisoryPage from './pages/dashboard/agronomist/AdvisoryPage'
 import WorkforcePage from './pages/dashboard/agronomist/WorkforcePage'
 
+// Auth Pages
+import SignInPage from './pages/auth/SignInPage'
+import RegisterPage from './pages/auth/RegisterPage'
+
 function App() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
+      <Route path="/sign-in" element={<SignInPage />} />
+      <Route path="/register" element={<RegisterPage />} />
       <Route path="/dashboard" element={<DashboardLayout />}>
         <Route index element={<DashboardPage />} />
         <Route path="crops" element={<CropsPage />} />
