@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { 
-  Phone, 
+  Mail, 
   Lock, 
   Eye, 
   EyeOff, 
@@ -12,13 +12,9 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
-// Rwandan phone regex: starting with 078/079/072/073 or +25078/etc followed by 7 digits
-const phoneRegex = /^(?:\+250|0)?7[8923]\d{7}$/;
-
-
 // Since the schema has a message for length, let's make it 6 characters
 const loginSchemaFixed = z.object({
-  phone: z.string().regex(phoneRegex, "Enter a valid Rwandan phone number (e.g. 0788123456)"),
+  email: z.string().email("Enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   role: z.enum(["farmer", "agronomist"])
 });
@@ -37,11 +33,12 @@ export default function SignInPage() {
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchemaFixed),
     defaultValues: {
-      phone: "",
+      email: "",
       password: "",
       role: "farmer"
     }
   });
+
 
 
   const onSubmit = async (data: LoginFormValues) => {
@@ -54,9 +51,8 @@ export default function SignInPage() {
       const existingUser = localStorage.getItem("imara_user");
       const user = existingUser ? JSON.parse(existingUser) : {
         name: data.role === "agronomist" ? "Senior Agronomist" : "Imara Farmer",
-        phone: data.phone,
-        role: data.role,
-        district: "Gasabo"
+        email: data.email,
+        role: data.role
       };
 
       // Ensure role matches what they selected to login
@@ -107,26 +103,24 @@ export default function SignInPage() {
             <h1 className="text-3xl font-bold text-emerald-950 mb-6">Welcome Back</h1>
             
 
-            
-
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               
-              {/* Telephone input */}
+              {/* Email input */}
               <div className="relative">
                 <span className="absolute left-3 -top-2 bg-[#faf6ee] px-1.5 text-[11px] font-semibold text-emerald-800 tracking-wide z-10">
-                  Telephone Number
+                  Email Address
                 </span>
                 <div className="flex items-center rounded-xl border border-[#e0d6bc] bg-[#faf6ee]/20 px-3.5 py-3.5 focus-within:border-emerald-600 focus-within:ring-1 focus-within:ring-emerald-600/20 transition-all">
-                  <Phone className="w-4 h-4 text-emerald-700/50 mr-2.5 flex-shrink-0" />
+                  <Mail className="w-4 h-4 text-emerald-700/50 mr-2.5 flex-shrink-0" />
                   <input
-                    {...register("phone")}
-                    type="tel"
-                    placeholder="e.g. 0788123456"
+                    {...register("email")}
+                    type="email"
+                    placeholder="e.g. john@example.com"
                     className="w-full bg-transparent text-sm text-emerald-950 placeholder-emerald-950/30 outline-none"
                   />
                 </div>
-                {errors.phone && (
-                  <p className="text-[11px] text-rose-600 mt-1 pl-1">{errors.phone.message}</p>
+                {errors.email && (
+                  <p className="text-[11px] text-rose-600 mt-1 pl-1">{errors.email.message}</p>
                 )}
               </div>
 
