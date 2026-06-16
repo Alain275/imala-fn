@@ -11,15 +11,14 @@ import {
   ArrowLeft
 } from "lucide-react";
 import { toast } from "sonner";
+import { authService } from "../../services/auth";
 
-// Since the schema has a message for length, let's make it 6 characters
-const loginSchemaFixed = z.object({
+const loginSchema = z.object({
   email: z.string().email("Enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
-  role: z.enum(["farmer", "agronomist"])
 });
 
-type LoginFormValues = z.infer<typeof loginSchemaFixed>;
+type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function SignInPage() {
   const navigate = useNavigate();
@@ -31,44 +30,30 @@ export default function SignInPage() {
     handleSubmit,
     formState: { errors }
   } = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchemaFixed),
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
-      role: "farmer"
     }
   });
-
-
 
   const onSubmit = async (data: LoginFormValues) => {
     setSubmitting(true);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1200));
-
-      // Retrieve existing mock user or store a placeholder
-      const existingUser = localStorage.getItem("imara_user");
-      const user = existingUser ? JSON.parse(existingUser) : {
-        name: data.role === "agronomist" ? "Senior Agronomist" : "Imara Farmer",
-        email: data.email,
-        role: data.role
-      };
-
-      // Ensure role matches what they selected to login
-      user.role = data.role;
-      localStorage.setItem("imara_user", JSON.stringify(user));
-
-      toast.success("Logged in successfully!");
+      const response = await authService.login(data);
+      
+      toast.success(response.message || "Logged in successfully!");
       
       // Redirect based on role
-      if (data.role === "agronomist") {
+      const user = response.data.user;
+      if (user.role === "agronomist") {
         navigate("/agronomist");
       } else {
         navigate("/dashboard");
       }
-    } catch (error) {
-      toast.error("Failed to authenticate. Please try again.");
+    } catch (error: any) {
+      const message = error.response?.data?.message || "Failed to authenticate. Please try again.";
+      toast.error(message);
     } finally {
       setSubmitting(false);
     }

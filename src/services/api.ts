@@ -1,0 +1,53 @@
+const API_URL = 'https://imara-bn.onrender.com/api';
+
+interface RequestOptions extends RequestInit {
+  requiresAuth?: boolean;
+}
+
+async function request<T>(
+  endpoint: string,
+  options: RequestOptions = {}
+): Promise<T> {
+  const { requiresAuth = false, ...fetchOptions } = options;
+
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+    ...fetchOptions.headers,
+  };
+
+  // Add auth token if required
+  if (requiresAuth) {
+    const token = localStorage.getItem('token');
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+  }
+
+  const response = await fetch(`${API_URL}${endpoint}`, {
+    ...fetchOptions,
+    headers,
+  });
+
+  // Handle 401 Unauthorized
+  if (response.status === 401) {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.href = '/sign-in';
+    throw new Error('Unauthorized');
+  }
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw {
+      response: {
+        data,
+        status: response.status,
+      },
+    };
+  }
+
+  return data;
+}
+
+export default { request };

@@ -11,21 +11,23 @@ import {
   Eye,
   EyeOff,
   ArrowLeft,
-  Check
+  Check,
+  MapPin
 } from "lucide-react";
 import { toast } from "sonner";
+import { authService } from "../../services/auth";
 
 // Rwandan phone regex: starting with 078/079/072/073 or +25078/etc followed by 7 digits
 const phoneRegex = /^(?:\+250|0)?7[8923]\d{7}$/;
 
 const registerSchema = z.object({
-  firstName: z.string().min(2, "First name must be at least 2 characters"),
-  lastName: z.string().min(2, "Last name must be at least 2 characters"),
+  name: z.string().min(2, "Full name must be at least 2 characters"),
   email: z.string().email("Enter a valid email address"),
   phone: z.string().regex(phoneRegex, "Enter a valid Rwandan phone number (e.g. 0788123456)"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   confirmPassword: z.string().min(6, "Confirm password must be at least 6 characters"),
-  role: z.enum(["farmer", "agronomist"]),
+  location: z.string().optional(),
+  farmSize: z.string().optional(),
   agree: z.boolean().refine(val => val === true, {
     message: "You must accept the terms of the agreement"
   })
@@ -50,13 +52,13 @@ export default function RegisterPage() {
   } = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
+      name: "",
       email: "",
       phone: "",
       password: "",
       confirmPassword: "",
-      role: "farmer",
+      location: "",
+      farmSize: "",
       agree: false
     }
   });
@@ -66,27 +68,28 @@ export default function RegisterPage() {
   const onSubmit = async (data: RegisterFormValues) => {
     setSubmitting(true);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Store mock user info in localStorage for demo login
-      localStorage.setItem("imara_user", JSON.stringify({
-        name: `${data.firstName} ${data.lastName}`,
+      const response = await authService.register({
+        name: data.name,
         email: data.email,
+        password: data.password,
         phone: data.phone,
-        role: data.role
-      }));
-
-      toast.success("Account created successfully!");
+        location: data.location,
+        farmSize: data.farmSize ? parseFloat(data.farmSize) : undefined,
+        role: 'farmer'
+      });
+      
+      toast.success(response.message || "Account created successfully!");
       
       // Redirect based on role
-      if (data.role === "agronomist") {
+      const user = response.data.user;
+      if (user.role === "agronomist") {
         navigate("/agronomist");
       } else {
         navigate("/dashboard");
       }
-    } catch (error) {
-      toast.error("An error occurred. Please try again.");
+    } catch (error: any) {
+      const message = error.response?.data?.message || "An error occurred. Please try again.";
+      toast.error(message);
     } finally {
       setSubmitting(false);
     }
@@ -128,41 +131,22 @@ export default function RegisterPage() {
               {/* Form Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
                 
-                {/* First Name */}
-                <div className="relative">
+                {/* Full Name */}
+                <div className="relative md:col-span-2">
                   <span className="absolute left-3 -top-2 bg-[#faf6ee] px-1.5 text-[11px] font-semibold text-emerald-800 tracking-wide z-10">
-                    First Name
+                    Full Name
                   </span>
                   <div className="flex items-center rounded-xl border border-[#e0d6bc] bg-[#faf6ee]/20 px-3.5 py-3.5 focus-within:border-emerald-600 focus-within:ring-1 focus-within:ring-emerald-600/20 transition-all">
                     <User className="w-4 h-4 text-emerald-700/50 mr-2.5 flex-shrink-0" />
                     <input
-                      {...register("firstName")}
+                      {...register("name")}
                       type="text"
-                      placeholder="e.g. John"
+                      placeholder="e.g. John Mugisha"
                       className="w-full bg-transparent text-sm text-emerald-950 placeholder-emerald-950/30 outline-none"
                     />
                   </div>
-                  {errors.firstName && (
-                    <p className="text-[11px] text-rose-600 mt-1 pl-1">{errors.firstName.message}</p>
-                  )}
-                </div>
-
-                {/* Last Name */}
-                <div className="relative">
-                  <span className="absolute left-3 -top-2 bg-[#faf6ee] px-1.5 text-[11px] font-semibold text-emerald-800 tracking-wide z-10">
-                    Last Name
-                  </span>
-                  <div className="flex items-center rounded-xl border border-[#e0d6bc] bg-[#faf6ee]/20 px-3.5 py-3.5 focus-within:border-emerald-600 focus-within:ring-1 focus-within:ring-emerald-600/20 transition-all">
-                    <User className="w-4 h-4 text-emerald-700/50 mr-2.5 flex-shrink-0" />
-                    <input
-                      {...register("lastName")}
-                      type="text"
-                      placeholder="e.g. Mugisha"
-                      className="w-full bg-transparent text-sm text-emerald-950 placeholder-emerald-950/30 outline-none"
-                    />
-                  </div>
-                  {errors.lastName && (
-                    <p className="text-[11px] text-rose-600 mt-1 pl-1">{errors.lastName.message}</p>
+                  {errors.name && (
+                    <p className="text-[11px] text-rose-600 mt-1 pl-1">{errors.name.message}</p>
                   )}
                 </div>
 
@@ -253,6 +237,45 @@ export default function RegisterPage() {
                   </div>
                   {errors.confirmPassword && (
                     <p className="text-[11px] text-rose-600 mt-1 pl-1">{errors.confirmPassword.message}</p>
+                  )}
+                </div>
+
+                {/* Location */}
+                <div className="relative">
+                  <span className="absolute left-3 -top-2 bg-[#faf6ee] px-1.5 text-[11px] font-semibold text-emerald-800 tracking-wide z-10">
+                    Location (Optional)
+                  </span>
+                  <div className="flex items-center rounded-xl border border-[#e0d6bc] bg-[#faf6ee]/20 px-3.5 py-3.5 focus-within:border-emerald-600 focus-within:ring-1 focus-within:ring-emerald-600/20 transition-all">
+                    <MapPin className="w-4 h-4 text-emerald-700/50 mr-2.5 flex-shrink-0" />
+                    <input
+                      {...register("location")}
+                      type="text"
+                      placeholder="e.g. Kigali, Gasabo"
+                      className="w-full bg-transparent text-sm text-emerald-950 placeholder-emerald-950/30 outline-none"
+                    />
+                  </div>
+                  {errors.location && (
+                    <p className="text-[11px] text-rose-600 mt-1 pl-1">{errors.location.message}</p>
+                  )}
+                </div>
+
+                {/* Farm Size */}
+                <div className="relative">
+                  <span className="absolute left-3 -top-2 bg-[#faf6ee] px-1.5 text-[11px] font-semibold text-emerald-800 tracking-wide z-10">
+                    Farm Size (Optional)
+                  </span>
+                  <div className="flex items-center rounded-xl border border-[#e0d6bc] bg-[#faf6ee]/20 px-3.5 py-3.5 focus-within:border-emerald-600 focus-within:ring-1 focus-within:ring-emerald-600/20 transition-all">
+                    <span className="text-emerald-700/50 text-sm mr-2.5 flex-shrink-0">ha</span>
+                    <input
+                      {...register("farmSize")}
+                      type="number"
+                      step="0.1"
+                      placeholder="e.g. 2.5"
+                      className="w-full bg-transparent text-sm text-emerald-950 placeholder-emerald-950/30 outline-none"
+                    />
+                  </div>
+                  {errors.farmSize && (
+                    <p className="text-[11px] text-rose-600 mt-1 pl-1">{errors.farmSize.message}</p>
                   )}
                 </div>
               </div>
