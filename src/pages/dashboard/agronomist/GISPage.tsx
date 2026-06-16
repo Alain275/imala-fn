@@ -1,11 +1,9 @@
 import { useState } from "react"
 import { Header } from "@/components/header"
-import { Card, CardContent } from "@/components/ui/card"
-import { Icon3D } from "@/components/icon-3d"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import {
-  Map, Layers, Navigation, Upload, MapPin, Eye, EyeOff,
+  Navigation, Upload, MapPin, Eye, EyeOff,
   Clock, CheckCircle2,
   Plus, RotateCcw, Maximize2, ZoomIn,
   ZoomOut, Crosshair, Filter, Camera

@@ -1,12 +1,11 @@
 import { Header } from "@/components/header"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Icon3D } from "@/components/icon-3d"
-import { Button } from "@/components/ui/button"
+
 import { 
   CloudSun, 
   Droplets, 
   Wind,
-  Thermometer,
   Sun,
   CloudRain,
   Cloud,
@@ -24,7 +23,6 @@ import {
   CartesianGrid, 
   Tooltip, 
   ResponsiveContainer,
-  LineChart,
   Line
 } from "recharts"
 

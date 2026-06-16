@@ -4,7 +4,6 @@ import { Icon3D } from "@/components/icon-3d"
 import { Button } from "@/components/ui/button"
 import { 
   TrendingUp, 
-  TrendingDown,
   ArrowUpRight,
   ArrowDownRight,
   MapPin,

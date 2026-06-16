@@ -3,8 +3,8 @@ import { Header } from "@/components/header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Icon3D } from "@/components/icon-3d"
 import {
-  Users2, Download, CheckCircle2, Clock, MapPin,
-  Calendar, TrendingUp, Target,
+  Users2, Download, Clock, MapPin,
+  Calendar, Target,
   Wifi, WifiOff, HardDrive, Database, Map,
   Phone, BarChart2, Award,
   ArrowUpRight, ArrowDownRight, Star
@@ -109,11 +109,7 @@ export default function WorkforcePage() {
     return map[type] ?? "bg-muted border-border text-muted-foreground"
   }
 
-  const statusDot = (s: string) => {
-    if (s === "done") return "bg-emerald-500"
-    if (s === "active") return "bg-sky-400 animate-pulse"
-    return "bg-muted-foreground/30"
-  }
+
 
   const statusLabel = (s: string) => {
     if (s === "done") return "bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400"

@@ -4,9 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Icon3D } from "@/components/icon-3d"
 import {
   FlaskConical, Camera, CheckCircle2,
-  Search, Send, Plus,
+  Search, Send,
   Pill, Shield, FileText, Microscope, Leaf,
-  AlertCircle, Package, Printer
+  AlertCircle, Printer
 } from "lucide-react"
 
 interface DiseaseMatch {

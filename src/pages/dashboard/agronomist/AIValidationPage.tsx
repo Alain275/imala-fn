@@ -7,7 +7,7 @@ import { Progress } from "@/components/ui/progress"
 import {
   BrainCircuit, AlertTriangle, CheckCircle2, XCircle,
   ChevronDown, Filter, Sliders, ThumbsUp,
-  ThumbsDown, Edit3, Info, Leaf,
+  Edit3, Info, Leaf,
   Clock, ArrowUpDown, Database
 } from "lucide-react"
 

@@ -3,7 +3,7 @@ import { Header } from "@/components/header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Icon3D } from "@/components/icon-3d"
 import {
-  BarChart3, Calculator, TrendingUp,
+  Calculator, TrendingUp,
   Minus, ArrowUpRight, ArrowDownRight,
   Sliders, CheckCircle2, MapPin,
   ChevronDown, Clock, Truck, Info

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import {
   Map, BrainCircuit, MessageSquare, FlaskConical,
   BarChart3, Users2, AlertTriangle, CheckCircle2,
-  Clock, TrendingUp, ArrowUpRight, Activity, Sprout, ArrowRight
+  Clock, TrendingUp, Activity, ArrowRight
 } from "lucide-react"
 import {
   ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip
