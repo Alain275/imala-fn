@@ -22,7 +22,8 @@ import {
   YAxis, 
   CartesianGrid, 
   Tooltip, 
-  ResponsiveContainer
+  ResponsiveContainer,
+  Line
 } from "recharts"
 
 // Dummy weather data
