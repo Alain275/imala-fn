@@ -109,8 +109,6 @@ export default function WorkforcePage() {
     return map[type] ?? "bg-muted border-border text-muted-foreground"
   }
 
-
-
   const statusLabel = (s: string) => {
     if (s === "done") return "bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400"
     if (s === "active") return "bg-sky-500/10 border-sky-500/20 text-sky-600 dark:text-sky-400"
