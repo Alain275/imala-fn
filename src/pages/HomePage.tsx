@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom"
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
-import { 
-  Leaf, 
+import { LanguageSwitcher } from "@/components/LanguageSwitcher"
+import {
+  Leaf,
   Sprout,
   CheckCircle,
   ArrowRight,
@@ -12,75 +14,38 @@ import {
   Star
 } from "lucide-react"
 
-const features = [
+const featureKeys = [
   {
     icon: "/crop advisory.png",
-    title: "Crop Advisory",
-    description: "Match the right crop to your soil, climate, and yield goals.",
-    details: [
-      "Soil-based matching",
-      "Climate analysis",
-      "Yield optimization",
-      "Planting schedules",
-    ],
+    key: "cropAdvisory",
   },
   {
     icon: "/Disease Detection.png",
-    title: "Disease Detection",
-    description: "Catch crop issues early with guided photo diagnosis and action steps.",
-    details: [
-      "Photo diagnosis",
-      "Early detection",
-      "Treatment recommendations",
-      "History tracking",
-    ],
+    key: "diseaseDetection",
   },
   {
     icon: "/Weather Intelligence.png",
-    title: "Weather Intelligence",
-    description: "Stay ahead of changing conditions with localized farm alerts.",
-    details: [
-      "Hyperlocal forecasts",
-      "Real-time alerts",
-      "Task scheduling",
-      "Irrigation sync",
-    ],
+    key: "weatherIntelligence",
   },
+] as const
+
+const statKeys = [
+  { value: "50,000+", key: "activeFarmers" },
+  { value: "30", key: "districtsCovered" },
+  { value: "85%", key: "yieldImprovement" },
+  { value: "200+", key: "expertAgronomists" },
+] as const
+
+const testimonialNames = [
+  "Emmanuel Habimana",
+  "Marie Claire Uwimana",
+  "Jean Baptiste Nsengiyumva",
 ]
 
-const stats = [
-  { value: "50,000+", label: "Active Farmers" },
-  { value: "30", label: "Districts Covered" },
-  { value: "85%", label: "Yield Improvement" },
-  { value: "200+", label: "Expert Agronomists" },
-]
-
-const testimonials = [
-  {
-    name: "Emmanuel Habimana",
-    role: "Maize Farmer, Eastern Province",
-    content: "IMARA helped me double my maize yield in just one season. The crop advisory recommendations were exactly what I needed.",
-    rating: 5
-  },
-  {
-    name: "Marie Claire Uwimana",
-    role: "Vegetable Farmer, Kigali",
-    content: "The disease detection feature saved my entire tomato crop. I was able to identify and treat the blight before it spread.",
-    rating: 5
-  },
-  {
-    name: "Jean Baptiste Nsengiyumva",
-    role: "Cooperative Leader, Northern Province",
-    content: "Our cooperative now uses IMARA for all our farming decisions. The market price alerts have improved our profits by 40%.",
-    rating: 5
-  },
-]
-
-const howItWorksSteps = [
+const howItWorksStepKeys = [
   {
     step: "01",
-    title: "Create Your Profile",
-    description: "Tell us about your farm location, size, and the crops you grow.",
+    key: "createProfile",
     icon: "/Create.png",
     accent: "from-emerald-500 to-green-500",
     lineColor: "bg-emerald-500",
@@ -89,8 +54,7 @@ const howItWorksSteps = [
   },
   {
     step: "02",
-    title: "Get Recommendations",
-    description: "Our AI analyzes your data and provides personalized farming advice.",
+    key: "getRecommendations",
     icon: "/Recommendations.png",
     accent: "from-blue-500 to-indigo-500",
     lineColor: "bg-blue-500",
@@ -99,17 +63,17 @@ const howItWorksSteps = [
   },
   {
     step: "03",
-    title: "Grow & Succeed",
-    description: "Follow the recommendations, track your progress, and increase your yields.",
+    key: "growSucceed",
     icon: "/Grow.png",
     accent: "from-fuchsia-500 to-pink-500",
     lineColor: "bg-fuchsia-500",
     borderColor: "border-fuchsia-500",
     innerTint: "from-fuchsia-500/15 to-transparent",
   },
-]
+] as const
 
 export default function HomePage() {
+  const { t } = useTranslation()
   const [isScrolled, setIsScrolled] = useState(false)
 
   useEffect(() => {
@@ -131,6 +95,35 @@ export default function HomePage() {
       document.removeEventListener("scroll", onScroll, true)
     }
   }, [])
+
+  const features = featureKeys.map((feature) => ({
+    icon: feature.icon,
+    title: t(`landing.features.${feature.key}.title`),
+    description: t(`landing.features.${feature.key}.description`),
+    details: t(`landing.features.${feature.key}.details`, { returnObjects: true }) as string[],
+  }))
+
+  const stats = statKeys.map((stat) => ({
+    value: stat.value,
+    label: t(`landing.stats.${stat.key}`),
+  }))
+
+  const testimonialItems = t("landing.testimonials.items", { returnObjects: true }) as {
+    role: string
+    content: string
+  }[]
+  const testimonials = testimonialNames.map((name, i) => ({
+    name,
+    role: testimonialItems[i].role,
+    content: testimonialItems[i].content,
+    rating: 5,
+  }))
+
+  const howItWorksSteps = howItWorksStepKeys.map((step) => ({
+    ...step,
+    title: t(`landing.howItWorks.${step.key}.title`),
+    description: t(`landing.howItWorks.${step.key}.description`),
+  }))
 
   return (
     <div className="min-h-screen bg-background">
@@ -154,10 +147,10 @@ export default function HomePage() {
                 IMARA
               </span>
             </Link>
-            
+
             <div className="hidden lg:flex flex-1 items-center justify-center px-6">
               <Input
-                placeholder="Search..."
+                placeholder={t("common.search")}
                 className={
                   isScrolled
                     ? "max-w-md h-11 rounded-full border border-primary-foreground/20 bg-white/10 px-4 text-primary-foreground placeholder:text-primary-foreground/70 shadow-sm backdrop-blur-md focus-visible:border-primary-foreground focus-visible:ring-0"
@@ -167,15 +160,22 @@ export default function HomePage() {
             </div>
 
             <div className="flex items-center gap-3">
+              <LanguageSwitcher
+                triggerClassName={
+                  isScrolled
+                    ? "border-primary-foreground/20 bg-white/10 text-primary-foreground hover:bg-white/20"
+                    : undefined
+                }
+              />
               <Button
                 variant="ghost"
                 className={isScrolled ? "text-primary-foreground" : undefined}
                 asChild
               >
-                <Link to="/sign-in">Sign In</Link>
+                <Link to="/sign-in">{t("common.signIn")}</Link>
               </Button>
               <Button className={isScrolled ? "text-primary-foreground" : undefined} asChild>
-                <Link to="/register">Get Started</Link>
+                <Link to="/register">{t("common.getStarted")}</Link>
               </Button>
             </div>
           </div>
@@ -198,7 +198,7 @@ export default function HomePage() {
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                Crop Advisory
+                {t("common.nav.cropAdvisory")}
               </a>
               <a
                 href="#how-it-works"
@@ -208,7 +208,7 @@ export default function HomePage() {
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                Disease Detection
+                {t("common.nav.diseaseDetection")}
               </a>
               <a
                 href="#testimonials"
@@ -218,7 +218,7 @@ export default function HomePage() {
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                Weather Intelligence
+                {t("common.nav.weatherIntelligence")}
               </a>
               <a
                 href="#contact"
@@ -228,7 +228,7 @@ export default function HomePage() {
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                Soil Analysis
+                {t("common.nav.soilAnalysis")}
               </a>
                <a
                 href="#contact"
@@ -238,7 +238,7 @@ export default function HomePage() {
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                Market Prices
+                {t("common.nav.marketPrices")}
               </a>
               <a
                 href="#contact"
@@ -248,7 +248,7 @@ export default function HomePage() {
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                Training & Education
+                {t("common.nav.trainingEducation")}
               </a>
             </div>
           </div>
@@ -259,41 +259,40 @@ export default function HomePage() {
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-green-50 to-amber-50" />
         <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-30" />
-        
+
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
-              
-              
+
+
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground leading-tight text-balance">
-                Smart Farming for a{" "}
+                {t("landing.hero.titlePrefix")}{" "}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-green-500">
-                  Better Harvest
+                  {t("landing.hero.titleHighlight")}
                 </span>
               </h1>
-              
+
               <p className="text-lg text-muted-foreground max-w-lg text-pretty">
-                IMARA is Rwanda&apos;s leading AI-powered agricultural platform, helping farmers increase yields, 
-                detect diseases early, and connect with markets - all from your phone.
+                {t("landing.hero.subtitle")}
               </p>
-              
+
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button size="lg" className="gap-2 text-base" asChild>
                   <Link to="/register">
-                    Start Farming Smarter
+                    {t("landing.hero.ctaPrimary")}
                     <ArrowRight className="w-5 h-5" />
                   </Link>
                 </Button>
                 <Button size="lg" variant="outline" className="gap-2 text-base">
                   <Play className="w-5 h-5" />
-                  Watch Demo
+                  {t("landing.hero.ctaSecondary")}
                 </Button>
               </div>
-              
+
               <div className="flex items-center gap-6 pt-4">
                 <div className="flex -space-x-3">
                   {[1, 2, 3, 4, 5].map((i) => (
-                    <div 
+                    <div
                       key={i}
                       className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-green-500 border-2 border-background flex items-center justify-center text-white text-xs font-bold"
                     >
@@ -308,12 +307,12 @@ export default function HomePage() {
                     ))}
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    Trusted by 50,000+ farmers
+                    {t("landing.hero.trustedBy", { count: "50,000+" })}
                   </p>
                 </div>
               </div>
             </div>
-            
+
             <div className="relative">
               <div className="relative z-10 bg-gradient-to-br from-emerald-500 to-green-600 rounded-3xl p-8 shadow-2xl transform rotate-2 hover:rotate-0 transition-transform duration-500">
                 <div className="bg-white rounded-2xl p-6 space-y-4">
@@ -322,12 +321,16 @@ export default function HomePage() {
                       <Sprout className="w-6 h-6 text-emerald-600" />
                     </div>
                     <div>
-                      <p className="font-semibold text-foreground">Crop Recommendation</p>
-                      <p className="text-sm text-muted-foreground">Based on your soil analysis</p>
+                      <p className="font-semibold text-foreground">{t("landing.hero.cardTitle")}</p>
+                      <p className="text-sm text-muted-foreground">{t("landing.hero.cardSubtitle")}</p>
                     </div>
                   </div>
                   <div className="space-y-3">
-                    {["Maize - 92% suitability", "Beans - 88% suitability", "Irish Potatoes - 85% suitability"].map((crop, i) => (
+                    {[
+                      t("landing.hero.maizeSuitability"),
+                      t("landing.hero.beansSuitability"),
+                      t("landing.hero.potatoSuitability"),
+                    ].map((crop, i) => (
                       <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-emerald-50">
                         <CheckCircle className="w-5 h-5 text-emerald-600" />
                         <span className="text-sm font-medium text-foreground">{crop}</span>
@@ -336,11 +339,11 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="absolute -bottom-6 -left-6 bg-white rounded-2xl p-4 shadow-xl z-20">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10  flex items-center justify-center">
-                    
+
                     <img
                       src="https://png.pngtree.com/png-clipart/20250427/original/pngtree-a-vibrant-illustration-depicting-sun-behind-clouds-rain-and-lightning-bolt-png-image_20853346.png"
                       alt="Weather icon"
@@ -348,12 +351,12 @@ export default function HomePage() {
                     />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-foreground">Weather Alert</p>
-                    <p className="text-xs text-muted-foreground">Rain expected tomorrow</p>
+                    <p className="text-sm font-medium text-foreground">{t("landing.hero.weatherAlertTitle")}</p>
+                    <p className="text-xs text-muted-foreground">{t("landing.hero.weatherAlertSubtitle")}</p>
                   </div>
                 </div>
               </div>
-              
+
               <div className="absolute -top-6 -right-6 bg-white rounded-2xl p-4 shadow-xl z-20">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10  flex items-center justify-center">
@@ -364,8 +367,8 @@ export default function HomePage() {
                     />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-foreground">Maize Price</p>
-                    <p className="text-xs text-emerald-600 font-medium">+5.2% this week</p>
+                    <p className="text-sm font-medium text-foreground">{t("landing.hero.maizePriceTitle")}</p>
+                    <p className="text-xs text-emerald-600 font-medium">{t("landing.hero.maizePriceChange")}</p>
                   </div>
                 </div>
               </div>
@@ -393,20 +396,20 @@ export default function HomePage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h4 className="text-xl font-semibold text-emerald-500 uppercase tracking-wider">
-              WE GIVE YOU
+              {t("landing.features.eyebrow")}
             </h4>
             <h2 className="text-3xl mt-2 sm:text-4xl font-bold text-foreground text-gray-700 mb-4 text-balance">
-              Everything You Need to Farm Smarter
+              {t("landing.features.title")}
             </h2>
-            
+
           </div>
-          
+
           <div className="grid md:grid-cols-3 gap-6">
             {features.map((feature, i) => (
               <div
                 key={i}
                 className="h-[30rem] cursor-pointer perspective"
-                style={{ 
+                style={{
                   perspective: '1000px',
                   transitionDelay: `${i * 100}ms`
                 }}
@@ -471,8 +474,8 @@ export default function HomePage() {
 
                     <div className="divide-y divide-primary-foreground/30 space-y-3 w-full">
                       {feature.details.map((detail) => (
-                        <div 
-                          key={detail} 
+                        <div
+                          key={detail}
                           className="py-3 text-center text-sm font-medium text-primary-foreground md:text-base"
                         >
                           {detail}
@@ -492,10 +495,10 @@ export default function HomePage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-foreground text-gray-800 mb-4 text-balance">
-              How IMARA Works
+              {t("landing.howItWorks.title")}
             </h2>
             <p className="text-lg text-muted-foreground text-pretty">
-              Get started in minutes and transform your farming practices
+              {t("landing.howItWorks.subtitle")}
             </p>
           </div>
 
@@ -554,13 +557,13 @@ export default function HomePage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4 text-balance">
-              Trusted by Farmers Across Rwanda
+              {t("landing.testimonials.title")}
             </h2>
             <p className="text-lg text-muted-foreground text-pretty">
-              See how IMARA is transforming agriculture for thousands of farmers
+              {t("landing.testimonials.subtitle")}
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-3 gap-6">
             {testimonials.map((testimonial, i) => (
               <Card key={i} className="border-0 shadow-lg">
@@ -591,21 +594,20 @@ export default function HomePage() {
       <section className="py-20 lg:py-32 bg-gradient-to-br from-emerald-600 to-green-700">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4 text-balance">
-            Ready to Transform Your Farm?
+            {t("landing.cta.title")}
           </h2>
           <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto text-pretty">
-            Join 50,000+ farmers already using IMARA to grow better crops and increase their income.
-            It&apos;s free to get started.
+            {t("landing.cta.description", { count: "50,000+" })}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" variant="secondary" className="gap-2 text-base" asChild>
               <Link to="/register">
-                Get Started Free
+                {t("landing.cta.primaryButton")}
                 <ArrowRight className="w-5 h-5" />
               </Link>
             </Button>
             <Button size="lg" variant="outline" className="gap-2 text-base bg-transparent text-white border-white hover:bg-white/10">
-              Contact Sales
+              {t("landing.cta.secondaryButton")}
             </Button>
           </div>
         </div>
@@ -623,47 +625,47 @@ export default function HomePage() {
                 <span className="text-xl font-bold">IMARA</span>
               </div>
               <p className="text-background/70">
-                Empowering Rwandan farmers with smart agricultural technology.
+                {t("landing.footer.tagline")}
               </p>
             </div>
-            
+
             <div>
-              <h4 className="font-semibold mb-4">Features</h4>
+              <h4 className="font-semibold mb-4">{t("landing.footer.featuresHeading")}</h4>
               <ul className="space-y-2 text-background/70">
-                <li><Link to="/dashboard/crops" className="hover:text-background transition-colors">Crop Advisory</Link></li>
-                <li><Link to="/dashboard/disease" className="hover:text-background transition-colors">Disease Detection</Link></li>
-                <li><Link to="/dashboard/weather" className="hover:text-background transition-colors">Weather Intelligence</Link></li>
-                <li><Link to="/dashboard/market" className="hover:text-background transition-colors">Market Prices</Link></li>
+                <li><Link to="/dashboard/crops" className="hover:text-background transition-colors">{t("common.nav.cropAdvisory")}</Link></li>
+                <li><Link to="/dashboard/disease" className="hover:text-background transition-colors">{t("common.nav.diseaseDetection")}</Link></li>
+                <li><Link to="/dashboard/weather" className="hover:text-background transition-colors">{t("common.nav.weatherIntelligence")}</Link></li>
+                <li><Link to="/dashboard/market" className="hover:text-background transition-colors">{t("common.nav.marketPrices")}</Link></li>
               </ul>
             </div>
-            
+
             <div>
-              <h4 className="font-semibold mb-4">Company</h4>
+              <h4 className="font-semibold mb-4">{t("landing.footer.companyHeading")}</h4>
               <ul className="space-y-2 text-background/70">
-                <li><a href="#" className="hover:text-background transition-colors">About Us</a></li>
-                <li><a href="#" className="hover:text-background transition-colors">Careers</a></li>
-                <li><a href="#" className="hover:text-background transition-colors">Partners</a></li>
-                <li><a href="#" className="hover:text-background transition-colors">Contact</a></li>
+                <li><a href="#" className="hover:text-background transition-colors">{t("landing.footer.companyLinks.aboutUs")}</a></li>
+                <li><a href="#" className="hover:text-background transition-colors">{t("landing.footer.companyLinks.careers")}</a></li>
+                <li><a href="#" className="hover:text-background transition-colors">{t("landing.footer.companyLinks.partners")}</a></li>
+                <li><a href="#" className="hover:text-background transition-colors">{t("landing.footer.companyLinks.contact")}</a></li>
               </ul>
             </div>
-            
+
             <div>
-              <h4 className="font-semibold mb-4">Contact</h4>
+              <h4 className="font-semibold mb-4">{t("landing.footer.contactHeading")}</h4>
               <ul className="space-y-2 text-background/70">
-                <li>Kigali, Rwanda</li>
-                <li>+250 788 000 000</li>
-                <li>info@imara.rw</li>
+                <li>{t("landing.footer.address")}</li>
+                <li>{t("landing.footer.phone")}</li>
+                <li>{t("landing.footer.email")}</li>
               </ul>
             </div>
           </div>
-          
+
           <div className="border-t border-background/20 mt-12 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-background/60 text-sm">
-              &copy; 2024 IMARA. All rights reserved.
+              {t("landing.footer.copyright", { year: 2024, brand: "IMARA" })}
             </p>
             <div className="flex gap-6 text-sm text-background/60">
-              <a href="#" className="hover:text-background transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-background transition-colors">Terms of Service</a>
+              <a href="#" className="hover:text-background transition-colors">{t("landing.footer.privacyPolicy")}</a>
+              <a href="#" className="hover:text-background transition-colors">{t("landing.footer.termsOfService")}</a>
             </div>
           </div>
         </div>

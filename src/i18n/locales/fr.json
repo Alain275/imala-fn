@@ -1,0 +1,176 @@
+{
+  "common": {
+    "brand": "IMARA",
+    "nav": {
+      "cropAdvisory": "Conseil Agricole",
+      "diseaseDetection": "Détection des Maladies",
+      "weatherIntelligence": "Intelligence Météo",
+      "soilAnalysis": "Analyse du Sol",
+      "marketPrices": "Prix du Marché",
+      "trainingEducation": "Formation & Éducation"
+    },
+    "search": "Rechercher...",
+    "signIn": "Connexion",
+    "getStarted": "Commencer",
+    "home": "Accueil",
+    "language": "Langue"
+  },
+  "landing": {
+    "hero": {
+      "titlePrefix": "Une Agriculture Intelligente pour une",
+      "titleHighlight": "Meilleure Récolte",
+      "subtitle": "IMARA est la principale plateforme agricole basée sur l'IA au Rwanda, aidant les agriculteurs à augmenter leurs rendements, détecter les maladies tôt et se connecter aux marchés - directement depuis leur téléphone.",
+      "ctaPrimary": "Cultivez Plus Intelligemment",
+      "ctaSecondary": "Voir la Démo",
+      "trustedBy": "Approuvé par {{count}} agriculteurs",
+      "cardTitle": "Recommandation de Culture",
+      "cardSubtitle": "Basée sur l'analyse de votre sol",
+      "maizeSuitability": "Maïs - 92% d'adéquation",
+      "beansSuitability": "Haricots - 88% d'adéquation",
+      "potatoSuitability": "Pommes de terre - 85% d'adéquation",
+      "weatherAlertTitle": "Alerte Météo",
+      "weatherAlertSubtitle": "Pluie attendue demain",
+      "maizePriceTitle": "Prix du Maïs",
+      "maizePriceChange": "+5,2% cette semaine"
+    },
+    "stats": {
+      "activeFarmers": "Agriculteurs Actifs",
+      "districtsCovered": "Districts Couverts",
+      "yieldImprovement": "Amélioration du Rendement",
+      "expertAgronomists": "Agronomes Experts"
+    },
+    "features": {
+      "eyebrow": "CE QUE NOUS OFFRONS",
+      "title": "Tout ce dont vous avez besoin pour cultiver intelligemment",
+      "cropAdvisory": {
+        "title": "Conseil Agricole",
+        "description": "Associez la culture idéale à votre sol, climat et objectifs de rendement.",
+        "details": ["Correspondance selon le sol", "Analyse climatique", "Optimisation du rendement", "Calendriers de plantation"]
+      },
+      "diseaseDetection": {
+        "title": "Détection des Maladies",
+        "description": "Détectez rapidement les problèmes des cultures grâce à un diagnostic photo guidé et des actions à suivre.",
+        "details": ["Diagnostic par photo", "Détection précoce", "Recommandations de traitement", "Suivi de l'historique"]
+      },
+      "weatherIntelligence": {
+        "title": "Intelligence Météo",
+        "description": "Anticipez les changements climatiques grâce à des alertes agricoles localisées.",
+        "details": ["Prévisions hyperlocales", "Alertes en temps réel", "Planification des tâches", "Synchronisation de l'irrigation"]
+      }
+    },
+    "howItWorks": {
+      "title": "Comment IMARA Fonctionne",
+      "subtitle": "Commencez en quelques minutes et transformez vos pratiques agricoles",
+      "createProfile": {
+        "title": "Créez Votre Profil",
+        "description": "Indiquez-nous l'emplacement de votre ferme, sa taille et les cultures que vous pratiquez."
+      },
+      "getRecommendations": {
+        "title": "Recevez des Recommandations",
+        "description": "Notre IA analyse vos données et fournit des conseils agricoles personnalisés."
+      },
+      "growSucceed": {
+        "title": "Cultivez et Réussissez",
+        "description": "Suivez les recommandations, suivez vos progrès et augmentez vos rendements."
+      }
+    },
+    "testimonials": {
+      "title": "Approuvé par les Agriculteurs à Travers le Rwanda",
+      "subtitle": "Découvrez comment IMARA transforme l'agriculture pour des milliers d'agriculteurs",
+      "items": [
+        {
+          "role": "Agriculteur de Maïs, Province de l'Est",
+          "content": "IMARA m'a aidé à doubler ma récolte de maïs en une seule saison. Les recommandations de conseil agricole étaient exactement ce dont j'avais besoin."
+        },
+        {
+          "role": "Agricultrice de Légumes, Kigali",
+          "content": "La fonction de détection des maladies a sauvé toute ma récolte de tomates. J'ai pu identifier et traiter le mildiou avant qu'il ne se propage."
+        },
+        {
+          "role": "Chef de Coopérative, Province du Nord",
+          "content": "Notre coopérative utilise désormais IMARA pour toutes nos décisions agricoles. Les alertes sur les prix du marché ont amélioré nos profits de 40%."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Prêt à Transformer Votre Ferme ?",
+      "description": "Rejoignez plus de {{count}} agriculteurs qui utilisent déjà IMARA pour mieux cultiver et augmenter leurs revenus. L'inscription est gratuite.",
+      "primaryButton": "Commencer Gratuitement",
+      "secondaryButton": "Contacter les Ventes"
+    },
+    "footer": {
+      "tagline": "Autonomiser les agriculteurs rwandais grâce à une technologie agricole intelligente.",
+      "featuresHeading": "Fonctionnalités",
+      "companyHeading": "Entreprise",
+      "companyLinks": {
+        "aboutUs": "À Propos",
+        "careers": "Carrières",
+        "partners": "Partenaires",
+        "contact": "Contact"
+      },
+      "contactHeading": "Contact",
+      "address": "Kigali, Rwanda",
+      "phone": "+250 788 000 000",
+      "email": "info@imara.rw",
+      "copyright": "© {{year}} {{brand}}. Tous droits réservés.",
+      "privacyPolicy": "Politique de Confidentialité",
+      "termsOfService": "Conditions d'Utilisation"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Bon Retour",
+      "emailLabel": "Adresse E-mail",
+      "emailPlaceholder": "ex. john@example.com",
+      "emailError": "Veuillez saisir une adresse e-mail valide",
+      "passwordLabel": "Mot de Passe",
+      "passwordPlaceholder": "Entrez votre mot de passe",
+      "passwordError": "Le mot de passe doit contenir au moins 6 caractères",
+      "forgotPassword": "Mot de passe oublié ?",
+      "submit": "Se Connecter",
+      "submitting": "Connexion en cours...",
+      "noAccount": "Vous n'avez pas de compte ?",
+      "createOne": "Créer un compte",
+      "panelTitle": "Commencer",
+      "panelText": "Nouveau sur IMARA ?",
+      "panelLink": "S'inscrire",
+      "successToast": "Connexion réussie !",
+      "errorToast": "Échec de l'authentification. Veuillez réessayer."
+    },
+    "register": {
+      "title": "Créer un Compte",
+      "fullNameLabel": "Nom Complet",
+      "fullNamePlaceholder": "ex. John Mugisha",
+      "fullNameError": "Le nom complet doit comporter au moins 2 caractères",
+      "emailLabel": "Adresse E-mail",
+      "emailPlaceholder": "ex. john@example.com",
+      "emailError": "Veuillez saisir une adresse e-mail valide",
+      "phoneLabel": "Numéro de Téléphone",
+      "phonePlaceholder": "ex. 0788123456",
+      "phoneError": "Veuillez saisir un numéro de téléphone rwandais valide (ex. 0788123456)",
+      "passwordLabel": "Mot de Passe",
+      "passwordPlaceholder": "Créez un mot de passe sécurisé",
+      "passwordError": "Le mot de passe doit contenir au moins 6 caractères",
+      "confirmPasswordLabel": "Confirmer le Mot de Passe",
+      "confirmPasswordPlaceholder": "Confirmez le mot de passe",
+      "confirmPasswordError": "La confirmation du mot de passe doit contenir au moins 6 caractères",
+      "passwordsMismatchError": "Les mots de passe ne correspondent pas",
+      "locationLabel": "Localisation (Facultatif)",
+      "locationPlaceholder": "ex. Kigali, Gasabo",
+      "farmSizeLabel": "Superficie de la Ferme (Facultatif)",
+      "farmSizePlaceholder": "ex. 2.5",
+      "agreeText": "J'accepte ",
+      "agreeLink": "les conditions de l'accord",
+      "agreeError": "Vous devez accepter les conditions de l'accord",
+      "submit": "S'inscrire",
+      "submitting": "Création du compte...",
+      "haveAccount": "Vous avez déjà un compte ?",
+      "logIn": "Se connecter",
+      "panelTitle": "Commencer",
+      "panelText": "Vous avez déjà un compte ?",
+      "panelLink": "Se connecter",
+      "successToast": "Compte créé avec succès !",
+      "errorToast": "Une erreur s'est produite. Veuillez réessayer."
+    }
+  }
+}
