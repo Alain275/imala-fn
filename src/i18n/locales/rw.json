@@ -1,0 +1,176 @@
+{
+  "common": {
+    "brand": "IMARA",
+    "nav": {
+      "cropAdvisory": "Inama ku Bihingwa",
+      "diseaseDetection": "Kumenya Indwara",
+      "weatherIntelligence": "Amakuru ku Kirere",
+      "soilAnalysis": "Isuzuma ry'Ubutaka",
+      "marketPrices": "Ibiciro ku Isoko",
+      "trainingEducation": "Amahugurwa n'Uburezi"
+    },
+    "search": "Shakisha...",
+    "signIn": "Injira",
+    "getStarted": "Tangira",
+    "home": "Ahabanza",
+    "language": "Ururimi"
+  },
+  "landing": {
+    "hero": {
+      "titlePrefix": "Ubuhinzi Bwa None Bugamije",
+      "titleHighlight": "Umusaruro Mwiza",
+      "subtitle": "IMARA ni urubuga rukomeye rw'ubuhinzi rukoresha ubwenge bw'ikoranabuhanga mu Rwanda, rufasha abahinzi kongera umusaruro, kumenya indwara hakiri kare, no guhuza n'amasoko - byose biva kuri telefone yawe.",
+      "ctaPrimary": "Tangira Guhinga mu Buryo Bwiza",
+      "ctaSecondary": "Reba Imikorere",
+      "trustedBy": "Bizewe n'abahinzi {{count}}",
+      "cardTitle": "Inama ku Gihingwa",
+      "cardSubtitle": "Bishingiye ku isuzuma ry'ubutaka bwawe",
+      "maizeSuitability": "Ibigori - bikwiriye 92%",
+      "beansSuitability": "Ibishyimbo - bikwiriye 88%",
+      "potatoSuitability": "Ibirayi - bikwiriye 85%",
+      "weatherAlertTitle": "Itangazo ku Kirere",
+      "weatherAlertSubtitle": "Imvura iteganyijwe ejo",
+      "maizePriceTitle": "Igiciro cy'Ibigori",
+      "maizePriceChange": "+5.2% iki cyumweru"
+    },
+    "stats": {
+      "activeFarmers": "Abahinzi Bakora",
+      "districtsCovered": "Uturere Dukorerwamo",
+      "yieldImprovement": "Iyongera ry'Umusaruro",
+      "expertAgronomists": "Abahanga mu Buhinzi"
+    },
+    "features": {
+      "eyebrow": "IBI TUGUHA",
+      "title": "Ibyo Ukeneye Byose kugira Uhinge mu Buryo Bwiza",
+      "cropAdvisory": {
+        "title": "Inama ku Bihingwa",
+        "description": "Hura n'igihingwa gikwiriye ubutaka bwawe, ikirere, n'intego z'umusaruro.",
+        "details": ["Guhuza bishingiye ku butaka", "Isesengura ry'ikirere", "Kongera umusaruro", "Gahunda z'iterura"]
+      },
+      "diseaseDetection": {
+        "title": "Kumenya Indwara",
+        "description": "Menya ibibazo by'ibihingwa hakiri kare ukoresheje isuzuma rifashwa n'ifoto n'intambwe zo gufata.",
+        "details": ["Isuzuma rikoresheje ifoto", "Kumenya hakiri kare", "Inama zo kuvura", "Gukurikirana amateka"]
+      },
+      "weatherIntelligence": {
+        "title": "Amakuru ku Kirere",
+        "description": "Menya mbere impinduka z'ikirere ukoresheje itangazo ry'ubuhinzi rigenewe agace wabarizwamo.",
+        "details": ["Iteganyagihe ry'agace karebwa", "Itangazo ako kanya", "Gahunda y'imirimo", "Guhuza no kuhira"]
+      }
+    },
+    "howItWorks": {
+      "title": "Uko IMARA Ikora",
+      "subtitle": "Tangira mu minota mike uhindure uburyo bwawe bwo guhinga",
+      "createProfile": {
+        "title": "Fungura Umwirondoro Wawe",
+        "description": "Tubwire aho umurima wawe uherereye, ingano yawo, n'ibihingwa uhinga."
+      },
+      "getRecommendations": {
+        "title": "Bona Inama",
+        "description": "Ubwenge bw'ikoranabuhanga bwacu busesengura amakuru yawe bukaguha inama z'ubuhinzi zihariye."
+      },
+      "growSucceed": {
+        "title": "Hinga Utsinde",
+        "description": "Kurikiza inama, kurikirane iterambere ryawe, kandi wongere umusaruro wawe."
+      }
+    },
+    "testimonials": {
+      "title": "Bizewe n'Abahinzi mu Rwanda Hose",
+      "subtitle": "Reba uko IMARA ihindura ubuhinzi ku bahinzi babarirwa mu bihumbi",
+      "items": [
+        {
+          "role": "Umuhinzi w'Ibigori, Intara y'Iburasirazuba",
+          "content": "IMARA yanyibwo gukuba kabiri umusaruro w'ibigori byanjye mu gihembwe kimwe. Inama z'ubuhinzi zari nk'ibyo nari nkeneye."
+        },
+        {
+          "role": "Umuhinzi w'Imboga, Kigali",
+          "content": "Igikoresho cyo kumenya indwara cyarokoye umusaruro wanjye wose w'inyanya. Narashoboye kumenya no kuvura indwara mbere yuko ikwirakwira."
+        },
+        {
+          "role": "Umuyobozi wa Koperative, Intara y'Amajyaruguru",
+          "content": "Koperative yacu ubu ikoresha IMARA mu byemezo byose by'ubuhinzi. Amatangazo y'ibiciro by'isoko yongereye inyungu zacu na 40%."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Witeguye Guhindura Umurima Wawe?",
+      "description": "Ifatanye n'abahinzi barenga {{count}} bakoresha IMARA mu guhinga neza no kongera amafaranga binjiza. Kwiyandikisha ni ubuntu.",
+      "primaryButton": "Tangira ku Buntu",
+      "secondaryButton": "Vugana n'Ubucuruzi"
+    },
+    "footer": {
+      "tagline": "Guha abahinzi b'Abanyarwanda imbaraga ukoresheje ikoranabuhanga ry'ubuhinzi.",
+      "featuresHeading": "Ibikorwa",
+      "companyHeading": "Ikigo",
+      "companyLinks": {
+        "aboutUs": "Abo Turibo",
+        "careers": "Akazi",
+        "partners": "Abafatanyabikorwa",
+        "contact": "Twandikire"
+      },
+      "contactHeading": "Twandikire",
+      "address": "Kigali, u Rwanda",
+      "phone": "+250 788 000 000",
+      "email": "info@imara.rw",
+      "copyright": "© {{year}} {{brand}}. Uburenganzira bwose burabitswe.",
+      "privacyPolicy": "Politiki y'Ibanga",
+      "termsOfService": "Amabwiriza y'Ikoreshwa"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Ikaze Ugaruka",
+      "emailLabel": "Aderesi Imeyili",
+      "emailPlaceholder": "urugero: john@example.com",
+      "emailError": "Andika aderesi imeyili nyayo",
+      "passwordLabel": "Ijambo ry'Ibanga",
+      "passwordPlaceholder": "Andika ijambo ryawe ry'ibanga",
+      "passwordError": "Ijambo ry'ibanga rigomba kugira nibura inyuguti 6",
+      "forgotPassword": "Wibagiwe Ijambo ry'Ibanga?",
+      "submit": "Injira",
+      "submitting": "Kwinjira...",
+      "noAccount": "Nta konti ufite?",
+      "createOne": "Fungura imwe",
+      "panelTitle": "Tangira",
+      "panelText": "Uri mushya kuri IMARA?",
+      "panelLink": "Iyandikishe",
+      "successToast": "Kwinjira byagenze neza!",
+      "errorToast": "Kwinjira byanze. Ongera ugerageze."
+    },
+    "register": {
+      "title": "Fungura Konti",
+      "fullNameLabel": "Amazina Yombi",
+      "fullNamePlaceholder": "urugero: John Mugisha",
+      "fullNameError": "Amazina agomba kugira nibura inyuguti 2",
+      "emailLabel": "Aderesi Imeyili",
+      "emailPlaceholder": "urugero: john@example.com",
+      "emailError": "Andika aderesi imeyili nyayo",
+      "phoneLabel": "Numero ya Telefone",
+      "phonePlaceholder": "urugero: 0788123456",
+      "phoneError": "Andika numero ya telefone y'u Rwanda nyayo (urugero: 0788123456)",
+      "passwordLabel": "Ijambo ry'Ibanga",
+      "passwordPlaceholder": "Shyiraho ijambo ry'ibanga rikomeye",
+      "passwordError": "Ijambo ry'ibanga rigomba kugira nibura inyuguti 6",
+      "confirmPasswordLabel": "Emeza Ijambo ry'Ibanga",
+      "confirmPasswordPlaceholder": "Emeza ijambo ry'ibanga",
+      "confirmPasswordError": "Iyemeza ry'ijambo ry'ibanga rigomba kugira nibura inyuguti 6",
+      "passwordsMismatchError": "Amagambo y'ibanga ntabwo ahuye",
+      "locationLabel": "Aho Utuye (Bidasabwa)",
+      "locationPlaceholder": "urugero: Kigali, Gasabo",
+      "farmSizeLabel": "Ubunini bw'Umurima (Bidasabwa)",
+      "farmSizePlaceholder": "urugero: 2.5",
+      "agreeText": "Ndemera ",
+      "agreeLink": "amabwiriza y'amasezerano",
+      "agreeError": "Ugomba kwemera amabwiriza y'amasezerano",
+      "submit": "Iyandikishe",
+      "submitting": "Gufungura konti...",
+      "haveAccount": "Ufite konti?",
+      "logIn": "Injira",
+      "panelTitle": "Tangira",
+      "panelText": "Ufite konti?",
+      "panelLink": "Injira",
+      "successToast": "Konti yawe yaremwe neza!",
+      "errorToast": "Habayeho ikibazo. Ongera ugerageze."
+    }
+  }
+}

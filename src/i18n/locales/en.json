@@ -1,0 +1,176 @@
+{
+  "common": {
+    "brand": "IMARA",
+    "nav": {
+      "cropAdvisory": "Crop Advisory",
+      "diseaseDetection": "Disease Detection",
+      "weatherIntelligence": "Weather Intelligence",
+      "soilAnalysis": "Soil Analysis",
+      "marketPrices": "Market Prices",
+      "trainingEducation": "Training & Education"
+    },
+    "search": "Search...",
+    "signIn": "Sign In",
+    "getStarted": "Get Started",
+    "home": "Home",
+    "language": "Language"
+  },
+  "landing": {
+    "hero": {
+      "titlePrefix": "Smart Farming for a",
+      "titleHighlight": "Better Harvest",
+      "subtitle": "IMARA is Rwanda's leading AI-powered agricultural platform, helping farmers increase yields, detect diseases early, and connect with markets - all from your phone.",
+      "ctaPrimary": "Start Farming Smarter",
+      "ctaSecondary": "Watch Demo",
+      "trustedBy": "Trusted by {{count}} farmers",
+      "cardTitle": "Crop Recommendation",
+      "cardSubtitle": "Based on your soil analysis",
+      "maizeSuitability": "Maize - 92% suitability",
+      "beansSuitability": "Beans - 88% suitability",
+      "potatoSuitability": "Irish Potatoes - 85% suitability",
+      "weatherAlertTitle": "Weather Alert",
+      "weatherAlertSubtitle": "Rain expected tomorrow",
+      "maizePriceTitle": "Maize Price",
+      "maizePriceChange": "+5.2% this week"
+    },
+    "stats": {
+      "activeFarmers": "Active Farmers",
+      "districtsCovered": "Districts Covered",
+      "yieldImprovement": "Yield Improvement",
+      "expertAgronomists": "Expert Agronomists"
+    },
+    "features": {
+      "eyebrow": "WE GIVE YOU",
+      "title": "Everything You Need to Farm Smarter",
+      "cropAdvisory": {
+        "title": "Crop Advisory",
+        "description": "Match the right crop to your soil, climate, and yield goals.",
+        "details": ["Soil-based matching", "Climate analysis", "Yield optimization", "Planting schedules"]
+      },
+      "diseaseDetection": {
+        "title": "Disease Detection",
+        "description": "Catch crop issues early with guided photo diagnosis and action steps.",
+        "details": ["Photo diagnosis", "Early detection", "Treatment recommendations", "History tracking"]
+      },
+      "weatherIntelligence": {
+        "title": "Weather Intelligence",
+        "description": "Stay ahead of changing conditions with localized farm alerts.",
+        "details": ["Hyperlocal forecasts", "Real-time alerts", "Task scheduling", "Irrigation sync"]
+      }
+    },
+    "howItWorks": {
+      "title": "How IMARA Works",
+      "subtitle": "Get started in minutes and transform your farming practices",
+      "createProfile": {
+        "title": "Create Your Profile",
+        "description": "Tell us about your farm location, size, and the crops you grow."
+      },
+      "getRecommendations": {
+        "title": "Get Recommendations",
+        "description": "Our AI analyzes your data and provides personalized farming advice."
+      },
+      "growSucceed": {
+        "title": "Grow & Succeed",
+        "description": "Follow the recommendations, track your progress, and increase your yields."
+      }
+    },
+    "testimonials": {
+      "title": "Trusted by Farmers Across Rwanda",
+      "subtitle": "See how IMARA is transforming agriculture for thousands of farmers",
+      "items": [
+        {
+          "role": "Maize Farmer, Eastern Province",
+          "content": "IMARA helped me double my maize yield in just one season. The crop advisory recommendations were exactly what I needed."
+        },
+        {
+          "role": "Vegetable Farmer, Kigali",
+          "content": "The disease detection feature saved my entire tomato crop. I was able to identify and treat the blight before it spread."
+        },
+        {
+          "role": "Cooperative Leader, Northern Province",
+          "content": "Our cooperative now uses IMARA for all our farming decisions. The market price alerts have improved our profits by 40%."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Ready to Transform Your Farm?",
+      "description": "Join {{count}} farmers already using IMARA to grow better crops and increase their income. It's free to get started.",
+      "primaryButton": "Get Started Free",
+      "secondaryButton": "Contact Sales"
+    },
+    "footer": {
+      "tagline": "Empowering Rwandan farmers with smart agricultural technology.",
+      "featuresHeading": "Features",
+      "companyHeading": "Company",
+      "companyLinks": {
+        "aboutUs": "About Us",
+        "careers": "Careers",
+        "partners": "Partners",
+        "contact": "Contact"
+      },
+      "contactHeading": "Contact",
+      "address": "Kigali, Rwanda",
+      "phone": "+250 788 000 000",
+      "email": "info@imara.rw",
+      "copyright": "© {{year}} {{brand}}. All rights reserved.",
+      "privacyPolicy": "Privacy Policy",
+      "termsOfService": "Terms of Service"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome Back",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "e.g. john@example.com",
+      "emailError": "Enter a valid email address",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "passwordError": "Password must be at least 6 characters",
+      "forgotPassword": "Forgot Password?",
+      "submit": "Sign In",
+      "submitting": "Signing in...",
+      "noAccount": "Don't have an account?",
+      "createOne": "Create one",
+      "panelTitle": "Get Started",
+      "panelText": "New to IMARA?",
+      "panelLink": "Sign Up",
+      "successToast": "Logged in successfully!",
+      "errorToast": "Failed to authenticate. Please try again."
+    },
+    "register": {
+      "title": "Create Account",
+      "fullNameLabel": "Full Name",
+      "fullNamePlaceholder": "e.g. John Mugisha",
+      "fullNameError": "Full name must be at least 2 characters",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "e.g. john@example.com",
+      "emailError": "Enter a valid email address",
+      "phoneLabel": "Telephone Number",
+      "phonePlaceholder": "e.g. 0788123456",
+      "phoneError": "Enter a valid Rwandan phone number (e.g. 0788123456)",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Create secure password",
+      "passwordError": "Password must be at least 6 characters",
+      "confirmPasswordLabel": "Confirm Password",
+      "confirmPasswordPlaceholder": "Confirm password",
+      "confirmPasswordError": "Confirm password must be at least 6 characters",
+      "passwordsMismatchError": "Passwords don't match",
+      "locationLabel": "Location (Optional)",
+      "locationPlaceholder": "e.g. Kigali, Gasabo",
+      "farmSizeLabel": "Farm Size (Optional)",
+      "farmSizePlaceholder": "e.g. 2.5",
+      "agreeText": "I accept the ",
+      "agreeLink": "terms of the agreement",
+      "agreeError": "You must accept the terms of the agreement",
+      "submit": "Sign up",
+      "submitting": "Creating account...",
+      "haveAccount": "Already have an account?",
+      "logIn": "Log in",
+      "panelTitle": "Get Started",
+      "panelText": "Already have an account?",
+      "panelLink": "Log in",
+      "successToast": "Account created successfully!",
+      "errorToast": "An error occurred. Please try again."
+    }
+  }
+}
