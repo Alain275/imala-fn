@@ -1,4 +1,4 @@
-const API_URL = 'https://imara-bn.onrender.com/api';
+const API_URL = `${import.meta.env.VITE_API_BASE_URL}/api`;
 
 interface RequestOptions extends RequestInit {
   requiresAuth?: boolean;
@@ -10,9 +10,9 @@ async function request<T>(
 ): Promise<T> {
   const { requiresAuth = false, ...fetchOptions } = options;
 
-  const headers: HeadersInit = {
+  const headers: Record<string, string> = {
     'Content-Type': 'application/json',
-    ...fetchOptions.headers,
+    ...(fetchOptions.headers as Record<string, string>),
   };
 
   // Add auth token if required
