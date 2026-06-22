@@ -1,7 +1,12 @@
 import { Bell, Search, Sun, Moon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { authService } from "@/services/auth"
+
+function getInitials(name: string): string {
+  return name.split(' ').map(w => w[0]).filter(Boolean).join('').slice(0, 2).toUpperCase()
+}
 
 interface HeaderProps {
   title: string
@@ -10,6 +15,13 @@ interface HeaderProps {
 
 export function Header({ title, subtitle }: HeaderProps) {
   const [isDark, setIsDark] = useState(false)
+  const [currentUser, setCurrentUser] = useState(() => authService.getCurrentUser())
+
+  useEffect(() => {
+    const handler = () => setCurrentUser(authService.getCurrentUser())
+    window.addEventListener('user-updated', handler)
+    return () => window.removeEventListener('user-updated', handler)
+  }, [])
 
   const toggleTheme = () => {
     setIsDark(!isDark)
@@ -58,7 +70,7 @@ export function Header({ title, subtitle }: HeaderProps) {
 
           {/* User avatar - mobile */}
           <div className="lg:hidden w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-green-500 flex items-center justify-center text-white font-semibold text-sm">
-            JM
+            {currentUser ? getInitials(currentUser.name) : '?'}
           </div>
         </div>
       </div>

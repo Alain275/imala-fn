@@ -137,6 +137,17 @@ export const authService = {
     return result.data;
   },
 
+  // Called after a profile update to keep localStorage.user (and sidebar/header) in sync.
+  // Dispatches 'user-updated' so subscribed components re-render without a page reload.
+  async refreshUser(): Promise<void> {
+    try {
+      await this.getProfile() // fetches /auth/me and updates localStorage.user
+      window.dispatchEvent(new Event('user-updated'))
+    } catch {
+      // silent — background sync; don't interrupt the UI
+    }
+  },
+
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
