@@ -1,11 +1,11 @@
 import { Link, useLocation } from "react-router-dom"
 import { cn } from "@/lib/utils"
-import { 
-  LayoutDashboard, 
-  Sprout, 
-  Bug, 
-  CloudSun, 
-  Mountain, 
+import {
+  LayoutDashboard,
+  Sprout,
+  Bug,
+  CloudSun,
+  Mountain,
   TrendingUp,
   BookOpen,
   Settings,
@@ -14,8 +14,13 @@ import {
   X,
   Leaf
 } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
+import { authService } from "@/services/auth"
+
+function getInitials(name: string): string {
+  return name.split(' ').map(w => w[0]).filter(Boolean).join('').slice(0, 2).toUpperCase()
+}
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -31,6 +36,13 @@ export function Sidebar() {
   const location = useLocation()
   const pathname = location.pathname
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [currentUser, setCurrentUser] = useState(() => authService.getCurrentUser())
+
+  useEffect(() => {
+    const handler = () => setCurrentUser(authService.getCurrentUser())
+    window.addEventListener('user-updated', handler)
+    return () => window.removeEventListener('user-updated', handler)
+  }, [])
 
   return (
     <>
@@ -135,11 +147,15 @@ export function Sidebar() {
           <div className="px-4 py-4 border-t border-sidebar-border">
             <div className="flex items-center gap-3 px-2">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-green-500 flex items-center justify-center text-white font-semibold">
-                JM
+                {currentUser ? getInitials(currentUser.name) : '?'}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-white truncate">Jean Mugabo</p>
-                <p className="text-xs text-sidebar-foreground/60 truncate">Farmer - Kigali</p>
+                <p className="text-sm font-medium text-white truncate">
+                  {currentUser?.name ?? 'Unknown'}
+                </p>
+                <p className="text-xs text-sidebar-foreground/60 truncate capitalize">
+                  {[currentUser?.role, currentUser?.location].filter(Boolean).join(' · ')}
+                </p>
               </div>
             </div>
           </div>
