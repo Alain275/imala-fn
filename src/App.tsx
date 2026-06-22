@@ -9,6 +9,7 @@ import SoilPage from './pages/dashboard/SoilPage'
 import MarketPage from './pages/dashboard/MarketPage'
 import TrainingPage from './pages/dashboard/TrainingPage'
 import SettingsPage from './pages/dashboard/SettingsPage'
+import NotificationsPage from './pages/dashboard/NotificationsPage'
 
 // Agronomist Dashboard Modules
 import AgronomistLayout from './pages/agronomist/AgronomistLayout'
@@ -24,8 +25,11 @@ import WorkforcePage from './pages/dashboard/agronomist/WorkforcePage'
 import SignInPage from './pages/auth/SignInPage'
 import RegisterPage from './pages/auth/RegisterPage'
 
+import { NotificationsProvider } from './context/NotificationsContext'
+
 function App() {
   return (
+    <NotificationsProvider>
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/sign-in" element={<SignInPage />} />
@@ -39,6 +43,7 @@ function App() {
         <Route path="market" element={<MarketPage />} />
         <Route path="training" element={<TrainingPage />} />
         <Route path="settings" element={<SettingsPage />} />
+        <Route path="notifications" element={<NotificationsPage />} />
       </Route>
 
       {/* Agronomist Dashboard Portal */}
@@ -53,6 +58,7 @@ function App() {
         <Route path="settings" element={<SettingsPage />} />
       </Route>
     </Routes>
+    </NotificationsProvider>
   )
 }
 
