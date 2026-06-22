@@ -1,8 +1,9 @@
-import { Bell, Search, Sun, Moon } from "lucide-react"
+import { Search, Sun, Moon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useState, useEffect } from "react"
 import { authService } from "@/services/auth"
+import { NotificationsBell } from "@/components/NotificationsBell"
 
 function getInitials(name: string): string {
   return name.split(' ').map(w => w[0]).filter(Boolean).join('').slice(0, 2).toUpperCase()
@@ -59,14 +60,7 @@ export function Header({ title, subtitle }: HeaderProps) {
           </Button>
 
           {/* Notifications */}
-          <Button 
-            variant="ghost" 
-            size="icon"
-            className="relative text-muted-foreground hover:text-foreground"
-          >
-            <Bell className="w-5 h-5" />
-            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
-          </Button>
+          <NotificationsBell />
 
           {/* User avatar - mobile */}
           <div className="lg:hidden w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-green-500 flex items-center justify-center text-white font-semibold text-sm">
