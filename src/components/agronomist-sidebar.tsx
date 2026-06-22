@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { cn } from "@/lib/utils"
 import {
   LayoutDashboard,
@@ -13,10 +13,14 @@ import {
   Menu,
   X,
   Sprout,
-  ArrowLeft
 } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
+import { authService } from "@/services/auth"
+
+function getInitials(name: string): string {
+  return name.split(' ').map(w => w[0]).filter(Boolean).join('').slice(0, 2).toUpperCase()
+}
 
 const navigation = [
   { name: "Overview", href: "/agronomist", icon: LayoutDashboard },
@@ -32,6 +36,19 @@ export function AgronomistSidebar() {
   const location = useLocation()
   const pathname = location.pathname
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [currentUser, setCurrentUser] = useState(() => authService.getCurrentUser())
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const handler = () => setCurrentUser(authService.getCurrentUser())
+    window.addEventListener('user-updated', handler)
+    return () => window.removeEventListener('user-updated', handler)
+  }, [])
+
+  const handleSignOut = () => {
+    authService.logout()
+    navigate('/sign-in')
+  }
 
   const isActive = (href: string) => {
     if (href === "/agronomist") return pathname === "/agronomist"
@@ -52,7 +69,7 @@ export function AgronomistSidebar() {
 
       {/* Mobile overlay */}
       {mobileOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
           onClick={() => setMobileOpen(false)}
         />
@@ -77,19 +94,11 @@ export function AgronomistSidebar() {
             </div>
           </div>
 
-          {/* Role switcher */}
+          {/* Portal indicator */}
           <div className="px-6 py-3 border-b border-sidebar-border bg-sidebar-accent/20">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" />
-                <span className="text-xs text-sidebar-foreground/80 font-medium">Agronomist View</span>
-              </div>
-              <Link
-                to="/dashboard"
-                className="flex items-center gap-1 text-[10px] text-emerald-600 hover:text-emerald-500 font-semibold border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-0.5 rounded-full transition-colors"
-              >
-                <ArrowLeft className="w-2.5 h-2.5" /> Farmer Portal
-              </Link>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" />
+              <span className="text-xs text-sidebar-foreground/80 font-medium">Agronomist Portal</span>
             </div>
           </div>
 
@@ -105,8 +114,8 @@ export function AgronomistSidebar() {
                   className={cn(
                     "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200",
                     "hover:bg-sidebar-accent",
-                    active 
-                      ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-md" 
+                    active
+                      ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-md"
                       : "text-sidebar-foreground/80 hover:text-sidebar-foreground"
                   )}
                 >
@@ -130,6 +139,7 @@ export function AgronomistSidebar() {
               <span className="font-medium">Settings</span>
             </Link>
             <button
+              onClick={handleSignOut}
               className="flex items-center gap-3 px-4 py-3 rounded-xl text-sidebar-foreground/80 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-all duration-200 w-full"
             >
               <LogOut className="w-5 h-5" />
@@ -141,11 +151,15 @@ export function AgronomistSidebar() {
           <div className="px-4 py-4 border-t border-sidebar-border">
             <div className="flex items-center gap-3 px-2">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-sky-400 to-emerald-600 flex items-center justify-center text-white font-semibold">
-                JM
+                {currentUser ? getInitials(currentUser.name) : '?'}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-white truncate">Jean Mugabo</p>
-                <p className="text-xs text-sidebar-foreground/60 truncate">Agronomist - Kigali</p>
+                <p className="text-sm font-medium text-white truncate">
+                  {currentUser?.name ?? 'Unknown'}
+                </p>
+                <p className="text-xs text-sidebar-foreground/60 truncate capitalize">
+                  {[currentUser?.role, currentUser?.location].filter(Boolean).join(' · ')}
+                </p>
               </div>
             </div>
           </div>

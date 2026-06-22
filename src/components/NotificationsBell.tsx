@@ -7,6 +7,7 @@ import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover
 import { Skeleton } from '@/components/ui/skeleton'
 import { useNotifications } from '@/context/NotificationsContext'
 import { NotificationDetailDialog } from '@/components/NotificationDetailDialog'
+import { authService } from '@/services/auth'
 import type { NotificationType, NotificationPriority, Notification } from '@/services/notifications'
 
 const TYPE_ICONS: Record<NotificationType, React.ElementType> = {
@@ -86,6 +87,11 @@ export function NotificationsBell() {
   const { notifications, unreadCount, loading, markAsRead, markAllRead } = useNotifications()
   const hasUnread = unreadCount > 0
 
+  const user = authService.getCurrentUser()
+  const notificationsPath = user?.role === 'agronomist'
+    ? '/agronomist/notifications'
+    : '/dashboard/notifications'
+
   const [popoverOpen, setPopoverOpen] = useState(false)
   const [selected, setSelected] = useState<Notification | null>(null)
   const [detailOpen, setDetailOpen] = useState(false)
@@ -163,7 +169,7 @@ export function NotificationsBell() {
           {/* Footer */}
           <div className="border-t px-4 py-2.5">
             <Link
-              to="/dashboard/notifications"
+              to={notificationsPath}
               className="text-xs text-primary hover:text-primary/80 transition-colors font-medium"
               onClick={() => setPopoverOpen(false)}
             >

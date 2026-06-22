@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { cn } from "@/lib/utils"
 import {
   LayoutDashboard,
@@ -37,12 +37,18 @@ export function Sidebar() {
   const pathname = location.pathname
   const [mobileOpen, setMobileOpen] = useState(false)
   const [currentUser, setCurrentUser] = useState(() => authService.getCurrentUser())
+  const navigate = useNavigate()
 
   useEffect(() => {
     const handler = () => setCurrentUser(authService.getCurrentUser())
     window.addEventListener('user-updated', handler)
     return () => window.removeEventListener('user-updated', handler)
   }, [])
+
+  const handleSignOut = () => {
+    authService.logout()
+    navigate('/sign-in')
+  }
 
   return (
     <>
@@ -83,19 +89,11 @@ export function Sidebar() {
             </div>
           </div>
 
-          {/* Role switcher */}
+          {/* Portal indicator */}
           <div className="px-6 py-3 border-b border-sidebar-border bg-sidebar-accent/20">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-xs text-sidebar-foreground/80 font-medium">Farmer View</span>
-              </div>
-              <Link
-                to="/agronomist"
-                className="text-[10px] text-sky-400 hover:text-sky-300 font-semibold border border-sky-500/30 bg-sky-500/10 px-2.5 py-0.5 rounded-full transition-colors"
-              >
-                Agronomist Portal →
-              </Link>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-xs text-sidebar-foreground/80 font-medium">Farmer Portal</span>
             </div>
           </div>
 
@@ -136,6 +134,7 @@ export function Sidebar() {
               <span className="font-medium">Settings</span>
             </Link>
             <button
+              onClick={handleSignOut}
               className="flex items-center gap-3 px-4 py-3 rounded-xl text-sidebar-foreground/80 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-all duration-200 w-full"
             >
               <LogOut className="w-5 h-5" />
