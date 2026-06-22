@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -28,6 +28,7 @@ type LoginFormValues = z.infer<ReturnType<typeof buildLoginSchema>>;
 export default function SignInPage() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
@@ -52,13 +53,10 @@ export default function SignInPage() {
 
       toast.success(response.message || t("auth.login.successToast"));
 
-      // Redirect based on role
       const user = response.data.user;
-      if (user.role === "agronomist") {
-        navigate("/agronomist");
-      } else {
-        navigate("/dashboard");
-      }
+      const defaultHome = user.role === "agronomist" ? "/agronomist" : "/dashboard";
+      const from = (location.state as { from?: { pathname: string } })?.from?.pathname
+      navigate(from ?? defaultHome, { replace: true });
     } catch (error: any) {
       const message = error.response?.data?.message || t("auth.login.errorToast");
       toast.error(message);
