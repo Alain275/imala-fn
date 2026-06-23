@@ -40,7 +40,7 @@ export interface UserProfile {
   role: string;
 }
 
-const API_BASE_URL = 'https://imara-bn.onrender.com/api';
+const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL ?? ''}/api`;
 
 export const authService = {
   async register(data: RegisterData): Promise<AuthResponse> {
@@ -94,6 +94,7 @@ export const authService = {
     if (result.success && result.data.token) {
       localStorage.setItem('token', result.data.token);
       localStorage.setItem('user', JSON.stringify(result.data.user));
+      window.dispatchEvent(new Event('user-updated'));
     }
 
     return result;
