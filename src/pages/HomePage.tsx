@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { LanguageSwitcher } from "@/components/LanguageSwitcher"
+import { ChatWidget } from "@/components/ChatWidget"
 import {
   Leaf,
   Sprout,
@@ -670,6 +671,8 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
+
+      <ChatWidget />
     </div>
   )
 }
