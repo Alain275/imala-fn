@@ -1,7 +1,8 @@
 import { Search, Sun, Moon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
+import { useTheme } from "next-themes"
 import { authService } from "@/services/auth"
 import { NotificationsBell } from "@/components/NotificationsBell"
 
@@ -15,18 +16,19 @@ interface HeaderProps {
 }
 
 export function Header({ title, subtitle }: HeaderProps) {
-  const [isDark, setIsDark] = useState(false)
+  const { resolvedTheme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
   const [currentUser, setCurrentUser] = useState(() => authService.getCurrentUser())
 
   useEffect(() => {
+    setMounted(true)
     const handler = () => setCurrentUser(authService.getCurrentUser())
     window.addEventListener('user-updated', handler)
     return () => window.removeEventListener('user-updated', handler)
   }, [])
 
   const toggleTheme = () => {
-    setIsDark(!isDark)
-    document.documentElement.classList.toggle('dark')
+    setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')
   }
 
   return (
@@ -43,20 +45,20 @@ export function Header({ title, subtitle }: HeaderProps) {
           {/* Search */}
           <div className="hidden md:flex items-center relative">
             <Search className="absolute left-3 w-4 h-4 text-muted-foreground" />
-            <Input 
-              placeholder="Search..." 
+            <Input
+              placeholder="Search..."
               className="pl-10 w-64 bg-muted/50 border-0 focus-visible:ring-primary"
             />
           </div>
 
-          {/* Theme toggle */}
-          <Button 
-            variant="ghost" 
+          {/* Theme toggle — hidden until mounted to avoid hydration flash */}
+          <Button
+            variant="ghost"
             size="icon"
             onClick={toggleTheme}
             className="text-muted-foreground hover:text-foreground"
           >
-            {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            {mounted && resolvedTheme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </Button>
 
           {/* Notifications */}

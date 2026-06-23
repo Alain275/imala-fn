@@ -11,7 +11,7 @@ import TrainingPage from './pages/dashboard/TrainingPage'
 import SettingsPage from './pages/dashboard/SettingsPage'
 import NotificationsPage from './pages/dashboard/NotificationsPage'
 
-// Agronomist Dashboard Modules
+// Agronomist Portal
 import AgronomistLayout from './pages/agronomist/AgronomistLayout'
 import AgronomistOverviewPage from './pages/agronomist/AgronomistOverviewPage'
 import GISPage from './pages/dashboard/agronomist/GISPage'
@@ -21,6 +21,26 @@ import PathologyPage from './pages/dashboard/agronomist/PathologyPage'
 import AdvisoryPage from './pages/dashboard/agronomist/AdvisoryPage'
 import WorkforcePage from './pages/dashboard/agronomist/WorkforcePage'
 
+// Admin Portal
+import AdminLayout from './pages/admin/AdminLayout'
+import AdminOverviewPage from './pages/admin/AdminOverviewPage'
+import AdminUsersPage from './pages/admin/AdminUsersPage'
+import AdminCooperativesPage from './pages/admin/AdminCooperativesPage'
+import AdminAnalyticsPage from './pages/admin/AdminAnalyticsPage'
+import AdminSettingsPage from './pages/admin/AdminSettingsPage'
+import AiOverviewPage from './pages/admin/ai/AiOverviewPage'
+import AiDatasetsPage from './pages/admin/ai/AiDatasetsPage'
+import AiTrainingPage from './pages/admin/ai/AiTrainingPage'
+import AiModelsPage from './pages/admin/ai/AiModelsPage'
+import AiReviewPage from './pages/admin/ai/AiReviewPage'
+import AiPerformancePage from './pages/admin/ai/AiPerformancePage'
+import AdminCropsPage from './pages/admin/AdminCropsPage'
+import AiOptimizationPage from './pages/admin/ai/AiOptimizationPage'
+import AdminProfilePage from './pages/admin/AdminProfilePage'
+
+// Cooperative Portal (placeholder)
+import CooperativePage from './pages/cooperative/CooperativePage'
+
 // Auth Pages
 import SignInPage from './pages/auth/SignInPage'
 import RegisterPage from './pages/auth/RegisterPage'
@@ -29,12 +49,18 @@ import { NotificationsProvider } from './context/NotificationsContext'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { authService } from './services/auth'
 
-// Redirect authenticated users away from the public landing page to their portal
+const roleHome: Record<string, string> = {
+  farmer: '/dashboard',
+  agronomist: '/agronomist',
+  admin: '/admin',
+  cooperative: '/cooperative',
+}
+
 function HomeRoute() {
   const location = useLocation()
   const user = authService.getCurrentUser()
   if (user && authService.isAuthenticated()) {
-    const home = user.role === 'agronomist' ? '/agronomist' : '/dashboard'
+    const home = roleHome[user.role] ?? '/dashboard'
     return <Navigate to={home} state={{ from: location }} replace />
   }
   return <HomePage />
@@ -76,6 +102,32 @@ function App() {
             <Route path="settings" element={<SettingsPage />} />
             <Route path="notifications" element={<NotificationsPage />} />
           </Route>
+        </Route>
+
+        {/* Admin-only routes */}
+        <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminOverviewPage />} />
+            <Route path="users" element={<AdminUsersPage />} />
+            <Route path="cooperatives" element={<AdminCooperativesPage />} />
+            <Route path="analytics" element={<AdminAnalyticsPage />} />
+            <Route path="settings" element={<AdminSettingsPage />} />
+            <Route path="notifications" element={<NotificationsPage />} />
+            <Route path="ai" element={<AiOverviewPage />} />
+            <Route path="ai/datasets" element={<AiDatasetsPage />} />
+            <Route path="ai/training" element={<AiTrainingPage />} />
+            <Route path="ai/models" element={<AiModelsPage />} />
+            <Route path="ai/review" element={<AiReviewPage />} />
+            <Route path="ai/performance" element={<AiPerformancePage />} />
+            <Route path="ai/optimization" element={<AiOptimizationPage />} />
+            <Route path="crops" element={<AdminCropsPage />} />
+            <Route path="profile" element={<AdminProfilePage />} />
+          </Route>
+        </Route>
+
+        {/* Cooperative placeholder — TODO: build cooperative portal */}
+        <Route element={<ProtectedRoute allowedRoles={['cooperative']} />}>
+          <Route path="/cooperative" element={<CooperativePage />} />
         </Route>
       </Routes>
     </NotificationsProvider>

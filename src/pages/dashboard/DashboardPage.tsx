@@ -132,16 +132,16 @@ export default function DashboardPage() {
                         <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis dataKey="day" stroke="#9ca3af" fontSize={12} />
-                    <YAxis stroke="#9ca3af" fontSize={12} />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: '#fff', 
-                        border: '1px solid #e5e7eb',
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-muted" />
+                    <XAxis dataKey="day" className="fill-muted-foreground" fontSize={12} tickLine={false} />
+                    <YAxis className="fill-muted-foreground" fontSize={12} tickLine={false} axisLine={false} />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: 'oklch(var(--card))',
+                        border: '1px solid oklch(var(--border))',
                         borderRadius: '8px',
-                        boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)'
-                      }} 
+                        color: 'oklch(var(--foreground))',
+                      }}
                     />
                     <Area type="monotone" dataKey="temp" stroke="#f59e0b" fillOpacity={1} fill="url(#colorTemp)" name="Temp (°C)" />
                     <Area type="monotone" dataKey="rain" stroke="#3b82f6" fillOpacity={1} fill="url(#colorRain)" name="Rain (%)" />
@@ -178,16 +178,16 @@ export default function DashboardPage() {
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={cropYieldData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis dataKey="month" stroke="#9ca3af" fontSize={12} />
-                    <YAxis stroke="#9ca3af" fontSize={12} />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: '#fff', 
-                        border: '1px solid #e5e7eb',
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-muted" />
+                    <XAxis dataKey="month" className="fill-muted-foreground" fontSize={12} tickLine={false} />
+                    <YAxis className="fill-muted-foreground" fontSize={12} tickLine={false} axisLine={false} />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: 'oklch(var(--card))',
+                        border: '1px solid oklch(var(--border))',
                         borderRadius: '8px',
-                        boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)'
-                      }} 
+                        color: 'oklch(var(--foreground))',
+                      }}
                     />
                     <Bar dataKey="maize" fill="#22c55e" radius={[4, 4, 0, 0]} name="Maize (kg)" />
                     <Bar dataKey="beans" fill="#84cc16" radius={[4, 4, 0, 0]} name="Beans (kg)" />
