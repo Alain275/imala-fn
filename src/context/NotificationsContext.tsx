@@ -12,6 +12,7 @@ import {
   notificationsService,
   Notification,
 } from '@/services/notifications'
+import { authService } from '@/services/auth'
 
 interface NotificationsContextValue {
   notifications: Notification[]
@@ -30,8 +31,9 @@ const POLL_INTERVAL_MS = 60_000
 export function NotificationsProvider({ children }: { children: ReactNode }) {
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [version, setVersion] = useState(0)
+  const [isAuthed, setIsAuthed] = useState(() => authService.isAuthenticated())
 
   // Always-current snapshot used in mutation callbacks to avoid stale closures
   const notificationsRef = useRef<Notification[]>([])
@@ -39,8 +41,30 @@ export function NotificationsProvider({ children }: { children: ReactNode }) {
 
   const refetch = useCallback(() => setVersion(v => v + 1), [])
 
+  // Track auth state changes (login / logout / profile refresh)
+  useEffect(() => {
+    const onAuthChange = () => {
+      const authed = authService.isAuthenticated()
+      setIsAuthed(authed)
+      if (!authed) {
+        setNotifications([])
+        setUnreadCount(0)
+      } else {
+        setVersion(v => v + 1)
+      }
+    }
+    window.addEventListener('user-updated', onAuthChange)
+    // Also catch logout (token removed from localStorage by another tab or direct call)
+    window.addEventListener('storage', onAuthChange)
+    return () => {
+      window.removeEventListener('user-updated', onAuthChange)
+      window.removeEventListener('storage', onAuthChange)
+    }
+  }, [])
+
   // Fetch recent 20 notifications for the bell panel
   useEffect(() => {
+    if (!isAuthed) return
     let cancelled = false
     setLoading(true)
     notificationsService.getNotifications({ limit: 20 })
@@ -57,20 +81,22 @@ export function NotificationsProvider({ children }: { children: ReactNode }) {
         setLoading(false)
       })
     return () => { cancelled = true }
-  }, [version])
+  }, [version, isAuthed])
 
   // Fetch + poll unread count
   const fetchUnreadCount = useCallback(() => {
+    if (!authService.isAuthenticated()) return
     notificationsService.getUnreadCount()
       .then(count => setUnreadCount(count))
       .catch(() => { /* silent — don't disrupt the UI on a background poll failure */ })
   }, [])
 
   useEffect(() => {
+    if (!isAuthed) return
     fetchUnreadCount()
     const id = setInterval(fetchUnreadCount, POLL_INTERVAL_MS)
     return () => clearInterval(id)
-  }, [fetchUnreadCount])
+  }, [fetchUnreadCount, isAuthed])
 
   const markAsRead = useCallback(async (id: string) => {
     // Optimistic

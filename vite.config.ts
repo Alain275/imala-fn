@@ -9,4 +9,13 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://imara-bn.onrender.com',
+        changeOrigin: true,
+        secure: true,
+      },
+    },
+  },
 })
