@@ -5,7 +5,18 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { toast } from 'sonner'
 import { authService } from '@/services/auth'
 
-type AppRole = 'farmer' | 'agronomist'
+export type AppRole = 'farmer' | 'agronomist' | 'admin' | 'cooperative'
+
+const roleHome: Record<AppRole, string> = {
+  farmer: '/dashboard',
+  agronomist: '/agronomist',
+  admin: '/admin',
+  cooperative: '/cooperative',
+}
+
+function roleToHome(role: string): string {
+  return roleHome[role as AppRole] ?? '/dashboard'
+}
 
 interface ProtectedRouteProps {
   allowedRoles?: AppRole[]
@@ -26,10 +37,8 @@ export function ProtectedRoute({ allowedRoles }: ProtectedRouteProps) {
     return <Navigate to="/sign-in" state={{ from: location }} replace />
   }
 
-  const role = user.role as AppRole
-  if (allowedRoles && !allowedRoles.includes(role)) {
-    const home = role === 'agronomist' ? '/agronomist' : '/dashboard'
-    return <DeniedRedirect to={home} />
+  if (allowedRoles && !allowedRoles.includes(user.role as AppRole)) {
+    return <DeniedRedirect to={roleToHome(user.role)} />
   }
 
   return <Outlet />
