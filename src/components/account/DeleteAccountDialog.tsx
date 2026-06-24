@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import {
   AlertDialog, AlertDialogContent, AlertDialogHeader,
   AlertDialogTitle, AlertDialogDescription,
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export function DeleteAccountDialog({ open, onOpenChange, onDeleted }: Props) {
+  const { t } = useTranslation()
   const { mutate: doDeleteAccount, loading: deletingAccount } = useDeleteAccount()
   const [deletePw, setDeletePw] = useState('')
 
@@ -34,14 +36,13 @@ export function DeleteAccountDialog({ open, onOpenChange, onDeleted }: Props) {
     <AlertDialog open={open} onOpenChange={handleOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete Account</AlertDialogTitle>
+          <AlertDialogTitle>{t("dashboard.account.deleteAccount.title")}</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. Your account and all associated data will be permanently removed.
-            Enter your password to confirm.
+            {t("dashboard.account.deleteAccount.description")}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <div className="py-2 space-y-2">
-          <Label htmlFor="dpa-pw">Password</Label>
+          <Label htmlFor="dpa-pw">{t("dashboard.account.deleteAccount.passwordLabel")}</Label>
           <Input
             id="dpa-pw"
             type="password"
@@ -50,13 +51,13 @@ export function DeleteAccountDialog({ open, onOpenChange, onDeleted }: Props) {
           />
         </div>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>{t("common.actions.cancel")}</AlertDialogCancel>
           <Button
             variant="destructive"
             onClick={handleDelete}
             disabled={deletingAccount || !deletePw}
           >
-            {deletingAccount ? 'Deleting…' : 'Delete Account'}
+            {deletingAccount ? t("dashboard.account.deleteAccount.deleting") : t("dashboard.account.deleteAccount.submit")}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

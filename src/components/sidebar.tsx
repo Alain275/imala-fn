@@ -1,4 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom"
+import { useTranslation } from "react-i18next"
 import { cn } from "@/lib/utils"
 import {
   LayoutDashboard,
@@ -23,16 +24,17 @@ function getInitials(name: string): string {
 }
 
 const navigation = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Crop Advisory", href: "/dashboard/crops", icon: Sprout },
-  { name: "Disease Detection", href: "/dashboard/disease", icon: Bug },
-  { name: "Weather Intelligence", href: "/dashboard/weather", icon: CloudSun },
-  { name: "Soil Analysis", href: "/dashboard/soil", icon: Mountain },
-  { name: "Market Prices", href: "/dashboard/market", icon: TrendingUp },
-  { name: "Training", href: "/dashboard/training", icon: BookOpen },
+  { key: "dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { key: "cropAdvisory", href: "/dashboard/crops", icon: Sprout },
+  { key: "diseaseDetection", href: "/dashboard/disease", icon: Bug },
+  { key: "weatherIntelligence", href: "/dashboard/weather", icon: CloudSun },
+  { key: "soilAnalysis", href: "/dashboard/soil", icon: Mountain },
+  { key: "marketPrices", href: "/dashboard/market", icon: TrendingUp },
+  { key: "training", href: "/dashboard/training", icon: BookOpen },
 ]
 
 export function Sidebar() {
+  const { t } = useTranslation()
   const location = useLocation()
   const pathname = location.pathname
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -85,7 +87,7 @@ export function Sidebar() {
             </div>
             <div>
               <h1 className="text-xl font-bold text-white">IMARA</h1>
-              <p className="text-xs text-sidebar-foreground/70">Smart Agriculture</p>
+              <p className="text-xs text-sidebar-foreground/70">{t('dashboard.sidebar.tagline')}</p>
             </div>
           </div>
 
@@ -93,7 +95,7 @@ export function Sidebar() {
           <div className="px-6 py-3 border-b border-sidebar-border bg-sidebar-accent/20">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-xs text-sidebar-foreground/80 font-medium">Farmer Portal</span>
+              <span className="text-xs text-sidebar-foreground/80 font-medium">{t('dashboard.sidebar.portalLabel')}</span>
             </div>
           </div>
 
@@ -103,14 +105,14 @@ export function Sidebar() {
               const isActive = pathname === item.href
               return (
                 <Link
-                  key={item.name}
+                  key={item.key}
                   to={item.href}
                   onClick={() => setMobileOpen(false)}
                   className={cn(
                     "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200",
                     "hover:bg-sidebar-accent",
-                    isActive 
-                      ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-md" 
+                    isActive
+                      ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-md"
                       : "text-sidebar-foreground/80 hover:text-sidebar-foreground"
                   )}
                 >
@@ -118,7 +120,7 @@ export function Sidebar() {
                     "w-5 h-5 flex-shrink-0",
                     isActive && "drop-shadow-md"
                   )} />
-                  <span className="font-medium">{item.name}</span>
+                  <span className="font-medium">{t(`dashboard.sidebar.nav.${item.key}`)}</span>
                 </Link>
               )
             })}
@@ -131,14 +133,14 @@ export function Sidebar() {
               className="flex items-center gap-3 px-4 py-3 rounded-xl text-sidebar-foreground/80 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-all duration-200"
             >
               <Settings className="w-5 h-5" />
-              <span className="font-medium">Settings</span>
+              <span className="font-medium">{t('dashboard.sidebar.settings')}</span>
             </Link>
             <button
               onClick={handleSignOut}
               className="flex items-center gap-3 px-4 py-3 rounded-xl text-sidebar-foreground/80 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-all duration-200 w-full"
             >
               <LogOut className="w-5 h-5" />
-              <span className="font-medium">Sign Out</span>
+              <span className="font-medium">{t('dashboard.sidebar.signOut')}</span>
             </button>
           </div>
 
@@ -152,8 +154,11 @@ export function Sidebar() {
                 <p className="text-sm font-medium text-white truncate">
                   {currentUser?.name ?? 'Unknown'}
                 </p>
-                <p className="text-xs text-sidebar-foreground/60 truncate capitalize">
-                  {[currentUser?.role, currentUser?.location].filter(Boolean).join(' · ')}
+                <p className="text-xs text-sidebar-foreground/60 truncate">
+                  {[
+                    currentUser?.role ? t(`common.role.${currentUser.role}`, { defaultValue: currentUser.role }) : null,
+                    currentUser?.location,
+                  ].filter(Boolean).join(' · ')}
                 </p>
               </div>
             </div>

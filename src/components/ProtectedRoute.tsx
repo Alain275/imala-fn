@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
 import { authService } from '@/services/auth'
 
 export type AppRole = 'farmer' | 'agronomist' | 'admin' | 'cooperative'
@@ -23,9 +24,10 @@ interface ProtectedRouteProps {
 }
 
 function DeniedRedirect({ to }: { to: string }) {
+  const { t } = useTranslation()
   useEffect(() => {
-    toast.error("You don't have access to that section.")
-  }, [])
+    toast.error(t('common.toast.accessDenied'))
+  }, [t])
   return <Navigate to={to} replace />
 }
 

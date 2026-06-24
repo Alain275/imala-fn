@@ -1,4 +1,5 @@
 import { Search, Sun, Moon } from "lucide-react"
+import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useEffect, useState } from "react"
@@ -16,6 +17,7 @@ interface HeaderProps {
 }
 
 export function Header({ title, subtitle }: HeaderProps) {
+  const { t } = useTranslation()
   const { resolvedTheme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const [currentUser, setCurrentUser] = useState(() => authService.getCurrentUser())
@@ -46,7 +48,7 @@ export function Header({ title, subtitle }: HeaderProps) {
           <div className="hidden md:flex items-center relative">
             <Search className="absolute left-3 w-4 h-4 text-muted-foreground" />
             <Input
-              placeholder="Search..."
+              placeholder={t('dashboard.header.searchPlaceholder')}
               className="pl-10 w-64 bg-muted/50 border-0 focus-visible:ring-primary"
             />
           </div>

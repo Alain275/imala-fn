@@ -1,5 +1,7 @@
 import { useState } from "react"
 import { toast } from "sonner"
+import { useTranslation } from "react-i18next"
+import { getIntlLocale } from "@/lib/dateLocale"
 import { Header } from "@/components/header"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Icon3D } from "@/components/icon-3d"
@@ -138,12 +140,8 @@ function statusColor(status: string | undefined): string {
   }
 }
 
-function capitalize(s: string): string {
-  return s.charAt(0).toUpperCase() + s.slice(1)
-}
-
-function formatTestDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("en-US", {
+function formatTestDate(iso: string, intlLocale: string): string {
+  return new Date(iso).toLocaleDateString(intlLocale, {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -160,15 +158,17 @@ function statusToScore(status: string | undefined): number {
   }
 }
 
-function buildRadarData(profile: NutrientProfile) {
+type RadarLabels = { ph: string; nitrogen: string; phosphorus: string; potassium: string; organicMatter: string }
+
+function buildRadarData(profile: NutrientProfile, labels: RadarLabels) {
   const axis = (score: number | null, status: string | undefined) =>
     score !== null ? score : statusToScore(status)
   return [
-    { subject: "pH Balance",     A: axis(profile.ph.score,            profile.ph.status),            fullMark: 100 },
-    { subject: "Nitrogen",       A: axis(profile.nitrogen.score,      profile.nitrogen.status),      fullMark: 100 },
-    { subject: "Phosphorus",     A: axis(profile.phosphorus.score,    profile.phosphorus.status),    fullMark: 100 },
-    { subject: "Potassium",      A: axis(profile.potassium.score,     profile.potassium.status),     fullMark: 100 },
-    { subject: "Organic Matter", A: axis(profile.organicMatter.score, profile.organicMatter.status), fullMark: 100 },
+    { subject: labels.ph,            A: axis(profile.ph.score,            profile.ph.status),            fullMark: 100 },
+    { subject: labels.nitrogen,      A: axis(profile.nitrogen.score,      profile.nitrogen.status),      fullMark: 100 },
+    { subject: labels.phosphorus,    A: axis(profile.phosphorus.score,    profile.phosphorus.status),    fullMark: 100 },
+    { subject: labels.potassium,     A: axis(profile.potassium.score,     profile.potassium.status),     fullMark: 100 },
+    { subject: labels.organicMatter, A: axis(profile.organicMatter.score, profile.organicMatter.status), fullMark: 100 },
   ]
 }
 
@@ -178,7 +178,7 @@ type HistTable = {
   showChange: boolean
 }
 
-function buildHistoricalTable(tests: SoilTest[]): HistTable {
+function buildHistoricalTable(tests: SoilTest[], intlLocale: string, paramLabels: RadarLabels): HistTable {
   // sort oldest → newest, keep last 4
   const sorted = [...tests]
     .sort((a, b) => new Date(a.testDate).getTime() - new Date(b.testDate).getTime())
@@ -186,7 +186,7 @@ function buildHistoricalTable(tests: SoilTest[]): HistTable {
 
   // only as many columns as we actually have — no "—" padding
   const headers = sorted.map(t =>
-    new Date(t.testDate).toLocaleString("en-US", { month: "short" })
+    new Date(t.testDate).toLocaleString(intlLocale, { month: "short" })
   )
 
   const showChange = sorted.length >= 2
@@ -200,11 +200,11 @@ function buildHistoricalTable(tests: SoilTest[]): HistTable {
   }
 
   const rowDefs: { parameter: string; key: NumKey }[] = [
-    { parameter: "pH", key: "ph" },
-    { parameter: "Nitrogen (mg/kg)", key: "nitrogen" },
-    { parameter: "Phosphorus (mg/kg)", key: "phosphorus" },
-    { parameter: "Potassium (mg/kg)", key: "potassium" },
-    { parameter: "Organic Matter (%)", key: "organicMatter" },
+    { parameter: paramLabels.ph, key: "ph" },
+    { parameter: paramLabels.nitrogen, key: "nitrogen" },
+    { parameter: paramLabels.phosphorus, key: "phosphorus" },
+    { parameter: paramLabels.potassium, key: "potassium" },
+    { parameter: paramLabels.organicMatter, key: "organicMatter" },
   ]
 
   return {
@@ -229,6 +229,7 @@ interface SoilFormProps {
 }
 
 function SoilForm({ initial, submitLabel, submitting, onSubmit, onCancel }: SoilFormProps) {
+  const { t } = useTranslation()
   const [form, setForm] = useState<FormValues>(initial ?? defaultForm)
 
   const setField =
@@ -243,7 +244,7 @@ function SoilForm({ initial, submitLabel, submitting, onSubmit, onCancel }: Soil
       !form.texture ||
       !form.location
     ) {
-      toast.error("Please fill in all required fields correctly")
+      toast.error(t("dashboard.soil.formValidationError"))
       return
     }
     onSubmit(form)
@@ -253,82 +254,82 @@ function SoilForm({ initial, submitLabel, submitting, onSubmit, onCancel }: Soil
     <>
       <div className="grid grid-cols-2 gap-4 py-4">
         <div className="space-y-2">
-          <Label htmlFor="ph">pH Level</Label>
+          <Label htmlFor="ph">{t("dashboard.soil.phLabel")}</Label>
           <Input
             id="ph"
             type="number"
             step="0.1"
             min="0"
             max="14"
-            placeholder="e.g. 6.5"
+            placeholder={t("dashboard.soil.phPlaceholder")}
             value={form.ph}
             onChange={setField("ph")}
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="nitrogen">Nitrogen (mg/kg)</Label>
+          <Label htmlFor="nitrogen">{t("dashboard.soil.nitrogenHeader")}</Label>
           <Input
             id="nitrogen"
             type="number"
-            placeholder="e.g. 45"
+            placeholder={t("dashboard.soil.nitrogenPlaceholder")}
             value={form.nitrogen}
             onChange={setField("nitrogen")}
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="phosphorus">Phosphorus (mg/kg)</Label>
+          <Label htmlFor="phosphorus">{t("dashboard.soil.phosphorusHeader")}</Label>
           <Input
             id="phosphorus"
             type="number"
-            placeholder="e.g. 38"
+            placeholder={t("dashboard.soil.phosphorusPlaceholder")}
             value={form.phosphorus}
             onChange={setField("phosphorus")}
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="potassium">Potassium (mg/kg)</Label>
+          <Label htmlFor="potassium">{t("dashboard.soil.potassiumHeader")}</Label>
           <Input
             id="potassium"
             type="number"
-            placeholder="e.g. 165"
+            placeholder={t("dashboard.soil.potassiumPlaceholder")}
             value={form.potassium}
             onChange={setField("potassium")}
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="organicMatter">Organic Matter (%)</Label>
+          <Label htmlFor="organicMatter">{t("dashboard.soil.organicMatterHeader")}</Label>
           <Input
             id="organicMatter"
             type="number"
             step="0.1"
-            placeholder="e.g. 3.2"
+            placeholder={t("dashboard.soil.organicMatterPlaceholder")}
             value={form.organicMatter}
             onChange={setField("organicMatter")}
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="texture">Texture</Label>
+          <Label htmlFor="texture">{t("dashboard.soil.textureHeader")}</Label>
           <Input
             id="texture"
-            placeholder="e.g. Silty Loam"
+            placeholder={t("dashboard.soil.texturePlaceholder")}
             value={form.texture}
             onChange={setField("texture")}
           />
         </div>
         <div className="col-span-2 space-y-2">
-          <Label htmlFor="location">Location</Label>
+          <Label htmlFor="location">{t("dashboard.soil.locationHeader")}</Label>
           <Input
             id="location"
-            placeholder="e.g. Musanze District, Rwanda"
+            placeholder={t("dashboard.soil.locationPlaceholder")}
             value={form.location}
             onChange={setField("location")}
           />
         </div>
         <div className="col-span-2 space-y-2">
-          <Label htmlFor="notes">Notes</Label>
+          <Label htmlFor="notes">{t("dashboard.soil.notesLabel")}</Label>
           <Textarea
             id="notes"
-            placeholder="Additional observations about the soil…"
+            placeholder={t("dashboard.soil.notesPlaceholder")}
             value={form.notes}
             onChange={setField("notes")}
             rows={3}
@@ -337,10 +338,10 @@ function SoilForm({ initial, submitLabel, submitting, onSubmit, onCancel }: Soil
       </div>
       <div className="flex justify-end gap-2">
         <Button variant="outline" onClick={onCancel} disabled={submitting}>
-          Cancel
+          {t("common.actions.cancel")}
         </Button>
         <Button onClick={handleSubmit} disabled={submitting}>
-          {submitting ? "Saving…" : submitLabel}
+          {submitting ? t("common.actions.saving") : submitLabel}
         </Button>
       </div>
     </>
@@ -380,6 +381,7 @@ function RecommendationCard({ rec }: { rec: Recommendation }) {
 }
 
 function CropCard({ crop }: { crop: CropSuitability }) {
+  const { t } = useTranslation()
   const pct = crop.suitability ?? 0
   return (
     <div className="p-4 rounded-xl border border-border hover:border-primary/50 transition-colors">
@@ -396,12 +398,12 @@ function CropCard({ crop }: { crop: CropSuitability }) {
               : "bg-red-100 text-red-700"
           }`}
         >
-          {crop.status}
+          {t(`common.status.${crop.status}`, { defaultValue: crop.status })}
         </span>
       </div>
       <Progress value={pct} className="h-2 mb-2" />
       <div className="flex items-center justify-between text-sm">
-        <span className="text-muted-foreground">Suitability</span>
+        <span className="text-muted-foreground">{t("dashboard.soil.suitabilityLabel")}</span>
         <span className="font-medium text-foreground">
           {crop.suitability != null ? `${crop.suitability}%` : "—"}
         </span>
@@ -413,6 +415,9 @@ function CropCard({ crop }: { crop: CropSuitability }) {
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function SoilPage() {
+  const { t, i18n } = useTranslation()
+  const intlLocale = getIntlLocale(i18n.language)
+
   // Dialog / modal state
   const [formOpen, setFormOpen] = useState(false)
   const [editTest, setEditTest] = useState<SoilTest | null>(null)
@@ -435,9 +440,23 @@ export default function SoilPage() {
   const { mutate: deleteTest, loading: deleting } = useDeleteSoilTest()
 
   // Derived data
-  const radarData = analysis ? buildRadarData(analysis.nutrientProfile) : []
+  const radarLabels: RadarLabels = {
+    ph: t("dashboard.soil.radarPh"),
+    nitrogen: t("dashboard.soil.radarNitrogen"),
+    phosphorus: t("dashboard.soil.radarPhosphorus"),
+    potassium: t("dashboard.soil.radarPotassium"),
+    organicMatter: t("dashboard.soil.radarOrganicMatter"),
+  }
+  const tableParamLabels: RadarLabels = {
+    ph: t("dashboard.soil.phHeader"),
+    nitrogen: t("dashboard.soil.nitrogenHeader"),
+    phosphorus: t("dashboard.soil.phosphorusHeader"),
+    potassium: t("dashboard.soil.potassiumHeader"),
+    organicMatter: t("dashboard.soil.organicMatterHeader"),
+  }
+  const radarData = analysis ? buildRadarData(analysis.nutrientProfile, radarLabels) : []
   const histTable: HistTable = testsData?.tests?.length
-    ? buildHistoricalTable(testsData.tests)
+    ? buildHistoricalTable(testsData.tests, intlLocale, tableParamLabels)
     : { headers: [], rows: [], showChange: false }
 
   // ── Handlers ────────────────────────────────────────────────────────────────
@@ -474,8 +493,8 @@ export default function SoilPage() {
   return (
     <div className="min-h-screen">
       <Header
-        title="Soil Analysis"
-        subtitle="Comprehensive soil health assessment and crop suitability recommendations"
+        title={t("dashboard.soil.pageTitle")}
+        subtitle={t("dashboard.soil.pageSubtitle")}
       />
 
       <div className="p-6 space-y-6">
@@ -491,7 +510,7 @@ export default function SoilPage() {
                     <Mountain className="w-6 h-6" />
                   </Icon3D>
                   <div>
-                    <CardTitle>Soil Health Score</CardTitle>
+                    <CardTitle>{t("dashboard.soil.healthScoreTitle")}</CardTitle>
                     <CardDescription className="flex items-center gap-1 mt-1">
                       <MapPin className="w-3 h-3" />
                       {analysisLoading ? (
@@ -510,7 +529,7 @@ export default function SoilPage() {
                       <p className="text-4xl font-bold text-primary">
                         {analysis?.healthScore ?? "—"}
                       </p>
-                      <p className="text-sm text-muted-foreground">out of 100</p>
+                      <p className="text-sm text-muted-foreground">{t("dashboard.soil.outOf100")}</p>
                     </>
                   )}
                 </div>
@@ -529,14 +548,14 @@ export default function SoilPage() {
                   <div className="p-4 rounded-xl bg-muted/50">
                     <div className="flex items-center gap-2 mb-2">
                       <FlaskConical className="w-4 h-4 text-primary" />
-                      <span className="text-sm text-muted-foreground">pH Level</span>
+                      <span className="text-sm text-muted-foreground">{t("dashboard.soil.phLabel")}</span>
                     </div>
                     <p className="text-2xl font-semibold text-foreground">
                       {analysis?.test?.ph ?? "—"}
                     </p>
                     <p className={`text-xs ${statusColor(analysis?.nutrientProfile?.ph?.status)}`}>
                       {analysis?.nutrientProfile?.ph?.status
-                        ? capitalize(analysis.nutrientProfile.ph.status)
+                        ? t(`common.status.${analysis.nutrientProfile.ph.status}`, { defaultValue: analysis.nutrientProfile.ph.status })
                         : "—"}
                     </p>
                   </div>
@@ -545,7 +564,7 @@ export default function SoilPage() {
                   <div className="p-4 rounded-xl bg-muted/50">
                     <div className="flex items-center gap-2 mb-2">
                       <Leaf className="w-4 h-4 text-emerald-500" />
-                      <span className="text-sm text-muted-foreground">Nitrogen</span>
+                      <span className="text-sm text-muted-foreground">{t("dashboard.soil.nitrogenLabel")}</span>
                     </div>
                     <p className="text-2xl font-semibold text-foreground">
                       {analysis?.test?.nitrogen != null
@@ -554,7 +573,7 @@ export default function SoilPage() {
                     </p>
                     <p className={`text-xs ${statusColor(analysis?.nutrientProfile?.nitrogen?.status)}`}>
                       {analysis?.nutrientProfile?.nitrogen?.status
-                        ? capitalize(analysis.nutrientProfile.nitrogen.status)
+                        ? t(`common.status.${analysis.nutrientProfile.nitrogen.status}`, { defaultValue: analysis.nutrientProfile.nitrogen.status })
                         : "—"}
                     </p>
                   </div>
@@ -563,17 +582,17 @@ export default function SoilPage() {
                   <div className="p-4 rounded-xl bg-muted/50">
                     <div className="flex items-center gap-2 mb-2">
                       <Droplets className="w-4 h-4 text-blue-500" />
-                      <span className="text-sm text-muted-foreground">Moisture</span>
+                      <span className="text-sm text-muted-foreground">{t("dashboard.soil.moistureLabel")}</span>
                     </div>
                     <p className="text-2xl font-semibold text-foreground">—</p>
-                    <p className="text-xs text-muted-foreground">No data yet</p>
+                    <p className="text-xs text-muted-foreground">{t("dashboard.soil.noDataYet")}</p>
                   </div>
 
                   {/* Texture */}
                   <div className="p-4 rounded-xl bg-muted/50">
                     <div className="flex items-center gap-2 mb-2">
                       <Thermometer className="w-4 h-4 text-amber-500" />
-                      <span className="text-sm text-muted-foreground">Texture</span>
+                      <span className="text-sm text-muted-foreground">{t("dashboard.soil.textureHeader")}</span>
                     </div>
                     <p className="text-lg font-semibold text-foreground">
                       {analysis?.test?.texture ?? "—"}
@@ -584,7 +603,7 @@ export default function SoilPage() {
               )}
 
               <Button className="w-full" onClick={openCreate}>
-                Request New Soil Test
+                {t("dashboard.soil.requestNewTest")}
               </Button>
             </CardContent>
           </Card>
@@ -592,7 +611,7 @@ export default function SoilPage() {
           {/* Radar Chart */}
           <Card className="border-0 shadow-md">
             <CardHeader className="pb-0">
-              <CardTitle className="text-base">Nutrient Profile</CardTitle>
+              <CardTitle className="text-base">{t("dashboard.soil.nutrientProfileTitle")}</CardTitle>
             </CardHeader>
             <CardContent>
               {analysisLoading ? (
@@ -605,7 +624,7 @@ export default function SoilPage() {
                       <PolarAngleAxis dataKey="subject" tick={{ fontSize: 10 }} />
                       <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fontSize: 10 }} />
                       <Radar
-                        name="Soil Health"
+                        name={t("dashboard.soil.radarSeriesName")}
                         dataKey="A"
                         stroke="#22c55e"
                         fill="#22c55e"
@@ -619,7 +638,7 @@ export default function SoilPage() {
                 </div>
               ) : (
                 <div className="h-64 flex items-center justify-center">
-                  <p className="text-sm text-muted-foreground">No nutrient data available.</p>
+                  <p className="text-sm text-muted-foreground">{t("dashboard.soil.noNutrientData")}</p>
                 </div>
               )}
             </CardContent>
@@ -633,9 +652,9 @@ export default function SoilPage() {
               <Icon3D gradient="green" size="sm">
                 <Leaf className="w-4 h-4" />
               </Icon3D>
-              <span>Crop Suitability Analysis</span>
+              <span>{t("dashboard.soil.cropSuitabilityTitle")}</span>
             </CardTitle>
-            <CardDescription>Based on your soil composition and local climate conditions</CardDescription>
+            <CardDescription>{t("dashboard.soil.cropSuitabilityDescription")}</CardDescription>
           </CardHeader>
           <CardContent>
             {analysisLoading ? (
@@ -651,7 +670,7 @@ export default function SoilPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground">No crop suitability data available.</p>
+              <p className="text-sm text-muted-foreground">{t("dashboard.soil.noCropSuitabilityData")}</p>
             )}
           </CardContent>
         </Card>
@@ -665,9 +684,9 @@ export default function SoilPage() {
                 <Icon3D gradient="gold" size="sm">
                   <CheckCircle className="w-4 h-4" />
                 </Icon3D>
-                <span>Recommendations</span>
+                <span>{t("dashboard.soil.recommendationsTitle")}</span>
               </CardTitle>
-              <CardDescription>Actions to improve your soil health</CardDescription>
+              <CardDescription>{t("dashboard.soil.recommendationsDescription")}</CardDescription>
             </CardHeader>
             <CardContent>
               {analysisLoading ? (
@@ -683,7 +702,7 @@ export default function SoilPage() {
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground">No recommendations at this time.</p>
+                <p className="text-sm text-muted-foreground">{t("dashboard.soil.noRecommendations")}</p>
               )}
             </CardContent>
           </Card>
@@ -696,7 +715,7 @@ export default function SoilPage() {
                   <Icon3D gradient="sky" size="sm">
                     <FlaskConical className="w-4 h-4" />
                   </Icon3D>
-                  <span>Historical Trends</span>
+                  <span>{t("dashboard.soil.historicalTrendsTitle")}</span>
                 </CardTitle>
                 {/* Wired: opens detail view for the latest test */}
                 <Button
@@ -705,7 +724,7 @@ export default function SoilPage() {
                   disabled={!latest}
                   onClick={() => latest && openView(latest.id)}
                 >
-                  View Full Report <ChevronRight className="w-4 h-4 ml-1" />
+                  {t("dashboard.soil.viewFullReport")} <ChevronRight className="w-4 h-4 ml-1" />
                 </Button>
               </div>
             </CardHeader>
@@ -723,7 +742,7 @@ export default function SoilPage() {
                       <thead>
                         <tr className="border-b border-border">
                           <th className="text-left py-3 text-sm font-medium text-muted-foreground">
-                            Parameter
+                            {t("dashboard.soil.parameterHeader")}
                           </th>
                           {histTable.headers.map((h, i) => (
                             <th
@@ -735,7 +754,7 @@ export default function SoilPage() {
                           ))}
                           {histTable.showChange && (
                             <th className="text-right py-3 text-sm font-medium text-muted-foreground">
-                              Change
+                              {t("dashboard.soil.changeHeader")}
                             </th>
                           )}
                         </tr>
@@ -766,18 +785,18 @@ export default function SoilPage() {
                   </div>
                   {!histTable.showChange && (
                     <p className="text-xs text-muted-foreground mt-3">
-                      Add more soil tests over time to see trends and changes.
+                      {t("dashboard.soil.addMoreTestsHint")}
                     </p>
                   )}
                   {analysis?.test?.testDate && (
                     <p className="text-xs text-muted-foreground mt-4">
-                      Last updated: {formatTestDate(analysis.test.testDate)}
+                      {t("dashboard.soil.lastUpdated", { date: formatTestDate(analysis.test.testDate, intlLocale) })}
                     </p>
                   )}
                 </>
               ) : (
                 <p className="text-sm text-muted-foreground">
-                  No historical test data available yet.
+                  {t("dashboard.soil.noHistoricalData")}
                 </p>
               )}
             </CardContent>
@@ -791,10 +810,12 @@ export default function SoilPage() {
               <Icon3D gradient="earth" size="sm">
                 <FlaskConical className="w-4 h-4" />
               </Icon3D>
-              <span>Soil Test History</span>
+              <span>{t("dashboard.soil.testHistoryTitle")}</span>
             </CardTitle>
             <CardDescription>
-              Individual test records{location ? ` for ${location}` : ""}
+              {location
+                ? t("dashboard.soil.testHistoryDescriptionWithLocation", { location })
+                : t("dashboard.soil.testHistoryDescription")}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -810,31 +831,31 @@ export default function SoilPage() {
                   <thead>
                     <tr className="border-b border-border">
                       <th className="text-left py-3 pr-4 text-sm font-medium text-muted-foreground whitespace-nowrap">
-                        Date
+                        {t("dashboard.soil.dateHeader")}
                       </th>
                       <th className="text-left py-3 pr-4 text-sm font-medium text-muted-foreground">
-                        Location
+                        {t("dashboard.soil.locationHeader")}
                       </th>
                       <th className="text-center py-3 pr-4 text-sm font-medium text-muted-foreground">
-                        pH
+                        {t("dashboard.soil.phHeader")}
                       </th>
                       <th className="text-center py-3 pr-4 text-sm font-medium text-muted-foreground whitespace-nowrap">
-                        Nitrogen (mg/kg)
+                        {t("dashboard.soil.nitrogenHeader")}
                       </th>
                       <th className="text-center py-3 pr-4 text-sm font-medium text-muted-foreground whitespace-nowrap">
-                        Phosphorus (mg/kg)
+                        {t("dashboard.soil.phosphorusHeader")}
                       </th>
                       <th className="text-center py-3 pr-4 text-sm font-medium text-muted-foreground whitespace-nowrap">
-                        Potassium (mg/kg)
+                        {t("dashboard.soil.potassiumHeader")}
                       </th>
                       <th className="text-center py-3 pr-4 text-sm font-medium text-muted-foreground whitespace-nowrap">
-                        Organic Matter (%)
+                        {t("dashboard.soil.organicMatterHeader")}
                       </th>
                       <th className="text-left py-3 pr-4 text-sm font-medium text-muted-foreground">
-                        Texture
+                        {t("dashboard.soil.textureHeader")}
                       </th>
                       <th className="text-right py-3 text-sm font-medium text-muted-foreground">
-                        Actions
+                        {t("dashboard.soil.actionsHeader")}
                       </th>
                     </tr>
                   </thead>
@@ -845,7 +866,7 @@ export default function SoilPage() {
                         className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors"
                       >
                         <td className="py-3 pr-4 text-sm text-foreground whitespace-nowrap">
-                          {formatTestDate(test.testDate)}
+                          {formatTestDate(test.testDate, intlLocale)}
                         </td>
                         <td className="py-3 pr-4 text-sm text-muted-foreground max-w-[160px] truncate">
                           {test.location}
@@ -873,24 +894,24 @@ export default function SoilPage() {
                             <DropdownMenuTrigger asChild>
                               <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
                                 <MoreHorizontal className="w-4 h-4" />
-                                <span className="sr-only">Actions</span>
+                                <span className="sr-only">{t("dashboard.soil.actionsHeader")}</span>
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" sideOffset={4}>
                               <DropdownMenuItem onClick={() => openView(test.id)}>
                                 <Eye className="w-4 h-4 mr-2" />
-                                View
+                                {t("common.actions.view")}
                               </DropdownMenuItem>
                               <DropdownMenuItem onClick={() => openEdit(test)}>
                                 <Pencil className="w-4 h-4 mr-2" />
-                                Edit
+                                {t("common.actions.edit")}
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() => openDelete(test.id)}
                                 className="text-destructive focus:text-destructive"
                               >
                                 <Trash2 className="w-4 h-4 mr-2" />
-                                Delete
+                                {t("common.actions.delete")}
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -901,12 +922,12 @@ export default function SoilPage() {
                 </table>
                 {testsData.pagination && (
                   <p className="text-xs text-muted-foreground mt-3">
-                    Showing {testsData.tests.length} of {testsData.pagination.total} tests
+                    {t("dashboard.soil.showingOfTests", { count: testsData.tests.length, total: testsData.pagination.total })}
                   </p>
                 )}
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground">No soil tests recorded yet.</p>
+              <p className="text-sm text-muted-foreground">{t("dashboard.soil.noTestsRecorded")}</p>
             )}
           </CardContent>
         </Card>
@@ -918,14 +939,14 @@ export default function SoilPage() {
         <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle>
-              {editTest ? "Edit Soil Test" : "Record New Soil Test"}
+              {editTest ? t("dashboard.soil.editSoilTest") : t("dashboard.soil.recordNewSoilTest")}
             </DialogTitle>
           </DialogHeader>
           {/* key forces remount when switching between create and edit */}
           <SoilForm
             key={editTest?.id ?? "create"}
             initial={editTest ? testToForm(editTest) : undefined}
-            submitLabel={editTest ? "Update Test" : "Save Test"}
+            submitLabel={editTest ? t("dashboard.soil.updateTest") : t("dashboard.soil.saveTest")}
             submitting={creating || updating}
             onSubmit={handleFormSubmit}
             onCancel={closeForm}
@@ -937,7 +958,7 @@ export default function SoilPage() {
       <Dialog open={!!viewId} onOpenChange={open => !open && setViewId(null)}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Soil Test Details</DialogTitle>
+            <DialogTitle>{t("dashboard.soil.soilTestDetailsTitle")}</DialogTitle>
           </DialogHeader>
           {viewLoading ? (
             <div className="space-y-3 py-4">
@@ -949,58 +970,58 @@ export default function SoilPage() {
             <div className="py-4 space-y-4">
               <div className="grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
                 <div>
-                  <p className="text-muted-foreground">Date</p>
-                  <p className="font-medium mt-0.5">{formatTestDate(viewTest.testDate)}</p>
+                  <p className="text-muted-foreground">{t("dashboard.soil.dateHeader")}</p>
+                  <p className="font-medium mt-0.5">{formatTestDate(viewTest.testDate, intlLocale)}</p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground">Texture</p>
+                  <p className="text-muted-foreground">{t("dashboard.soil.textureHeader")}</p>
                   <p className="font-medium mt-0.5">{viewTest.texture}</p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground">pH</p>
+                  <p className="text-muted-foreground">{t("dashboard.soil.phHeader")}</p>
                   <p className="font-medium mt-0.5">{viewTest.ph}</p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground">Nitrogen</p>
+                  <p className="text-muted-foreground">{t("dashboard.soil.nitrogenLabel")}</p>
                   <p className="font-medium mt-0.5">{viewTest.nitrogen} mg/kg</p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground">Phosphorus</p>
+                  <p className="text-muted-foreground">{t("dashboard.soil.phosphorusDetailLabel")}</p>
                   <p className="font-medium mt-0.5">{viewTest.phosphorus} mg/kg</p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground">Potassium</p>
+                  <p className="text-muted-foreground">{t("dashboard.soil.potassiumDetailLabel")}</p>
                   <p className="font-medium mt-0.5">{viewTest.potassium} mg/kg</p>
                 </div>
                 <div>
-                  <p className="text-muted-foreground">Organic Matter</p>
+                  <p className="text-muted-foreground">{t("dashboard.soil.organicMatterDetailLabel")}</p>
                   <p className="font-medium mt-0.5">{viewTest.organicMatter}%</p>
                 </div>
               </div>
               <div>
-                <p className="text-sm text-muted-foreground">Location</p>
+                <p className="text-sm text-muted-foreground">{t("dashboard.soil.locationHeader")}</p>
                 <p className="text-sm mt-0.5">{viewTest.location}</p>
               </div>
               {viewTest.notes && (
                 <div>
-                  <p className="text-sm text-muted-foreground">Notes</p>
+                  <p className="text-sm text-muted-foreground">{t("dashboard.soil.notesLabel")}</p>
                   <p className="text-sm mt-0.5 text-foreground">{viewTest.notes}</p>
                 </div>
               )}
               <div className="flex justify-end gap-2 pt-2">
                 <Button variant="outline" onClick={() => { setViewId(null); openEdit(viewTest) }}>
-                  <Pencil className="w-4 h-4 mr-2" /> Edit
+                  <Pencil className="w-4 h-4 mr-2" /> {t("common.actions.edit")}
                 </Button>
                 <Button
                   variant="destructive"
                   onClick={() => { setViewId(null); openDelete(viewTest.id) }}
                 >
-                  <Trash2 className="w-4 h-4 mr-2" /> Delete
+                  <Trash2 className="w-4 h-4 mr-2" /> {t("common.actions.delete")}
                 </Button>
               </div>
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground py-4">Could not load test details.</p>
+            <p className="text-sm text-muted-foreground py-4">{t("dashboard.soil.couldNotLoadDetails")}</p>
           )}
         </DialogContent>
       </Dialog>
@@ -1009,15 +1030,15 @@ export default function SoilPage() {
       <AlertDialog open={!!deleteId} onOpenChange={open => !open && setDeleteId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete this soil test?</AlertDialogTitle>
+            <AlertDialogTitle>{t("dashboard.soil.deleteTestTitle")}</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. The test record will be permanently removed.
+              {t("dashboard.soil.deleteTestDescription")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={deleting}>{t("common.actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction onClick={handleDelete} disabled={deleting}>
-              {deleting ? "Deleting…" : "Delete"}
+              {deleting ? t("dashboard.soil.deletingLabel") : t("common.actions.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

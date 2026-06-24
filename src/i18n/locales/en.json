@@ -13,7 +13,67 @@
     "signIn": "Sign In",
     "getStarted": "Get Started",
     "home": "Home",
-    "language": "Language"
+    "language": "Language",
+    "actions": {
+      "view": "View",
+      "viewAll": "View All",
+      "viewDetails": "View Details",
+      "edit": "Edit",
+      "delete": "Delete",
+      "save": "Save Changes",
+      "saving": "Saving...",
+      "cancel": "Cancel",
+      "search": "Search",
+      "filter": "Filter",
+      "retry": "Retry",
+      "previous": "Previous",
+      "next": "Next",
+      "contact": "Contact"
+    },
+    "status": {
+      "excellent": "Excellent",
+      "good": "Good",
+      "fair": "Fair",
+      "poor": "Poor"
+    },
+    "priority": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low",
+      "withLabel": "{{priority}} priority"
+    },
+    "severity": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "notificationType": {
+      "weather": "Weather",
+      "market": "Market",
+      "disease": "Disease",
+      "soil": "Soil",
+      "training": "Training",
+      "system": "System"
+    },
+    "role": {
+      "farmer": "Farmer",
+      "agronomist": "Agronomist",
+      "admin": "Admin",
+      "cooperative": "Cooperative"
+    },
+    "toast": {
+      "notificationsLoadFailed": "Failed to load notifications",
+      "markAsReadFailed": "Failed to mark notification as read",
+      "markAllReadFailed": "Failed to mark all as read",
+      "deleteNotificationFailed": "Failed to delete notification",
+      "profileUpdated": "Profile updated successfully",
+      "profileUpdateFailed": "Failed to update profile",
+      "passwordChanged": "Password changed successfully",
+      "passwordChangeFailed": "Failed to change password",
+      "accountDeleteFailed": "Failed to delete account",
+      "accessDenied": "You don't have access to that section.",
+      "profileLoadFailed": "Failed to load profile"
+    }
   },
   "landing": {
     "hero": {
@@ -171,6 +231,439 @@
       "panelLink": "Log in",
       "successToast": "Account created successfully!",
       "errorToast": "An error occurred. Please try again."
+    }
+  },
+  "dashboard": {
+    "sidebar": {
+      "tagline": "Smart Agriculture",
+      "portalLabel": "Farmer Portal",
+      "nav": {
+        "dashboard": "Dashboard",
+        "cropAdvisory": "Crop Advisory",
+        "diseaseDetection": "Disease Detection",
+        "weatherIntelligence": "Weather Intelligence",
+        "soilAnalysis": "Soil Analysis",
+        "marketPrices": "Market Prices",
+        "training": "Training"
+      },
+      "settings": "Settings",
+      "signOut": "Sign Out"
+    },
+    "header": {
+      "searchPlaceholder": "Search..."
+    },
+    "overview": {
+      "title": "Dashboard",
+      "subtitle": "Welcome back, {{name}}! Here's your farm overview.",
+      "stats": {
+        "activeFarms": "Active Farms",
+        "cropsMonitored": "Crops Monitored",
+        "diseaseAlerts": "Disease Alerts",
+        "marketListings": "Market Listings"
+      },
+      "changeFromLastMonth": "{{change}} from last month",
+      "weatherForecast": {
+        "title": "Weather Forecast",
+        "next7Days": "Next 7 days",
+        "tempLegend": "Temperature (°C)",
+        "rainLegend": "Rainfall (%)",
+        "temperature": "Temperature",
+        "rainfall": "Rainfall"
+      },
+      "cropYield": {
+        "title": "Crop Yield Analysis",
+        "last6Months": "Last 6 months",
+        "maizeLegend": "Maize (kg)",
+        "beansLegend": "Beans (kg)",
+        "riceLegend": "Rice (kg)",
+        "maize": "Maize",
+        "beans": "Beans",
+        "rice": "Rice"
+      },
+      "soilHealth": { "title": "Soil Health Overview" },
+      "recentAlerts": {
+        "title": "Recent Alerts",
+        "viewAll": "View All",
+        "items": [
+          { "message": "Heavy rainfall expected in Kigali tomorrow", "time": "2 hours ago" },
+          { "message": "Maize leaf blight detected in Eastern Province", "time": "5 hours ago" },
+          { "message": "Bean prices increased by 15% this week", "time": "1 day ago" },
+          { "message": "Optimal planting time for tomatoes begins next week", "time": "1 day ago" }
+        ]
+      },
+      "quickActions": {
+        "title": "Quick Actions",
+        "addCrop": "Add Crop",
+        "reportDisease": "Report Disease",
+        "checkWeather": "Check Weather",
+        "soilTest": "Soil Test",
+        "viewPrices": "View Prices",
+        "findExpert": "Find Expert"
+      }
+    },
+    "soil": {
+      "pageTitle": "Soil Analysis",
+      "pageSubtitle": "Comprehensive soil health assessment and crop suitability recommendations",
+      "healthScoreTitle": "Soil Health Score",
+      "outOf100": "out of 100",
+      "phLabel": "pH Level",
+      "nitrogenLabel": "Nitrogen",
+      "moistureLabel": "Moisture",
+      "noDataYet": "No data yet",
+      "textureHeader": "Texture",
+      "requestNewTest": "Request New Soil Test",
+      "nutrientProfileTitle": "Nutrient Profile",
+      "noNutrientData": "No nutrient data available.",
+      "radarPh": "pH Balance",
+      "radarNitrogen": "Nitrogen",
+      "radarPhosphorus": "Phosphorus",
+      "radarPotassium": "Potassium",
+      "radarOrganicMatter": "Organic Matter",
+      "radarSeriesName": "Soil Health",
+      "cropSuitabilityTitle": "Crop Suitability Analysis",
+      "cropSuitabilityDescription": "Based on your soil composition and local climate conditions",
+      "noCropSuitabilityData": "No crop suitability data available.",
+      "suitabilityLabel": "Suitability",
+      "recommendationsTitle": "Recommendations",
+      "recommendationsDescription": "Actions to improve your soil health",
+      "noRecommendations": "No recommendations at this time.",
+      "historicalTrendsTitle": "Historical Trends",
+      "viewFullReport": "View Full Report",
+      "parameterHeader": "Parameter",
+      "changeHeader": "Change",
+      "addMoreTestsHint": "Add more soil tests over time to see trends and changes.",
+      "lastUpdated": "Last updated: {{date}}",
+      "noHistoricalData": "No historical test data available yet.",
+      "testHistoryTitle": "Soil Test History",
+      "testHistoryDescription": "Individual test records",
+      "testHistoryDescriptionWithLocation": "Individual test records for {{location}}",
+      "dateHeader": "Date",
+      "locationHeader": "Location",
+      "phHeader": "pH",
+      "nitrogenHeader": "Nitrogen (mg/kg)",
+      "phosphorusHeader": "Phosphorus (mg/kg)",
+      "potassiumHeader": "Potassium (mg/kg)",
+      "organicMatterHeader": "Organic Matter (%)",
+      "actionsHeader": "Actions",
+      "showingOfTests": "Showing {{count}} of {{total}} tests",
+      "noTestsRecorded": "No soil tests recorded yet.",
+      "editSoilTest": "Edit Soil Test",
+      "recordNewSoilTest": "Record New Soil Test",
+      "updateTest": "Update Test",
+      "saveTest": "Save Test",
+      "soilTestDetailsTitle": "Soil Test Details",
+      "phosphorusDetailLabel": "Phosphorus",
+      "potassiumDetailLabel": "Potassium",
+      "organicMatterDetailLabel": "Organic Matter",
+      "notesLabel": "Notes",
+      "couldNotLoadDetails": "Could not load test details.",
+      "deleteTestTitle": "Delete this soil test?",
+      "deleteTestDescription": "This action cannot be undone. The test record will be permanently removed.",
+      "deletingLabel": "Deleting…",
+      "formValidationError": "Please fill in all required fields correctly",
+      "phPlaceholder": "e.g. 6.5",
+      "nitrogenPlaceholder": "e.g. 45",
+      "phosphorusPlaceholder": "e.g. 38",
+      "potassiumPlaceholder": "e.g. 165",
+      "organicMatterPlaceholder": "e.g. 3.2",
+      "texturePlaceholder": "e.g. Silty Loam",
+      "locationPlaceholder": "e.g. Musanze District, Rwanda",
+      "notesPlaceholder": "Additional observations about the soil…"
+    },
+    "shared": {
+      "crops": {
+        "maize": "Maize",
+        "beans": "Beans",
+        "rice": "Rice",
+        "irishPotatoes": "Irish Potatoes",
+        "tomatoes": "Tomatoes",
+        "cassava": "Cassava",
+        "sorghum": "Sorghum",
+        "banana": "Banana",
+        "coffee": "Coffee",
+        "tea": "Tea",
+        "onions": "Onions"
+      },
+      "waterNeed": {
+        "low": "Low",
+        "lowMedium": "Low-Medium",
+        "medium": "Medium",
+        "mediumHigh": "Medium-High",
+        "high": "High"
+      }
+    },
+    "crops": {
+      "pageTitle": "Crop Advisory",
+      "pageSubtitle": "Personalized crop recommendations based on your farm conditions",
+      "conditionsBannerTitle": "Current Farm Conditions",
+      "conditionsBannerSubtitle": "Real-time data for optimal planting decisions",
+      "temperatureLabel": "Temperature",
+      "humidityLabel": "Humidity",
+      "seasonLabel": "Season",
+      "seasonValueRainyA": "Rainy Season A",
+      "recommendedTitle": "Recommended Crops for Your Farm",
+      "matchPercent": "{{pct}}% match",
+      "plantLabel": "Plant: {{window}}",
+      "harvestLabel": "Harvest: {{time}}",
+      "waterLabel": "Water: {{need}}",
+      "plantingCalendarTitle": "Planting Calendar",
+      "plantingCalendarDescription": "Optimal planting windows throughout the year",
+      "cropHeader": "Crop",
+      "legendOptimal": "Optimal planting time",
+      "legendNotRecommended": "Not recommended",
+      "fertilizerTitle": "Fertilizer Recommendations",
+      "fertilizerDescription": "Recommended application rates per crop",
+      "nitrogenHeader": "Nitrogen",
+      "phosphorusHeader": "Phosphorus",
+      "potassiumHeader": "Potassium",
+      "applicationTimingHeader": "Application Timing",
+      "tips": {
+        "maize": ["Plant in well-drained soil after the first rains", "Space rows 75cm apart for best yields", "Apply nitrogen fertilizer 4 weeks after planting"],
+        "beans": ["Rotate with cereals to help fix nitrogen in the soil", "Avoid waterlogged fields to prevent root rot", "Harvest once pods turn yellow and dry"],
+        "irishPotatoes": ["Plant in cool, well-drained, loose soil", "Hill soil around stems as plants grow", "Store harvested tubers in a dark, cool, ventilated place"],
+        "tomatoes": ["Stake or cage plants to support healthy growth", "Water consistently to avoid blossom end rot", "Watch lower leaves closely for early signs of blight"]
+      }
+    },
+    "disease": {
+      "pageTitle": "Disease Detection",
+      "pageSubtitle": "Identify plant diseases instantly with AI-powered image analysis",
+      "scanCardTitle": "Scan Your Crop",
+      "scanCardDescription": "Upload or take a photo of the affected plant for an instant diagnosis",
+      "dragDropTitle": "Drag and drop an image, or click to browse",
+      "dragDropSubtitle": "Get instant disease detection results powered by AI",
+      "uploadImageButton": "Upload Image",
+      "takePhotoButton": "Take Photo",
+      "supportedFormats": "Supported formats: JPG, PNG, HEIC (Max 10MB)",
+      "recentDetectionsTitle": "Recent Detections",
+      "viewHistoryButton": "View History",
+      "tipEarlyDetectionTitle": "Early Detection",
+      "tipEarlyDetectionDescription": "Check your crops weekly for early signs of disease to prevent widespread damage.",
+      "tipPhotoTipsTitle": "Photo Tips",
+      "tipPhotoTipsDescription": "Take clear, well-lit photos of affected leaves for the most accurate diagnosis.",
+      "tipExpertHelpTitle": "Expert Help",
+      "tipExpertHelpDescription": "Connect with a local agronomist if you need further guidance on treatment.",
+      "databaseTitle": "Disease Database",
+      "databaseDescription": "Browse common crop diseases and their treatments",
+      "symptomsLabel": "Symptoms:",
+      "detections": {
+        "maizeLeafBlight": { "name": "Maize Leaf Blight", "treatment": "Apply fungicide and remove affected leaves to prevent spread." },
+        "beanRust": { "name": "Bean Rust", "treatment": "Apply sulfur-based fungicide and improve air circulation between plants." },
+        "tomatoEarlyBlight": { "name": "Tomato Early Blight", "treatment": "Remove infected leaves and apply copper-based fungicide weekly." }
+      },
+      "relativeDates": {
+        "twoDaysAgo": "2 days ago",
+        "fiveDaysAgo": "5 days ago",
+        "oneWeekAgo": "1 week ago"
+      },
+      "commonDiseases": {
+        "maizeStreakVirus": { "name": "Maize Streak Virus", "symptoms": "Yellow streaks along leaf veins and stunted growth.", "prevention": "Use resistant varieties and control leafhopper vectors." },
+        "cassavaMosaic": { "name": "Cassava Mosaic Disease", "symptoms": "Mottled yellow-green leaf patterns and leaf distortion.", "prevention": "Plant virus-free cuttings and remove infected plants early." },
+        "bananaBacterialWilt": { "name": "Banana Bacterial Wilt", "symptoms": "Yellowing and wilting of leaves with premature ripening of fruit.", "prevention": "Disinfect tools between plants and remove infected stems." },
+        "coffeeBerryDisease": { "name": "Coffee Berry Disease", "symptoms": "Dark, sunken lesions on berries and premature berry drop.", "prevention": "Prune for airflow and apply copper fungicide during flowering." },
+        "riceBlast": { "name": "Rice Blast", "symptoms": "Diamond-shaped lesions on leaves with white to gray centers.", "prevention": "Use resistant varieties and avoid excess nitrogen fertilizer." }
+      }
+    },
+    "weather": {
+      "pageTitle": "Weather Intelligence",
+      "pageSubtitle": "Hyperlocal forecasts and farming alerts for your area",
+      "feelsLike": "Feels like {{temp}}°C",
+      "humidityLabel": "Humidity",
+      "windLabel": "Wind (km/h)",
+      "uvIndexLabel": "UV Index",
+      "rainChanceLabel": "Rain Chance",
+      "noCurrentData": "Current weather data is unavailable.",
+      "farmingAlertsTitle": "Farming Alerts",
+      "noActiveAlerts": "No active farming alerts right now.",
+      "hourlyForecastTitle": "Hourly Forecast",
+      "nowLabel": "Now",
+      "noHourlyData": "Hourly forecast data is unavailable.",
+      "sevenDayForecastTitle": "7-Day Forecast",
+      "todayLabel": "Today",
+      "noForecastData": "Forecast data is unavailable.",
+      "annualRainfallTitle": "Annual Rainfall",
+      "annualRainfallDescription": "Monthly rainfall compared to the historical average",
+      "legendThisYear": "This Year",
+      "legendAverage": "Average",
+      "noRainfallData": "Rainfall data is unavailable.",
+      "condition": {
+        "sunny": "Sunny",
+        "partly_cloudy": "Partly Cloudy",
+        "cloudy": "Cloudy",
+        "rainy": "Rainy"
+      }
+    },
+    "market": {
+      "pageTitle": "Market Prices",
+      "pageSubtitle": "Real-time commodity prices and verified buyer connections",
+      "totalVolumeLabel": "Total Volume",
+      "totalVolumeUnit": "tons traded this month",
+      "activeBuyersLabel": "Active Buyers",
+      "activeBuyersUnit": "registered on the platform",
+      "priceIndexLabel": "Price Index",
+      "priceIndexUnit": "change this month",
+      "todaysPricesTitle": "Today's Prices",
+      "todaysPricesUpdated": "Updated {{date}} at {{time}}",
+      "volumeLabel": "Volume: {{volume}}",
+      "priceTrendsTitle": "Price Trends",
+      "chartSeriesRwf": "{{crop}} (RWF)",
+      "demandIndexTitle": "Market Demand Index",
+      "demandPercentSeries": "Demand (%)",
+      "verifiedBuyersTitle": "Verified Buyers",
+      "verifiedBadge": "Verified",
+      "starsUnit": "stars",
+      "insightsTitle": "Market Insights",
+      "personalizedInsightsButton": "Get Personalized Insights",
+      "buyerType": {
+        "processor": "Processor",
+        "cooperative": "Cooperative",
+        "retailer": "Retailer",
+        "exporter": "Exporter"
+      },
+      "insights": {
+        "peakSellingSeason": { "title": "Peak Selling Season", "description": "Maize and bean prices typically rise 15-20% between June and August." },
+        "bestMarkets": { "title": "Best Markets Nearby", "description": "Kigali and Rwamagana markets are currently offering the highest prices for your crops." },
+        "exportOpportunity": { "title": "Export Opportunity", "description": "Coffee and tea exporters are actively seeking new suppliers this quarter." }
+      }
+    },
+    "training": {
+      "pageTitle": "Training & Education",
+      "pageSubtitle": "Learn farming best practices through videos and tutorials in local languages",
+      "stats": {
+        "inProgress": "Courses In Progress",
+        "completed": "Completed Courses",
+        "totalTime": "Total Learning Time",
+        "certificates": "Certificates Earned"
+      },
+      "learningPath": "Your Learning Path",
+      "progress": "Progress",
+      "completed": "Completed",
+      "startCourse": "Start Course",
+      "continueCourse": "Continue",
+      "getCertificate": "Get Certificate",
+      "courseLibrary": "Course Library",
+      "lessonsCount_one": "{{count}} lesson",
+      "lessonsCount_other": "{{count}} lessons",
+      "achievementsTitle": "Achievements",
+      "achievementsSubtitle": "Track your learning milestones",
+      "courses": {
+        "modernMaizeFarming": { "title": "Modern Maize Farming Techniques", "description": "Learn modern techniques to maximize your maize yield, from planting to harvest." },
+        "integratedPestManagement": { "title": "Integrated Pest Management", "description": "Identify and manage common pests using safe, effective, and sustainable methods." },
+        "soilHealthFertility": { "title": "Soil Health & Fertility", "description": "Understand soil composition and learn how to maintain and improve fertility." },
+        "waterManagement": { "title": "Water Management for Farms", "description": "Efficient irrigation techniques to conserve water and improve crop yields." },
+        "postHarvestHandling": { "title": "Post-Harvest Handling", "description": "Best practices for storing and handling crops after harvest to reduce losses." },
+        "organicFarmingPractices": { "title": "Organic Farming Practices", "description": "Transition to organic methods that improve soil health and produce quality." },
+        "climateSmartAgriculture": { "title": "Climate-Smart Agriculture", "description": "Adapt your farming practices to build resilience against climate change." },
+        "livestockIntegration": { "title": "Livestock Integration", "description": "Combine crop and livestock farming for a more sustainable, profitable farm." },
+        "farmBusinessManagement": { "title": "Farm Business Management", "description": "Manage your farm like a business — budgeting, record-keeping, and growth planning." }
+      },
+      "category": {
+        "all": "All Courses",
+        "crops": "Crops",
+        "plantHealth": "Plant Health",
+        "soil": "Soil",
+        "irrigation": "Irrigation",
+        "storage": "Storage",
+        "organic": "Organic",
+        "climate": "Climate",
+        "livestock": "Livestock",
+        "business": "Business"
+      },
+      "level": {
+        "beginner": "Beginner",
+        "intermediate": "Intermediate",
+        "advanced": "Advanced"
+      },
+      "achievementsList": {
+        "firstCourse": { "title": "First Course Completed", "description": "You completed your first training course" },
+        "quickLearner": { "title": "Quick Learner", "description": "Completed a course in under a week" },
+        "expertFarmer": { "title": "Expert Farmer", "description": "Completed 10 or more courses" },
+        "communityHelper": { "title": "Community Helper", "description": "Helped 5 other farmers in the community forum" }
+      }
+    },
+    "notifications": {
+      "pageTitle": "Notifications",
+      "pageSubtitle": "Your activity feed",
+      "filterType": "Type",
+      "filterStatus": "Status",
+      "allTypes": "All types",
+      "allStatus": "All",
+      "unread": "Unread",
+      "read": "Read",
+      "markAllRead": "Mark all as read",
+      "countLabel_one": "{{count}} notification",
+      "countLabel_other": "{{count}} notifications",
+      "emptyTitle": "No notifications",
+      "emptyFiltered": "Try adjusting your filters",
+      "emptyAllCaughtUp": "You're all caught up",
+      "markAsRead": "Mark as read",
+      "pageOf": "Page {{page}} of {{pages}}",
+      "totalCount": "{{count}} total",
+      "viewAllLink": "View all notifications →",
+      "ariaLabel": "Notifications",
+      "ariaLabelUnread": "Notifications ({{count}} unread)",
+      "deleteAria": "Delete notification"
+    },
+    "settings": {
+      "title": "Settings",
+      "subtitle": "Manage your account preferences and notification settings",
+      "profileErrorCard": { "title": "Profile Information" },
+      "farmLocationLabel": "Farm Location",
+      "profileDescription": "Update your personal information and farm details",
+      "notificationsCard": {
+        "title": "Notifications",
+        "description": "Configure how you receive alerts and updates"
+      },
+      "notificationToggles": {
+        "weatherAlerts": { "title": "Weather Alerts", "description": "Get notified about severe weather conditions" },
+        "diseaseAlerts": { "title": "Disease Alerts", "description": "Receive alerts about disease outbreaks in your area" },
+        "marketPriceUpdates": { "title": "Market Price Updates", "description": "Daily updates on crop prices" },
+        "plantingReminders": { "title": "Planting Reminders", "description": "Reminders for optimal planting times" },
+        "trainingRecommendations": { "title": "Training Recommendations", "description": "Suggestions for new courses" }
+      },
+      "languageCard": {
+        "title": "Language & Region",
+        "description": "Set your preferred language and regional settings"
+      },
+      "unitsLabel": "Units",
+      "unitsMetric": "Metric (kg, hectares)",
+      "unitsImperial": "Imperial (lbs, acres)",
+      "securityCard": {
+        "title": "Security",
+        "description": "Manage your account security settings",
+        "changePassword": "Change Password",
+        "enableTwoFactor": "Enable Two-Factor Authentication",
+        "deleteAccount": "Delete Account"
+      }
+    },
+    "account": {
+      "profile": {
+        "title": "Profile Information",
+        "changePhoto": "Change Photo",
+        "photoHelper": "JPG, PNG or GIF. Max 2MB.",
+        "emailVerified": "Email Verified",
+        "emailNotVerified": "Email Not Verified",
+        "fullNameLabel": "Full Name",
+        "emailLabel": "Email",
+        "phoneLabel": "Phone Number",
+        "farmSizeLabel": "Farm Size (hectares)"
+      },
+      "changePassword": {
+        "title": "Change Password",
+        "currentLabel": "Current Password",
+        "newLabel": "New Password",
+        "confirmLabel": "Confirm New Password",
+        "mismatchError": "Passwords do not match",
+        "lengthError": "Password must be at least 8 characters",
+        "changing": "Changing…",
+        "submit": "Change Password"
+      },
+      "deleteAccount": {
+        "title": "Delete Account",
+        "description": "This action cannot be undone. Your account and all associated data will be permanently removed. Enter your password to confirm.",
+        "passwordLabel": "Password",
+        "deleting": "Deleting…",
+        "submit": "Delete Account"
+      }
     }
   }
 }

@@ -8,6 +8,7 @@ import {
   ReactNode,
 } from 'react'
 import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
 import {
   notificationsService,
   Notification,
@@ -29,6 +30,7 @@ const NotificationsContext = createContext<NotificationsContextValue | null>(nul
 const POLL_INTERVAL_MS = 60_000
 
 export function NotificationsProvider({ children }: { children: ReactNode }) {
+  const { t } = useTranslation()
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
   const [loading, setLoading] = useState(false)
@@ -76,7 +78,7 @@ export function NotificationsProvider({ children }: { children: ReactNode }) {
       })
       .catch((err: unknown) => {
         if (cancelled) return
-        const message = err instanceof Error ? err.message : 'Failed to load notifications'
+        const message = err instanceof Error ? err.message : t('common.toast.notificationsLoadFailed')
         toast.error(message)
         setLoading(false)
       })
@@ -108,7 +110,7 @@ export function NotificationsProvider({ children }: { children: ReactNode }) {
       // Revert
       setNotifications(prev => prev.map(n => n.id === id ? { ...n, isRead: false } : n))
       setUnreadCount(prev => prev + 1)
-      const message = err instanceof Error ? err.message : 'Failed to mark notification as read'
+      const message = err instanceof Error ? err.message : t('common.toast.markAsReadFailed')
       toast.error(message)
     }
   }, [])
@@ -122,7 +124,7 @@ export function NotificationsProvider({ children }: { children: ReactNode }) {
     } catch (err: unknown) {
       setNotifications(snapshot)
       fetchUnreadCount()
-      const message = err instanceof Error ? err.message : 'Failed to mark all as read'
+      const message = err instanceof Error ? err.message : t('common.toast.markAllReadFailed')
       toast.error(message)
     }
   }, [fetchUnreadCount])
@@ -137,7 +139,7 @@ export function NotificationsProvider({ children }: { children: ReactNode }) {
     } catch (err: unknown) {
       setNotifications(snapshot)
       if (target && !target.isRead) setUnreadCount(prev => prev + 1)
-      const message = err instanceof Error ? err.message : 'Failed to delete notification'
+      const message = err instanceof Error ? err.message : t('common.toast.deleteNotificationFailed')
       toast.error(message)
     }
   }, [])

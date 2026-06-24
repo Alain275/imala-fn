@@ -1,39 +1,21 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { formatDistanceToNow } from 'date-fns'
-import { Bell, X, CloudSun, TrendingUp, Bug, Mountain, BookOpen, CheckCheck } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import { Bell, X, CheckCheck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useNotifications } from '@/context/NotificationsContext'
 import { NotificationDetailDialog } from '@/components/NotificationDetailDialog'
 import { authService } from '@/services/auth'
-import type { NotificationType, NotificationPriority, Notification } from '@/services/notifications'
+import type { Notification } from '@/services/notifications'
+import { TYPE_ICONS, PRIORITY_RING, PRIORITY_ICON_COLOR } from '@/lib/notificationLabels'
+import { getDateFnsLocale } from '@/lib/dateLocale'
 
-const TYPE_ICONS: Record<NotificationType, React.ElementType> = {
-  weather: CloudSun,
-  market: TrendingUp,
-  disease: Bug,
-  soil: Mountain,
-  training: BookOpen,
-  system: Bell,
-}
-
-const PRIORITY_RING: Record<NotificationPriority, string> = {
-  high: 'ring-red-400 bg-red-50 dark:bg-red-950/40',
-  medium: 'ring-amber-400 bg-amber-50 dark:bg-amber-950/40',
-  low: 'ring-border bg-muted',
-}
-
-const PRIORITY_ICON_COLOR: Record<NotificationPriority, string> = {
-  high: 'text-red-500',
-  medium: 'text-amber-500',
-  low: 'text-muted-foreground',
-}
-
-function relativeTime(iso: string) {
+function relativeTime(iso: string, lng: string) {
   try {
-    return formatDistanceToNow(new Date(iso), { addSuffix: true })
+    return formatDistanceToNow(new Date(iso), { addSuffix: true, locale: getDateFnsLocale(lng) })
   } catch {
     return ''
   }
@@ -46,6 +28,7 @@ interface NotificationItemProps {
 
 function NotificationItem({ n, onOpen }: NotificationItemProps) {
   const { remove } = useNotifications()
+  const { i18n, t } = useTranslation()
   const Icon = TYPE_ICONS[n.type] ?? Bell
 
   return (
@@ -68,14 +51,14 @@ function NotificationItem({ n, onOpen }: NotificationItemProps) {
           {n.title}
         </p>
         <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{n.message}</p>
-        <p className="text-[11px] text-muted-foreground/70 mt-1">{relativeTime(n.createdAt)}</p>
+        <p className="text-[11px] text-muted-foreground/70 mt-1">{relativeTime(n.createdAt, i18n.language)}</p>
       </div>
 
       {/* Delete — stop propagation so it doesn't also open the detail */}
       <button
         className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 mt-0.5 text-muted-foreground hover:text-destructive"
         onClick={e => { e.stopPropagation(); remove(n.id) }}
-        aria-label="Delete notification"
+        aria-label={t('dashboard.notifications.deleteAria')}
       >
         <X className="w-3.5 h-3.5" />
       </button>
@@ -84,6 +67,7 @@ function NotificationItem({ n, onOpen }: NotificationItemProps) {
 }
 
 export function NotificationsBell() {
+  const { t } = useTranslation()
   const { notifications, unreadCount, loading, markAsRead, markAllRead } = useNotifications()
   const hasUnread = unreadCount > 0
 
@@ -111,7 +95,7 @@ export function NotificationsBell() {
             variant="ghost"
             size="icon"
             className="relative text-muted-foreground hover:text-foreground"
-            aria-label={`Notifications${hasUnread ? ` (${unreadCount} unread)` : ''}`}
+            aria-label={hasUnread ? t('dashboard.notifications.ariaLabelUnread', { count: unreadCount }) : t('dashboard.notifications.ariaLabel')}
           >
             <Bell className="w-5 h-5" />
             {hasUnread && (
@@ -125,14 +109,14 @@ export function NotificationsBell() {
         <PopoverContent align="end" sideOffset={8} className="w-96 p-0 overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b">
-            <span className="font-semibold text-sm">Notifications</span>
+            <span className="font-semibold text-sm">{t('dashboard.notifications.ariaLabel')}</span>
             {hasUnread && (
               <button
                 onClick={() => markAllRead()}
                 className="flex items-center gap-1 text-xs text-primary hover:text-primary/80 transition-colors"
               >
                 <CheckCheck className="w-3.5 h-3.5" />
-                Mark all as read
+                {t('dashboard.notifications.markAllRead')}
               </button>
             )}
           </div>
@@ -155,7 +139,7 @@ export function NotificationsBell() {
             ) : notifications.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-10 text-muted-foreground">
                 <Bell className="w-8 h-8 mb-2 opacity-30" />
-                <p className="text-sm">You're all caught up</p>
+                <p className="text-sm">{t('dashboard.notifications.emptyAllCaughtUp')}</p>
               </div>
             ) : (
               <div className="divide-y divide-border/50">
@@ -173,7 +157,7 @@ export function NotificationsBell() {
               className="text-xs text-primary hover:text-primary/80 transition-colors font-medium"
               onClick={() => setPopoverOpen(false)}
             >
-              View all notifications →
+              {t('dashboard.notifications.viewAllLink')}
             </Link>
           </div>
         </PopoverContent>

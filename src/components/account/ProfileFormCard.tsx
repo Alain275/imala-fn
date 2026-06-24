@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { useTranslation } from "react-i18next"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Icon3D } from "@/components/icon-3d"
 import { Button } from "@/components/ui/button"
@@ -61,10 +62,13 @@ export function ProfileFormCard({
   onSaved,
   showAvatar = true,
   showFarmSize = false,
-  locationLabel = "Location",
-  description = "Update your personal information",
+  locationLabel,
+  description,
   avatarGradient = "from-emerald-400 to-green-500",
 }: ProfileFormCardProps) {
+  const { t } = useTranslation()
+  const resolvedLocationLabel = locationLabel ?? t("dashboard.account.profile.defaultLocationLabel")
+  const resolvedDescription = description ?? t("dashboard.account.profile.defaultDescription")
   const { mutate: saveProfile, loading: saving } = useUpdateProfile()
 
   const [name, setName] = useState(profile.name ?? '')
@@ -100,9 +104,9 @@ export function ProfileFormCard({
           <Icon3D gradient="green" size="sm">
             <User className="w-4 h-4" />
           </Icon3D>
-          <span>Profile Information</span>
+          <span>{t("dashboard.account.profile.title")}</span>
         </CardTitle>
-        <CardDescription>{description}</CardDescription>
+        <CardDescription>{resolvedDescription}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {showAvatar && (
@@ -111,19 +115,19 @@ export function ProfileFormCard({
               {getInitials(profile.name)}
             </div>
             <div className="space-y-2">
-              <Button variant="outline" size="sm">Change Photo</Button>
-              <p className="text-xs text-muted-foreground">JPG, PNG or GIF. Max 2MB.</p>
+              <Button variant="outline" size="sm">{t("dashboard.account.profile.changePhoto")}</Button>
+              <p className="text-xs text-muted-foreground">{t("dashboard.account.profile.photoHelper")}</p>
               <div className="flex flex-wrap gap-2 pt-1">
-                <Badge variant="secondary" className="capitalize">{profile.role}</Badge>
+                <Badge variant="secondary">{t(`common.role.${profile.role}`, { defaultValue: profile.role })}</Badge>
                 {profile.isEmailVerified ? (
                   <Badge className="bg-emerald-500/10 text-emerald-700 border-emerald-200 dark:text-emerald-400 dark:border-emerald-800">
                     <CheckCircle className="w-3 h-3 mr-1" />
-                    Email Verified
+                    {t("dashboard.account.profile.emailVerified")}
                   </Badge>
                 ) : (
                   <Badge variant="outline" className="text-amber-600 border-amber-300 dark:border-amber-700">
                     <AlertCircle className="w-3 h-3 mr-1" />
-                    Email Not Verified
+                    {t("dashboard.account.profile.emailNotVerified")}
                   </Badge>
                 )}
               </div>
@@ -133,7 +137,7 @@ export function ProfileFormCard({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="pfcard-name">Full Name</Label>
+            <Label htmlFor="pfcard-name">{t("dashboard.account.profile.fullNameLabel")}</Label>
             <Input
               id="pfcard-name"
               value={name}
@@ -143,7 +147,7 @@ export function ProfileFormCard({
 
           {/* Email read-only — enable when backend adds email-change with verification */}
           <div className="space-y-2">
-            <Label htmlFor="pfcard-email">Email</Label>
+            <Label htmlFor="pfcard-email">{t("dashboard.account.profile.emailLabel")}</Label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
@@ -156,7 +160,7 @@ export function ProfileFormCard({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="pfcard-phone">Phone Number</Label>
+            <Label htmlFor="pfcard-phone">{t("dashboard.account.profile.phoneLabel")}</Label>
             <div className="relative">
               <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
@@ -169,7 +173,7 @@ export function ProfileFormCard({
           </div>
 
           <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="pfcard-location">{locationLabel}</Label>
+            <Label htmlFor="pfcard-location">{resolvedLocationLabel}</Label>
             <div className="relative">
               <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
@@ -183,7 +187,7 @@ export function ProfileFormCard({
 
           {showFarmSize && (
             <div className="space-y-2">
-              <Label htmlFor="pfcard-farmsize">Farm Size (hectares)</Label>
+              <Label htmlFor="pfcard-farmsize">{t("dashboard.account.profile.farmSizeLabel")}</Label>
               <Input
                 id="pfcard-farmsize"
                 type="number"
@@ -198,7 +202,7 @@ export function ProfileFormCard({
 
         <Button onClick={handleSave} disabled={saving} className="gap-2">
           <Save className="w-4 h-4" />
-          {saving ? 'Saving…' : 'Save Changes'}
+          {saving ? t("common.actions.saving") : t("common.actions.save")}
         </Button>
       </CardContent>
     </Card>
