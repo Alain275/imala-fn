@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog"
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export function ChangePasswordDialog({ open, onOpenChange }: Props) {
+  const { t } = useTranslation()
   const { mutate: doChangePassword, loading: changingPw } = useChangePassword()
 
   const [currentPw, setCurrentPw] = useState('')
@@ -36,8 +38,8 @@ export function ChangePasswordDialog({ open, onOpenChange }: Props) {
 
   const handleSubmit = () => {
     setValidationError(null)
-    if (newPw !== confirmPw) { setValidationError('Passwords do not match'); return }
-    if (newPw.length < 8) { setValidationError('Password must be at least 8 characters'); return }
+    if (newPw !== confirmPw) { setValidationError(t("dashboard.account.changePassword.mismatchError")); return }
+    if (newPw.length < 8) { setValidationError(t("dashboard.account.changePassword.lengthError")); return }
     doChangePassword({ currentPassword: currentPw, newPassword: newPw }, () => {
       reset()
       onOpenChange(false)
@@ -48,11 +50,11 @@ export function ChangePasswordDialog({ open, onOpenChange }: Props) {
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Change Password</DialogTitle>
+          <DialogTitle>{t("dashboard.account.changePassword.title")}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 py-2">
           <div className="space-y-2">
-            <Label htmlFor="cpd-current">Current Password</Label>
+            <Label htmlFor="cpd-current">{t("dashboard.account.changePassword.currentLabel")}</Label>
             <div className="relative">
               <Input
                 id="cpd-current"
@@ -71,7 +73,7 @@ export function ChangePasswordDialog({ open, onOpenChange }: Props) {
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="cpd-new">New Password</Label>
+            <Label htmlFor="cpd-new">{t("dashboard.account.changePassword.newLabel")}</Label>
             <div className="relative">
               <Input
                 id="cpd-new"
@@ -90,7 +92,7 @@ export function ChangePasswordDialog({ open, onOpenChange }: Props) {
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="cpd-confirm">Confirm New Password</Label>
+            <Label htmlFor="cpd-confirm">{t("dashboard.account.changePassword.confirmLabel")}</Label>
             <Input
               id="cpd-confirm"
               type="password"
@@ -103,12 +105,12 @@ export function ChangePasswordDialog({ open, onOpenChange }: Props) {
           )}
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>{t("common.actions.cancel")}</Button>
           <Button
             onClick={handleSubmit}
             disabled={changingPw || !currentPw || !newPw || !confirmPw}
           >
-            {changingPw ? 'Changing…' : 'Change Password'}
+            {changingPw ? t("dashboard.account.changePassword.changing") : t("dashboard.account.changePassword.submit")}
           </Button>
         </DialogFooter>
       </DialogContent>

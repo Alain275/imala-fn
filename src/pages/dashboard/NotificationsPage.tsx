@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { formatDistanceToNow } from 'date-fns'
+import { useTranslation } from 'react-i18next'
 import {
-  Bell, CloudSun, TrendingUp, Bug, Mountain, BookOpen,
+  Bell,
   Trash2, CheckCheck, CheckCircle,
 } from 'lucide-react'
 import { Header } from '@/components/header'
@@ -16,49 +17,14 @@ import { NotificationDetailDialog } from '@/components/NotificationDetailDialog'
 import type {
   Notification,
   NotificationType,
-  NotificationPriority,
   Pagination,
 } from '@/services/notifications'
+import { TYPE_ICONS, PRIORITY_RING, PRIORITY_ICON_COLOR, PRIORITY_BADGE, useNotificationLabels } from '@/lib/notificationLabels'
+import { getDateFnsLocale } from '@/lib/dateLocale'
 
-const TYPE_ICONS: Record<NotificationType, React.ElementType> = {
-  weather: CloudSun,
-  market: TrendingUp,
-  disease: Bug,
-  soil: Mountain,
-  training: BookOpen,
-  system: Bell,
-}
-
-const PRIORITY_RING: Record<NotificationPriority, string> = {
-  high: 'ring-red-400 bg-red-50 dark:bg-red-950/40',
-  medium: 'ring-amber-400 bg-amber-50 dark:bg-amber-950/40',
-  low: 'ring-border bg-muted',
-}
-
-const PRIORITY_ICON_COLOR: Record<NotificationPriority, string> = {
-  high: 'text-red-500',
-  medium: 'text-amber-500',
-  low: 'text-muted-foreground',
-}
-
-const PRIORITY_BADGE: Record<NotificationPriority, string> = {
-  high: 'bg-red-100 text-red-700 border-red-200 dark:bg-red-950/40 dark:text-red-400',
-  medium: 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400',
-  low: 'bg-muted text-muted-foreground',
-}
-
-const TYPE_LABELS: Record<NotificationType, string> = {
-  weather: 'Weather',
-  market: 'Market',
-  disease: 'Disease',
-  soil: 'Soil',
-  training: 'Training',
-  system: 'System',
-}
-
-function relativeTime(iso: string) {
+function relativeTime(iso: string, lng: string) {
   try {
-    return formatDistanceToNow(new Date(iso), { addSuffix: true })
+    return formatDistanceToNow(new Date(iso), { addSuffix: true, locale: getDateFnsLocale(lng) })
   } catch {
     return ''
   }
@@ -69,6 +35,8 @@ type ReadFilter = 'all' | 'unread' | 'read'
 const PAGE_SIZE = 20
 
 export default function NotificationsPage() {
+  const { t, i18n } = useTranslation()
+  const { typeLabel, priorityLabel } = useNotificationLabels()
   const { markAsRead, markAllRead, remove } = useNotifications()
 
   const [items, setItems] = useState<Notification[]>([])
@@ -145,36 +113,36 @@ export default function NotificationsPage() {
 
   return (
     <div className="min-h-screen">
-      <Header title="Notifications" subtitle="Your activity feed" />
+      <Header title={t('dashboard.notifications.pageTitle')} subtitle={t('dashboard.notifications.pageSubtitle')} />
 
       <div className="p-6 space-y-4 max-w-4xl">
 
         {/* Filters + actions bar */}
         <div className="flex flex-wrap items-end gap-4">
           <div className="space-y-1.5">
-            <Label>Type</Label>
+            <Label>{t('dashboard.notifications.filterType')}</Label>
             <select
               className="px-3 py-2 rounded-lg border border-input bg-background text-foreground text-sm"
               value={typeFilter}
               onChange={e => setTypeFilter(e.target.value as NotificationType | '')}
             >
-              <option value="">All types</option>
-              {(Object.keys(TYPE_LABELS) as NotificationType[]).map(t => (
-                <option key={t} value={t}>{TYPE_LABELS[t]}</option>
+              <option value="">{t('dashboard.notifications.allTypes')}</option>
+              {(Object.keys(TYPE_ICONS) as NotificationType[]).map(type => (
+                <option key={type} value={type}>{typeLabel(type)}</option>
               ))}
             </select>
           </div>
 
           <div className="space-y-1.5">
-            <Label>Status</Label>
+            <Label>{t('dashboard.notifications.filterStatus')}</Label>
             <select
               className="px-3 py-2 rounded-lg border border-input bg-background text-foreground text-sm"
               value={readFilter}
               onChange={e => setReadFilter(e.target.value as ReadFilter)}
             >
-              <option value="all">All</option>
-              <option value="unread">Unread</option>
-              <option value="read">Read</option>
+              <option value="all">{t('dashboard.notifications.allStatus')}</option>
+              <option value="unread">{t('dashboard.notifications.unread')}</option>
+              <option value="read">{t('dashboard.notifications.read')}</option>
             </select>
           </div>
 
@@ -186,7 +154,7 @@ export default function NotificationsPage() {
               onClick={handleMarkAllRead}
             >
               <CheckCheck className="w-4 h-4" />
-              Mark all as read
+              {t('dashboard.notifications.markAllRead')}
             </Button>
           )}
         </div>
@@ -197,8 +165,8 @@ export default function NotificationsPage() {
             <CardTitle className="text-base flex items-center justify-between">
               <span>
                 {pagination.total > 0
-                  ? `${pagination.total} notification${pagination.total !== 1 ? 's' : ''}`
-                  : 'Notifications'}
+                  ? t('dashboard.notifications.countLabel', { count: pagination.total })
+                  : t('dashboard.notifications.pageTitle')}
               </span>
             </CardTitle>
           </CardHeader>
@@ -219,9 +187,11 @@ export default function NotificationsPage() {
             ) : items.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
                 <Bell className="w-10 h-10 mb-3 opacity-25" />
-                <p className="text-sm font-medium">No notifications</p>
+                <p className="text-sm font-medium">{t('dashboard.notifications.emptyTitle')}</p>
                 <p className="text-xs mt-1">
-                  {readFilter !== 'all' || typeFilter ? 'Try adjusting your filters' : "You're all caught up"}
+                  {readFilter !== 'all' || typeFilter
+                    ? t('dashboard.notifications.emptyFiltered')
+                    : t('dashboard.notifications.emptyAllCaughtUp')}
                 </p>
               </div>
             ) : (
@@ -244,15 +214,15 @@ export default function NotificationsPage() {
                           <span className={`text-sm ${!n.isRead ? 'font-semibold text-foreground' : 'font-medium text-foreground/80'}`}>
                             {n.title}
                           </span>
-                          <Badge variant="outline" className={`text-[10px] py-0 px-1.5 capitalize ${PRIORITY_BADGE[n.priority]}`}>
-                            {n.priority}
+                          <Badge variant="outline" className={`text-[10px] py-0 px-1.5 ${PRIORITY_BADGE[n.priority]}`}>
+                            {priorityLabel(n.priority)}
                           </Badge>
-                          <Badge variant="outline" className="text-[10px] py-0 px-1.5 capitalize">
-                            {TYPE_LABELS[n.type]}
+                          <Badge variant="outline" className="text-[10px] py-0 px-1.5">
+                            {typeLabel(n.type)}
                           </Badge>
                         </div>
                         <p className="text-sm text-muted-foreground leading-snug line-clamp-2">{n.message}</p>
-                        <p className="text-xs text-muted-foreground/60 mt-1">{relativeTime(n.createdAt)}</p>
+                        <p className="text-xs text-muted-foreground/60 mt-1">{relativeTime(n.createdAt, i18n.language)}</p>
                       </div>
 
                       {/* Actions — stop propagation so they don't also open the detail dialog */}
@@ -261,7 +231,7 @@ export default function NotificationsPage() {
                           <button
                             onClick={e => handleMarkAsRead(e, n.id)}
                             className="p-1.5 rounded-md text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
-                            title="Mark as read"
+                            title={t('dashboard.notifications.markAsRead')}
                           >
                             <CheckCircle className="w-4 h-4" />
                           </button>
@@ -269,7 +239,7 @@ export default function NotificationsPage() {
                         <button
                           onClick={e => handleRemove(e, n.id)}
                           className="p-1.5 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
-                          title="Delete"
+                          title={t('common.actions.delete')}
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -286,9 +256,9 @@ export default function NotificationsPage() {
         {pagination.pages > 1 && (
           <div className="flex items-center justify-between text-sm text-muted-foreground">
             <span>
-              Page {pagination.page} of {pagination.pages}
+              {t('dashboard.notifications.pageOf', { page: pagination.page, pages: pagination.pages })}
               {' '}·{' '}
-              {pagination.total} total
+              {t('dashboard.notifications.totalCount', { count: pagination.total })}
             </span>
             <div className="flex gap-2">
               <Button
@@ -297,7 +267,7 @@ export default function NotificationsPage() {
                 disabled={page <= 1}
                 onClick={() => setPage(p => p - 1)}
               >
-                Previous
+                {t('common.actions.previous')}
               </Button>
               <Button
                 variant="outline"
@@ -305,7 +275,7 @@ export default function NotificationsPage() {
                 disabled={page >= pagination.pages}
                 onClick={() => setPage(p => p + 1)}
               >
-                Next
+                {t('common.actions.next')}
               </Button>
             </div>
           </div>

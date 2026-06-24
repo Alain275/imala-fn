@@ -1,5 +1,6 @@
 import { format, formatDistanceToNow } from 'date-fns'
-import { Bell, CloudSun, TrendingUp, Bug, Mountain, BookOpen } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
+import { Bell } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -8,43 +9,9 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog'
 import { Badge } from '@/components/ui/badge'
-import type { Notification, NotificationType, NotificationPriority } from '@/services/notifications'
-
-const TYPE_ICONS: Record<NotificationType, React.ElementType> = {
-  weather: CloudSun,
-  market: TrendingUp,
-  disease: Bug,
-  soil: Mountain,
-  training: BookOpen,
-  system: Bell,
-}
-
-const TYPE_LABELS: Record<NotificationType, string> = {
-  weather: 'Weather',
-  market: 'Market',
-  disease: 'Disease',
-  soil: 'Soil',
-  training: 'Training',
-  system: 'System',
-}
-
-const PRIORITY_RING: Record<NotificationPriority, string> = {
-  high: 'ring-red-400 bg-red-50 dark:bg-red-950/40',
-  medium: 'ring-amber-400 bg-amber-50 dark:bg-amber-950/40',
-  low: 'ring-border bg-muted',
-}
-
-const PRIORITY_ICON_COLOR: Record<NotificationPriority, string> = {
-  high: 'text-red-500',
-  medium: 'text-amber-500',
-  low: 'text-muted-foreground',
-}
-
-const PRIORITY_BADGE: Record<NotificationPriority, string> = {
-  high: 'bg-red-100 text-red-700 border-red-200 dark:bg-red-950/40 dark:text-red-400',
-  medium: 'bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400',
-  low: 'bg-muted text-muted-foreground',
-}
+import type { Notification } from '@/services/notifications'
+import { TYPE_ICONS, PRIORITY_RING, PRIORITY_ICON_COLOR, PRIORITY_BADGE, useNotificationLabels } from '@/lib/notificationLabels'
+import { getDateFnsLocale } from '@/lib/dateLocale'
 
 interface NotificationDetailDialogProps {
   notification: Notification | null
@@ -57,16 +24,22 @@ export function NotificationDetailDialog({
   open,
   onClose,
 }: NotificationDetailDialogProps) {
+  const { i18n } = useTranslation()
+  const { typeLabel, priorityWithLabel } = useNotificationLabels()
   if (!n) return null
 
   const Icon = TYPE_ICONS[n.type] ?? Bell
 
   const relativeTs = (() => {
-    try { return formatDistanceToNow(new Date(n.createdAt), { addSuffix: true }) } catch { return '' }
+    try {
+      return formatDistanceToNow(new Date(n.createdAt), { addSuffix: true, locale: getDateFnsLocale(i18n.language) })
+    } catch { return '' }
   })()
 
   const absoluteTs = (() => {
-    try { return format(new Date(n.createdAt), "MMM d, yyyy 'at' HH:mm") } catch { return '' }
+    try {
+      return format(new Date(n.createdAt), 'MMM d, yyyy HH:mm', { locale: getDateFnsLocale(i18n.language) })
+    } catch { return '' }
   })()
 
   return (
@@ -79,11 +52,11 @@ export function NotificationDetailDialog({
               <Icon className={`w-6 h-6 ${PRIORITY_ICON_COLOR[n.priority]}`} />
             </div>
             <div className="flex flex-wrap gap-2">
-              <Badge variant="outline" className="capitalize">
-                {TYPE_LABELS[n.type]}
+              <Badge variant="outline">
+                {typeLabel(n.type)}
               </Badge>
-              <Badge variant="outline" className={`capitalize ${PRIORITY_BADGE[n.priority]}`}>
-                {n.priority} priority
+              <Badge variant="outline" className={PRIORITY_BADGE[n.priority]}>
+                {priorityWithLabel(n.priority)}
               </Badge>
             </div>
           </div>

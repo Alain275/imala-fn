@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next"
+import { getIntlLocale } from "@/lib/dateLocale"
 import { Header } from "@/components/header"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -38,10 +40,10 @@ import type { HourlyForecast, DailyForecast, FarmingAlert } from "@/services/wea
 
 const LOCATION = "Musanze"
 
-function formatHourLabel(isoTime: string, index: number): string {
-  if (index === 0) return "Now"
+function formatHourLabel(isoTime: string, index: number, intlLocale: string, nowLabel: string): string {
+  if (index === 0) return nowLabel
   const d = new Date(isoTime)
-  return d.toLocaleTimeString("en-US", { hour: "numeric", hour12: true })
+  return d.toLocaleTimeString(intlLocale, { hour: "numeric", hour12: true })
 }
 
 type WeatherCondition = "sunny" | "partly_cloudy" | "cloudy" | "rainy"
@@ -60,7 +62,7 @@ const WeatherIcon = ({ condition, size = "md" }: { condition: WeatherCondition |
   }
 }
 
-function AlertCard({ alert }: { alert: FarmingAlert }) {
+function AlertCard({ alert, intlLocale }: { alert: FarmingAlert; intlLocale: string }) {
   const isWarning = alert.type === "warning"
   return (
     <div
@@ -74,13 +76,13 @@ function AlertCard({ alert }: { alert: FarmingAlert }) {
         {alert.message}
       </p>
       <p className="text-xs text-muted-foreground mt-1">
-        {new Date(alert.validFrom).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+        {new Date(alert.validFrom).toLocaleDateString(intlLocale, { month: "short", day: "numeric" })}
       </p>
     </div>
   )
 }
 
-function HourlyCard({ hour, index }: { hour: HourlyForecast; index: number }) {
+function HourlyCard({ hour, index, intlLocale, nowLabel }: { hour: HourlyForecast; index: number; intlLocale: string; nowLabel: string }) {
   return (
     <div
       className={`flex-shrink-0 w-20 p-4 rounded-xl text-center ${
@@ -88,7 +90,7 @@ function HourlyCard({ hour, index }: { hour: HourlyForecast; index: number }) {
       }`}
     >
       <p className={`text-sm font-medium ${index === 0 ? "" : "text-muted-foreground"}`}>
-        {formatHourLabel(hour.time, index)}
+        {formatHourLabel(hour.time, index, intlLocale, nowLabel)}
       </p>
       <div className="my-2 flex justify-center">
         <WeatherIcon condition={hour.condition} size="sm" />
@@ -106,8 +108,8 @@ function HourlyCard({ hour, index }: { hour: HourlyForecast; index: number }) {
   )
 }
 
-function DailyRow({ day, index }: { day: DailyForecast; index: number }) {
-  const label = index === 0 ? "Today" : day.day
+function DailyRow({ day, index, todayLabel, conditionLabel }: { day: DailyForecast; index: number; todayLabel: string; conditionLabel: string }) {
+  const label = index === 0 ? todayLabel : day.day
   return (
     <div
       className={`flex items-center justify-between p-3 rounded-xl ${
@@ -122,7 +124,7 @@ function DailyRow({ day, index }: { day: DailyForecast; index: number }) {
       <div className="flex items-center gap-2">
         <WeatherIcon condition={day.condition} size="sm" />
         <span className="text-sm text-muted-foreground w-24 hidden sm:block">
-          {day.condition.replace("_", " ")}
+          {conditionLabel}
         </span>
       </div>
       <div className="flex items-center gap-1 text-sm">
@@ -138,6 +140,8 @@ function DailyRow({ day, index }: { day: DailyForecast; index: number }) {
 }
 
 export default function WeatherPage() {
+  const { t, i18n } = useTranslation()
+  const intlLocale = getIntlLocale(i18n.language)
   const { data: current, loading: currentLoading } = useCurrentWeather(LOCATION)
   const { data: hourly, loading: hourlyLoading } = useHourlyForecast(LOCATION, 12)
   const { data: daily, loading: dailyLoading } = useDailyForecast(LOCATION, 7)
@@ -147,8 +151,8 @@ export default function WeatherPage() {
   return (
     <div className="min-h-screen">
       <Header
-        title="Weather Intelligence"
-        subtitle="Real-time weather data and farming-specific forecasts for your location"
+        title={t("dashboard.weather.pageTitle")}
+        subtitle={t("dashboard.weather.pageSubtitle")}
       />
 
       <div className="p-6 space-y-6">
@@ -178,7 +182,7 @@ export default function WeatherPage() {
                         <span className="text-7xl font-light">{current.temperature}°</span>
                         <div className="pt-2">
                           <p className="text-xl font-medium">{current.condition}</p>
-                          <p className="text-white/70">Feels like {current.feelsLike}°C</p>
+                          <p className="text-white/70">{t("dashboard.weather.feelsLike", { temp: current.feelsLike })}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-4 mt-4 text-sm text-white/80">
@@ -201,27 +205,27 @@ export default function WeatherPage() {
                     <div className="text-center">
                       <Droplets className="w-6 h-6 mx-auto mb-2 text-white/80" />
                       <p className="text-2xl font-semibold">{current.humidity}%</p>
-                      <p className="text-sm text-white/70">Humidity</p>
+                      <p className="text-sm text-white/70">{t("dashboard.weather.humidityLabel")}</p>
                     </div>
                     <div className="text-center">
                       <Wind className="w-6 h-6 mx-auto mb-2 text-white/80" />
                       <p className="text-2xl font-semibold">{current.windSpeed}</p>
-                      <p className="text-sm text-white/70">Wind (km/h)</p>
+                      <p className="text-sm text-white/70">{t("dashboard.weather.windLabel")}</p>
                     </div>
                     <div className="text-center">
                       <Sun className="w-6 h-6 mx-auto mb-2 text-white/80" />
                       <p className="text-2xl font-semibold">{current.uvIndex}</p>
-                      <p className="text-sm text-white/70">UV Index</p>
+                      <p className="text-sm text-white/70">{t("dashboard.weather.uvIndexLabel")}</p>
                     </div>
                     <div className="text-center">
                       <CloudRain className="w-6 h-6 mx-auto mb-2 text-white/80" />
                       <p className="text-2xl font-semibold">{current.rainChance}%</p>
-                      <p className="text-sm text-white/70">Rain Chance</p>
+                      <p className="text-sm text-white/70">{t("dashboard.weather.rainChanceLabel")}</p>
                     </div>
                   </div>
                 </>
               ) : (
-                <p className="text-white/70 text-sm">No weather data available.</p>
+                <p className="text-white/70 text-sm">{t("dashboard.weather.noCurrentData")}</p>
               )}
             </CardContent>
           </Card>
@@ -233,7 +237,7 @@ export default function WeatherPage() {
                 <Icon3D gradient="gold" size="sm">
                   <AlertTriangle className="w-4 h-4" />
                 </Icon3D>
-                <span>Farming Alerts</span>
+                <span>{t("dashboard.weather.farmingAlertsTitle")}</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -246,11 +250,11 @@ export default function WeatherPage() {
               ) : alerts && alerts.length > 0 ? (
                 <div className="space-y-3">
                   {alerts.map((alert) => (
-                    <AlertCard key={alert.id} alert={alert} />
+                    <AlertCard key={alert.id} alert={alert} intlLocale={intlLocale} />
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground">No active alerts.</p>
+                <p className="text-sm text-muted-foreground">{t("dashboard.weather.noActiveAlerts")}</p>
               )}
             </CardContent>
           </Card>
@@ -263,7 +267,7 @@ export default function WeatherPage() {
               <Icon3D gradient="sky" size="sm">
                 <Clock className="w-4 h-4" />
               </Icon3D>
-              <span>Hourly Forecast</span>
+              <span>{t("dashboard.weather.hourlyForecastTitle")}</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -276,11 +280,11 @@ export default function WeatherPage() {
             ) : hourly && hourly.length > 0 ? (
               <div className="flex gap-4 overflow-x-auto pb-2">
                 {hourly.map((hour, i) => (
-                  <HourlyCard key={i} hour={hour} index={i} />
+                  <HourlyCard key={i} hour={hour} index={i} intlLocale={intlLocale} nowLabel={t("dashboard.weather.nowLabel")} />
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground">No hourly data available.</p>
+              <p className="text-sm text-muted-foreground">{t("dashboard.weather.noHourlyData")}</p>
             )}
           </CardContent>
         </Card>
@@ -294,7 +298,7 @@ export default function WeatherPage() {
                 <Icon3D gradient="green" size="sm">
                   <CloudSun className="w-4 h-4" />
                 </Icon3D>
-                <span>7-Day Forecast</span>
+                <span>{t("dashboard.weather.sevenDayForecastTitle")}</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -307,11 +311,17 @@ export default function WeatherPage() {
               ) : daily && daily.length > 0 ? (
                 <div className="space-y-3">
                   {daily.map((day, i) => (
-                    <DailyRow key={day.date} day={day} index={i} />
+                    <DailyRow
+                      key={day.date}
+                      day={day}
+                      index={i}
+                      todayLabel={t("dashboard.weather.todayLabel")}
+                      conditionLabel={t(`dashboard.weather.condition.${day.condition}`)}
+                    />
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground">No forecast available.</p>
+                <p className="text-sm text-muted-foreground">{t("dashboard.weather.noForecastData")}</p>
               )}
             </CardContent>
           </Card>
@@ -323,9 +333,9 @@ export default function WeatherPage() {
                 <Icon3D gradient="sky" size="sm">
                   <CloudRain className="w-4 h-4" />
                 </Icon3D>
-                <span>Annual Rainfall</span>
+                <span>{t("dashboard.weather.annualRainfallTitle")}</span>
               </CardTitle>
-              <CardDescription>Monthly rainfall vs average (mm)</CardDescription>
+              <CardDescription>{t("dashboard.weather.annualRainfallDescription")}</CardDescription>
             </CardHeader>
             <CardContent>
               {rainfallLoading ? (
@@ -357,14 +367,14 @@ export default function WeatherPage() {
                           stroke="#3b82f6"
                           fillOpacity={1}
                           fill="url(#colorRainfall)"
-                          name="Rainfall (mm)"
+                          name={t("dashboard.weather.legendThisYear")}
                         />
                         <Line
                           type="monotone"
                           dataKey="average"
                           stroke="#9ca3af"
                           strokeDasharray="5 5"
-                          name="Average (mm)"
+                          name={t("dashboard.weather.legendAverage")}
                         />
                       </AreaChart>
                     </ResponsiveContainer>
@@ -372,16 +382,16 @@ export default function WeatherPage() {
                   <div className="flex items-center justify-center gap-6 mt-4 text-sm">
                     <div className="flex items-center gap-2">
                       <div className="w-4 h-1 bg-blue-500 rounded" />
-                      <span className="text-muted-foreground">This Year</span>
+                      <span className="text-muted-foreground">{t("dashboard.weather.legendThisYear")}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <div className="w-4 h-1 bg-gray-400 rounded border-dashed" />
-                      <span className="text-muted-foreground">Average</span>
+                      <span className="text-muted-foreground">{t("dashboard.weather.legendAverage")}</span>
                     </div>
                   </div>
                 </>
               ) : (
-                <p className="text-sm text-muted-foreground">No rainfall data available.</p>
+                <p className="text-sm text-muted-foreground">{t("dashboard.weather.noRainfallData")}</p>
               )}
             </CardContent>
           </Card>

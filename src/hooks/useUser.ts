@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
+import i18n from '@/i18n'
 import {
   userService,
   UserProfile,
@@ -16,7 +18,7 @@ interface UserState<T> {
 
 function useUserFetch<T>(
   fetcher: () => Promise<T>,
-  errorLabel: string
+  fallbackMessage: string
 ): UserState<T> & { refetch: () => void } {
   const [version, setVersion] = useState(0)
   const [state, setState] = useState<UserState<T>>({
@@ -37,7 +39,7 @@ function useUserFetch<T>(
       })
       .catch((err: unknown) => {
         if (cancelled) return
-        const message = err instanceof Error ? err.message : `Failed to load ${errorLabel}`
+        const message = err instanceof Error ? err.message : fallbackMessage
         setState({ data: null, loading: false, error: message })
         toast.error(message)
       })
@@ -57,10 +59,11 @@ function extractErrorMessage(err: unknown, fallback: string): string {
 }
 
 export function useProfile() {
-  return useUserFetch<UserProfile>(() => userService.getProfile(), 'profile')
+  return useUserFetch<UserProfile>(() => userService.getProfile(), i18n.t('common.toast.profileLoadFailed'))
 }
 
 export function useUpdateProfile() {
+  const { t } = useTranslation()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -69,10 +72,10 @@ export function useUpdateProfile() {
     setError(null)
     try {
       await userService.updateProfile(body)
-      toast.success('Profile updated successfully')
+      toast.success(t('common.toast.profileUpdated'))
       onSuccess?.()
     } catch (err: unknown) {
-      const message = extractErrorMessage(err, 'Failed to update profile')
+      const message = extractErrorMessage(err, t('common.toast.profileUpdateFailed'))
       setError(message)
       toast.error(message)
     } finally {
@@ -84,6 +87,7 @@ export function useUpdateProfile() {
 }
 
 export function useChangePassword() {
+  const { t } = useTranslation()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -92,11 +96,11 @@ export function useChangePassword() {
     setError(null)
     try {
       await userService.changePassword(body)
-      toast.success('Password changed successfully')
+      toast.success(t('common.toast.passwordChanged'))
       onSuccess?.()
     } catch (err: unknown) {
       // extractErrorMessage surfaces backend rule violations (uppercase/number/symbol etc.)
-      const message = extractErrorMessage(err, 'Failed to change password')
+      const message = extractErrorMessage(err, t('common.toast.passwordChangeFailed'))
       setError(message)
       toast.error(message)
     } finally {
@@ -108,6 +112,7 @@ export function useChangePassword() {
 }
 
 export function useDeleteAccount() {
+  const { t } = useTranslation()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -118,7 +123,7 @@ export function useDeleteAccount() {
       await userService.deleteAccount(body)
       onSuccess?.()
     } catch (err: unknown) {
-      const message = extractErrorMessage(err, 'Failed to delete account')
+      const message = extractErrorMessage(err, t('common.toast.accountDeleteFailed'))
       setError(message)
       toast.error(message)
     } finally {

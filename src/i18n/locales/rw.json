@@ -13,7 +13,67 @@
     "signIn": "Injira",
     "getStarted": "Tangira",
     "home": "Ahabanza",
-    "language": "Ururimi"
+    "language": "Ururimi",
+    "actions": {
+      "view": "Reba",
+      "viewAll": "Reba Byose",
+      "viewDetails": "Reba Birambuye",
+      "edit": "Hindura",
+      "delete": "Siba",
+      "save": "Bika Impinduka",
+      "saving": "Kubika...",
+      "cancel": "Hagarika",
+      "search": "Shakisha",
+      "filter": "Hitamo",
+      "retry": "Ongera Ugerageze",
+      "previous": "Ibanziriza",
+      "next": "Ikurikira",
+      "contact": "Twandikire"
+    },
+    "status": {
+      "excellent": "Byiza Cyane",
+      "good": "Byiza",
+      "fair": "Bisanzwe",
+      "poor": "Bibi"
+    },
+    "priority": {
+      "high": "Byihutirwa",
+      "medium": "Hagati",
+      "low": "Buke",
+      "withLabel": "Icyiciro cy'ihutirwa: {{priority}}"
+    },
+    "severity": {
+      "high": "Bikomeye",
+      "medium": "Biringaniye",
+      "low": "Bicye"
+    },
+    "notificationType": {
+      "weather": "Ikirere",
+      "market": "Isoko",
+      "disease": "Indwara",
+      "soil": "Ubutaka",
+      "training": "Amahugurwa",
+      "system": "Sisitemu"
+    },
+    "role": {
+      "farmer": "Umuhinzi",
+      "agronomist": "Umuhanga mu Buhinzi",
+      "admin": "Umuyobozi",
+      "cooperative": "Koperative"
+    },
+    "toast": {
+      "notificationsLoadFailed": "Gushaka amatangazo byanze",
+      "markAsReadFailed": "Kwemeza ko itangazo ryasomwe byanze",
+      "markAllReadFailed": "Kwemeza ko amatangazo yose yasomwe byanze",
+      "deleteNotificationFailed": "Gusiba itangazo byanze",
+      "profileUpdated": "Umwirondoro wahinduwe neza",
+      "profileUpdateFailed": "Guhindura umwirondoro byanze",
+      "passwordChanged": "Ijambo ry'ibanga ryahinduwe neza",
+      "passwordChangeFailed": "Guhindura ijambo ry'ibanga byanze",
+      "accountDeleteFailed": "Gusiba konti byanze",
+      "accessDenied": "Ntabwo ufite uburenganzira bwo kugera kuri iki gice.",
+      "profileLoadFailed": "Gushaka umwirondoro byanze"
+    }
   },
   "landing": {
     "hero": {
@@ -171,6 +231,439 @@
       "panelLink": "Injira",
       "successToast": "Konti yawe yaremwe neza!",
       "errorToast": "Habayeho ikibazo. Ongera ugerageze."
+    }
+  },
+  "dashboard": {
+    "sidebar": {
+      "tagline": "Ubuhinzi bw'Ikoranabuhanga",
+      "portalLabel": "Urubuga rw'Umuhinzi",
+      "nav": {
+        "dashboard": "Imbonerahamwe",
+        "cropAdvisory": "Inama ku Bihingwa",
+        "diseaseDetection": "Kumenya Indwara",
+        "weatherIntelligence": "Amakuru ku Kirere",
+        "soilAnalysis": "Isuzuma ry'Ubutaka",
+        "marketPrices": "Ibiciro ku Isoko",
+        "training": "Amahugurwa"
+      },
+      "settings": "Igenamiterere",
+      "signOut": "Gusohoka"
+    },
+    "header": {
+      "searchPlaceholder": "Shakisha..."
+    },
+    "overview": {
+      "title": "Imbonerahamwe",
+      "subtitle": "Murakaza neza {{name}}! Dore incamake y'umurima wawe.",
+      "stats": {
+        "activeFarms": "Imirima Ikora",
+        "cropsMonitored": "Ibihingwa Bikurikiranwa",
+        "diseaseAlerts": "Amatangazo y'Indwara",
+        "marketListings": "Ibyatangijwe ku Isoko"
+      },
+      "changeFromLastMonth": "{{change}} ugereranyije n'ukwezi gushize",
+      "weatherForecast": {
+        "title": "Iteganyagihe",
+        "next7Days": "Iminsi 7 itaha",
+        "tempLegend": "Ubushyuhe (°C)",
+        "rainLegend": "Imvura (%)",
+        "temperature": "Ubushyuhe",
+        "rainfall": "Imvura"
+      },
+      "cropYield": {
+        "title": "Isesengura ry'Umusaruro w'Ibihingwa",
+        "last6Months": "Amezi 6 ashize",
+        "maizeLegend": "Ibigori (kg)",
+        "beansLegend": "Ibishyimbo (kg)",
+        "riceLegend": "Umuceri (kg)",
+        "maize": "Ibigori",
+        "beans": "Ibishyimbo",
+        "rice": "Umuceri"
+      },
+      "soilHealth": { "title": "Incamake y'Ubuzima bw'Ubutaka" },
+      "recentAlerts": {
+        "title": "Amatangazo Aheruka",
+        "viewAll": "Reba Byose",
+        "items": [
+          { "message": "Imvura nyinshi iteganyijwe i Kigali ejo", "time": "Amasaha 2 ashize" },
+          { "message": "Indwara y'ibigori yabonetse mu Ntara y'Iburasirazuba", "time": "Amasaha 5 ashize" },
+          { "message": "Ibiciro by'ibishyimbo byazamutse 15% iki cyumweru", "time": "Umunsi 1 ushize" },
+          { "message": "Igihe cyiza cyo gutera inyanya gitangira icyumweru gitaha", "time": "Umunsi 1 ushize" }
+        ]
+      },
+      "quickActions": {
+        "title": "Ibikorwa Byihuse",
+        "addCrop": "Ongeraho Igihingwa",
+        "reportDisease": "Tanga Raporo y'Indwara",
+        "checkWeather": "Reba Ikirere",
+        "soilTest": "Isuzuma ry'Ubutaka",
+        "viewPrices": "Reba Ibiciro",
+        "findExpert": "Shaka Umuhanga"
+      }
+    },
+    "soil": {
+      "pageTitle": "Isuzuma ry'Ubutaka",
+      "pageSubtitle": "Isuzuma ryuzuye ry'ubuzima bw'ubutaka n'inama ku bihingwa bikwiriye",
+      "healthScoreTitle": "Amanota y'Ubuzima bw'Ubutaka",
+      "outOf100": "kuri 100",
+      "phLabel": "Urugero rwa pH",
+      "nitrogenLabel": "Azote",
+      "moistureLabel": "Ubuhehere",
+      "noDataYet": "Nta makuru arahaboneka",
+      "textureHeader": "Imiterere",
+      "requestNewTest": "Saba Isuzuma Rishya ry'Ubutaka",
+      "nutrientProfileTitle": "Imiterere y'Intungamubiri",
+      "noNutrientData": "Nta makuru y'intungamubiri ahari.",
+      "radarPh": "Kringaniza pH",
+      "radarNitrogen": "Azote",
+      "radarPhosphorus": "Fosifore",
+      "radarPotassium": "Potasiyo",
+      "radarOrganicMatter": "Ibinyabuzima mu Butaka",
+      "radarSeriesName": "Ubuzima bw'Ubutaka",
+      "cropSuitabilityTitle": "Isesengura ry'Ibihingwa Bikwiriye",
+      "cropSuitabilityDescription": "Bishingiye ku miterere y'ubutaka bwawe n'imiterere y'ikirere y'aho uherereye",
+      "noCropSuitabilityData": "Nta makuru ku bihingwa bikwiriye ahari.",
+      "suitabilityLabel": "Ukwiriye",
+      "recommendationsTitle": "Inama",
+      "recommendationsDescription": "Ibikorwa byo kunoza ubuzima bw'ubutaka bwawe",
+      "noRecommendations": "Nta nama zihari kuri ubu.",
+      "historicalTrendsTitle": "Amateka y'Impinduka",
+      "viewFullReport": "Reba Raporo Yuzuye",
+      "parameterHeader": "Igipimo",
+      "changeHeader": "Impinduka",
+      "addMoreTestsHint": "Ongeraho ibizamini by'ubutaka mu gihe kugira ngo ubone impinduka n'amateka yabyo.",
+      "lastUpdated": "Vuguruwe bwa nyuma: {{date}}",
+      "noHistoricalData": "Nta makuru y'amateka y'ibizamini arahaboneka.",
+      "testHistoryTitle": "Amateka y'Ibizamini by'Ubutaka",
+      "testHistoryDescription": "Inyandiko z'ibizamini ku giti cyabyo",
+      "testHistoryDescriptionWithLocation": "Inyandiko z'ibizamini ku giti cyabyo kuri {{location}}",
+      "dateHeader": "Itariki",
+      "locationHeader": "Aho Biherereye",
+      "phHeader": "pH",
+      "nitrogenHeader": "Azote (mg/kg)",
+      "phosphorusHeader": "Fosifore (mg/kg)",
+      "potassiumHeader": "Potasiyo (mg/kg)",
+      "organicMatterHeader": "Ibinyabuzima (%)",
+      "actionsHeader": "Ibikorwa",
+      "showingOfTests": "Hagaragajwe {{count}} kuri {{total}} z'ibizamini",
+      "noTestsRecorded": "Nta bizamini by'ubutaka byanditswe.",
+      "editSoilTest": "Hindura Ikizamini cy'Ubutaka",
+      "recordNewSoilTest": "Andika Ikizamini Gishya cy'Ubutaka",
+      "updateTest": "Vugurura Ikizamini",
+      "saveTest": "Bika Ikizamini",
+      "soilTestDetailsTitle": "Birambuye ku Kizamini cy'Ubutaka",
+      "phosphorusDetailLabel": "Fosifore",
+      "potassiumDetailLabel": "Potasiyo",
+      "organicMatterDetailLabel": "Ibinyabuzima mu Butaka",
+      "notesLabel": "Inyandiko",
+      "couldNotLoadDetails": "Ntibyashobotse gushaka birambuye ku kizamini.",
+      "deleteTestTitle": "Siba iki kizamini cy'ubutaka?",
+      "deleteTestDescription": "Iki gikorwa ntigishobora gusubizwa inyuma. Inyandiko y'ikizamini izasibwa burundu.",
+      "deletingLabel": "Kubisiba...",
+      "formValidationError": "Nyamuneka uzuza neza imyanya yose isabwa",
+      "phPlaceholder": "urugero: 6.5",
+      "nitrogenPlaceholder": "urugero: 45",
+      "phosphorusPlaceholder": "urugero: 38",
+      "potassiumPlaceholder": "urugero: 165",
+      "organicMatterPlaceholder": "urugero: 3.2",
+      "texturePlaceholder": "urugero: Ubutaka bw'Ibumba",
+      "locationPlaceholder": "urugero: Akarere ka Musanze, u Rwanda",
+      "notesPlaceholder": "Ibindi wabonye ku butaka…"
+    },
+    "shared": {
+      "crops": {
+        "maize": "Ibigori",
+        "beans": "Ibishyimbo",
+        "rice": "Umuceri",
+        "irishPotatoes": "Ibirayi",
+        "tomatoes": "Inyanya",
+        "cassava": "Imyumbati",
+        "sorghum": "Amasaka",
+        "banana": "Ibitoki",
+        "coffee": "Ikawa",
+        "tea": "Icyayi",
+        "onions": "Ibitunguru"
+      },
+      "waterNeed": {
+        "low": "Buke",
+        "lowMedium": "Buke-Hagati",
+        "medium": "Hagati",
+        "mediumHigh": "Hagati-Byinshi",
+        "high": "Byinshi"
+      }
+    },
+    "crops": {
+      "pageTitle": "Inama ku Bihingwa",
+      "pageSubtitle": "Inama z'ibihingwa zihariye zishingiye ku miterere y'umurima wawe",
+      "conditionsBannerTitle": "Imiterere y'Umurima Ubu",
+      "conditionsBannerSubtitle": "Amakuru y'igihe nyacyo yo gufata neza ibyemezo byo gutera",
+      "temperatureLabel": "Ubushyuhe",
+      "humidityLabel": "Ubuhehere",
+      "seasonLabel": "Igihembwe",
+      "seasonValueRainyA": "Igihembwe cy'Imvura A",
+      "recommendedTitle": "Ibihingwa Bikwiriye Umurima Wawe",
+      "matchPercent": "Bikwiriye {{pct}}%",
+      "plantLabel": "Gutera: {{window}}",
+      "harvestLabel": "Gusarura: {{time}}",
+      "waterLabel": "Amazi: {{need}}",
+      "plantingCalendarTitle": "Gahunda y'Iterura",
+      "plantingCalendarDescription": "Ibihe byiza byo gutera mu mwaka wose",
+      "cropHeader": "Igihingwa",
+      "legendOptimal": "Igihe cyiza cyo gutera",
+      "legendNotRecommended": "Ntibyifuzwa",
+      "fertilizerTitle": "Inama z'Ifumbire",
+      "fertilizerDescription": "Ingano y'ifumbire ikwiriye buri gihingwa",
+      "nitrogenHeader": "Azote",
+      "phosphorusHeader": "Fosifore",
+      "potassiumHeader": "Potasiyo",
+      "applicationTimingHeader": "Igihe cyo Gushyira",
+      "tips": {
+        "maize": ["Tera mu butaka bucukuye neza nyuma y'imvura ya mbere", "Tandukanya imirongo cm 75", "Shyiraho ifumbire ya azote ibyumweru 4 nyuma yo gutera"],
+        "beans": ["Tandukanya n'ibihingwa by'imbuto kugira ngo wongere azote mu butaka", "Irinde imirima ihohotewe n'amazi kugira ngo wirinde kubora imizi", "Sarura igihe ibinyampeke byahindutse umuhondo bikumye"],
+        "irishPotatoes": ["Tera mu butaka bukonje, bucukuye neza kandi bworoshye", "Zibira ubutaka ku mizi uko ibihingwa bikura", "Bika ibirayi byasaruwe ahantu hijimye, hakonje kandi hafite umwuka"],
+        "tomatoes": ["Shyiraho inkoni cyangwa ikinjana kugira ngo bifashe gukura neza", "Hira buri gihe kugira ngo wirinde kubora ku gice cy'ibua", "Kurikirane amababi yo hasi kugira ngo umenye hakiri kare ikibazo cy'indwara"]
+      }
+    },
+    "disease": {
+      "pageTitle": "Kumenya Indwara",
+      "pageSubtitle": "Menya indwara z'ibihingwa ako kanya ukoresheje isesengura ry'ifoto rikoresha ubwenge bw'ikoranabuhanga",
+      "scanCardTitle": "Suzuma Igihingwa Cyawe",
+      "scanCardDescription": "Ohereza cyangwa fata ifoto y'igihingwa kirwaye kugira ngo ubone isuzuma ako kanya",
+      "dragDropTitle": "Kurura kandi ushyire ifoto, cyangwa ukande kugira ngo ushakishe",
+      "dragDropSubtitle": "Bona ibisubizo byo kumenya indwara ako kanya bikoresheje ubwenge bw'ikoranabuhanga",
+      "uploadImageButton": "Ohereza Ifoto",
+      "takePhotoButton": "Fata Ifoto",
+      "supportedFormats": "Imiterere yemewe: JPG, PNG, HEIC (Ntirenze 10MB)",
+      "recentDetectionsTitle": "Ibyabonetse Vuba",
+      "viewHistoryButton": "Reba Amateka",
+      "tipEarlyDetectionTitle": "Kumenya Hakiri Kare",
+      "tipEarlyDetectionDescription": "Suzuma ibihingwa byawe buri cyumweru kugira ngo umenye hakiri kare ibimenyetso by'indwara.",
+      "tipPhotoTipsTitle": "Inama ku Mafoto",
+      "tipPhotoTipsDescription": "Fata amafoto asobanutse kandi afite urumuri ruhagije y'amababi yarwaye kugira ngo isuzuma riboneke neza.",
+      "tipExpertHelpTitle": "Ubufasha bw'Inzobere",
+      "tipExpertHelpDescription": "Vugana n'umuhanga mu buhinzi wo mu karere kawe niba ukeneye inama z'inyongera ku kuvura.",
+      "databaseTitle": "Ububiko bw'Indwara",
+      "databaseDescription": "Reba indwara zikunze kugaragara mu bihingwa n'uburyo bwo kuzivura",
+      "symptomsLabel": "Ibimenyetso:",
+      "detections": {
+        "maizeLeafBlight": { "name": "Indwara y'Amababi y'Ibigori", "treatment": "Koresha umuti w'ibyonyi kandi ukure amababi yarwaye kugira ngo wirinde gukwirakwira." },
+        "beanRust": { "name": "Igicurama cy'Ibishyimbo", "treatment": "Koresha umuti w'ibyonyi ukozwe muri sulfuru kandi unoze uko umwuka unyura hagati y'ibihingwa." },
+        "tomatoEarlyBlight": { "name": "Indwara y'Inyanya Itangira Kare", "treatment": "Kura amababi yanduye kandi ukoreshe umuti w'ibyonyi ukozwe muri kuparu buri cyumweru." }
+      },
+      "relativeDates": {
+        "twoDaysAgo": "Iminsi 2 ishize",
+        "fiveDaysAgo": "Iminsi 5 ishize",
+        "oneWeekAgo": "Icyumweru 1 gishize"
+      },
+      "commonDiseases": {
+        "maizeStreakVirus": { "name": "Virusi y'Imirongo y'Ibigori", "symptoms": "Imirongo y'umuhondo ku mitsi y'amababi n'ubukure budakwiye.", "prevention": "Koresha ubwoko budwara ku ndwara kandi ugenzure udukoko dutwara virusi." },
+        "cassavaMosaic": { "name": "Indwara ya Mozayike y'Imyumbati", "symptoms": "Amababi afite ibara ry'umuhondo n'icyatsi bivanze, asaze.", "prevention": "Tera ibikamba bidafite virusi kandi ukure ibihingwa byanduye hakiri kare." },
+        "bananaBacterialWilt": { "name": "Indwara ya Bagiteri y'Ibitoki", "symptoms": "Amababi ahindukira umuhondo akuma, imbuto zikera hakiri kare.", "prevention": "Disenfekta ibikoresho hagati y'ibihingwa kandi ukure ibikonde byanduye." },
+        "coffeeBerryDisease": { "name": "Indwara y'Imbuto z'Ikawa", "symptoms": "Ibara ryijimye ku mbuto, imbuto zigwa hakiri kare.", "prevention": "Senda kugira ngo umwuka unyure neza kandi ukoreshe umuti wa kuparu mu gihe cy'ubuko." },
+        "riceBlast": { "name": "Indwara y'Umuceri", "symptoms": "Ibimenyetso bisa n'agasare ku mababi hagati hafite ibara ryera-imvi.", "prevention": "Koresha ubwoko budwara ku ndwara kandi wirinde gukoresha ifumbire ya azote nyinshi." }
+      }
+    },
+    "weather": {
+      "pageTitle": "Amakuru ku Kirere",
+      "pageSubtitle": "Iteganyagihe rigenewe agace n'amatangazo y'ubuhinzi ku gace wabarizwamo",
+      "feelsLike": "Bigaragara nk'aho ari {{temp}}°C",
+      "humidityLabel": "Ubuhehere",
+      "windLabel": "Umuyaga (km/h)",
+      "uvIndexLabel": "Urugero rwa UV",
+      "rainChanceLabel": "Amahirwe y'Imvura",
+      "noCurrentData": "Amakuru y'ikirere ubu ntahari.",
+      "farmingAlertsTitle": "Amatangazo y'Ubuhinzi",
+      "noActiveAlerts": "Nta matangazo y'ubuhinzi ahari ubu.",
+      "hourlyForecastTitle": "Iteganyagihe rya Saa Saa",
+      "nowLabel": "Ubu",
+      "noHourlyData": "Amakuru y'iteganyagihe rya saa saa ntahari.",
+      "sevenDayForecastTitle": "Iteganyagihe ry'Iminsi 7",
+      "todayLabel": "Uyu munsi",
+      "noForecastData": "Amakuru y'iteganyagihe ntahari.",
+      "annualRainfallTitle": "Imvura y'Umwaka",
+      "annualRainfallDescription": "Imvura ya buri kwezi igereranyije n'impuzandengo y'amateka",
+      "legendThisYear": "Uyu Mwaka",
+      "legendAverage": "Impuzandengo",
+      "noRainfallData": "Amakuru y'imvura ntahari.",
+      "condition": {
+        "sunny": "Izuba",
+        "partly_cloudy": "Ibicu Bike",
+        "cloudy": "Ibicu",
+        "rainy": "Imvura"
+      }
+    },
+    "market": {
+      "pageTitle": "Ibiciro ku Isoko",
+      "pageSubtitle": "Ibiciro by'ibicuruzwa byo mu gihe nyacyo no guhuza n'abaguzi bemejwe",
+      "totalVolumeLabel": "Ingano Yose",
+      "totalVolumeUnit": "toni zacurujwe muri uku kwezi",
+      "activeBuyersLabel": "Abaguzi Bakora",
+      "activeBuyersUnit": "biyandikishije kuri urubuga",
+      "priceIndexLabel": "Urugero rw'Ibiciro",
+      "priceIndexUnit": "impinduka muri uku kwezi",
+      "todaysPricesTitle": "Ibiciro by'Uyu Munsi",
+      "todaysPricesUpdated": "Byavuguruwe {{date}} saa {{time}}",
+      "volumeLabel": "Ingano: {{volume}}",
+      "priceTrendsTitle": "Imikurire y'Ibiciro",
+      "chartSeriesRwf": "{{crop}} (RWF)",
+      "demandIndexTitle": "Urugero rw'Ibyifuzo ku Isoko",
+      "demandPercentSeries": "Ibyifuzo (%)",
+      "verifiedBuyersTitle": "Abaguzi Bemejwe",
+      "verifiedBadge": "Byemejwe",
+      "starsUnit": "inyenyeri",
+      "insightsTitle": "Inama ku Isoko",
+      "personalizedInsightsButton": "Bona Inama Zihariye",
+      "buyerType": {
+        "processor": "Utunganya Ibicuruzwa",
+        "cooperative": "Koperative",
+        "retailer": "Ucuruza mu Ruguri",
+        "exporter": "Utumiza mu Mahanga"
+      },
+      "insights": {
+        "peakSellingSeason": { "title": "Igihembwe Cyiza cyo Kugurisha", "description": "Ibiciro by'ibigori n'ibishyimbo akenshi bizamuka 15-20% hagati ya Kamena na Kanama." },
+        "bestMarkets": { "title": "Amasoko Meza Ari Hafi", "description": "Amasoko ya Kigali na Rwamagana ubu atanga ibiciro byiza ku bihingwa byawe." },
+        "exportOpportunity": { "title": "Amahirwe yo Kohereza Ibicuruzwa mu Mahanga", "description": "Abatumiza ikawa n'icyayi mu mahanga barimo gushakisha abatanga ibicuruzwa bashya muri iki gihembwe." }
+      }
+    },
+    "training": {
+      "pageTitle": "Amahugurwa n'Uburezi",
+      "pageSubtitle": "Wige uburyo bwiza bw'ubuhinzi ukoresheje amavidewo n'amasomo mu ndimi z'aho uherereye",
+      "stats": {
+        "inProgress": "Amasomo Aracyakorwa",
+        "completed": "Amasomo Yarangiye",
+        "totalTime": "Igihe Cyose Cyo Kwiga",
+        "certificates": "Impamyabushobozi Zabonetse"
+      },
+      "learningPath": "Inzira Yawe yo Kwiga",
+      "progress": "Aho Bigeze",
+      "completed": "Byarangiye",
+      "startCourse": "Tangira Isomo",
+      "continueCourse": "Komeza",
+      "getCertificate": "Bona Impamyabushobozi",
+      "courseLibrary": "Ububiko bw'Amasomo",
+      "lessonsCount_one": "Isomo {{count}}",
+      "lessonsCount_other": "Amasomo {{count}}",
+      "achievementsTitle": "Ibyagezweho",
+      "achievementsSubtitle": "Kurikirana intambwe zawe zo kwiga",
+      "courses": {
+        "modernMaizeFarming": { "title": "Uburyo Bugezweho bwo Guhinga Ibigori", "description": "Wige uburyo bugezweho bwo kongera umusaruro w'ibigori, kuva mu gutera kugeza mu gusarura." },
+        "integratedPestManagement": { "title": "Imicungire Yunze Ubumwe y'Udukoko", "description": "Menya kandi ucunge udukoko dukunze kugaragara ukoresheje uburyo bwizewe, bukora neza kandi burambye." },
+        "soilHealthFertility": { "title": "Ubuzima n'Ubworo bw'Ubutaka", "description": "Sobanukirwa imiterere y'ubutaka kandi wige uko wabungabunga no kunoza ubworo bwabwo." },
+        "waterManagement": { "title": "Imicungire y'Amazi ku Mirima", "description": "Uburyo bwiza bwo kuhira kugira ngo ukungahaze amazi kandi wongere umusaruro." },
+        "postHarvestHandling": { "title": "Imicungire Nyuma yo Gusarura", "description": "Uburyo bwiza bwo kubika no gucunga ibihingwa nyuma yo gusarura kugira ngo wirinde igihombo." },
+        "organicFarmingPractices": { "title": "Uburyo bw'Ubuhinzi Karemano", "description": "Hindukirira uburyo bw'ubuhinzi karemano bunoza ubuzima bw'ubutaka n'ubwiza bw'umusaruro." },
+        "climateSmartAgriculture": { "title": "Ubuhinzi Buhuye n'Ihindagurika ry'Ikirere", "description": "Hindura uburyo bwawe bwo guhinga kugira ngo wihanganire ihindagurika ry'ikirere." },
+        "livestockIntegration": { "title": "Guhuza Ubuhinzi n'Ubworozi", "description": "Vanga ubuhinzi n'ubworozi kugira ngo ubone umurima urambye kandi utanga inyungu nyinshi." },
+        "farmBusinessManagement": { "title": "Imicungire y'Ubucuruzi bw'Umurima", "description": "Cunga umurima wawe nk'ubucuruzi — kubara amafaranga, kubika inyandiko, no gutegura iterambere." }
+      },
+      "category": {
+        "all": "Amasomo Yose",
+        "crops": "Ibihingwa",
+        "plantHealth": "Ubuzima bw'Ibihingwa",
+        "soil": "Ubutaka",
+        "irrigation": "Kuhira",
+        "storage": "Kubika",
+        "organic": "Karemano",
+        "climate": "Ikirere",
+        "livestock": "Ubworozi",
+        "business": "Ubucuruzi"
+      },
+      "level": {
+        "beginner": "Utangira",
+        "intermediate": "Hagati",
+        "advanced": "Uzobereyemo"
+      },
+      "achievementsList": {
+        "firstCourse": { "title": "Isomo rya Mbere Ryarangiye", "description": "Warangije isomo ryawe rya mbere ry'amahugurwa" },
+        "quickLearner": { "title": "Wiga Vuba", "description": "Warangije isomo mu gihe kitarenze icyumweru" },
+        "expertFarmer": { "title": "Umuhinzi Inzobere", "description": "Warangije amasomo 10 cyangwa arenga" },
+        "communityHelper": { "title": "Ufasha Abaturage", "description": "Wafashije abandi bahinzi 5 ku rubuga rw'abaturage" }
+      }
+    },
+    "notifications": {
+      "pageTitle": "Amatangazo",
+      "pageSubtitle": "Ibikorwa byawe biheruka",
+      "filterType": "Ubwoko",
+      "filterStatus": "Imiterere",
+      "allTypes": "Ubwoko bwose",
+      "allStatus": "Byose",
+      "unread": "Ntibyasomwe",
+      "read": "Byasomwe",
+      "markAllRead": "Emeza ko byose byasomwe",
+      "countLabel_one": "Itangazo {{count}}",
+      "countLabel_other": "Amatangazo {{count}}",
+      "emptyTitle": "Nta matangazo",
+      "emptyFiltered": "Gerageza guhindura ibyo wahisemo",
+      "emptyAllCaughtUp": "Nta kindi gisigaye gusoma",
+      "markAsRead": "Emeza ko ryasomwe",
+      "pageOf": "Urupapuro {{page}} kuri {{pages}}",
+      "totalCount": "Byose hamwe {{count}}",
+      "viewAllLink": "Reba amatangazo yose →",
+      "ariaLabel": "Amatangazo",
+      "ariaLabelUnread": "Amatangazo ({{count}} ntiyasomwe)",
+      "deleteAria": "Siba itangazo"
+    },
+    "settings": {
+      "title": "Igenamiterere",
+      "subtitle": "Genzura ibyo uhitamo kuri konti yawe n'amatangazo",
+      "profileErrorCard": { "title": "Amakuru y'Umwirondoro" },
+      "farmLocationLabel": "Aho Umurima Uherereye",
+      "profileDescription": "Vugurura amakuru yawe bwite n'iby'umurima wawe",
+      "notificationsCard": {
+        "title": "Amatangazo",
+        "description": "Genzura uburyo wakira amatangazo n'amakuru mashya"
+      },
+      "notificationToggles": {
+        "weatherAlerts": { "title": "Amatangazo y'Ikirere", "description": "Menyeshwa ku bihe by'ikirere bikomeye" },
+        "diseaseAlerts": { "title": "Amatangazo y'Indwara", "description": "Akira amatangazo ku ndwara zibasiye agace wabarizwamo" },
+        "marketPriceUpdates": { "title": "Amakuru y'Ibiciro ku Isoko", "description": "Amakuru ya buri munsi ku biciro by'ibihingwa" },
+        "plantingReminders": { "title": "Ibyibutso byo Gutera", "description": "Ibyibutso ku bihe byiza byo gutera" },
+        "trainingRecommendations": { "title": "Inama z'Amahugurwa", "description": "Ibyifuzo by'amasomo mashya" }
+      },
+      "languageCard": {
+        "title": "Ururimi n'Akarere",
+        "description": "Hitamo ururimi rukunda n'igenamiterere ry'akarere"
+      },
+      "unitsLabel": "Ibipimo",
+      "unitsMetric": "Metric (kg, hegitari)",
+      "unitsImperial": "Imperial (lbs, acres)",
+      "securityCard": {
+        "title": "Umutekano",
+        "description": "Genzura igenamiterere ry'umutekano wa konti yawe",
+        "changePassword": "Hindura Ijambo ry'Ibanga",
+        "enableTwoFactor": "Emeza Kwemeza Kabiri",
+        "deleteAccount": "Siba Konti"
+      }
+    },
+    "account": {
+      "profile": {
+        "title": "Amakuru y'Umwirondoro",
+        "changePhoto": "Hindura Ifoto",
+        "photoHelper": "JPG, PNG cyangwa GIF. Ntirenze 2MB.",
+        "emailVerified": "Imeyili Yemejwe",
+        "emailNotVerified": "Imeyili Ntiyemejwe",
+        "fullNameLabel": "Amazina Yombi",
+        "emailLabel": "Imeyili",
+        "phoneLabel": "Numero ya Telefone",
+        "farmSizeLabel": "Ubunini bw'Umurima (hegitari)"
+      },
+      "changePassword": {
+        "title": "Hindura Ijambo ry'Ibanga",
+        "currentLabel": "Ijambo ry'Ibanga Ririho",
+        "newLabel": "Ijambo ry'Ibanga Rishya",
+        "confirmLabel": "Emeza Ijambo ry'Ibanga Rishya",
+        "mismatchError": "Amagambo y'ibanga ntabwo ahuye",
+        "lengthError": "Ijambo ry'ibanga rigomba kugira nibura inyuguti 8",
+        "changing": "Kuhindura...",
+        "submit": "Hindura Ijambo ry'Ibanga"
+      },
+      "deleteAccount": {
+        "title": "Siba Konti",
+        "description": "Iki gikorwa ntigishobora gusubizwa inyuma. Konti yawe n'amakuru yose ajyanye nayo bizasibwa burundu. Andika ijambo ryawe ry'ibanga kugira ngo wemeze.",
+        "passwordLabel": "Ijambo ry'Ibanga",
+        "deleting": "Kubisiba...",
+        "submit": "Siba Konti"
+      }
     }
   }
 }

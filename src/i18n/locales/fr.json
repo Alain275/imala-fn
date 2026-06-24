@@ -13,7 +13,67 @@
     "signIn": "Connexion",
     "getStarted": "Commencer",
     "home": "Accueil",
-    "language": "Langue"
+    "language": "Langue",
+    "actions": {
+      "view": "Voir",
+      "viewAll": "Voir Tout",
+      "viewDetails": "Voir les Détails",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "save": "Enregistrer les Modifications",
+      "saving": "Enregistrement...",
+      "cancel": "Annuler",
+      "search": "Rechercher",
+      "filter": "Filtrer",
+      "retry": "Réessayer",
+      "previous": "Précédent",
+      "next": "Suivant",
+      "contact": "Contact"
+    },
+    "status": {
+      "excellent": "Excellent",
+      "good": "Bon",
+      "fair": "Moyen",
+      "poor": "Faible"
+    },
+    "priority": {
+      "high": "Élevée",
+      "medium": "Moyenne",
+      "low": "Faible",
+      "withLabel": "Priorité {{priority}}"
+    },
+    "severity": {
+      "high": "Élevée",
+      "medium": "Moyenne",
+      "low": "Faible"
+    },
+    "notificationType": {
+      "weather": "Météo",
+      "market": "Marché",
+      "disease": "Maladie",
+      "soil": "Sol",
+      "training": "Formation",
+      "system": "Système"
+    },
+    "role": {
+      "farmer": "Agriculteur",
+      "agronomist": "Agronome",
+      "admin": "Administrateur",
+      "cooperative": "Coopérative"
+    },
+    "toast": {
+      "notificationsLoadFailed": "Échec du chargement des notifications",
+      "markAsReadFailed": "Échec du marquage de la notification comme lue",
+      "markAllReadFailed": "Échec du marquage de toutes les notifications comme lues",
+      "deleteNotificationFailed": "Échec de la suppression de la notification",
+      "profileUpdated": "Profil mis à jour avec succès",
+      "profileUpdateFailed": "Échec de la mise à jour du profil",
+      "passwordChanged": "Mot de passe changé avec succès",
+      "passwordChangeFailed": "Échec du changement de mot de passe",
+      "accountDeleteFailed": "Échec de la suppression du compte",
+      "accessDenied": "Vous n'avez pas accès à cette section.",
+      "profileLoadFailed": "Échec du chargement du profil"
+    }
   },
   "landing": {
     "hero": {
@@ -171,6 +231,439 @@
       "panelLink": "Se connecter",
       "successToast": "Compte créé avec succès !",
       "errorToast": "Une erreur s'est produite. Veuillez réessayer."
+    }
+  },
+  "dashboard": {
+    "sidebar": {
+      "tagline": "Agriculture Intelligente",
+      "portalLabel": "Portail Agriculteur",
+      "nav": {
+        "dashboard": "Tableau de Bord",
+        "cropAdvisory": "Conseil Agricole",
+        "diseaseDetection": "Détection des Maladies",
+        "weatherIntelligence": "Intelligence Météo",
+        "soilAnalysis": "Analyse du Sol",
+        "marketPrices": "Prix du Marché",
+        "training": "Formation"
+      },
+      "settings": "Paramètres",
+      "signOut": "Déconnexion"
+    },
+    "header": {
+      "searchPlaceholder": "Rechercher..."
+    },
+    "overview": {
+      "title": "Tableau de Bord",
+      "subtitle": "Bon retour, {{name}} ! Voici un aperçu de votre ferme.",
+      "stats": {
+        "activeFarms": "Fermes Actives",
+        "cropsMonitored": "Cultures Surveillées",
+        "diseaseAlerts": "Alertes Maladies",
+        "marketListings": "Annonces du Marché"
+      },
+      "changeFromLastMonth": "{{change}} par rapport au mois dernier",
+      "weatherForecast": {
+        "title": "Prévisions Météo",
+        "next7Days": "7 prochains jours",
+        "tempLegend": "Température (°C)",
+        "rainLegend": "Précipitations (%)",
+        "temperature": "Température",
+        "rainfall": "Précipitations"
+      },
+      "cropYield": {
+        "title": "Analyse du Rendement des Cultures",
+        "last6Months": "6 derniers mois",
+        "maizeLegend": "Maïs (kg)",
+        "beansLegend": "Haricots (kg)",
+        "riceLegend": "Riz (kg)",
+        "maize": "Maïs",
+        "beans": "Haricots",
+        "rice": "Riz"
+      },
+      "soilHealth": { "title": "Aperçu de la Santé du Sol" },
+      "recentAlerts": {
+        "title": "Alertes Récentes",
+        "viewAll": "Voir Tout",
+        "items": [
+          { "message": "De fortes pluies sont attendues à Kigali demain", "time": "Il y a 2 heures" },
+          { "message": "Mildiou du maïs détecté dans la Province de l'Est", "time": "Il y a 5 heures" },
+          { "message": "Les prix des haricots ont augmenté de 15% cette semaine", "time": "Il y a 1 jour" },
+          { "message": "La période optimale de plantation des tomates commence la semaine prochaine", "time": "Il y a 1 jour" }
+        ]
+      },
+      "quickActions": {
+        "title": "Actions Rapides",
+        "addCrop": "Ajouter une Culture",
+        "reportDisease": "Signaler une Maladie",
+        "checkWeather": "Vérifier la Météo",
+        "soilTest": "Test de Sol",
+        "viewPrices": "Voir les Prix",
+        "findExpert": "Trouver un Expert"
+      }
+    },
+    "soil": {
+      "pageTitle": "Analyse du Sol",
+      "pageSubtitle": "Évaluation complète de la santé du sol et recommandations de culture adaptées",
+      "healthScoreTitle": "Score de Santé du Sol",
+      "outOf100": "sur 100",
+      "phLabel": "Niveau de pH",
+      "nitrogenLabel": "Azote",
+      "moistureLabel": "Humidité",
+      "noDataYet": "Aucune donnée pour l'instant",
+      "textureHeader": "Texture",
+      "requestNewTest": "Demander un Nouveau Test de Sol",
+      "nutrientProfileTitle": "Profil Nutritif",
+      "noNutrientData": "Aucune donnée nutritive disponible.",
+      "radarPh": "Équilibre du pH",
+      "radarNitrogen": "Azote",
+      "radarPhosphorus": "Phosphore",
+      "radarPotassium": "Potassium",
+      "radarOrganicMatter": "Matière Organique",
+      "radarSeriesName": "Santé du Sol",
+      "cropSuitabilityTitle": "Analyse d'Adéquation des Cultures",
+      "cropSuitabilityDescription": "Basée sur la composition de votre sol et les conditions climatiques locales",
+      "noCropSuitabilityData": "Aucune donnée d'adéquation des cultures disponible.",
+      "suitabilityLabel": "Adéquation",
+      "recommendationsTitle": "Recommandations",
+      "recommendationsDescription": "Actions pour améliorer la santé de votre sol",
+      "noRecommendations": "Aucune recommandation pour le moment.",
+      "historicalTrendsTitle": "Tendances Historiques",
+      "viewFullReport": "Voir le Rapport Complet",
+      "parameterHeader": "Paramètre",
+      "changeHeader": "Variation",
+      "addMoreTestsHint": "Ajoutez davantage de tests de sol au fil du temps pour voir les tendances et changements.",
+      "lastUpdated": "Dernière mise à jour : {{date}}",
+      "noHistoricalData": "Aucune donnée de test historique disponible pour le moment.",
+      "testHistoryTitle": "Historique des Tests de Sol",
+      "testHistoryDescription": "Registres de tests individuels",
+      "testHistoryDescriptionWithLocation": "Registres de tests individuels pour {{location}}",
+      "dateHeader": "Date",
+      "locationHeader": "Emplacement",
+      "phHeader": "pH",
+      "nitrogenHeader": "Azote (mg/kg)",
+      "phosphorusHeader": "Phosphore (mg/kg)",
+      "potassiumHeader": "Potassium (mg/kg)",
+      "organicMatterHeader": "Matière Organique (%)",
+      "actionsHeader": "Actions",
+      "showingOfTests": "Affichage de {{count}} sur {{total}} tests",
+      "noTestsRecorded": "Aucun test de sol enregistré pour le moment.",
+      "editSoilTest": "Modifier le Test de Sol",
+      "recordNewSoilTest": "Enregistrer un Nouveau Test de Sol",
+      "updateTest": "Mettre à Jour le Test",
+      "saveTest": "Enregistrer le Test",
+      "soilTestDetailsTitle": "Détails du Test de Sol",
+      "phosphorusDetailLabel": "Phosphore",
+      "potassiumDetailLabel": "Potassium",
+      "organicMatterDetailLabel": "Matière Organique",
+      "notesLabel": "Notes",
+      "couldNotLoadDetails": "Impossible de charger les détails du test.",
+      "deleteTestTitle": "Supprimer ce test de sol ?",
+      "deleteTestDescription": "Cette action est irréversible. Le registre du test sera définitivement supprimé.",
+      "deletingLabel": "Suppression en cours…",
+      "formValidationError": "Veuillez remplir correctement tous les champs requis",
+      "phPlaceholder": "ex. 6,5",
+      "nitrogenPlaceholder": "ex. 45",
+      "phosphorusPlaceholder": "ex. 38",
+      "potassiumPlaceholder": "ex. 165",
+      "organicMatterPlaceholder": "ex. 3,2",
+      "texturePlaceholder": "ex. Limon Silteux",
+      "locationPlaceholder": "ex. District de Musanze, Rwanda",
+      "notesPlaceholder": "Observations supplémentaires sur le sol…"
+    },
+    "shared": {
+      "crops": {
+        "maize": "Maïs",
+        "beans": "Haricots",
+        "rice": "Riz",
+        "irishPotatoes": "Pommes de Terre",
+        "tomatoes": "Tomates",
+        "cassava": "Manioc",
+        "sorghum": "Sorgho",
+        "banana": "Banane",
+        "coffee": "Café",
+        "tea": "Thé",
+        "onions": "Oignons"
+      },
+      "waterNeed": {
+        "low": "Faible",
+        "lowMedium": "Faible-Moyen",
+        "medium": "Moyen",
+        "mediumHigh": "Moyen-Élevé",
+        "high": "Élevé"
+      }
+    },
+    "crops": {
+      "pageTitle": "Conseil Agricole",
+      "pageSubtitle": "Recommandations de cultures personnalisées selon les conditions de votre ferme",
+      "conditionsBannerTitle": "Conditions Actuelles de la Ferme",
+      "conditionsBannerSubtitle": "Données en temps réel pour des décisions de plantation optimales",
+      "temperatureLabel": "Température",
+      "humidityLabel": "Humidité",
+      "seasonLabel": "Saison",
+      "seasonValueRainyA": "Saison des Pluies A",
+      "recommendedTitle": "Cultures Recommandées pour Votre Ferme",
+      "matchPercent": "{{pct}}% de compatibilité",
+      "plantLabel": "Plantation : {{window}}",
+      "harvestLabel": "Récolte : {{time}}",
+      "waterLabel": "Eau : {{need}}",
+      "plantingCalendarTitle": "Calendrier de Plantation",
+      "plantingCalendarDescription": "Périodes de plantation optimales tout au long de l'année",
+      "cropHeader": "Culture",
+      "legendOptimal": "Période de plantation optimale",
+      "legendNotRecommended": "Non recommandé",
+      "fertilizerTitle": "Recommandations d'Engrais",
+      "fertilizerDescription": "Taux d'application recommandés par culture",
+      "nitrogenHeader": "Azote",
+      "phosphorusHeader": "Phosphore",
+      "potassiumHeader": "Potassium",
+      "applicationTimingHeader": "Moment d'Application",
+      "tips": {
+        "maize": ["Plantez dans un sol bien drainé après les premières pluies", "Espacez les rangs de 75 cm pour de meilleurs rendements", "Appliquez de l'engrais azoté 4 semaines après la plantation"],
+        "beans": ["Alternez avec des céréales pour fixer l'azote dans le sol", "Évitez les champs détrempés pour prévenir la pourriture des racines", "Récoltez lorsque les gousses jaunissent et sèchent"],
+        "irishPotatoes": ["Plantez dans un sol frais, meuble et bien drainé", "Buttez la terre autour des tiges au fur et à mesure de la croissance", "Conservez les tubercules récoltés dans un endroit sombre, frais et ventilé"],
+        "tomatoes": ["Tuteurez ou cagez les plants pour soutenir une croissance saine", "Arrosez régulièrement pour éviter la nécrose apicale", "Surveillez les feuilles basses pour détecter les premiers signes de mildiou"]
+      }
+    },
+    "disease": {
+      "pageTitle": "Détection des Maladies",
+      "pageSubtitle": "Identifiez instantanément les maladies des plantes grâce à l'analyse d'image par IA",
+      "scanCardTitle": "Scannez Votre Culture",
+      "scanCardDescription": "Téléchargez ou prenez une photo de la plante affectée pour un diagnostic instantané",
+      "dragDropTitle": "Glissez-déposez une image, ou cliquez pour parcourir",
+      "dragDropSubtitle": "Obtenez des résultats de détection de maladies instantanés grâce à l'IA",
+      "uploadImageButton": "Télécharger une Image",
+      "takePhotoButton": "Prendre une Photo",
+      "supportedFormats": "Formats acceptés : JPG, PNG, HEIC (Max 10 Mo)",
+      "recentDetectionsTitle": "Détections Récentes",
+      "viewHistoryButton": "Voir l'Historique",
+      "tipEarlyDetectionTitle": "Détection Précoce",
+      "tipEarlyDetectionDescription": "Vérifiez vos cultures chaque semaine pour détecter les signes précoces de maladie et éviter des dégâts généralisés.",
+      "tipPhotoTipsTitle": "Conseils Photo",
+      "tipPhotoTipsDescription": "Prenez des photos claires et bien éclairées des feuilles affectées pour un diagnostic plus précis.",
+      "tipExpertHelpTitle": "Aide d'un Expert",
+      "tipExpertHelpDescription": "Contactez un agronome local si vous avez besoin de conseils supplémentaires sur le traitement.",
+      "databaseTitle": "Base de Données des Maladies",
+      "databaseDescription": "Parcourez les maladies courantes des cultures et leurs traitements",
+      "symptomsLabel": "Symptômes :",
+      "detections": {
+        "maizeLeafBlight": { "name": "Brûlure des Feuilles de Maïs", "treatment": "Appliquez un fongicide et retirez les feuilles affectées pour éviter la propagation." },
+        "beanRust": { "name": "Rouille du Haricot", "treatment": "Appliquez un fongicide à base de soufre et améliorez la circulation de l'air entre les plants." },
+        "tomatoEarlyBlight": { "name": "Mildiou Précoce de la Tomate", "treatment": "Retirez les feuilles infectées et appliquez un fongicide à base de cuivre chaque semaine." }
+      },
+      "relativeDates": {
+        "twoDaysAgo": "Il y a 2 jours",
+        "fiveDaysAgo": "Il y a 5 jours",
+        "oneWeekAgo": "Il y a 1 semaine"
+      },
+      "commonDiseases": {
+        "maizeStreakVirus": { "name": "Virus de la Striure du Maïs", "symptoms": "Stries jaunes le long des nervures des feuilles et croissance retardée.", "prevention": "Utilisez des variétés résistantes et contrôlez les cicadelles vectrices." },
+        "cassavaMosaic": { "name": "Mosaïque du Manioc", "symptoms": "Motifs jaune-vert mouchetés sur les feuilles et déformation des feuilles.", "prevention": "Plantez des boutures saines et retirez rapidement les plants infectés." },
+        "bananaBacterialWilt": { "name": "Flétrissement Bactérien du Bananier", "symptoms": "Jaunissement et flétrissement des feuilles avec mûrissement prématuré des fruits.", "prevention": "Désinfectez les outils entre les plants et retirez les tiges infectées." },
+        "coffeeBerryDisease": { "name": "Maladie des Baies de Café", "symptoms": "Lésions sombres et enfoncées sur les baies avec chute prématurée des baies.", "prevention": "Élaguez pour favoriser l'aération et appliquez un fongicide à base de cuivre pendant la floraison." },
+        "riceBlast": { "name": "Pyriculariose du Riz", "symptoms": "Lésions en forme de diamant sur les feuilles avec des centres blancs à gris.", "prevention": "Utilisez des variétés résistantes et évitez l'excès d'engrais azoté." }
+      }
+    },
+    "weather": {
+      "pageTitle": "Intelligence Météo",
+      "pageSubtitle": "Prévisions hyperlocales et alertes agricoles pour votre région",
+      "feelsLike": "Ressenti {{temp}}°C",
+      "humidityLabel": "Humidité",
+      "windLabel": "Vent (km/h)",
+      "uvIndexLabel": "Indice UV",
+      "rainChanceLabel": "Chance de Pluie",
+      "noCurrentData": "Les données météo actuelles ne sont pas disponibles.",
+      "farmingAlertsTitle": "Alertes Agricoles",
+      "noActiveAlerts": "Aucune alerte agricole active pour le moment.",
+      "hourlyForecastTitle": "Prévisions Horaires",
+      "nowLabel": "Maintenant",
+      "noHourlyData": "Les prévisions horaires ne sont pas disponibles.",
+      "sevenDayForecastTitle": "Prévisions sur 7 Jours",
+      "todayLabel": "Aujourd'hui",
+      "noForecastData": "Les données de prévision ne sont pas disponibles.",
+      "annualRainfallTitle": "Précipitations Annuelles",
+      "annualRainfallDescription": "Précipitations mensuelles comparées à la moyenne historique",
+      "legendThisYear": "Cette Année",
+      "legendAverage": "Moyenne",
+      "noRainfallData": "Les données de précipitations ne sont pas disponibles.",
+      "condition": {
+        "sunny": "Ensoleillé",
+        "partly_cloudy": "Partiellement Nuageux",
+        "cloudy": "Nuageux",
+        "rainy": "Pluvieux"
+      }
+    },
+    "market": {
+      "pageTitle": "Prix du Marché",
+      "pageSubtitle": "Prix des matières premières en temps réel et connexions avec des acheteurs vérifiés",
+      "totalVolumeLabel": "Volume Total",
+      "totalVolumeUnit": "tonnes échangées ce mois-ci",
+      "activeBuyersLabel": "Acheteurs Actifs",
+      "activeBuyersUnit": "inscrits sur la plateforme",
+      "priceIndexLabel": "Indice des Prix",
+      "priceIndexUnit": "variation ce mois-ci",
+      "todaysPricesTitle": "Prix d'Aujourd'hui",
+      "todaysPricesUpdated": "Mis à jour le {{date}} à {{time}}",
+      "volumeLabel": "Volume : {{volume}}",
+      "priceTrendsTitle": "Tendances des Prix",
+      "chartSeriesRwf": "{{crop}} (RWF)",
+      "demandIndexTitle": "Indice de Demande du Marché",
+      "demandPercentSeries": "Demande (%)",
+      "verifiedBuyersTitle": "Acheteurs Vérifiés",
+      "verifiedBadge": "Vérifié",
+      "starsUnit": "étoiles",
+      "insightsTitle": "Aperçus du Marché",
+      "personalizedInsightsButton": "Obtenir des Aperçus Personnalisés",
+      "buyerType": {
+        "processor": "Transformateur",
+        "cooperative": "Coopérative",
+        "retailer": "Détaillant",
+        "exporter": "Exportateur"
+      },
+      "insights": {
+        "peakSellingSeason": { "title": "Haute Saison de Vente", "description": "Les prix du maïs et des haricots augmentent généralement de 15 à 20 % entre juin et août." },
+        "bestMarkets": { "title": "Meilleurs Marchés à Proximité", "description": "Les marchés de Kigali et de Rwamagana offrent actuellement les meilleurs prix pour vos cultures." },
+        "exportOpportunity": { "title": "Opportunité d'Exportation", "description": "Les exportateurs de café et de thé recherchent activement de nouveaux fournisseurs ce trimestre." }
+      }
+    },
+    "training": {
+      "pageTitle": "Formation & Éducation",
+      "pageSubtitle": "Apprenez les meilleures pratiques agricoles grâce à des vidéos et tutoriels en langues locales",
+      "stats": {
+        "inProgress": "Cours en Cours",
+        "completed": "Cours Terminés",
+        "totalTime": "Temps Total d'Apprentissage",
+        "certificates": "Certificats Obtenus"
+      },
+      "learningPath": "Votre Parcours d'Apprentissage",
+      "progress": "Progression",
+      "completed": "Terminé",
+      "startCourse": "Commencer le Cours",
+      "continueCourse": "Continuer",
+      "getCertificate": "Obtenir le Certificat",
+      "courseLibrary": "Bibliothèque de Cours",
+      "lessonsCount_one": "{{count}} leçon",
+      "lessonsCount_other": "{{count}} leçons",
+      "achievementsTitle": "Réussites",
+      "achievementsSubtitle": "Suivez vos étapes d'apprentissage",
+      "courses": {
+        "modernMaizeFarming": { "title": "Techniques Modernes de Culture du Maïs", "description": "Apprenez des techniques modernes pour maximiser votre rendement de maïs, de la plantation à la récolte." },
+        "integratedPestManagement": { "title": "Gestion Intégrée des Ravageurs", "description": "Identifiez et gérez les ravageurs courants avec des méthodes sûres, efficaces et durables." },
+        "soilHealthFertility": { "title": "Santé et Fertilité du Sol", "description": "Comprenez la composition du sol et apprenez à maintenir et améliorer sa fertilité." },
+        "waterManagement": { "title": "Gestion de l'Eau pour les Fermes", "description": "Techniques d'irrigation efficaces pour économiser l'eau et améliorer les rendements." },
+        "postHarvestHandling": { "title": "Manutention Post-Récolte", "description": "Meilleures pratiques pour stocker et manipuler les cultures après la récolte afin de réduire les pertes." },
+        "organicFarmingPractices": { "title": "Pratiques d'Agriculture Biologique", "description": "Passez à des méthodes biologiques qui améliorent la santé du sol et la qualité des produits." },
+        "climateSmartAgriculture": { "title": "Agriculture Intelligente face au Climat", "description": "Adaptez vos pratiques agricoles pour renforcer la résilience face au changement climatique." },
+        "livestockIntegration": { "title": "Intégration de l'Élevage", "description": "Combinez culture et élevage pour une ferme plus durable et plus rentable." },
+        "farmBusinessManagement": { "title": "Gestion d'Entreprise Agricole", "description": "Gérez votre ferme comme une entreprise — budgétisation, tenue de registres et planification de la croissance." }
+      },
+      "category": {
+        "all": "Tous les Cours",
+        "crops": "Cultures",
+        "plantHealth": "Santé des Plantes",
+        "soil": "Sol",
+        "irrigation": "Irrigation",
+        "storage": "Stockage",
+        "organic": "Biologique",
+        "climate": "Climat",
+        "livestock": "Élevage",
+        "business": "Entreprise"
+      },
+      "level": {
+        "beginner": "Débutant",
+        "intermediate": "Intermédiaire",
+        "advanced": "Avancé"
+      },
+      "achievementsList": {
+        "firstCourse": { "title": "Premier Cours Terminé", "description": "Vous avez terminé votre premier cours de formation" },
+        "quickLearner": { "title": "Apprenant Rapide", "description": "A terminé un cours en moins d'une semaine" },
+        "expertFarmer": { "title": "Agriculteur Expert", "description": "A terminé 10 cours ou plus" },
+        "communityHelper": { "title": "Soutien Communautaire", "description": "A aidé 5 autres agriculteurs sur le forum communautaire" }
+      }
+    },
+    "notifications": {
+      "pageTitle": "Notifications",
+      "pageSubtitle": "Votre flux d'activité",
+      "filterType": "Type",
+      "filterStatus": "Statut",
+      "allTypes": "Tous les types",
+      "allStatus": "Tous",
+      "unread": "Non lues",
+      "read": "Lues",
+      "markAllRead": "Tout marquer comme lu",
+      "countLabel_one": "{{count}} notification",
+      "countLabel_other": "{{count}} notifications",
+      "emptyTitle": "Aucune notification",
+      "emptyFiltered": "Essayez d'ajuster vos filtres",
+      "emptyAllCaughtUp": "Vous êtes à jour",
+      "markAsRead": "Marquer comme lu",
+      "pageOf": "Page {{page}} sur {{pages}}",
+      "totalCount": "{{count}} au total",
+      "viewAllLink": "Voir toutes les notifications →",
+      "ariaLabel": "Notifications",
+      "ariaLabelUnread": "Notifications ({{count}} non lues)",
+      "deleteAria": "Supprimer la notification"
+    },
+    "settings": {
+      "title": "Paramètres",
+      "subtitle": "Gérez vos préférences de compte et vos paramètres de notification",
+      "profileErrorCard": { "title": "Informations du Profil" },
+      "farmLocationLabel": "Emplacement de la Ferme",
+      "profileDescription": "Mettez à jour vos informations personnelles et les détails de votre ferme",
+      "notificationsCard": {
+        "title": "Notifications",
+        "description": "Configurez la manière dont vous recevez les alertes et mises à jour"
+      },
+      "notificationToggles": {
+        "weatherAlerts": { "title": "Alertes Météo", "description": "Soyez informé des conditions météorologiques sévères" },
+        "diseaseAlerts": { "title": "Alertes Maladies", "description": "Recevez des alertes sur les épidémies de maladies dans votre région" },
+        "marketPriceUpdates": { "title": "Mises à Jour des Prix du Marché", "description": "Mises à jour quotidiennes sur les prix des cultures" },
+        "plantingReminders": { "title": "Rappels de Plantation", "description": "Rappels pour les périodes de plantation optimales" },
+        "trainingRecommendations": { "title": "Recommandations de Formation", "description": "Suggestions de nouveaux cours" }
+      },
+      "languageCard": {
+        "title": "Langue et Région",
+        "description": "Définissez votre langue préférée et vos paramètres régionaux"
+      },
+      "unitsLabel": "Unités",
+      "unitsMetric": "Métrique (kg, hectares)",
+      "unitsImperial": "Impérial (lbs, acres)",
+      "securityCard": {
+        "title": "Sécurité",
+        "description": "Gérez les paramètres de sécurité de votre compte",
+        "changePassword": "Changer le Mot de Passe",
+        "enableTwoFactor": "Activer l'Authentification à Deux Facteurs",
+        "deleteAccount": "Supprimer le Compte"
+      }
+    },
+    "account": {
+      "profile": {
+        "title": "Informations du Profil",
+        "changePhoto": "Changer la Photo",
+        "photoHelper": "JPG, PNG ou GIF. Max 2 Mo.",
+        "emailVerified": "E-mail Vérifié",
+        "emailNotVerified": "E-mail Non Vérifié",
+        "fullNameLabel": "Nom Complet",
+        "emailLabel": "E-mail",
+        "phoneLabel": "Numéro de Téléphone",
+        "farmSizeLabel": "Superficie de la Ferme (hectares)"
+      },
+      "changePassword": {
+        "title": "Changer le Mot de Passe",
+        "currentLabel": "Mot de Passe Actuel",
+        "newLabel": "Nouveau Mot de Passe",
+        "confirmLabel": "Confirmer le Nouveau Mot de Passe",
+        "mismatchError": "Les mots de passe ne correspondent pas",
+        "lengthError": "Le mot de passe doit contenir au moins 8 caractères",
+        "changing": "Changement en cours…",
+        "submit": "Changer le Mot de Passe"
+      },
+      "deleteAccount": {
+        "title": "Supprimer le Compte",
+        "description": "Cette action est irréversible. Votre compte et toutes les données associées seront définitivement supprimés. Entrez votre mot de passe pour confirmer.",
+        "passwordLabel": "Mot de Passe",
+        "deleting": "Suppression en cours…",
+        "submit": "Supprimer le Compte"
+      }
     }
   }
 }

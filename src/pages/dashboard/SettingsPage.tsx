@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { useTranslation } from "react-i18next"
 import { Header } from "@/components/header"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Icon3D } from "@/components/icon-3d"
@@ -15,10 +16,12 @@ import {
 import { ProfileFormCard, ProfileSkeleton } from "@/components/account/ProfileFormCard"
 import { ChangePasswordDialog } from "@/components/account/ChangePasswordDialog"
 import { DeleteAccountDialog } from "@/components/account/DeleteAccountDialog"
+import { LanguageSwitcher } from "@/components/LanguageSwitcher"
 import { useProfile } from "@/hooks/useUser"
 import { authService } from "@/services/auth"
 
 export default function SettingsPage() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const { data: profile, loading, error, refetch } = useProfile()
 
@@ -38,8 +41,8 @@ export default function SettingsPage() {
   return (
     <div className="min-h-screen">
       <Header
-        title="Settings"
-        subtitle="Manage your account preferences and notification settings"
+        title={t("dashboard.settings.title")}
+        subtitle={t("dashboard.settings.subtitle")}
       />
 
       <div className="p-6 space-y-6 max-w-4xl">
@@ -54,13 +57,13 @@ export default function SettingsPage() {
                 <Icon3D gradient="green" size="sm">
                   <AlertCircle className="w-4 h-4" />
                 </Icon3D>
-                <span>Profile Information</span>
+                <span>{t("dashboard.settings.profileErrorCard.title")}</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="py-8 flex flex-col items-center gap-3 text-center">
               <AlertCircle className="w-10 h-10 text-destructive" />
               <p className="text-sm text-muted-foreground">{error}</p>
-              <Button variant="outline" size="sm" onClick={refetch}>Retry</Button>
+              <Button variant="outline" size="sm" onClick={refetch}>{t("common.actions.retry")}</Button>
             </CardContent>
           </Card>
         ) : profile ? (
@@ -69,8 +72,8 @@ export default function SettingsPage() {
             onSaved={handleSaved}
             showAvatar
             showFarmSize
-            locationLabel="Farm Location"
-            description="Update your personal information and farm details"
+            locationLabel={t("dashboard.settings.farmLocationLabel")}
+            description={t("dashboard.settings.profileDescription")}
             avatarGradient="from-emerald-400 to-green-500"
           />
         ) : null}
@@ -82,23 +85,23 @@ export default function SettingsPage() {
               <Icon3D gradient="gold" size="sm">
                 <Bell className="w-4 h-4" />
               </Icon3D>
-              <span>Notifications</span>
+              <span>{t("dashboard.settings.notificationsCard.title")}</span>
             </CardTitle>
-            <CardDescription>Configure how you receive alerts and updates</CardDescription>
+            <CardDescription>{t("dashboard.settings.notificationsCard.description")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="space-y-4">
               {[
-                { title: "Weather Alerts", description: "Get notified about severe weather conditions", enabled: true },
-                { title: "Disease Alerts", description: "Receive alerts about disease outbreaks in your area", enabled: true },
-                { title: "Market Price Updates", description: "Daily updates on crop prices", enabled: true },
-                { title: "Planting Reminders", description: "Reminders for optimal planting times", enabled: false },
-                { title: "Training Recommendations", description: "Suggestions for new courses", enabled: false },
+                { key: "weatherAlerts", enabled: true },
+                { key: "diseaseAlerts", enabled: true },
+                { key: "marketPriceUpdates", enabled: true },
+                { key: "plantingReminders", enabled: false },
+                { key: "trainingRecommendations", enabled: false },
               ].map((setting, i) => (
                 <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-muted/50">
                   <div>
-                    <p className="font-medium text-foreground">{setting.title}</p>
-                    <p className="text-sm text-muted-foreground">{setting.description}</p>
+                    <p className="font-medium text-foreground">{t(`dashboard.settings.notificationToggles.${setting.key}.title`)}</p>
+                    <p className="text-sm text-muted-foreground">{t(`dashboard.settings.notificationToggles.${setting.key}.description`)}</p>
                   </div>
                   <Switch defaultChecked={setting.enabled} />
                 </div>
@@ -114,25 +117,26 @@ export default function SettingsPage() {
               <Icon3D gradient="sky" size="sm">
                 <Globe className="w-4 h-4" />
               </Icon3D>
-              <span>Language & Region</span>
+              <span>{t("dashboard.settings.languageCard.title")}</span>
             </CardTitle>
-            <CardDescription>Set your preferred language and regional settings</CardDescription>
+            <CardDescription>{t("dashboard.settings.languageCard.description")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Language</Label>
-                <select className="w-full px-3 py-2 rounded-lg border border-input bg-background text-foreground">
-                  <option>English</option>
-                  <option>Kinyarwanda</option>
-                  <option>French</option>
-                </select>
+                <Label>{t("common.language")}</Label>
+                <LanguageSwitcher
+                  triggerClassName="w-full justify-between rounded-lg px-3 py-2"
+                  contentClassName="w-full min-w-[--radix-dropdown-menu-trigger-width]"
+                  align="start"
+                />
+                {/* Future: once backend supports it, persist via userService.updateProfile({ language: lang.code }) here */}
               </div>
               <div className="space-y-2">
-                <Label>Units</Label>
+                <Label>{t("dashboard.settings.unitsLabel")}</Label>
                 <select className="w-full px-3 py-2 rounded-lg border border-input bg-background text-foreground">
-                  <option>Metric (kg, hectares)</option>
-                  <option>Imperial (lbs, acres)</option>
+                  <option>{t("dashboard.settings.unitsMetric")}</option>
+                  <option>{t("dashboard.settings.unitsImperial")}</option>
                 </select>
               </div>
             </div>
@@ -146,24 +150,24 @@ export default function SettingsPage() {
               <Icon3D gradient="earth" size="sm">
                 <Shield className="w-4 h-4" />
               </Icon3D>
-              <span>Security</span>
+              <span>{t("dashboard.settings.securityCard.title")}</span>
             </CardTitle>
-            <CardDescription>Manage your account security settings</CardDescription>
+            <CardDescription>{t("dashboard.settings.securityCard.description")}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <Button variant="outline" className="w-full justify-start" onClick={() => setPwOpen(true)}>
-              Change Password
+              {t("dashboard.settings.securityCard.changePassword")}
             </Button>
             {/* Local-only until backend is implemented */}
             <Button variant="outline" className="w-full justify-start">
-              Enable Two-Factor Authentication
+              {t("dashboard.settings.securityCard.enableTwoFactor")}
             </Button>
             <Button
               variant="outline"
               className="w-full justify-start text-destructive hover:text-destructive"
               onClick={() => setDeleteOpen(true)}
             >
-              Delete Account
+              {t("dashboard.settings.securityCard.deleteAccount")}
             </Button>
           </CardContent>
         </Card>

@@ -41,9 +41,11 @@ export function LanguageSwitcher({
             triggerClassName,
           )}
         >
-          <Globe className="w-4 h-4 shrink-0" aria-hidden="true" />
-          <span className="hidden sm:inline">{activeLanguage.nativeLabel}</span>
-          <span className="sm:hidden">{activeLanguage.code.toUpperCase()}</span>
+          <span className="inline-flex items-center gap-1.5">
+            <Globe className="w-4 h-4 shrink-0" aria-hidden="true" />
+            <span className="hidden sm:inline">{activeLanguage.nativeLabel}</span>
+            <span className="sm:hidden">{activeLanguage.code.toUpperCase()}</span>
+          </span>
           <ChevronDown className="w-3.5 h-3.5 shrink-0 opacity-60" aria-hidden="true" />
         </button>
       </DropdownMenuTrigger>
