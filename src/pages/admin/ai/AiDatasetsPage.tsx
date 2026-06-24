@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Header } from "@/components/header"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Icon3D } from "@/components/icon-3d"
@@ -21,6 +22,7 @@ const TOOLTIP_STYLE = {
 const PLACEHOLDER_COLORS = ['#10b981', '#0ea5e9', '#f59e0b', '#8b5cf6', '#ef4444', '#f97316', '#14b8a6', '#ec4899', '#6366f1']
 
 export default function AiDatasetsPage() {
+  const { t } = useTranslation()
   const [dataset, setDataset] = useState<Dataset | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -35,16 +37,16 @@ export default function AiDatasetsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header title="Dataset Management" subtitle="Manage disease class images for model training" />
+      <Header title={t('admin.ai.datasets.title')} subtitle={t('admin.ai.datasets.subtitle')} />
 
       <div className="p-6 space-y-6">
         {/* KPIs */}
         <div className="grid grid-cols-3 gap-4">
           {[
-            { label: "Total Images", value: loading ? '—' : dataset?.totalImages.toLocaleString(), gradient: "sky" as const, icon: Database },
-            { label: "Disease Classes", value: loading ? '—' : dataset?.classes.length, gradient: "green" as const, icon: ImageIcon },
+            { label: t('admin.ai.datasets.kpi.totalImages'), value: loading ? '—' : dataset?.totalImages.toLocaleString(), gradient: "sky" as const, icon: Database },
+            { label: t('admin.ai.datasets.kpi.diseaseClasses'), value: loading ? '—' : dataset?.classes.length, gradient: "green" as const, icon: ImageIcon },
             {
-              label: "Imbalanced Classes",
+              label: t('admin.ai.datasets.kpi.imbalancedClasses'),
               value: loading ? '—' : imbalancedCount,
               gradient: imbalancedCount > 0 ? "earth" as const : "green" as const,
               icon: imbalancedCount > 0 ? AlertTriangle : CheckCircle2,
@@ -69,11 +71,11 @@ export default function AiDatasetsPage() {
           <CardHeader className="border-b border-border">
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-base">Class Balance</CardTitle>
-                <CardDescription>Image count vs. target (10,000) per disease class</CardDescription>
+                <CardTitle className="text-base">{t('admin.ai.datasets.classBalance.title')}</CardTitle>
+                <CardDescription>{t('admin.ai.datasets.classBalance.description')}</CardDescription>
               </div>
-              <Button size="sm" variant="outline" className="gap-2" onClick={() => toast.info('Add class — coming soon (mock)')}>
-                <Plus className="w-4 h-4" /> Add Class
+              <Button size="sm" variant="outline" className="gap-2" onClick={() => toast.info(t('admin.ai.datasets.toast.addClassComingSoon'))}>
+                <Plus className="w-4 h-4" /> {t('admin.ai.datasets.classBalance.addClass')}
               </Button>
             </div>
           </CardHeader>
@@ -86,8 +88,8 @@ export default function AiDatasetsPage() {
                     <XAxis dataKey="name" className="fill-muted-foreground" fontSize={9} tickLine={false} angle={-30} textAnchor="end" height={50} />
                     <YAxis className="fill-muted-foreground" fontSize={11} tickLine={false} axisLine={false} />
                     <Tooltip contentStyle={TOOLTIP_STYLE} />
-                    <ReferenceLine y={targetCount} stroke="#f59e0b" strokeDasharray="4 2" label={{ value: 'Target', fill: '#f59e0b', fontSize: 10 }} />
-                    <Bar dataKey="imageCount" radius={[4, 4, 0, 0]} name="Images">
+                    <ReferenceLine y={targetCount} stroke="#f59e0b" strokeDasharray="4 2" label={{ value: t('admin.ai.datasets.classBalance.targetLabel'), fill: '#f59e0b', fontSize: 10 }} />
+                    <Bar dataKey="imageCount" radius={[4, 4, 0, 0]} name={t('admin.ai.datasets.classBalance.imagesLabel')}>
                       {dataset?.classes.map((cls, i) => (
                         <Cell key={cls.id} fill={cls.isBalanced ? PLACEHOLDER_COLORS[i % PLACEHOLDER_COLORS.length] : '#ef4444'} fillOpacity={cls.isBalanced ? 0.85 : 0.7} />
                       ))}
@@ -97,9 +99,9 @@ export default function AiDatasetsPage() {
               </div>
             )}
             <div className="flex items-center gap-6 mt-2">
-              <div className="flex items-center gap-2"><span className="w-3 h-1.5 rounded bg-emerald-500" /><span className="text-xs text-muted-foreground">Balanced class</span></div>
-              <div className="flex items-center gap-2"><span className="w-3 h-1.5 rounded bg-rose-500" /><span className="text-xs text-muted-foreground">Imbalanced (below target)</span></div>
-              <div className="flex items-center gap-2"><span className="w-3 h-0.5 border-t-2 border-dashed border-amber-500" /><span className="text-xs text-muted-foreground">Target (10k)</span></div>
+              <div className="flex items-center gap-2"><span className="w-3 h-1.5 rounded bg-emerald-500" /><span className="text-xs text-muted-foreground">{t('admin.ai.datasets.classBalance.legendBalanced')}</span></div>
+              <div className="flex items-center gap-2"><span className="w-3 h-1.5 rounded bg-rose-500" /><span className="text-xs text-muted-foreground">{t('admin.ai.datasets.classBalance.legendImbalanced')}</span></div>
+              <div className="flex items-center gap-2"><span className="w-3 h-0.5 border-t-2 border-dashed border-amber-500" /><span className="text-xs text-muted-foreground">{t('admin.ai.datasets.classBalance.legendTarget')}</span></div>
             </div>
           </CardContent>
         </Card>
@@ -107,8 +109,8 @@ export default function AiDatasetsPage() {
         {/* Class list */}
         <Card className="border-0 shadow-md">
           <CardHeader className="border-b border-border">
-            <CardTitle className="text-base">Disease Classes</CardTitle>
-            <CardDescription>Dataset v{dataset?.version} · Last updated {dataset?.createdAt}</CardDescription>
+            <CardTitle className="text-base">{t('admin.ai.datasets.diseaseClasses.title')}</CardTitle>
+            <CardDescription>{t('admin.ai.datasets.diseaseClasses.description', { version: dataset?.version, date: dataset?.createdAt })}</CardDescription>
           </CardHeader>
           <CardContent className="p-0">
             {loading ? (
@@ -132,14 +134,14 @@ export default function AiDatasetsPage() {
                         <p className="text-sm font-semibold text-foreground">{cls.name}</p>
                         {!cls.isBalanced && (
                           <span className="text-[10px] px-1.5 py-0.5 rounded border bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800/40 font-medium flex items-center gap-1">
-                            <AlertTriangle className="w-2.5 h-2.5" /> Imbalanced
+                            <AlertTriangle className="w-2.5 h-2.5" /> {t('admin.ai.datasets.diseaseClasses.imbalancedBadge')}
                           </span>
                         )}
                       </div>
                       <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                        <span>{cls.imageCount.toLocaleString()} images</span>
-                        <span>Target: {cls.targetCount.toLocaleString()}</span>
-                        <span>Updated: {cls.lastUpdated}</span>
+                        <span>{t('admin.ai.datasets.diseaseClasses.imagesCount', { count: cls.imageCount.toLocaleString() })}</span>
+                        <span>{t('admin.ai.datasets.diseaseClasses.targetLabel', { count: cls.targetCount.toLocaleString() })}</span>
+                        <span>{t('admin.ai.datasets.diseaseClasses.updatedLabel', { date: cls.lastUpdated })}</span>
                       </div>
                       {/* Mini progress bar */}
                       <div className="mt-1.5 h-1 bg-muted rounded-full overflow-hidden w-40">
@@ -156,9 +158,9 @@ export default function AiDatasetsPage() {
                       size="sm"
                       variant="outline"
                       className="gap-1.5 text-xs"
-                      onClick={() => toast.info(`Upload images for "${cls.name}" — mock`)}
+                      onClick={() => toast.info(t('admin.ai.datasets.toast.uploadImagesFor', { name: cls.name }))}
                     >
-                      <Upload className="w-3.5 h-3.5" /> Upload
+                      <Upload className="w-3.5 h-3.5" /> {t('admin.ai.datasets.diseaseClasses.uploadButton')}
                     </Button>
                   </div>
                 ))}

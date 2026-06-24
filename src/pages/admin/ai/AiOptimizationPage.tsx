@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react"
+import { useTranslation } from "react-i18next"
 import { Header } from "@/components/header"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -10,10 +11,10 @@ import {
 import { toast } from "sonner"
 import { adminAiService, type OptimizationSuggestion, type OptimizationType, type OptimizationStatus } from "@/services/adminAiMock"
 
-const TYPE_CONFIG: Record<OptimizationType, { label: string; icon: React.ElementType; color: string; bg: string }> = {
-  planting: { label: 'Planting', icon: Sprout, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-500/10' },
-  harvesting: { label: 'Harvesting', icon: Scissors, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-500/10' },
-  resource: { label: 'Resource', icon: Package2, color: 'text-sky-600 dark:text-sky-400', bg: 'bg-sky-500/10' },
+const TYPE_CONFIG: Record<OptimizationType, { icon: React.ElementType; color: string; bg: string }> = {
+  planting: { icon: Sprout, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-500/10' },
+  harvesting: { icon: Scissors, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-500/10' },
+  resource: { icon: Package2, color: 'text-sky-600 dark:text-sky-400', bg: 'bg-sky-500/10' },
 }
 
 const STATUS_BADGE: Record<OptimizationStatus, string> = {
@@ -51,6 +52,7 @@ function SuggestionCard({
   onDismiss: (id: string) => void
   busy: string | null
 }) {
+  const { t } = useTranslation()
   const tc = TYPE_CONFIG[suggestion.type]
   const TypeIcon = tc.icon
   const isPending = suggestion.status === 'pending'
@@ -66,7 +68,7 @@ function SuggestionCard({
             <TypeIcon className={`w-4 h-4 ${tc.color}`} />
           </div>
           <div className="flex-1 min-w-0 flex items-center gap-2">
-            <span className={`text-[10px] font-bold uppercase tracking-wide ${tc.color}`}>{tc.label}</span>
+            <span className={`text-[10px] font-bold uppercase tracking-wide ${tc.color}`}>{t(`admin.ai.optimizationType.${suggestion.type}`)}</span>
             {suggestion.crop && (
               <>
                 <span className="text-muted-foreground text-[10px]">·</span>
@@ -78,7 +80,7 @@ function SuggestionCard({
             )}
           </div>
           <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded border ${STATUS_BADGE[suggestion.status]}`}>
-            {suggestion.status}
+            {t(`admin.ai.optimizationStatus.${suggestion.status}`)}
           </span>
         </div>
 
@@ -88,11 +90,11 @@ function SuggestionCard({
 
           <div className="flex flex-wrap gap-x-6 gap-y-2">
             <div>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wide font-medium mb-0.5">Confidence</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wide font-medium mb-0.5">{t('admin.ai.optimization.suggestionCard.confidence')}</p>
               <ConfidenceBar value={suggestion.confidence} />
             </div>
             <div>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wide font-medium mb-1">Expected Impact</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wide font-medium mb-1">{t('admin.ai.optimization.suggestionCard.expectedImpact')}</p>
               <p className="text-xs font-semibold text-foreground flex items-center gap-1">
                 <TrendingUp className="w-3 h-3 text-emerald-500" />
                 {suggestion.expectedImpact}
@@ -100,7 +102,7 @@ function SuggestionCard({
             </div>
             {suggestion.window && (
               <div>
-                <p className="text-[10px] text-muted-foreground uppercase tracking-wide font-medium mb-1">Action Window</p>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wide font-medium mb-1">{t('admin.ai.optimization.suggestionCard.actionWindow')}</p>
                 <p className="text-xs font-medium text-foreground flex items-center gap-1">
                   <Clock className="w-3 h-3 text-sky-500" />
                   {suggestion.window.start} → {suggestion.window.end}
@@ -119,7 +121,7 @@ function SuggestionCard({
                 disabled={isBusy}
               >
                 <CheckCircle2 className="w-3.5 h-3.5 mr-1.5 text-emerald-600 dark:text-emerald-400" />
-                <span className="text-emerald-700 dark:text-emerald-400">{isBusy ? 'Applying…' : 'Apply'}</span>
+                <span className="text-emerald-700 dark:text-emerald-400">{isBusy ? t('admin.ai.optimization.suggestionCard.applying') : t('admin.ai.optimization.suggestionCard.apply')}</span>
               </Button>
               <Button
                 size="sm"
@@ -129,7 +131,7 @@ function SuggestionCard({
                 disabled={isBusy}
               >
                 <XCircle className="w-3.5 h-3.5 mr-1.5 text-rose-600 dark:text-rose-400" />
-                <span className="text-rose-700 dark:text-rose-400">Dismiss</span>
+                <span className="text-rose-700 dark:text-rose-400">{t('admin.ai.optimization.suggestionCard.dismiss')}</span>
               </Button>
             </div>
           )}
@@ -137,7 +139,7 @@ function SuggestionCard({
           {isApplied && (
             <div className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
               <CheckCircle2 className="w-3.5 h-3.5" />
-              Applied — shared with relevant agronomists
+              {t('admin.ai.optimization.suggestionCard.appliedNotice')}
             </div>
           )}
         </div>
@@ -147,6 +149,7 @@ function SuggestionCard({
 }
 
 export default function AiOptimizationPage() {
+  const { t } = useTranslation()
   const [suggestions, setSuggestions] = useState<OptimizationSuggestion[]>([])
   const [loading, setLoading] = useState(true)
   const [statusFilter, setStatusFilter] = useState<FilterStatus>('pending')
@@ -157,9 +160,9 @@ export default function AiOptimizationPage() {
     setLoading(true)
     adminAiService.getOptimizationSuggestions()
       .then(setSuggestions)
-      .catch(() => toast.error('Failed to load optimization suggestions'))
+      .catch(() => toast.error(t('admin.ai.optimization.toast.loadFailed')))
       .finally(() => setLoading(false))
-  }, [])
+  }, [t])
 
   useEffect(() => { load() }, [load])
 
@@ -168,9 +171,9 @@ export default function AiOptimizationPage() {
     try {
       const updated = await adminAiService.applyOptimization(id)
       setSuggestions(prev => prev.map(s => s.id === id ? updated : s))
-      toast.success('Suggestion applied — shared with agronomists.')
+      toast.success(t('admin.ai.optimization.toast.applied'))
     } catch {
-      toast.error('Failed to apply suggestion.')
+      toast.error(t('admin.ai.optimization.toast.applyFailed'))
     } finally {
       setBusy(null)
     }
@@ -181,9 +184,9 @@ export default function AiOptimizationPage() {
     try {
       const updated = await adminAiService.dismissOptimization(id)
       setSuggestions(prev => prev.map(s => s.id === id ? updated : s))
-      toast.info('Suggestion dismissed.')
+      toast.info(t('admin.ai.optimization.toast.dismissed'))
     } catch {
-      toast.error('Failed to dismiss suggestion.')
+      toast.error(t('admin.ai.optimization.toast.dismissFailed'))
     } finally {
       setBusy(null)
     }
@@ -196,15 +199,15 @@ export default function AiOptimizationPage() {
   const pendingCount = suggestions.filter(s => s.status === 'pending').length
 
   const kpis = [
-    { label: "Total Suggestions", value: suggestions.length, gradient: "gold" as const, icon: Lightbulb },
-    { label: "Pending Action", value: pendingCount, gradient: "leaf" as const, icon: Clock },
-    { label: "Applied", value: suggestions.filter(s => s.status === 'applied').length, gradient: "green" as const, icon: CheckCircle2 },
-    { label: "Avg Confidence", value: suggestions.length ? `${Math.round(suggestions.reduce((a, s) => a + s.confidence, 0) / suggestions.length)}%` : '—', gradient: "sky" as const, icon: TrendingUp },
+    { label: t('admin.ai.optimization.kpi.totalSuggestions'), value: suggestions.length, gradient: "gold" as const, icon: Lightbulb },
+    { label: t('admin.ai.optimization.kpi.pendingAction'), value: pendingCount, gradient: "leaf" as const, icon: Clock },
+    { label: t('admin.ai.optimization.kpi.applied'), value: suggestions.filter(s => s.status === 'applied').length, gradient: "green" as const, icon: CheckCircle2 },
+    { label: t('admin.ai.optimization.kpi.avgConfidence'), value: suggestions.length ? `${Math.round(suggestions.reduce((a, s) => a + s.confidence, 0) / suggestions.length)}%` : '—', gradient: "sky" as const, icon: TrendingUp },
   ]
 
   return (
     <div className="min-h-screen bg-background">
-      <Header title="Optimization Suggestions" subtitle="AI-powered planting, harvesting, and resource recommendations" />
+      <Header title={t('admin.ai.optimization.title')} subtitle={t('admin.ai.optimization.subtitle')} />
 
       <div className="p-6 space-y-6">
         {/* KPI strip */}
@@ -244,14 +247,14 @@ export default function AiOptimizationPage() {
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-base">
               <Lightbulb className="w-4 h-4 text-amber-500" />
-              Suggestions
+              {t('admin.ai.optimization.suggestionsCard.title')}
             </CardTitle>
-            <CardDescription>{filtered.length} suggestions match current filters</CardDescription>
+            <CardDescription>{t('admin.ai.optimization.suggestionsCard.matchCount', { count: filtered.length })}</CardDescription>
           </CardHeader>
           <CardContent className="pt-0">
             <div className="flex flex-wrap gap-x-6 gap-y-3 mb-6">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-xs text-muted-foreground font-medium">Status:</span>
+                <span className="text-xs text-muted-foreground font-medium">{t('admin.ai.optimization.suggestionsCard.statusLabel')}:</span>
                 {STATUS_FILTERS.map(f => (
                   <button
                     key={f}
@@ -262,12 +265,12 @@ export default function AiOptimizationPage() {
                         : 'bg-muted text-muted-foreground border-border hover:text-foreground'
                     }`}
                   >
-                    {f}
+                    {f === 'all' ? t('common.activeStatus.all') : t(`admin.ai.optimizationStatus.${f}`)}
                   </button>
                 ))}
               </div>
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-xs text-muted-foreground font-medium">Type:</span>
+                <span className="text-xs text-muted-foreground font-medium">{t('admin.ai.optimization.suggestionsCard.typeLabel')}:</span>
                 {TYPE_FILTERS.map(f => (
                   <button
                     key={f}
@@ -278,7 +281,7 @@ export default function AiOptimizationPage() {
                         : 'bg-muted text-muted-foreground border-border hover:text-foreground'
                     }`}
                   >
-                    {f}
+                    {f === 'all' ? t('common.activeStatus.all') : t(`admin.ai.optimizationType.${f}`)}
                   </button>
                 ))}
               </div>
@@ -291,8 +294,8 @@ export default function AiOptimizationPage() {
             ) : filtered.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16">
                 <CheckCircle2 className="w-10 h-10 text-emerald-500 mb-3" />
-                <p className="font-semibold text-foreground">No suggestions match</p>
-                <p className="text-sm text-muted-foreground mt-1">Try adjusting the filters above.</p>
+                <p className="font-semibold text-foreground">{t('admin.ai.optimization.suggestionsCard.emptyTitle')}</p>
+                <p className="text-sm text-muted-foreground mt-1">{t('admin.ai.optimization.suggestionsCard.emptyDescription')}</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

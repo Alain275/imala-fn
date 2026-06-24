@@ -45,7 +45,13 @@
     "severity": {
       "high": "Bikomeye",
       "medium": "Biringaniye",
-      "low": "Bicye"
+      "low": "Bicye",
+      "critical": "Byihutirwa Cyane"
+    },
+    "activeStatus": {
+      "active": "Birakora",
+      "inactive": "Ntibikora",
+      "all": "Byose"
     },
     "notificationType": {
       "weather": "Ikirere",
@@ -663,6 +669,600 @@
         "passwordLabel": "Ijambo ry'Ibanga",
         "deleting": "Kubisiba...",
         "submit": "Siba Konti"
+      }
+    }
+  },
+  "admin": {
+    "sidebar": {
+      "tagline": "Urubuga rw'Ubuyobozi",
+      "portalLabel": "Urubuga rw'Umuyobozi",
+      "platformSection": "Urubuga",
+      "aiSection": "Imicungire y'Ubwenge bw'Ikoranabuhanga",
+      "nav": {
+        "overview": "Incamake",
+        "users": "Abakoresha",
+        "cooperatives": "Koperative",
+        "crops": "Ibihingwa",
+        "analytics": "Isesengura",
+        "notifications": "Amatangazo",
+        "aiOverview": "Incamake y'Ubwenge bw'Ikoranabuhanga",
+        "datasets": "Amakuru y'Ibipimo",
+        "trainingJobs": "Imyitozo y'Ubwenge bw'Ikoranabuhanga",
+        "modelRegistry": "Urutonde rw'Imodeli",
+        "reviewQueue": "Urutonde rwo Kongera Kureba",
+        "performance": "Imikorere",
+        "optimization": "Kunoza"
+      },
+      "myProfile": "Umwirondoro Wanjye",
+      "settings": "Igenamiterere",
+      "signOut": "Gusohoka",
+      "adminFallback": "Umuyobozi"
+    },
+    "settings": {
+      "title": "Igenamiterere ry'Urubuga",
+      "subtitle": "Genzura imikorere n'amabwiriza rusange y'urubuga",
+      "generalCard": {
+        "title": "Rusange",
+        "description": "Igenamiterere ry'ibanze ry'umwirondoro w'urubuga"
+      },
+      "platformNameLabel": "Izina ry'Urubuga",
+      "supportEmailLabel": "Imeyili y'Ubufasha",
+      "aiPolicyCard": {
+        "title": "Amabwiriza y'Ubwenge bw'Ikoranabuhanga",
+        "description": "Genzura ibisabwa byo kwemeza ibiteganyijwe n'ubwenge bw'ikoranabuhanga",
+        "requireReviewTitle": "Saba isuzuma ry'umuntu ku biteganyijwe biri munsi ya 85%",
+        "requireReviewDescription": "Ibiteganyijwe bifite icyizere gito binjira mu rutonde rwo kongera kureba mbere yo koherezwa abahinzi",
+        "maintenanceModeTitle": "Uburyo bwo Kubungabunga",
+        "maintenanceModeDescription": "Bihagarika kwinjira kw'abahinzi/abahanga mu buhinzi byose kandi bigaragaza urupapuro rwo kubungabunga"
+      },
+      "notificationsCard": {
+        "title": "Amatangazo",
+        "description": "Ibyo umuyobozi ahitamo ku matangazo",
+        "notifyNewUsersTitle": "Menyesha iyandikisha ry'abakoresha bashya",
+        "notifyNewUsersDescription": "Kira itangazo ry'urubuga buri gihe umukoresha mushya yiyandikishije"
+      },
+      "languageCard": {
+        "title": "Ururimi n'Akarere",
+        "description": "Hitamo ururimi rukoreshwa muri Urubuga rw'Ubuyobozi yose"
+      },
+      "saving": "Kubika...",
+      "saveSettings": "Bika Igenamiterere",
+      "savedMockToast": "Igenamiterere ryabitswe (igerageza)",
+      "mockStoreNotice": "Impinduka zabitswe gusa mu bubiko by'igerageza — BIGOMBA GUKORWA: guhuza n'API nyayo"
+    },
+    "ai": {
+      "trainingStatus": { "queued": "Bitegereje", "running": "Birimo Gukorwa", "completed": "Byarangiye", "failed": "Byanze" },
+      "modelStatus": { "staged": "Witeguriye", "deployed": "Byashyizwe mu Bikorwa", "archived": "Byabitswe" },
+      "reviewStatus": { "pending": "Bitegereje", "approved": "Byemejwe", "corrected": "Byahinduwe", "rejected": "Byanzwe" },
+      "reviewActions": { "approve": "Emeza", "correct": "Hindura", "reject": "Anga" },
+      "optimizationType": { "planting": "Gutera", "harvesting": "Gusarura", "resource": "Ibikoresho" },
+      "optimizationStatus": { "pending": "Bitegereje", "applied": "Byashyizwe mu Bikorwa", "dismissed": "Byirengagijwe" },
+      "overview": {
+        "title": "Incamake y'Ubwenge bw'Ikoranabuhanga",
+        "subtitle": "Imodeli y'indwara z'ibihingwa · Imiterere y'amahugurwa no gushyira mu bikorwa",
+        "kpi": {
+          "deployedModel": "Imodeli Ishyizwe mu Bikorwa",
+          "overallAccuracy": "Ukuri Rusange",
+          "onValidationSet": "ku makuru yo kwemeza",
+          "totalPredictions": "Igiteranyo cy'Ibiteganyijwe",
+          "sinceDeployment": "kuva ishyizwe mu bikorwa",
+          "pendingReviews": "Ibitegereje Kongera Kurebwa",
+          "awaitingValidation": "bitegereje kwemezwa",
+          "datasetImages": "Amafoto y'Amakuru",
+          "trainingSamples": "ingero z'amahugurwa",
+          "diseaseClasses": "Ibyiciro by'Indwara",
+          "categories": "ibyiciro"
+        },
+        "accuracyTrend": {
+          "title": "Imikurire y'Ukuri",
+          "description": "Ukuri kw'imodeli mu gihe (verisiyo zashyizwe mu bikorwa)",
+          "tooltipLabel": "Ukuri"
+        },
+        "confidenceDistribution": {
+          "title": "Igabanya ry'Icyizere",
+          "description": "Ese imodeli ifite icyizere kingana gute ku biteganyijwe byayo?",
+          "predictionsLabel": "Ibiteganyijwe"
+        },
+        "riskAlerts": {
+          "title": "Amatangazo y'Ibyago by'Ubwenge bw'Ikoranabuhanga",
+          "description": "Ibiteganyijwe by'ibyorezo by'udukoko/indwara n'ibyago bijyanye n'ikirere biturutse ku isesengura ry'imodeli",
+          "criticalCount": "{{count}} bikomeye cyane",
+          "emptyTitle": "Nta matangazo y'ibyago ahari",
+          "emptyDescription": "Igenzura ry'ubwenge bw'ikoranabuhanga rirakora — byose biri mu buryo busanzwe.",
+          "pestSectionTitle": "Udukoko n'Indwara",
+          "weatherSectionTitle": "Ibyago bijyanye n'Ikirere"
+        },
+        "alertRegion": "Akarere",
+        "alertCrop": "Igihingwa",
+        "alertProbability": "Amahirwe",
+        "alertTimeframe": "Igihe"
+      },
+      "datasets": {
+        "title": "Imicungire y'Amakuru",
+        "subtitle": "Cunga amafoto y'ibyiciro by'indwara ku mahugurwa y'imodeli",
+        "kpi": {
+          "totalImages": "Igiteranyo cy'Amafoto",
+          "diseaseClasses": "Ibyiciro by'Indwara",
+          "imbalancedClasses": "Ibyiciro Bidahwanye"
+        },
+        "classBalance": {
+          "title": "Ihwanya ry'Ibyiciro",
+          "description": "Umubare w'amafoto ugereranyije n'intego (10,000) kuri buri cyiciro cy'indwara",
+          "addClass": "Ongeraho Icyiciro",
+          "targetLabel": "Intego",
+          "imagesLabel": "Amafoto",
+          "legendBalanced": "Icyiciro gihwanye",
+          "legendImbalanced": "Kidahwanye (munsi y'intego)",
+          "legendTarget": "Intego (10k)"
+        },
+        "diseaseClasses": {
+          "title": "Ibyiciro by'Indwara",
+          "description": "Amakuru v{{version}} · Vuguruwe bwa nyuma {{date}}",
+          "imbalancedBadge": "Kidahwanye",
+          "imagesCount": "Amafoto {{count}}",
+          "targetLabel": "Intego: {{count}}",
+          "updatedLabel": "Byavuguruwe: {{date}}",
+          "uploadButton": "Ohereza"
+        },
+        "toast": {
+          "addClassComingSoon": "Kongeraho icyiciro — bizaza vuba (igerageza)",
+          "uploadImagesFor": "Kohereza amafoto ya \"{{name}}\" — igerageza"
+        }
+      },
+      "training": {
+        "title": "Imyitozo y'Amahugurwa",
+        "subtitle": "Tangira, kurikirana, kandi ucunge imyitozo y'amahugurwa y'imodeli",
+        "jobsSummary": "Imyitozo {{total}} byose · {{completed}} byarangiye",
+        "startTrainingRun": "Tangira Umwitozo w'Amahugurwa",
+        "emptyTitle": "Nta myitozo y'amahugurwa irahari",
+        "emptyDescription": "Tangira umwitozo w'amahugurwa kugira ngo utangire.",
+        "job": {
+          "base": "Ishingiro",
+          "epochs": "Inshuro z'Amahugurwa",
+          "dataset": "Amakuru",
+          "bestAcc": "Ukuri kwiza",
+          "metrics": "Ibipimo"
+        },
+        "metricsChart": {
+          "title": "Ibipimo by'Amahugurwa (Igihombo n'Ukuri kuri buri Nshuro)",
+          "epochAxis": "Inshuro",
+          "trainLoss": "Igihombo cy'Amahugurwa",
+          "valLoss": "Igihombo cyo Kwemeza",
+          "trainAcc": "Ukuri kw'Amahugurwa",
+          "valAcc": "Ukuri kwo Kwemeza"
+        },
+        "startDialog": {
+          "title": "Tangira Umwitozo Mushya w'Amahugurwa",
+          "baseModel": "Imodeli y'Ishingiro",
+          "epochs": "Inshuro z'Amahugurwa",
+          "datasetVersion": "Verisiyo y'Amakuru",
+          "starting": "Gutangira...",
+          "startTraining": "Tangira Amahugurwa"
+        },
+        "cancelDialog": {
+          "title": "Hagarika \"{{name}}\"?",
+          "description": "Ibi bizahagarika ako kanya umwitozo w'amahugurwa. Aho bigeze bizabura.",
+          "keepRunning": "Komeza Gukora",
+          "cancelling": "Guhagarika...",
+          "cancelJob": "Hagarika Umwitozo"
+        },
+        "cancelledByAdmin": "Byahagaritswe n'umuyobozi.",
+        "toast": {
+          "jobQueued": "Umwitozo w'amahugurwa \"{{name}}\" washyizwe mu murongo",
+          "startJobFailed": "Gutangira umwitozo byanze",
+          "jobCancelled": "Umwitozo \"{{name}}\" wahagaritswe",
+          "cancelFailed": "Guhagarika byanze",
+          "retryQueued": "Kongera kugerageza byashyizwe mu murongo: \"{{name}}\"",
+          "retryFailed": "Kongera kugerageza byanze"
+        }
+      },
+      "models": {
+        "title": "Urutonde rw'Imodeli",
+        "subtitle": "Amateka y'amaverisiyo, igenzura ryo gushyira mu bikorwa, n'ibipimo by'imodeli",
+        "currentlyDeployed": "Ishyizwe mu Bikorwa Ubu: {{version}}",
+        "deployedOn": "Yashyizwe mu bikorwa {{date}}",
+        "metric": {
+          "accuracy": "Ukuri",
+          "f1": "F1",
+          "precision": "Ukwizerwa",
+          "recall": "Kwibuka",
+          "f1Score": "Amanota ya F1",
+          "trained": "Yahuguwe"
+        },
+        "allVersions": {
+          "title": "Verisiyo Zose",
+          "description": "Imodeli imwe gusa ishobora gushyirwa mu bikorwa icyarimwe. Shyira mu bikorwa imodeli nshya kugira ngo iy'ubu ihindukire mu buryo bwikora ijye mu byiteguye."
+        },
+        "deploy": "Shyira mu Bikorwa",
+        "rollback": "Subiza Inyuma",
+        "archive": "Bika mu Bubiko",
+        "confirmDialog": {
+          "deployTitle": "Shyira mu Bikorwa {{version}}?",
+          "archiveTitle": "Bika mu Bubiko {{version}}?",
+          "deployDescription": "Ibi bizashyira mu bikorwa {{version}} kandi bigire imodeli y'ubu ({{previousVersion}}) ijye mu byiteguye. Ibiteganyijwe by'abahinzi bizahita bikoresha imodeli nshya.",
+          "archiveDescription": "Ibi bizabika {{version}} mu bubiko. Ishobora kongera gushyirwa mu bikorwa n'umuyobozi.",
+          "processing": "Birimo gukorwa...",
+          "deployModel": "Shyira Imodeli mu Bikorwa"
+        },
+        "toast": {
+          "deployed": "Imodeli {{version}} yashyizwe mu bikorwa. Imodeli y'ubu yimuriwe mu byiteguye.",
+          "archived": "Imodeli {{version}} yabitswe mu bubiko.",
+          "actionFailed": "Igikorwa cyanze",
+          "detailsComingSoon": "Ibisobanuro bya {{version}} — bizaza vuba",
+          "rollbackHint": "Kugira ngo usubize inyuma, shyira mu bikorwa imodeli y'ubu yari iteguye."
+        }
+      },
+      "review": {
+        "title": "Urutonde rwo Kongera Kureba Ibiteganyijwe",
+        "subtitle": "Emeza ibiteganyijwe by'indwara byatanzwe n'ubwenge bw'ikoranabuhanga biturutse ku mafoto y'abahinzi",
+        "kpi": {
+          "pendingReviews": "Ibitegereje Kongera Kurebwa",
+          "approvedToday": "Byemejwe Uyu Munsi",
+          "correctedToTraining": "Byahinduwe (→ Amahugurwa)"
+        },
+        "itemsCount": "Ibintu {{count}}",
+        "emptyTitle": "Urutonde rwarakuwemo",
+        "emptyDescription": "Nta kintu kihuye n'ibyo wahisemo.",
+        "correctedToLabel": "Byahinduriwe kuri",
+        "pagination": {
+          "showing": "Hagaragajwe {{from}}–{{to}} kuri {{total}}"
+        },
+        "correctDialog": {
+          "title": "Hindura Izina ry'Indwara",
+          "predicted": "Byateganyijwe",
+          "confidence": "Icyizere {{value}}%",
+          "correctLabel": "Izina Nyaryo",
+          "placeholder": "urugero: Mozayike y'Imyumbati, Indwara y'Umuceri…",
+          "helperText": "Ibintu byahinduwe byongera kwerekanwa nk'amakuru y'amahugurwa ku mwitozo ukurikira.",
+          "saving": "Kubika...",
+          "submit": "Ohereza Ihinduka"
+        },
+        "toast": {
+          "loadFailed": "Gushaka urutonde rwo kongera kureba byanze",
+          "enterCorrectLabel": "Nyamuneka andika izina nyaryo ry'indwara",
+          "corrected": "Byahinduriwe kuri \"{{label}}\" — byongewe ku makuru y'amahugurwa",
+          "actionFailed": "Igikorwa cyanze",
+          "approved": "Byemejwe — \"{{disease}}\" byemejwe kuri {{farmer}}",
+          "rejected": "Byanzwe — ibiteganyijwe byakuwe ku rutonde"
+        }
+      },
+      "performance": {
+        "title": "Imikorere y'Ubwenge bw'Ikoranabuhanga",
+        "subtitle": "Ukuri kuri buri cyiciro, igabanya ry'icyizere, n'amateka y'impinduka",
+        "accuracyOverTime": {
+          "title": "Ukuri mu Gihe",
+          "description": "Ukuri kw'amahugurwa ugereranyije n'ukuri kwo kwemeza kuri buri modeli yashyizwe mu bikorwa",
+          "trainAcc": "Ukuri kw'Amahugurwa",
+          "valAcc": "Ukuri kwo Kwemeza"
+        },
+        "perClassAccuracy": {
+          "title": "Ukuri kuri Buri Cyiciro",
+          "description": "Ukuri kwo kwemeza kuri buri cyiciro cy'indwara",
+          "accuracyLabel": "Ukuri"
+        },
+        "confidenceDistribution": {
+          "title": "Igabanya ry'Icyizere",
+          "description": "Ese imodeli ifite icyizere kingana gute ku biteganyijwe byose?",
+          "predictionsLabel": "Ibiteganyijwe"
+        },
+        "confusionHighlights": {
+          "title": "Amakosa Akunze Kugaragara",
+          "description": "Amakosa y'ibiteganyijwe akunze kugaragara — aho imodeli ikeneye kunozwa",
+          "predictedAs": "Byateganyijwe Nka",
+          "actualDisease": "Indwara Nyayo",
+          "count": "Umubare",
+          "severity": "Uburemere"
+        }
+      },
+      "optimization": {
+        "title": "Inama zo Kunoza",
+        "subtitle": "Inama z'ubwenge bw'ikoranabuhanga ku gutera, gusarura, n'ibikoresho",
+        "kpi": {
+          "totalSuggestions": "Igiteranyo cy'Inama",
+          "pendingAction": "Bitegereje Igikorwa",
+          "applied": "Zashyizwe mu Bikorwa",
+          "avgConfidence": "Impuzandengo y'Icyizere"
+        },
+        "suggestionsCard": {
+          "title": "Inama",
+          "matchCount": "Inama {{count}} zihuye n'ibyo wahisemo",
+          "statusLabel": "Imiterere",
+          "typeLabel": "Ubwoko",
+          "emptyTitle": "Nta nama ihuye",
+          "emptyDescription": "Gerageza guhindura ibyo wahisemo hejuru."
+        },
+        "suggestionCard": {
+          "confidence": "Icyizere",
+          "expectedImpact": "Ingaruka Ziteganyijwe",
+          "actionWindow": "Igihe cyo Gukora",
+          "apply": "Shyira mu Bikorwa",
+          "applying": "Birimo gushyirwa mu bikorwa...",
+          "dismiss": "Irengagiza",
+          "appliedNotice": "Yashyizwe mu bikorwa — yasangiwe n'abahanga mu buhinzi babireba"
+        },
+        "toast": {
+          "loadFailed": "Gushaka inama zo kunoza byanze",
+          "applied": "Inama yashyizwe mu bikorwa — yasangiwe n'abahanga mu buhinzi.",
+          "applyFailed": "Gushyira inama mu bikorwa byanze.",
+          "dismissed": "Inama yarengagijwe.",
+          "dismissFailed": "Kwirengagiza inama byanze."
+        }
+      }
+    },
+    "overview": {
+      "title": "Incamake y'Ubuyobozi",
+      "subtitle": "Imicungire y'urubuga n'ubuzima bw'uburyo",
+      "loadError": "Gushaka amakuru y'incamake byanze.",
+      "kpis": {
+        "totalUsers": "Igiteranyo cy'Abakoresha",
+        "newThisWeekSub": "+{{count}} iki cyumweru",
+        "farmers": "Abahinzi",
+        "registered": "biyandikishije",
+        "agronomists": "Abahanga mu Buhinzi",
+        "active": "bakora",
+        "cooperatives": "Koperative",
+        "onboarded": "zinjiye",
+        "activeToday": "Bakora Uyu Munsi",
+        "uniqueSessions": "abinjiye batandukanye",
+        "newThisWeek": "Bashya Iki Cyumweru",
+        "growthSub": "+{{rate}}% iterambere"
+      },
+      "roleDistribution": {
+        "admins": "Abayobozi",
+        "title": "Igabanya ry'Inshingano",
+        "description": "Igabanya ry'abakoresha ubu"
+      },
+      "userGrowth": {
+        "title": "Iterambere ry'Abakoresha",
+        "description": "Iyandikisha rya buri kwezi hashingiwe ku nshingano"
+      },
+      "quickActions": {
+        "title": "Ibikorwa Byihuse",
+        "description": "Ibikorwa by'ubuyobozi bisanzwe",
+        "registerCooperative": "Andikisha Koperative",
+        "addCrop": "Ongeraho Igihingwa",
+        "startTrainingRun": "Tangira Umwitozo w'Amahugurwa",
+        "reviewPredictions": "Kongera Kureba Ibiteganyijwe",
+        "viewAnalytics": "Reba Isesengura",
+        "manageUsers": "Cunga Abakoresha"
+      },
+      "recentActivity": {
+        "title": "Ibikorwa Biheruka",
+        "description": "Ibyabaye ku rubuga n'ibikorwa by'abakoresha",
+        "items": [
+          { "text": "Umuhinzi mushya yiyandikishije — Akarere ka Nyagatare", "time": "Iminota 12 ishize" },
+          { "text": "Ukuri kw'imodeli y'ubwenge bw'ikoranabuhanga v3.0.0 kwagezeho 93.4%", "time": "Isaha 1 ishize" },
+          { "text": "Koperative ABIRUHA yongeyeho abanyamuryango 24 bashya", "time": "Amasaha 2 ashize" },
+          { "text": "Umuhanga mu buhinzi Patrick Nkurunziza yinjiye", "time": "Amasaha 3 ashize" },
+          { "text": "Urubuga: abakoresha 8 bakora uyu munsi", "time": "Amasaha 4 ashize" },
+          { "text": "Abakoresha bashya 3 biyandikishije iki cyumweru", "time": "Amasaha 6 ashize" }
+        ]
+      }
+    },
+    "users": {
+      "title": "Imicungire y'Abakoresha",
+      "subtitle": "Cunga abakoresha bose b'urubuga, inshingano zabo, n'uburenganzira",
+      "searchPlaceholder": "Shakisha hakurikijwe izina cyangwa imeyili…",
+      "allRoles": "Inshingano Zose",
+      "tableTitle": "Abakoresha",
+      "empty": { "title": "Nta bakoresha babonetse", "description": "Gerageza guhindura ibyo wahisemo" },
+      "columns": { "user": "Umukoresha", "role": "Inshingano", "status": "Imiterere", "joined": "Yinjiye", "lastLogin": "Igihe Yinjiriye Bwa Nyuma" },
+      "actions": { "editRole": "Hindura Inshingano", "deactivate": "Hagarika", "activate": "Kora" },
+      "pagination": { "showing": "Hagaragajwe {{from}}–{{to}} kuri {{total}}" },
+      "editRoleDialog": { "title": "Hindura Inshingano — {{name}}", "prompt": "Hitamo inshingano nshya y'uyu mukoresha:", "saveRole": "Bika Inshingano" },
+      "deleteDialog": { "title": "Siba {{name}}?", "description": "Ibi bizasiba burundu uyu mukoresha n'amakuru ye yose. Iki gikorwa ntigishobora gusubizwa inyuma.", "deleting": "Kubisiba…" },
+      "toast": {
+        "loadFailed": "Gushaka abakoresha byanze",
+        "activated": "{{name}} yashyizwe mu bukora",
+        "deactivated": "{{name}} yahagaritswe",
+        "actionFailed": "Igikorwa cyanze",
+        "deleted": "{{name}} yasibwe",
+        "deleteFailed": "Gusiba byanze",
+        "roleUpdated": "Inshingano ya {{name}} yahinduriwe kuri {{role}}",
+        "roleUpdateFailed": "Guhindura inshingano byanze"
+      }
+    },
+    "cooperatives": {
+      "title": "Koperative",
+      "subtitle": "Cunga koperative zanditswe n'abanyamuryango babo",
+      "kpis": { "total": "Igiteranyo cya Koperative", "active": "Zikora", "totalMembers": "Igiteranyo cy'Abanyamuryango" },
+      "listTitle": "Koperative Zanditswe",
+      "listDescription": "Konti za koperative zose ku rubuga rwa IMARA",
+      "registerButton": "Andikisha Koperative",
+      "empty": { "title": "Nta koperative irahari", "description": "Andikisha koperative ya mbere kugira ngo utangire." },
+      "membersCount": "Abanyamuryango {{count}}/{{capacity}}",
+      "joinedLabel": "Yinjiye",
+      "actions": { "editDetails": "Hindura Ibisobanuro", "deactivate": "Hagarika", "activate": "Kora" },
+      "dialog": {
+        "editTitle": "Hindura Koperative",
+        "createTitle": "Andikisha Koperative",
+        "nameLabel": "Izina rya Koperative *",
+        "namePlaceholder": "urugero: COOPAC Rwamagana",
+        "locationLabel": "Aho Iherereye *",
+        "locationPlaceholder": "urugero: Rwamagana, Intara y'Iburasirazuba",
+        "contactPersonLabel": "Umuntu wo Kuvugana Na We *",
+        "contactPersonPlaceholder": "Amazina yombi",
+        "memberCapacityLabel": "Ubushobozi bw'Abanyamuryango",
+        "contactPhoneLabel": "Telefone yo Kuvugana",
+        "contactPhonePlaceholder": "+250 7XX XXX XXX",
+        "contactEmailLabel": "Imeyili yo Kuvugana *",
+        "contactEmailPlaceholder": "contact@coop.rw",
+        "statusLabel": "Imiterere",
+        "notesLabel": "Inyandiko",
+        "notesPlaceholder": "Inyandiko cyangwa ibitekerezo bidasabwa",
+        "registerSubmit": "Iyandikishe"
+      },
+      "deleteDialog": {
+        "title": "Siba {{name}}?",
+        "description": "Ibi bizasiba burundu koperative ku rubuga. Inyandiko z'abanyamuryango zose zijyanye nayo zizatandukanywa nayo. Iki gikorwa ntigishobora gusubizwa inyuma.",
+        "deleting": "Kubisiba…",
+        "confirmButton": "Siba Koperative"
+      },
+      "toast": {
+        "loadFailed": "Gushaka koperative byanze",
+        "validationRequired": "Izina, aho iherereye, umuntu wo kuvugana na we, n'imeyili birasabwa.",
+        "updated": "{{name}} yahinduwe neza.",
+        "registered": "{{name}} yanditswe ku rubuga.",
+        "saveFailed": "Kubika koperative byanze.",
+        "activated": "{{name}} yashyizwe mu bukora.",
+        "deactivated": "{{name}} yahagaritswe.",
+        "statusUpdateFailed": "Kuvugurura imiterere byanze.",
+        "deleted": "{{name}} yakuwe ku rubuga.",
+        "deleteFailed": "Gusiba koperative byanze."
+      }
+    },
+    "crops": {
+      "title": "Ububiko bw'Ibihingwa",
+      "subtitle": "Cunga ibihingwa byemewe n'imiterere yabyo mu buhinzi",
+      "searchPlaceholder": "Shakisha ibihingwa cyangwa amazina y'ubumenyi…",
+      "addCropButton": "Ongeraho Igihingwa",
+      "tableTitle": "Ibihingwa",
+      "summary": {
+        "total": "Ibihingwa {{count}} byose",
+        "totalMatching": "Ibihingwa {{count}} bihuye na \"{{search}}\"",
+        "totalInCategory": "Ibihingwa {{count}} biri muri \"{{category}}\"",
+        "totalInCategoryMatching": "Ibihingwa {{count}} biri muri \"{{category}}\" bihuye na \"{{search}}\""
+      },
+      "empty": { "title": "Nta gihingwa cyabonetse", "description": "Gerageza guhindura ishakiro cyangwa icyo wahisemo." },
+      "columns": { "crop": "Igihingwa", "category": "Icyiciro", "growingSeason": "Igihembwe cyo Gutera", "duration": "Igihe", "status": "Imiterere" },
+      "durationDays": "Iminsi {{count}}",
+      "pagination": { "showing": "{{from}}–{{to}} kuri {{total}}" },
+      "dialog": {
+        "editTitle": "Hindura Igihingwa",
+        "createTitle": "Ongeraho Igihingwa",
+        "commonNameLabel": "Izina Risanzwe *",
+        "commonNamePlaceholder": "urugero: Ibigori",
+        "scientificNameLabel": "Izina ry'Ubumenyi",
+        "scientificNamePlaceholder": "urugero: Zea mays",
+        "categoryLabel": "Icyiciro *",
+        "statusLabel": "Imiterere",
+        "growingSeasonLabel": "Igihembwe cyo Gutera *",
+        "growingSeasonPlaceholder": "urugero: Werurwe–Kamena, Nzeli–Ukuboza",
+        "growthDurationLabel": "Igihe cyo Gukura (iminsi) *",
+        "descriptionLabel": "Ibisobanuro",
+        "descriptionPlaceholder": "Inyandiko z'ubuhinzi bidasabwa",
+        "addSubmit": "Ongeraho Igihingwa"
+      },
+      "deleteDialog": {
+        "title": "Siba {{name}}?",
+        "description": "Ibi bizasiba burundu iki gihingwa mu bubiko. Abahinzi bari bahisemo nk'igihingwa nyamukuru ntibazahita babigiraho ingaruka, ariko iki gihingwa kizagenda kitagaragara mu byo guhitamo bishya.",
+        "deleting": "Kubisiba…",
+        "confirmButton": "Siba Igihingwa"
+      },
+      "toast": {
+        "loadFailed": "Gushaka ibihingwa byanze",
+        "validationRequired": "Izina, igihembwe cyo gutera, n'igihe cyo gukura birasabwa.",
+        "updated": "{{name}} yahinduwe.",
+        "added": "{{name}} yongewe mu bubiko bw'ibihingwa.",
+        "saveFailed": "Kubika igihingwa byanze.",
+        "deleted": "{{name}} yakuwe.",
+        "deleteFailed": "Gusiba igihingwa byanze."
+      },
+      "category": {
+        "cereal": "Ibinyampeke",
+        "legume": "Ibishyimbo",
+        "vegetable": "Imboga",
+        "tuber": "Ibijumba",
+        "fruit": "Imbuto",
+        "cashCrop": "Igihingwa cy'Ubucuruzi"
+      }
+    },
+    "analytics": {
+      "title": "Isesengura ry'Urubuga",
+      "subtitle": "Imikorere y'ibihingwa, ubuzima bw'ubutaka, imari, n'iramburabuzima",
+      "tabs": {
+        "cropPerformance": "Imikorere y'Ibihingwa", "cropPerformanceShort": "Ibihingwa",
+        "soilEnvironmental": "Ubutaka n'Ibidukikije", "soilEnvironmentalShort": "Ubutaka",
+        "financialResource": "Imari n'Ibikoresho", "financialResourceShort": "Imari",
+        "sustainability": "Iramburabuzima", "sustainabilityShort": "Iramburabuzima"
+      },
+      "crop": {
+        "kpis": {
+          "totalYield": "Umusaruro Wose (toni)",
+          "trackedCrops": "Ibihingwa {{count}} bikurikiranwa",
+          "avgDetectionRate": "Impuzandengo y'Urugero rwo Kumenya",
+          "diseaseScans": "isuzuma ry'indwara",
+          "mostAffected": "Cyibasiwe Kurusha",
+          "leafBlightCases": "Indwara y'Amababi — Ibibazo {{count}}",
+          "bestYieldRate": "Urugero rw'Umusaruro Mwiza Kurusha",
+          "aboveTarget": "+{{percent}}% hejuru y'intego"
+        },
+        "yieldChart": { "title": "Umusaruro w'Ibihingwa ugereranyije n'Intego", "description": "Toni kuri buri gihingwa muri iki gihembwe", "actual": "Nyakuri (t)", "target": "Intego (t)" },
+        "detectionChart": { "title": "Imikurire yo Kumenya Indwara", "description": "Ibyabonetse na AI bya buri kwezi hashingiwe ku bwoko bw'indwara", "blight": "Indwara y'Amababi", "rust": "Igicurama", "mosaic": "Mozayike", "blast": "Indwara y'Umuceri" }
+      },
+      "soil": {
+        "kpis": {
+          "avgRainfall": "Impuzandengo y'Imvura (mm)",
+          "monthlyAvg": "impuzandengo ya buri kwezi {{year}}",
+          "avgTemperature": "Impuzandengo y'Ubushyuhe (°C)",
+          "acrossAllZones": "mu turere twose",
+          "avgSoilPh": "Impuzandengo ya pH y'Ubutaka",
+          "withinOptimalRange": "mu rugero rwiza",
+          "lowNitrogenZones": "Uturere Dufite Azote Nke",
+          "needIntervention": "dukeneye kwitabwaho"
+        },
+        "climateChart": { "title": "Imikurire y'Ikirere (Amezi 12)", "description": "Imvura (mm) n'ubushyuhe (°C)", "rainfall": "Imvura (mm)", "temp": "Ubushyuhe (°C)" },
+        "nutrientsChart": { "title": "Intungamubiri z'Ubutaka mu Turere", "description": "Urugero rwa Azote / Fosifore / Potasiyo (0–100)", "nitrogen": "Azote", "phosphorus": "Fosifore", "potassium": "Potasiyo" }
+      },
+      "finance": {
+        "kpis": {
+          "totalRevenue": "Amafaranga Yose Yinjiye (M RWF)",
+          "allCrops": "ibihingwa byose {{year}}",
+          "topEarner": "Cyinjiza Cyane Kurusha",
+          "avgCostPerHa": "Impuzandengo y'Ikiguzi / Ha (K RWF)",
+          "seedsInputsLabor": "imbuto + ibikoresho + umurimo",
+          "revenueGrowth": "Iterambere ry'Amafaranga Yinjiye",
+          "vsSamePeriod": "ugereranyije n'igihe kimwe {{year}}"
+        },
+        "revenueChart": { "title": "Amafaranga Yinjiye kuri Buri Gihingwa", "description": "Miliyoni za RWF, ibihembwe byose kugeza ubu", "revenue": "Amafaranga Yinjiye" },
+        "costChart": { "title": "Igabanya ry'Ikiguzi cy'Ibikoresho", "description": "Miliyoni za RWF kuri buri cyiciro cy'ikiguzi mu gihembwe", "seeds": "Imbuto", "fertilizer": "Ifumbire", "pesticide": "Umuti w'Ibyonyi", "labor": "Umurimo" },
+        "priceChart": { "title": "Imikurire y'Ibiciro ku Isoko", "description": "RWF kuri kg — Ibigori, Ibishyimbo, Ikawa (÷10 ku rugero)", "coffeeScaled": "Ikawa (÷10)" }
+      },
+      "sustainability": {
+        "kpis": {
+          "carbonScore": "Amanota ya Karubone",
+          "target": "intego: {{value}}",
+          "organicCoverage": "Ubuso bw'Ubuhinzi Karemano",
+          "targetPercent": "intego: {{value}}%",
+          "pesticideCompliance": "Ubahirizwa bw'Imiti y'Ibyonyi",
+          "certifiedFarms": "imirima yemejwe",
+          "waterEfficiency": "Ikoreshwa Ryiza ry'Amazi"
+        },
+        "carbonChart": { "title": "Imikurire y'Ibyuka bya Karubone", "description": "Toni za CO₂e za buri kwezi hashingiwe ku nkomoko", "machinery": "Ibikoresho", "fertilizer": "Ifumbire", "transport": "Ubwikorezi" },
+        "scoresChart": { "title": "Amanota y'Iramburabuzima", "description": "Ubu ugereranyije n'intego ku bipimo byose", "current": "Ubu", "target": "Intego" }
+      }
+    },
+    "profile": {
+      "title": "Umwirondoro Wanjye",
+      "subtitle": "Igenamiterere rya konti y'umuyobozi n'ibikorwa",
+      "emailVerified": "Imeyili Yemejwe",
+      "emailNotVerified": "Imeyili Ntiyemejwe",
+      "memberSince": "Umunyamuryango kuva {{date}}",
+      "lastLogin": "Yinjiye bwa nyuma {{time}}",
+      "locationLabel": "Aho Aherereye",
+      "formDescription": "Vugurura amakuru ya konti yawe y'umuyobozi — izina, telefone, n'aho uherereye.",
+      "security": {
+        "title": "Umutekano",
+        "description": "Cunga ijambo ry'ibanga n'uburenganzira bwa konti yawe y'umuyobozi",
+        "changePassword": "Hindura Ijambo ry'Ibanga",
+        "deleteAccount": "Siba Konti",
+        "deleteWarning": "Gusiba konti y'umuyobozi bizakuraho burundu uburenganzira bwo kugera ku rubuga. Emeza ko hari konti y'umuyobozi indi ibaho mbere yo gukomeza."
+      },
+      "activity": { "title": "Ibikorwa Biheruka", "description": "Ibikorwa byawe by'ubuyobozi biheruka kuri uru rubuga", "empty": "Nta gikorwa cyaheruka cyanditswe." },
+      "preferences": {
+        "title": "Ibyo Uhitamo",
+        "description": "Ibyo uhitamo ku miterere n'amatangazo",
+        "appearance": "Imiterere",
+        "themeLight": "Iboneye",
+        "themeDark": "Yijimye",
+        "themeSystem": "Iy'Igikoresho",
+        "notificationsHeading": "Amatangazo y'Umuyobozi",
+        "notifications": {
+          "platformAlerts": { "title": "Amatangazo y'Urubuga", "description": "Ibyabaye bikomeye by'uburyo n'amatangazo y'umutekano" },
+          "aiModelUpdates": { "title": "Amavugurura y'Imodeli z'Ubwenge bw'Ikoranabuhanga", "description": "Irangira ry'amahugurwa, ibyabaye byo gushyira mu bikorwa" },
+          "newUserRegistrations": { "title": "Iyandikisha ry'Abakoresha Bashya", "description": "Incamake ya buri munsi y'iyandikisha rishya" },
+          "cooperativeActivity": { "title": "Ibikorwa bya Koperative", "description": "Impinduka z'abanyamuryango n'amavugurura ya koperative" }
+        }
       }
     }
   }

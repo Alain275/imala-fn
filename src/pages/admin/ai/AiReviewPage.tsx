@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react"
+import { useTranslation } from "react-i18next"
 import { Header } from "@/components/header"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Icon3D } from "@/components/icon-3d"
@@ -45,6 +46,7 @@ const STATUS_BADGE: Record<PredictionReviewItem['status'], string> = {
 const FILTERS: StatusFilter[] = ['all', 'pending', 'approved', 'corrected', 'rejected']
 
 export default function AiReviewPage() {
+  const { t } = useTranslation()
   const [items, setItems] = useState<PredictionReviewItem[]>([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -61,28 +63,28 @@ export default function AiReviewPage() {
     setLoading(true)
     adminAiService.getReviewQueue({ page, pageSize, status: filter })
       .then(({ data, total }) => { setItems(data); setTotal(total) })
-      .catch(() => toast.error('Failed to load review queue'))
+      .catch(() => toast.error(t('admin.ai.review.toast.loadFailed')))
       .finally(() => setLoading(false))
-  }, [page, pageSize, filter])
+  }, [page, pageSize, filter, t])
 
   useEffect(() => { load() }, [load])
   useEffect(() => { setPage(1) }, [filter])
 
   const handleCorrect = async () => {
     if (!selected || !correctedLabel.trim()) {
-      toast.warning('Please enter the correct disease label')
+      toast.warning(t('admin.ai.review.toast.enterCorrectLabel'))
       return
     }
     setActionLoading(true)
     try {
       await adminAiService.reviewPrediction(selected.id, 'correct', correctedLabel)
-      toast.success(`Corrected to "${correctedLabel}" — added to training dataset`)
+      toast.success(t('admin.ai.review.toast.corrected', { label: correctedLabel }))
       setSelected(null)
       setCorrectOpen(false)
       setCorrectedLabel('')
       load()
     } catch {
-      toast.error('Action failed')
+      toast.error(t('admin.ai.review.toast.actionFailed'))
     } finally {
       setActionLoading(false)
     }
@@ -92,15 +94,15 @@ export default function AiReviewPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header title="Prediction Review Queue" subtitle="Validate AI disease predictions from farmer scans" />
+      <Header title={t('admin.ai.review.title')} subtitle={t('admin.ai.review.subtitle')} />
 
       <div className="p-6 space-y-6">
         {/* Stats strip */}
         <div className="grid grid-cols-3 gap-4">
           {[
-            { label: "Pending Reviews", value: items.filter(i => i.status === 'pending').length || '—', gradient: "gold" as const, icon: ClipboardCheck },
-            { label: "Approved Today", value: '4', gradient: "green" as const, icon: CheckCircle2 },
-            { label: "Corrected (→ Training)", value: '1', gradient: "sky" as const, icon: Edit3 },
+            { label: t('admin.ai.review.kpi.pendingReviews'), value: items.filter(i => i.status === 'pending').length || '—', gradient: "gold" as const, icon: ClipboardCheck },
+            { label: t('admin.ai.review.kpi.approvedToday'), value: '4', gradient: "green" as const, icon: CheckCircle2 },
+            { label: t('admin.ai.review.kpi.correctedToTraining'), value: '1', gradient: "sky" as const, icon: Edit3 },
           ].map(k => (
             <Card key={k.label} className="border-0 shadow-md">
               <CardContent className="p-4 flex items-center gap-4">
@@ -126,10 +128,10 @@ export default function AiReviewPage() {
                   : 'bg-muted text-muted-foreground border-border hover:text-foreground'
               }`}
             >
-              {f.charAt(0).toUpperCase() + f.slice(1)}
+              {f === 'all' ? t('common.activeStatus.all') : t(`admin.ai.reviewStatus.${f}`)}
             </button>
           ))}
-          <span className="text-xs text-muted-foreground ml-2">{total} items</span>
+          <span className="text-xs text-muted-foreground ml-2">{t('admin.ai.review.itemsCount', { count: total })}</span>
         </div>
 
         {/* Review items */}
@@ -141,8 +143,8 @@ export default function AiReviewPage() {
           <Card className="border-0 shadow-md">
             <CardContent className="flex flex-col items-center justify-center py-16">
               <CheckCircle2 className="w-10 h-10 text-emerald-500 mb-3" />
-              <p className="font-semibold text-foreground">Queue cleared</p>
-              <p className="text-sm text-muted-foreground mt-1">No items match the current filter.</p>
+              <p className="font-semibold text-foreground">{t('admin.ai.review.emptyTitle')}</p>
+              <p className="text-sm text-muted-foreground mt-1">{t('admin.ai.review.emptyDescription')}</p>
             </CardContent>
           </Card>
         ) : (
@@ -168,7 +170,7 @@ export default function AiReviewPage() {
                           {item.confidence}%
                         </span>
                         <span className={`absolute top-2 left-2 text-[10px] font-medium px-1.5 py-0.5 rounded border ${STATUS_BADGE[item.status]}`}>
-                          {item.status}
+                          {t(`admin.ai.reviewStatus.${item.status}`)}
                         </span>
                       </div>
 
@@ -187,7 +189,7 @@ export default function AiReviewPage() {
 
                         {item.correctedLabel && (
                           <p className="text-xs text-sky-600 dark:text-sky-400 mb-2">
-                            Corrected to: <strong>{item.correctedLabel}</strong>
+                            {t('admin.ai.review.correctedToLabel')}: <strong>{item.correctedLabel}</strong>
                           </p>
                         )}
 
@@ -199,19 +201,19 @@ export default function AiReviewPage() {
                                 setActionLoading(true)
                                 try {
                                   await adminAiService.reviewPrediction(item.id, 'approve')
-                                  toast.success(`Approved — "${item.predictedDisease}" confirmed for ${item.farmerName}`)
+                                  toast.success(t('admin.ai.review.toast.approved', { disease: item.predictedDisease, farmer: item.farmerName }))
                                   load()
-                                } catch { toast.error('Action failed') } finally { setActionLoading(false) }
+                                } catch { toast.error(t('admin.ai.review.toast.actionFailed')) } finally { setActionLoading(false) }
                               }}
                               className="h-9 text-xs flex-col gap-0.5 border-emerald-200 hover:bg-emerald-50 dark:border-emerald-900/30 dark:hover:bg-emerald-950/20"
                               disabled={actionLoading}>
                               <ThumbsUp className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                              <span className="text-emerald-600 dark:text-emerald-400">Approve</span>
+                              <span className="text-emerald-600 dark:text-emerald-400">{t('admin.ai.reviewActions.approve')}</span>
                             </Button>
                             <Button size="sm" variant="outline" onClick={() => { setSelected(item); setCorrectOpen(true) }}
                               className="h-9 text-xs flex-col gap-0.5 border-sky-200 hover:bg-sky-50 dark:border-sky-900/30 dark:hover:bg-sky-950/20">
                               <Edit3 className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />
-                              <span className="text-sky-600 dark:text-sky-400">Correct</span>
+                              <span className="text-sky-600 dark:text-sky-400">{t('admin.ai.reviewActions.correct')}</span>
                             </Button>
                             <Button size="sm" variant="outline"
                               onClick={async () => {
@@ -219,14 +221,14 @@ export default function AiReviewPage() {
                                 setActionLoading(true)
                                 try {
                                   await adminAiService.reviewPrediction(item.id, 'reject')
-                                  toast.success('Rejected — prediction removed from queue')
+                                  toast.success(t('admin.ai.review.toast.rejected'))
                                   load()
-                                } catch { toast.error('Action failed') } finally { setActionLoading(false) }
+                                } catch { toast.error(t('admin.ai.review.toast.actionFailed')) } finally { setActionLoading(false) }
                               }}
                               className="h-9 text-xs flex-col gap-0.5 border-rose-200 hover:bg-rose-50 dark:border-rose-900/30 dark:hover:bg-rose-950/20"
                               disabled={actionLoading}>
                               <XCircle className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
-                              <span className="text-rose-600 dark:text-rose-400">Reject</span>
+                              <span className="text-rose-600 dark:text-rose-400">{t('admin.ai.reviewActions.reject')}</span>
                             </Button>
                           </div>
                         )}
@@ -241,7 +243,7 @@ export default function AiReviewPage() {
             {Math.ceil(total / pageSize) > 1 && (
               <div className="flex items-center justify-between">
                 <p className="text-xs text-muted-foreground">
-                  Showing {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, total)} of {total}
+                  {t('admin.ai.review.pagination.showing', { from: (page - 1) * pageSize + 1, to: Math.min(page * pageSize, total), total })}
                 </p>
                 <div className="flex items-center gap-2">
                   <Button variant="outline" size="icon" className="h-8 w-8" disabled={page === 1} onClick={() => setPage(p => p - 1)}>
@@ -262,28 +264,28 @@ export default function AiReviewPage() {
       <Dialog open={correctOpen} onOpenChange={open => { if (!open) { setCorrectOpen(false); setCorrectedLabel('') } }}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Correct Disease Label</DialogTitle>
+            <DialogTitle>{t('admin.ai.review.correctDialog.title')}</DialogTitle>
           </DialogHeader>
           <div className="py-4 space-y-3">
             <div className="bg-muted/50 border border-border rounded-xl p-3">
-              <p className="text-xs text-muted-foreground">Predicted</p>
+              <p className="text-xs text-muted-foreground">{t('admin.ai.review.correctDialog.predicted')}</p>
               <p className="text-sm font-semibold text-foreground">{selected?.predictedDisease}</p>
-              <p className="text-xs text-amber-600 dark:text-amber-400">{selected?.confidence}% confidence</p>
+              <p className="text-xs text-amber-600 dark:text-amber-400">{t('admin.ai.review.correctDialog.confidence', { value: selected?.confidence })}</p>
             </div>
             <div className="space-y-1.5">
-              <Label>Correct Label</Label>
+              <Label>{t('admin.ai.review.correctDialog.correctLabel')}</Label>
               <Input
-                placeholder="e.g. Cassava Mosaic, Rice Blast…"
+                placeholder={t('admin.ai.review.correctDialog.placeholder')}
                 value={correctedLabel}
                 onChange={e => setCorrectedLabel(e.target.value)}
               />
-              <p className="text-xs text-muted-foreground">Corrected items are automatically flagged as training data for the next model run.</p>
+              <p className="text-xs text-muted-foreground">{t('admin.ai.review.correctDialog.helperText')}</p>
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => { setCorrectOpen(false); setCorrectedLabel('') }}>Cancel</Button>
+            <Button variant="outline" onClick={() => { setCorrectOpen(false); setCorrectedLabel('') }}>{t('common.actions.cancel')}</Button>
             <Button onClick={handleCorrect} disabled={actionLoading || !correctedLabel.trim()}>
-              {actionLoading ? 'Saving…' : 'Submit Correction'}
+              {actionLoading ? t('admin.ai.review.correctDialog.saving') : t('admin.ai.review.correctDialog.submit')}
             </Button>
           </DialogFooter>
         </DialogContent>

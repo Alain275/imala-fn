@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Header } from "@/components/header"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -33,6 +34,7 @@ function MetricCell({ label, value }: { label: string; value: number }) {
 }
 
 export default function AiModelsPage() {
+  const { t } = useTranslation()
   const [models, setModels] = useState<AiModel[]>([])
   const [loading, setLoading] = useState(true)
   const [pending, setPending] = useState<PendingAction | null>(null)
@@ -53,15 +55,15 @@ export default function AiModelsPage() {
       let updated: AiModel[]
       if (pending.type === 'deploy') {
         updated = await adminAiService.deployModel(pending.model.id)
-        toast.success(`Model ${pending.model.version} deployed. Previous model moved to staged.`)
+        toast.success(t('admin.ai.models.toast.deployed', { version: pending.model.version }))
       } else {
         updated = await adminAiService.archiveModel(pending.model.id)
-        toast.success(`Model ${pending.model.version} archived.`)
+        toast.success(t('admin.ai.models.toast.archived', { version: pending.model.version }))
       }
       setModels(updated)
       setPending(null)
     } catch {
-      toast.error('Action failed')
+      toast.error(t('admin.ai.models.toast.actionFailed'))
     } finally {
       setActionLoading(false)
     }
@@ -69,7 +71,7 @@ export default function AiModelsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header title="Model Registry" subtitle="Version history, deployment control, and model metrics" />
+      <Header title={t('admin.ai.models.title')} subtitle={t('admin.ai.models.subtitle')} />
 
       <div className="p-6 space-y-6">
         {/* Currently deployed banner */}
@@ -81,15 +83,15 @@ export default function AiModelsPage() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">
-                  Currently Deployed: {deployedModel.version}
+                  {t('admin.ai.models.currentlyDeployed', { version: deployedModel.version })}
                 </p>
                 <p className="text-xs text-emerald-600/70 dark:text-emerald-400/70">
-                  {deployedModel.description} · Deployed {deployedModel.deployedAt}
+                  {deployedModel.description} · {t('admin.ai.models.deployedOn', { date: deployedModel.deployedAt })}
                 </p>
               </div>
               <div className="flex items-center gap-6 text-center">
-                <div><p className="text-xs text-muted-foreground">Accuracy</p><p className="font-bold text-emerald-600 dark:text-emerald-400">{(deployedModel.accuracy * 100).toFixed(1)}%</p></div>
-                <div><p className="text-xs text-muted-foreground">F1</p><p className="font-bold text-foreground">{(deployedModel.f1Score * 100).toFixed(1)}%</p></div>
+                <div><p className="text-xs text-muted-foreground">{t('admin.ai.models.metric.accuracy')}</p><p className="font-bold text-emerald-600 dark:text-emerald-400">{(deployedModel.accuracy * 100).toFixed(1)}%</p></div>
+                <div><p className="text-xs text-muted-foreground">{t('admin.ai.models.metric.f1')}</p><p className="font-bold text-foreground">{(deployedModel.f1Score * 100).toFixed(1)}%</p></div>
               </div>
             </CardContent>
           </Card>
@@ -100,9 +102,9 @@ export default function AiModelsPage() {
           <CardHeader className="border-b border-border">
             <CardTitle className="flex items-center gap-2 text-base">
               <Package className="w-4 h-4" />
-              All Versions
+              {t('admin.ai.models.allVersions.title')}
             </CardTitle>
-            <CardDescription>Only one model can be deployed at a time. Deploy a new model to automatically move the current one to staged.</CardDescription>
+            <CardDescription>{t('admin.ai.models.allVersions.description')}</CardDescription>
           </CardHeader>
           <CardContent className="p-0">
             {loading ? (
@@ -117,17 +119,17 @@ export default function AiModelsPage() {
                       <div className="flex items-center gap-3 mb-1.5">
                         <p className="font-semibold text-foreground">{model.version}</p>
                         <span className={`text-[10px] px-2 py-0.5 rounded border font-medium ${STATUS_STYLE[model.status]}`}>
-                          {model.status}
+                          {t(`admin.ai.modelStatus.${model.status}`)}
                         </span>
                       </div>
                       <p className="text-xs text-muted-foreground mb-3">{model.description}</p>
                       <div className="flex items-center gap-6">
-                        <MetricCell label="Accuracy" value={model.accuracy} />
-                        <MetricCell label="Precision" value={model.precision} />
-                        <MetricCell label="Recall" value={model.recall} />
-                        <MetricCell label="F1 Score" value={model.f1Score} />
+                        <MetricCell label={t('admin.ai.models.metric.accuracy')} value={model.accuracy} />
+                        <MetricCell label={t('admin.ai.models.metric.precision')} value={model.precision} />
+                        <MetricCell label={t('admin.ai.models.metric.recall')} value={model.recall} />
+                        <MetricCell label={t('admin.ai.models.metric.f1Score')} value={model.f1Score} />
                         <div className="text-center">
-                          <p className="text-xs text-muted-foreground">Trained</p>
+                          <p className="text-xs text-muted-foreground">{t('admin.ai.models.metric.trained')}</p>
                           <p className="text-sm font-medium text-foreground">{model.trainedAt}</p>
                         </div>
                       </div>
@@ -140,24 +142,24 @@ export default function AiModelsPage() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => toast.info(`Details for ${model.version} — coming soon`)}>
-                          <Info className="w-4 h-4 mr-2" /> View Details
+                        <DropdownMenuItem onClick={() => toast.info(t('admin.ai.models.toast.detailsComingSoon', { version: model.version }))}>
+                          <Info className="w-4 h-4 mr-2" /> {t('common.actions.viewDetails')}
                         </DropdownMenuItem>
                         {model.status !== 'deployed' && model.status !== 'archived' && (
                           <DropdownMenuItem onClick={() => setPending({ type: 'deploy', model })}>
-                            <Rocket className="w-4 h-4 mr-2" /> Deploy
+                            <Rocket className="w-4 h-4 mr-2" /> {t('admin.ai.models.deploy')}
                           </DropdownMenuItem>
                         )}
                         {model.status === 'deployed' && (
-                          <DropdownMenuItem onClick={() => toast.info('To rollback, deploy a previous staged model.')}>
-                            <Rocket className="w-4 h-4 mr-2" /> Rollback
+                          <DropdownMenuItem onClick={() => toast.info(t('admin.ai.models.toast.rollbackHint'))}>
+                            <Rocket className="w-4 h-4 mr-2" /> {t('admin.ai.models.rollback')}
                           </DropdownMenuItem>
                         )}
                         {model.status !== 'archived' && (
                           <>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={() => setPending({ type: 'archive', model })} className="text-muted-foreground">
-                              <Archive className="w-4 h-4 mr-2" /> Archive
+                              <Archive className="w-4 h-4 mr-2" /> {t('admin.ai.models.archive')}
                             </DropdownMenuItem>
                           </>
                         )}
@@ -176,23 +178,25 @@ export default function AiModelsPage() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              {pending?.type === 'deploy' ? `Deploy ${pending.model.version}?` : `Archive ${pending?.model.version}?`}
+              {pending?.type === 'deploy'
+                ? t('admin.ai.models.confirmDialog.deployTitle', { version: pending.model.version })
+                : t('admin.ai.models.confirmDialog.archiveTitle', { version: pending?.model.version })}
             </AlertDialogTitle>
             <AlertDialogDescription>
               {pending?.type === 'deploy'
-                ? `This will deploy ${pending.model.version} and move the current model (${deployedModel?.version ?? '—'}) to staged. Farmer predictions will immediately use the new model.`
-                : `This will archive ${pending?.model.version}. It can be restored by an admin.`
+                ? t('admin.ai.models.confirmDialog.deployDescription', { version: pending.model.version, previousVersion: deployedModel?.version ?? '—' })
+                : t('admin.ai.models.confirmDialog.archiveDescription', { version: pending?.model.version })
               }
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t('common.actions.cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleConfirm}
               disabled={actionLoading}
               className={pending?.type === 'deploy' ? '' : 'bg-muted text-foreground hover:bg-muted/80'}
             >
-              {actionLoading ? 'Processing…' : pending?.type === 'deploy' ? 'Deploy Model' : 'Archive'}
+              {actionLoading ? t('admin.ai.models.confirmDialog.processing') : pending?.type === 'deploy' ? t('admin.ai.models.confirmDialog.deployModel') : t('admin.ai.models.archive')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

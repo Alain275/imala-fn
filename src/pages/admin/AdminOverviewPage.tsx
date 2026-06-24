@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { useTranslation } from "react-i18next"
 import { cn } from "@/lib/utils"
 import { Header } from "@/components/header"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
@@ -25,15 +26,6 @@ const TOOLTIP_STYLE = {
   color: 'oklch(var(--foreground))',
 }
 
-const recentActivity = [
-  { icon: UserCheck, text: "New farmer registered — Nyagatare District", time: "12m ago", color: "text-emerald-500" },
-  { icon: BrainCircuit, text: "AI model v3.0.0 accuracy reached 93.4%", time: "1h ago", color: "text-violet-500" },
-  { icon: Building2, text: "ABIRUHA Cooperative added 24 new members", time: "2h ago", color: "text-sky-500" },
-  { icon: Users, text: "Agronomist Patrick Nkurunziza logged in", time: "3h ago", color: "text-amber-500" },
-  { icon: Activity, text: "Platform: 8 active users today", time: "4h ago", color: "text-emerald-500" },
-  { icon: TrendingUp, text: "3 new users registered this week", time: "6h ago", color: "text-emerald-500" },
-]
-
 function StatSkeleton() {
   return (
     <Card className="border-0 shadow-md">
@@ -47,48 +39,53 @@ function StatSkeleton() {
 }
 
 const QUICK_ACTIONS = [
-  { label: "Register Cooperative", icon: Building2, color: "text-amber-500", bg: "bg-amber-500/10 dark:bg-amber-500/15", href: "/admin/cooperatives" },
-  { label: "Add Crop", icon: Wheat, color: "text-emerald-500", bg: "bg-emerald-500/10 dark:bg-emerald-500/15", href: "/admin/crops" },
-  { label: "Start Training Run", icon: PlayCircle, color: "text-violet-500", bg: "bg-violet-500/10 dark:bg-violet-500/15", href: "/admin/ai/training" },
-  { label: "Review Predictions", icon: ClipboardCheck, color: "text-sky-500", bg: "bg-sky-500/10 dark:bg-sky-500/15", href: "/admin/ai/review" },
-  { label: "View Analytics", icon: BarChart3, color: "text-rose-500", bg: "bg-rose-500/10 dark:bg-rose-500/15", href: "/admin/analytics" },
-  { label: "Manage Users", icon: Users, color: "text-indigo-500", bg: "bg-indigo-500/10 dark:bg-indigo-500/15", href: "/admin/users" },
+  { labelKey: "admin.overview.quickActions.registerCooperative", icon: Building2, color: "text-amber-500", bg: "bg-amber-500/10 dark:bg-amber-500/15", href: "/admin/cooperatives" },
+  { labelKey: "admin.overview.quickActions.addCrop", icon: Wheat, color: "text-emerald-500", bg: "bg-emerald-500/10 dark:bg-emerald-500/15", href: "/admin/crops" },
+  { labelKey: "admin.overview.quickActions.startTrainingRun", icon: PlayCircle, color: "text-violet-500", bg: "bg-violet-500/10 dark:bg-violet-500/15", href: "/admin/ai/training" },
+  { labelKey: "admin.overview.quickActions.reviewPredictions", icon: ClipboardCheck, color: "text-sky-500", bg: "bg-sky-500/10 dark:bg-sky-500/15", href: "/admin/ai/review" },
+  { labelKey: "admin.overview.quickActions.viewAnalytics", icon: BarChart3, color: "text-rose-500", bg: "bg-rose-500/10 dark:bg-rose-500/15", href: "/admin/analytics" },
+  { labelKey: "admin.overview.quickActions.manageUsers", icon: Users, color: "text-indigo-500", bg: "bg-indigo-500/10 dark:bg-indigo-500/15", href: "/admin/users" },
 ]
 
 export default function AdminOverviewPage() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [stats, setStats] = useState<AdminStats | null>(null)
   const [growth, setGrowth] = useState<UserGrowthPoint[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+  const recentActivity = t('admin.overview.recentActivity.items', { returnObjects: true }) as { text: string; time: string }[]
+  const recentActivityIcons = [UserCheck, BrainCircuit, Building2, Users, Activity, TrendingUp]
+  const recentActivityColors = ["text-emerald-500", "text-violet-500", "text-sky-500", "text-amber-500", "text-emerald-500", "text-emerald-500"]
+
   useEffect(() => {
     Promise.all([adminService.getStats(), adminService.getUserGrowth()])
       .then(([s, g]) => { setStats(s); setGrowth(g) })
-      .catch(() => setError('Failed to load overview data.'))
+      .catch(() => setError(t('admin.overview.loadError')))
       .finally(() => setLoading(false))
-  }, [])
+  }, [t])
 
   const kpis = stats ? [
-    { label: "Total Users", value: stats.totalUsers, icon: Users, gradient: "gold" as const, sub: `+${stats.newThisWeek} this week` },
-    { label: "Farmers", value: stats.farmerCount, icon: Sprout, gradient: "green" as const, sub: "registered" },
-    { label: "Agronomists", value: stats.agronomistCount, icon: BrainCircuit, gradient: "sky" as const, sub: "active" },
-    { label: "Cooperatives", value: stats.cooperativeCount, icon: Building2, gradient: "earth" as const, sub: "onboarded" },
-    { label: "Active Today", value: stats.activeToday, icon: Activity, gradient: "leaf" as const, sub: "unique sessions" },
-    { label: "New This Week", value: stats.newThisWeek, icon: TrendingUp, gradient: "gold" as const, sub: `+${stats.growthRate}% growth` },
+    { label: t('admin.overview.kpis.totalUsers'), value: stats.totalUsers, icon: Users, gradient: "gold" as const, sub: t('admin.overview.kpis.newThisWeekSub', { count: stats.newThisWeek }) },
+    { label: t('admin.overview.kpis.farmers'), value: stats.farmerCount, icon: Sprout, gradient: "green" as const, sub: t('admin.overview.kpis.registered') },
+    { label: t('admin.overview.kpis.agronomists'), value: stats.agronomistCount, icon: BrainCircuit, gradient: "sky" as const, sub: t('admin.overview.kpis.active') },
+    { label: t('admin.overview.kpis.cooperatives'), value: stats.cooperativeCount, icon: Building2, gradient: "earth" as const, sub: t('admin.overview.kpis.onboarded') },
+    { label: t('admin.overview.kpis.activeToday'), value: stats.activeToday, icon: Activity, gradient: "leaf" as const, sub: t('admin.overview.kpis.uniqueSessions') },
+    { label: t('admin.overview.kpis.newThisWeek'), value: stats.newThisWeek, icon: TrendingUp, gradient: "gold" as const, sub: t('admin.overview.kpis.growthSub', { rate: stats.growthRate }) },
   ] : []
 
   const roleDistribution = stats ? [
-    { name: 'Farmers', value: stats.farmerCount },
-    { name: 'Agronomists', value: stats.agronomistCount },
-    { name: 'Cooperatives', value: stats.cooperativeCount },
-    { name: 'Admins', value: stats.adminCount },
+    { name: t('common.role.farmer'), value: stats.farmerCount },
+    { name: t('common.role.agronomist'), value: stats.agronomistCount },
+    { name: t('common.role.cooperative'), value: stats.cooperativeCount },
+    { name: t('admin.overview.roleDistribution.admins'), value: stats.adminCount },
   ] : []
 
   if (error) {
     return (
       <div className="min-h-screen bg-background">
-        <Header title="Admin Overview" subtitle="Platform management & system health" />
+        <Header title={t('admin.overview.title')} subtitle={t('admin.overview.subtitle')} />
         <div className="p-6 flex items-center justify-center">
           <p className="text-muted-foreground">{error}</p>
         </div>
@@ -98,7 +95,7 @@ export default function AdminOverviewPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header title="Admin Overview" subtitle="Platform management & system health" />
+      <Header title={t('admin.overview.title')} subtitle={t('admin.overview.subtitle')} />
 
       <div className="p-6 space-y-6">
         {/* KPI cards */}
@@ -131,9 +128,9 @@ export default function AdminOverviewPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
                 <TrendingUp className="w-5 h-5 text-emerald-500" />
-                User Growth
+                {t('admin.overview.userGrowth.title')}
               </CardTitle>
-              <CardDescription>Monthly registrations by role</CardDescription>
+              <CardDescription>{t('admin.overview.userGrowth.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               {loading ? <Skeleton className="h-56 w-full rounded-xl" /> : (
@@ -154,15 +151,15 @@ export default function AdminOverviewPage() {
                       <XAxis dataKey="month" className="fill-muted-foreground" fontSize={11} tickLine={false} />
                       <YAxis className="fill-muted-foreground" fontSize={11} tickLine={false} axisLine={false} />
                       <Tooltip contentStyle={TOOLTIP_STYLE} />
-                      <Area type="monotone" dataKey="farmers" stroke="#10b981" fill="url(#gFarmer)" name="Farmers" />
-                      <Area type="monotone" dataKey="agronomists" stroke="#0ea5e9" fill="url(#gAgro)" name="Agronomists" />
+                      <Area type="monotone" dataKey="farmers" stroke="#10b981" fill="url(#gFarmer)" name={t('common.role.farmer')} />
+                      <Area type="monotone" dataKey="agronomists" stroke="#0ea5e9" fill="url(#gAgro)" name={t('common.role.agronomist')} />
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>
               )}
               <div className="flex items-center gap-6 mt-3">
-                <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-emerald-500" /><span className="text-xs text-muted-foreground">Farmers</span></div>
-                <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-sky-500" /><span className="text-xs text-muted-foreground">Agronomists</span></div>
+                <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-emerald-500" /><span className="text-xs text-muted-foreground">{t('common.role.farmer')}</span></div>
+                <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-sky-500" /><span className="text-xs text-muted-foreground">{t('common.role.agronomist')}</span></div>
               </div>
             </CardContent>
           </Card>
@@ -172,9 +169,9 @@ export default function AdminOverviewPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
                 <Users className="w-5 h-5 text-muted-foreground" />
-                Role Distribution
+                {t('admin.overview.roleDistribution.title')}
               </CardTitle>
-              <CardDescription>Current user breakdown</CardDescription>
+              <CardDescription>{t('admin.overview.roleDistribution.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               {loading ? <Skeleton className="h-48 w-full rounded-xl" /> : (
@@ -213,22 +210,22 @@ export default function AdminOverviewPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
               <Activity className="w-5 h-5 text-violet-500" />
-              Quick Actions
+              {t('admin.overview.quickActions.title')}
             </CardTitle>
-            <CardDescription>Common administrative tasks</CardDescription>
+            <CardDescription>{t('admin.overview.quickActions.description')}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
               {QUICK_ACTIONS.map(a => (
                 <button
-                  key={a.label}
+                  key={a.labelKey}
                   onClick={() => navigate(a.href)}
                   className="flex flex-col items-center gap-2 p-4 rounded-xl border border-border hover:border-border/80 hover:bg-muted/40 transition-all duration-200 text-center group"
                 >
                   <div className={cn("w-10 h-10 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110", a.bg)}>
                     <a.icon className={cn("w-5 h-5", a.color)} />
                   </div>
-                  <span className="text-xs font-medium text-foreground leading-tight">{a.label}</span>
+                  <span className="text-xs font-medium text-foreground leading-tight">{t(a.labelKey)}</span>
                 </button>
               ))}
             </div>
@@ -240,23 +237,26 @@ export default function AdminOverviewPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
               <Clock className="w-5 h-5 text-muted-foreground" />
-              Recent Activity
+              {t('admin.overview.recentActivity.title')}
             </CardTitle>
-            <CardDescription>Platform events and user actions</CardDescription>
+            <CardDescription>{t('admin.overview.recentActivity.description')}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {recentActivity.map((a, i) => (
-                <div key={i} className="flex items-start gap-3">
-                  <div className={cn("w-8 h-8 rounded-lg bg-muted flex items-center justify-center flex-shrink-0", a.color)}>
-                    <a.icon className="w-4 h-4" />
+              {recentActivity.map((a, i) => {
+                const ActivityIcon = recentActivityIcons[i] ?? Activity
+                return (
+                  <div key={i} className="flex items-start gap-3">
+                    <div className={cn("w-8 h-8 rounded-lg bg-muted flex items-center justify-center flex-shrink-0", recentActivityColors[i])}>
+                      <ActivityIcon className="w-4 h-4" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm text-foreground">{a.text}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">{a.time}</p>
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm text-foreground">{a.text}</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">{a.time}</p>
-                  </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </CardContent>
         </Card>

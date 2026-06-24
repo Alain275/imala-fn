@@ -45,7 +45,13 @@
     "severity": {
       "high": "Élevée",
       "medium": "Moyenne",
-      "low": "Faible"
+      "low": "Faible",
+      "critical": "Critique"
+    },
+    "activeStatus": {
+      "active": "Actif",
+      "inactive": "Inactif",
+      "all": "Tous"
     },
     "notificationType": {
       "weather": "Météo",
@@ -663,6 +669,600 @@
         "passwordLabel": "Mot de Passe",
         "deleting": "Suppression en cours…",
         "submit": "Supprimer le Compte"
+      }
+    }
+  },
+  "admin": {
+    "sidebar": {
+      "tagline": "Console Admin",
+      "portalLabel": "Portail Admin",
+      "platformSection": "Plateforme",
+      "aiSection": "Gestion de l'IA",
+      "nav": {
+        "overview": "Aperçu",
+        "users": "Utilisateurs",
+        "cooperatives": "Coopératives",
+        "crops": "Cultures",
+        "analytics": "Analytique",
+        "notifications": "Notifications",
+        "aiOverview": "Aperçu de l'IA",
+        "datasets": "Jeux de Données",
+        "trainingJobs": "Tâches d'Entraînement",
+        "modelRegistry": "Registre des Modèles",
+        "reviewQueue": "File de Révision",
+        "performance": "Performance",
+        "optimization": "Optimisation"
+      },
+      "myProfile": "Mon Profil",
+      "settings": "Paramètres",
+      "signOut": "Déconnexion",
+      "adminFallback": "Admin"
+    },
+    "settings": {
+      "title": "Paramètres de la Plateforme",
+      "subtitle": "Configurez le comportement global et les politiques de la plateforme",
+      "generalCard": {
+        "title": "Général",
+        "description": "Paramètres d'identité de base de la plateforme"
+      },
+      "platformNameLabel": "Nom de la Plateforme",
+      "supportEmailLabel": "E-mail de Support",
+      "aiPolicyCard": {
+        "title": "Politique IA",
+        "description": "Contrôlez les exigences de validation des prédictions de l'IA",
+        "requireReviewTitle": "Exiger une révision humaine pour les prédictions inférieures à 85 %",
+        "requireReviewDescription": "Les prédictions à faible confiance entrent dans la file de révision admin avant d'être envoyées aux agriculteurs",
+        "maintenanceModeTitle": "Mode Maintenance",
+        "maintenanceModeDescription": "Bloque toutes les connexions des agriculteurs/agronomes et affiche la page de maintenance"
+      },
+      "notificationsCard": {
+        "title": "Notifications",
+        "description": "Préférences de notification de l'administrateur",
+        "notifyNewUsersTitle": "Notifier les nouvelles inscriptions d'utilisateurs",
+        "notifyNewUsersDescription": "Recevez une notification de la plateforme chaque fois qu'un nouvel utilisateur s'inscrit"
+      },
+      "languageCard": {
+        "title": "Langue et Région",
+        "description": "Définissez la langue utilisée dans tout le Tableau de Bord Admin"
+      },
+      "saving": "Enregistrement…",
+      "saveSettings": "Enregistrer les Paramètres",
+      "savedMockToast": "Paramètres enregistrés (simulation)",
+      "mockStoreNotice": "Modifications enregistrées uniquement dans le stockage simulé — À FAIRE : connecter à l'API réelle"
+    },
+    "ai": {
+      "trainingStatus": { "queued": "En file d'attente", "running": "En cours", "completed": "Terminé", "failed": "Échoué" },
+      "modelStatus": { "staged": "En préparation", "deployed": "Déployé", "archived": "Archivé" },
+      "reviewStatus": { "pending": "En attente", "approved": "Approuvé", "corrected": "Corrigé", "rejected": "Rejeté" },
+      "reviewActions": { "approve": "Approuver", "correct": "Corriger", "reject": "Rejeter" },
+      "optimizationType": { "planting": "Plantation", "harvesting": "Récolte", "resource": "Ressource" },
+      "optimizationStatus": { "pending": "En attente", "applied": "Appliqué", "dismissed": "Ignoré" },
+      "overview": {
+        "title": "Aperçu de l'IA",
+        "subtitle": "Modèle de maladies des cultures · Statut d'entraînement et de déploiement",
+        "kpi": {
+          "deployedModel": "Modèle Déployé",
+          "overallAccuracy": "Précision Globale",
+          "onValidationSet": "sur l'ensemble de validation",
+          "totalPredictions": "Total des Prédictions",
+          "sinceDeployment": "depuis le déploiement",
+          "pendingReviews": "Révisions en Attente",
+          "awaitingValidation": "en attente de validation",
+          "datasetImages": "Images du Jeu de Données",
+          "trainingSamples": "échantillons d'entraînement",
+          "diseaseClasses": "Classes de Maladies",
+          "categories": "catégories"
+        },
+        "accuracyTrend": {
+          "title": "Tendance de la Précision",
+          "description": "Précision du modèle au fil du temps (versions déployées)",
+          "tooltipLabel": "Précision"
+        },
+        "confidenceDistribution": {
+          "title": "Distribution de la Confiance",
+          "description": "Quel est le niveau de confiance du modèle dans ses prédictions ?",
+          "predictionsLabel": "Prédictions"
+        },
+        "riskAlerts": {
+          "title": "Alertes de Risque IA",
+          "description": "Prédictions d'épidémies de ravageurs/maladies et risques météorologiques issus de l'analyse du modèle",
+          "criticalCount": "{{count}} critiques",
+          "emptyTitle": "Aucune alerte de risque active",
+          "emptyDescription": "La surveillance par IA est en cours — tout est normal.",
+          "pestSectionTitle": "Ravageurs et Maladies",
+          "weatherSectionTitle": "Risques Météorologiques"
+        },
+        "alertRegion": "Région",
+        "alertCrop": "Culture",
+        "alertProbability": "Probabilité",
+        "alertTimeframe": "Délai"
+      },
+      "datasets": {
+        "title": "Gestion des Jeux de Données",
+        "subtitle": "Gérez les images des classes de maladies pour l'entraînement du modèle",
+        "kpi": {
+          "totalImages": "Total des Images",
+          "diseaseClasses": "Classes de Maladies",
+          "imbalancedClasses": "Classes Déséquilibrées"
+        },
+        "classBalance": {
+          "title": "Équilibre des Classes",
+          "description": "Nombre d'images par rapport à l'objectif (10 000) par classe de maladie",
+          "addClass": "Ajouter une Classe",
+          "targetLabel": "Objectif",
+          "imagesLabel": "Images",
+          "legendBalanced": "Classe équilibrée",
+          "legendImbalanced": "Déséquilibrée (sous l'objectif)",
+          "legendTarget": "Objectif (10k)"
+        },
+        "diseaseClasses": {
+          "title": "Classes de Maladies",
+          "description": "Jeu de données v{{version}} · Dernière mise à jour {{date}}",
+          "imbalancedBadge": "Déséquilibrée",
+          "imagesCount": "{{count}} images",
+          "targetLabel": "Objectif : {{count}}",
+          "updatedLabel": "Mis à jour : {{date}}",
+          "uploadButton": "Télécharger"
+        },
+        "toast": {
+          "addClassComingSoon": "Ajout de classe — bientôt disponible (simulation)",
+          "uploadImagesFor": "Téléchargement d'images pour « {{name}} » — simulation"
+        }
+      },
+      "training": {
+        "title": "Tâches d'Entraînement",
+        "subtitle": "Démarrez, surveillez et gérez les sessions d'entraînement du modèle",
+        "jobsSummary": "{{total}} tâches au total · {{completed}} terminées",
+        "startTrainingRun": "Démarrer une Session d'Entraînement",
+        "emptyTitle": "Aucune tâche d'entraînement pour le moment",
+        "emptyDescription": "Démarrez une session d'entraînement pour commencer.",
+        "job": {
+          "base": "Base",
+          "epochs": "Époques",
+          "dataset": "Jeu de données",
+          "bestAcc": "Meilleure précision",
+          "metrics": "Métriques"
+        },
+        "metricsChart": {
+          "title": "Métriques d'Entraînement (Perte et Précision par Époque)",
+          "epochAxis": "Époque",
+          "trainLoss": "Perte (Entraînement)",
+          "valLoss": "Perte (Validation)",
+          "trainAcc": "Précision (Entraînement)",
+          "valAcc": "Précision (Validation)"
+        },
+        "startDialog": {
+          "title": "Démarrer une Nouvelle Session d'Entraînement",
+          "baseModel": "Modèle de Base",
+          "epochs": "Époques",
+          "datasetVersion": "Version du Jeu de Données",
+          "starting": "Démarrage…",
+          "startTraining": "Démarrer l'Entraînement"
+        },
+        "cancelDialog": {
+          "title": "Annuler « {{name}} » ?",
+          "description": "Cela arrêtera immédiatement la session d'entraînement. La progression sera perdue.",
+          "keepRunning": "Continuer",
+          "cancelling": "Annulation…",
+          "cancelJob": "Annuler la Tâche"
+        },
+        "cancelledByAdmin": "Annulé par l'administrateur.",
+        "toast": {
+          "jobQueued": "Tâche d'entraînement « {{name}} » mise en file d'attente",
+          "startJobFailed": "Échec du démarrage de la tâche",
+          "jobCancelled": "Tâche « {{name}} » annulée",
+          "cancelFailed": "Échec de l'annulation",
+          "retryQueued": "Nouvelle tentative en file d'attente : « {{name}} »",
+          "retryFailed": "Échec de la nouvelle tentative"
+        }
+      },
+      "models": {
+        "title": "Registre des Modèles",
+        "subtitle": "Historique des versions, contrôle du déploiement et métriques du modèle",
+        "currentlyDeployed": "Actuellement Déployé : {{version}}",
+        "deployedOn": "Déployé le {{date}}",
+        "metric": {
+          "accuracy": "Précision",
+          "f1": "F1",
+          "precision": "Précision",
+          "recall": "Rappel",
+          "f1Score": "Score F1",
+          "trained": "Entraîné"
+        },
+        "allVersions": {
+          "title": "Toutes les Versions",
+          "description": "Un seul modèle peut être déployé à la fois. Déployez un nouveau modèle pour basculer automatiquement l'actuel en préparation."
+        },
+        "deploy": "Déployer",
+        "rollback": "Revenir en Arrière",
+        "archive": "Archiver",
+        "confirmDialog": {
+          "deployTitle": "Déployer {{version}} ?",
+          "archiveTitle": "Archiver {{version}} ?",
+          "deployDescription": "Cela déploiera {{version}} et basculera le modèle actuel ({{previousVersion}}) en préparation. Les prédictions des agriculteurs utiliseront immédiatement le nouveau modèle.",
+          "archiveDescription": "Cela archivera {{version}}. Il pourra être restauré par un administrateur.",
+          "processing": "Traitement…",
+          "deployModel": "Déployer le Modèle"
+        },
+        "toast": {
+          "deployed": "Modèle {{version}} déployé. Le modèle précédent est passé en préparation.",
+          "archived": "Modèle {{version}} archivé.",
+          "actionFailed": "Action échouée",
+          "detailsComingSoon": "Détails pour {{version}} — bientôt disponible",
+          "rollbackHint": "Pour revenir en arrière, déployez un modèle précédemment en préparation."
+        }
+      },
+      "review": {
+        "title": "File de Révision des Prédictions",
+        "subtitle": "Validez les prédictions de maladies de l'IA issues des scans des agriculteurs",
+        "kpi": {
+          "pendingReviews": "Révisions en Attente",
+          "approvedToday": "Approuvées Aujourd'hui",
+          "correctedToTraining": "Corrigées (→ Entraînement)"
+        },
+        "itemsCount": "{{count}} éléments",
+        "emptyTitle": "File vidée",
+        "emptyDescription": "Aucun élément ne correspond au filtre actuel.",
+        "correctedToLabel": "Corrigé en",
+        "pagination": {
+          "showing": "Affichage de {{from}}–{{to}} sur {{total}}"
+        },
+        "correctDialog": {
+          "title": "Corriger l'Étiquette de la Maladie",
+          "predicted": "Prédit",
+          "confidence": "{{value}}% de confiance",
+          "correctLabel": "Étiquette Correcte",
+          "placeholder": "ex. Mosaïque du Manioc, Pyriculariose du Riz…",
+          "helperText": "Les éléments corrigés sont automatiquement marqués comme données d'entraînement pour la prochaine session.",
+          "saving": "Enregistrement…",
+          "submit": "Soumettre la Correction"
+        },
+        "toast": {
+          "loadFailed": "Échec du chargement de la file de révision",
+          "enterCorrectLabel": "Veuillez saisir l'étiquette correcte de la maladie",
+          "corrected": "Corrigé en « {{label}} » — ajouté au jeu de données d'entraînement",
+          "actionFailed": "Action échouée",
+          "approved": "Approuvé — « {{disease}} » confirmé pour {{farmer}}",
+          "rejected": "Rejeté — prédiction supprimée de la file"
+        }
+      },
+      "performance": {
+        "title": "Performance de l'IA",
+        "subtitle": "Précision par classe, distribution de la confiance et tendances historiques",
+        "accuracyOverTime": {
+          "title": "Précision au Fil du Temps",
+          "description": "Précision d'entraînement par rapport à la précision de validation pour chaque modèle déployé",
+          "trainAcc": "Précision (Entraînement)",
+          "valAcc": "Précision (Validation)"
+        },
+        "perClassAccuracy": {
+          "title": "Précision par Classe",
+          "description": "Précision de validation pour chaque catégorie de maladie",
+          "accuracyLabel": "Précision"
+        },
+        "confidenceDistribution": {
+          "title": "Distribution de la Confiance",
+          "description": "Quel est le niveau de confiance du modèle dans l'ensemble des prédictions ?",
+          "predictionsLabel": "Prédictions"
+        },
+        "confusionHighlights": {
+          "title": "Erreurs de Classification Courantes",
+          "description": "Erreurs de prédiction les plus fréquentes — pistes d'amélioration du modèle",
+          "predictedAs": "Prédit Comme",
+          "actualDisease": "Maladie Réelle",
+          "count": "Nombre",
+          "severity": "Gravité"
+        }
+      },
+      "optimization": {
+        "title": "Suggestions d'Optimisation",
+        "subtitle": "Recommandations de plantation, récolte et ressources basées sur l'IA",
+        "kpi": {
+          "totalSuggestions": "Total des Suggestions",
+          "pendingAction": "Action en Attente",
+          "applied": "Appliquées",
+          "avgConfidence": "Confiance Moyenne"
+        },
+        "suggestionsCard": {
+          "title": "Suggestions",
+          "matchCount": "{{count}} suggestions correspondent aux filtres actuels",
+          "statusLabel": "Statut",
+          "typeLabel": "Type",
+          "emptyTitle": "Aucune suggestion correspondante",
+          "emptyDescription": "Essayez d'ajuster les filtres ci-dessus."
+        },
+        "suggestionCard": {
+          "confidence": "Confiance",
+          "expectedImpact": "Impact Attendu",
+          "actionWindow": "Fenêtre d'Action",
+          "apply": "Appliquer",
+          "applying": "Application…",
+          "dismiss": "Ignorer",
+          "appliedNotice": "Appliquée — partagée avec les agronomes concernés"
+        },
+        "toast": {
+          "loadFailed": "Échec du chargement des suggestions d'optimisation",
+          "applied": "Suggestion appliquée — partagée avec les agronomes.",
+          "applyFailed": "Échec de l'application de la suggestion.",
+          "dismissed": "Suggestion ignorée.",
+          "dismissFailed": "Échec du rejet de la suggestion."
+        }
+      }
+    },
+    "overview": {
+      "title": "Aperçu Administratif",
+      "subtitle": "Gestion de la plateforme et santé du système",
+      "loadError": "Échec du chargement des données d'aperçu.",
+      "kpis": {
+        "totalUsers": "Total des Utilisateurs",
+        "newThisWeekSub": "+{{count}} cette semaine",
+        "farmers": "Agriculteurs",
+        "registered": "inscrits",
+        "agronomists": "Agronomes",
+        "active": "actifs",
+        "cooperatives": "Coopératives",
+        "onboarded": "intégrées",
+        "activeToday": "Actifs Aujourd'hui",
+        "uniqueSessions": "sessions uniques",
+        "newThisWeek": "Nouveaux Cette Semaine",
+        "growthSub": "+{{rate}}% de croissance"
+      },
+      "roleDistribution": {
+        "admins": "Administrateurs",
+        "title": "Répartition des Rôles",
+        "description": "Répartition actuelle des utilisateurs"
+      },
+      "userGrowth": {
+        "title": "Croissance des Utilisateurs",
+        "description": "Inscriptions mensuelles par rôle"
+      },
+      "quickActions": {
+        "title": "Actions Rapides",
+        "description": "Tâches administratives courantes",
+        "registerCooperative": "Enregistrer une Coopérative",
+        "addCrop": "Ajouter une Culture",
+        "startTrainingRun": "Démarrer une Session d'Entraînement",
+        "reviewPredictions": "Réviser les Prédictions",
+        "viewAnalytics": "Voir l'Analytique",
+        "manageUsers": "Gérer les Utilisateurs"
+      },
+      "recentActivity": {
+        "title": "Activité Récente",
+        "description": "Événements de la plateforme et actions des utilisateurs",
+        "items": [
+          { "text": "Nouvel agriculteur inscrit — District de Nyagatare", "time": "il y a 12 min" },
+          { "text": "La précision du modèle IA v3.0.0 a atteint 93,4 %", "time": "il y a 1 h" },
+          { "text": "La Coopérative ABIRUHA a ajouté 24 nouveaux membres", "time": "il y a 2 h" },
+          { "text": "L'agronome Patrick Nkurunziza s'est connecté", "time": "il y a 3 h" },
+          { "text": "Plateforme : 8 utilisateurs actifs aujourd'hui", "time": "il y a 4 h" },
+          { "text": "3 nouveaux utilisateurs inscrits cette semaine", "time": "il y a 6 h" }
+        ]
+      }
+    },
+    "users": {
+      "title": "Gestion des Utilisateurs",
+      "subtitle": "Gérez tous les utilisateurs, rôles et accès de la plateforme",
+      "searchPlaceholder": "Rechercher par nom ou e-mail…",
+      "allRoles": "Tous les Rôles",
+      "tableTitle": "Utilisateurs",
+      "empty": { "title": "Aucun utilisateur trouvé", "description": "Essayez d'ajuster vos filtres" },
+      "columns": { "user": "Utilisateur", "role": "Rôle", "status": "Statut", "joined": "Inscrit le", "lastLogin": "Dernière Connexion" },
+      "actions": { "editRole": "Modifier le Rôle", "deactivate": "Désactiver", "activate": "Activer" },
+      "pagination": { "showing": "Affichage de {{from}}–{{to}} sur {{total}}" },
+      "editRoleDialog": { "title": "Modifier le Rôle — {{name}}", "prompt": "Sélectionnez le nouveau rôle pour cet utilisateur :", "saveRole": "Enregistrer le Rôle" },
+      "deleteDialog": { "title": "Supprimer {{name}} ?", "description": "Cela supprimera définitivement cet utilisateur et toutes ses données. Cette action est irréversible.", "deleting": "Suppression en cours…" },
+      "toast": {
+        "loadFailed": "Échec du chargement des utilisateurs",
+        "activated": "{{name}} activé",
+        "deactivated": "{{name}} désactivé",
+        "actionFailed": "Action échouée",
+        "deleted": "{{name}} supprimé",
+        "deleteFailed": "Échec de la suppression",
+        "roleUpdated": "Le rôle de {{name}} a été mis à jour vers {{role}}",
+        "roleUpdateFailed": "Échec de la mise à jour du rôle"
+      }
+    },
+    "cooperatives": {
+      "title": "Coopératives",
+      "subtitle": "Gérez les coopératives enregistrées et leurs membres",
+      "kpis": { "total": "Total des Coopératives", "active": "Actives", "totalMembers": "Total des Membres" },
+      "listTitle": "Coopératives Enregistrées",
+      "listDescription": "Tous les comptes de coopératives sur la plateforme IMARA",
+      "registerButton": "Enregistrer une Coopérative",
+      "empty": { "title": "Aucune coopérative pour le moment", "description": "Enregistrez la première coopérative pour commencer." },
+      "membersCount": "{{count}}/{{capacity}} membres",
+      "joinedLabel": "Inscrite le",
+      "actions": { "editDetails": "Modifier les Détails", "deactivate": "Désactiver", "activate": "Activer" },
+      "dialog": {
+        "editTitle": "Modifier la Coopérative",
+        "createTitle": "Enregistrer une Coopérative",
+        "nameLabel": "Nom de la Coopérative *",
+        "namePlaceholder": "ex. COOPAC Rwamagana",
+        "locationLabel": "Emplacement *",
+        "locationPlaceholder": "ex. Rwamagana, Province de l'Est",
+        "contactPersonLabel": "Personne de Contact *",
+        "contactPersonPlaceholder": "Nom complet",
+        "memberCapacityLabel": "Capacité de Membres",
+        "contactPhoneLabel": "Téléphone de Contact",
+        "contactPhonePlaceholder": "+250 7XX XXX XXX",
+        "contactEmailLabel": "E-mail de Contact *",
+        "contactEmailPlaceholder": "contact@coop.rw",
+        "statusLabel": "Statut",
+        "notesLabel": "Notes",
+        "notesPlaceholder": "Notes ou remarques facultatives",
+        "registerSubmit": "Enregistrer"
+      },
+      "deleteDialog": {
+        "title": "Supprimer {{name}} ?",
+        "description": "Cela supprimera définitivement la coopérative de la plateforme. Tous les enregistrements de membres associés seront dissociés. Cette action est irréversible.",
+        "deleting": "Suppression en cours…",
+        "confirmButton": "Supprimer la Coopérative"
+      },
+      "toast": {
+        "loadFailed": "Échec du chargement des coopératives",
+        "validationRequired": "Le nom, l'emplacement, la personne de contact et l'e-mail sont requis.",
+        "updated": "{{name}} mis à jour avec succès.",
+        "registered": "{{name}} enregistrée sur la plateforme.",
+        "saveFailed": "Échec de l'enregistrement de la coopérative.",
+        "activated": "{{name}} activée.",
+        "deactivated": "{{name}} désactivée.",
+        "statusUpdateFailed": "Échec de la mise à jour du statut.",
+        "deleted": "{{name}} retirée de la plateforme.",
+        "deleteFailed": "Échec de la suppression de la coopérative."
+      }
+    },
+    "crops": {
+      "title": "Bibliothèque de Cultures",
+      "subtitle": "Gérez les cultures prises en charge et leurs profils agronomiques",
+      "searchPlaceholder": "Rechercher des cultures ou des noms scientifiques…",
+      "addCropButton": "Ajouter une Culture",
+      "tableTitle": "Cultures",
+      "summary": {
+        "total": "{{count}} cultures au total",
+        "totalMatching": "{{count}} cultures correspondant à « {{search}} »",
+        "totalInCategory": "{{count}} cultures dans « {{category}} »",
+        "totalInCategoryMatching": "{{count}} cultures dans « {{category}} » correspondant à « {{search}} »"
+      },
+      "empty": { "title": "Aucune culture trouvée", "description": "Essayez d'ajuster la recherche ou le filtre." },
+      "columns": { "crop": "Culture", "category": "Catégorie", "growingSeason": "Saison de Croissance", "duration": "Durée", "status": "Statut" },
+      "durationDays": "{{count}}j",
+      "pagination": { "showing": "{{from}}–{{to}} sur {{total}}" },
+      "dialog": {
+        "editTitle": "Modifier la Culture",
+        "createTitle": "Ajouter une Culture",
+        "commonNameLabel": "Nom Commun *",
+        "commonNamePlaceholder": "ex. Maïs",
+        "scientificNameLabel": "Nom Scientifique",
+        "scientificNamePlaceholder": "ex. Zea mays",
+        "categoryLabel": "Catégorie *",
+        "statusLabel": "Statut",
+        "growingSeasonLabel": "Saison de Croissance *",
+        "growingSeasonPlaceholder": "ex. Mars–Juin, Sep–Déc",
+        "growthDurationLabel": "Durée de Croissance (jours) *",
+        "descriptionLabel": "Description",
+        "descriptionPlaceholder": "Notes agronomiques facultatives",
+        "addSubmit": "Ajouter la Culture"
+      },
+      "deleteDialog": {
+        "title": "Supprimer {{name}} ?",
+        "description": "Cela supprimera définitivement cette culture de la bibliothèque. Les agriculteurs qui l'ont sélectionnée comme culture principale ne seront pas immédiatement affectés, mais la culture n'apparaîtra plus dans les nouvelles sélections.",
+        "deleting": "Suppression en cours…",
+        "confirmButton": "Supprimer la Culture"
+      },
+      "toast": {
+        "loadFailed": "Échec du chargement des cultures",
+        "validationRequired": "Le nom, la saison de croissance et la durée de croissance sont requis.",
+        "updated": "{{name}} mis à jour.",
+        "added": "{{name}} ajouté à la bibliothèque de cultures.",
+        "saveFailed": "Échec de l'enregistrement de la culture.",
+        "deleted": "{{name}} retiré.",
+        "deleteFailed": "Échec de la suppression de la culture."
+      },
+      "category": {
+        "cereal": "Céréale",
+        "legume": "Légumineuse",
+        "vegetable": "Légume",
+        "tuber": "Tubercule",
+        "fruit": "Fruit",
+        "cashCrop": "Culture de Rente"
+      }
+    },
+    "analytics": {
+      "title": "Analytique de la Plateforme",
+      "subtitle": "Performance des cultures, santé du sol, finances et durabilité",
+      "tabs": {
+        "cropPerformance": "Performance des Cultures", "cropPerformanceShort": "Cultures",
+        "soilEnvironmental": "Sol et Environnement", "soilEnvironmentalShort": "Sol",
+        "financialResource": "Finances et Ressources", "financialResourceShort": "Finances",
+        "sustainability": "Durabilité", "sustainabilityShort": "Durabilité"
+      },
+      "crop": {
+        "kpis": {
+          "totalYield": "Rendement Total (tonnes)",
+          "trackedCrops": "{{count}} cultures suivies",
+          "avgDetectionRate": "Taux de Détection Moyen",
+          "diseaseScans": "scans de maladies",
+          "mostAffected": "Plus Affectée",
+          "leafBlightCases": "Brûlure des Feuilles — {{count}} cas",
+          "bestYieldRate": "Meilleur Taux de Rendement",
+          "aboveTarget": "+{{percent}}% au-dessus de l'objectif"
+        },
+        "yieldChart": { "title": "Rendement des Cultures vs Objectif", "description": "Tonnes par culture cette saison", "actual": "Réel (t)", "target": "Objectif (t)" },
+        "detectionChart": { "title": "Tendances de Détection des Maladies", "description": "Détections mensuelles par l'IA selon le type de maladie", "blight": "Brûlure", "rust": "Rouille", "mosaic": "Mosaïque", "blast": "Pyriculariose" }
+      },
+      "soil": {
+        "kpis": {
+          "avgRainfall": "Précipitations Moyennes (mm)",
+          "monthlyAvg": "moyenne mensuelle {{year}}",
+          "avgTemperature": "Température Moyenne (°C)",
+          "acrossAllZones": "dans toutes les zones",
+          "avgSoilPh": "pH Moyen du Sol",
+          "withinOptimalRange": "dans la plage optimale",
+          "lowNitrogenZones": "Zones à Faible Azote",
+          "needIntervention": "nécessitent une intervention"
+        },
+        "climateChart": { "title": "Tendances Climatiques (12 Mois)", "description": "Précipitations (mm) et température (°C)", "rainfall": "Précipitations (mm)", "temp": "Température (°C)" },
+        "nutrientsChart": { "title": "Nutriments du Sol par Zone", "description": "Indice Azote / Phosphore / Potassium (0–100)", "nitrogen": "Azote", "phosphorus": "Phosphore", "potassium": "Potassium" }
+      },
+      "finance": {
+        "kpis": {
+          "totalRevenue": "Revenu Total (M RWF)",
+          "allCrops": "toutes cultures {{year}}",
+          "topEarner": "Meilleure Culture",
+          "avgCostPerHa": "Coût Moyen / Ha (K RWF)",
+          "seedsInputsLabor": "semences + intrants + main-d'œuvre",
+          "revenueGrowth": "Croissance des Revenus",
+          "vsSamePeriod": "par rapport à la même période {{year}}"
+        },
+        "revenueChart": { "title": "Revenus par Culture", "description": "Millions de RWF, toutes saisons à ce jour", "revenue": "Revenu" },
+        "costChart": { "title": "Répartition des Coûts des Intrants", "description": "Millions de RWF par catégorie de coût et par saison", "seeds": "Semences", "fertilizer": "Engrais", "pesticide": "Pesticide", "labor": "Main-d'œuvre" },
+        "priceChart": { "title": "Tendances des Prix du Marché", "description": "RWF par kg — Maïs, Haricots, Café (÷10 pour l'échelle)", "coffeeScaled": "Café (÷10)" }
+      },
+      "sustainability": {
+        "kpis": {
+          "carbonScore": "Score Carbone",
+          "target": "objectif : {{value}}",
+          "organicCoverage": "Couverture Biologique",
+          "targetPercent": "objectif : {{value}}%",
+          "pesticideCompliance": "Conformité Pesticides",
+          "certifiedFarms": "fermes certifiées",
+          "waterEfficiency": "Efficacité de l'Eau"
+        },
+        "carbonChart": { "title": "Tendance de l'Empreinte Carbone", "description": "Tonnes de CO₂e mensuelles par source", "machinery": "Machinerie", "fertilizer": "Engrais", "transport": "Transport" },
+        "scoresChart": { "title": "Scores de Durabilité", "description": "Actuel vs objectif pour tous les indicateurs", "current": "Actuel", "target": "Objectif" }
+      }
+    },
+    "profile": {
+      "title": "Mon Profil",
+      "subtitle": "Paramètres du compte administrateur et activité",
+      "emailVerified": "E-mail Vérifié",
+      "emailNotVerified": "E-mail Non Vérifié",
+      "memberSince": "Membre depuis {{date}}",
+      "lastLogin": "Dernière connexion {{time}}",
+      "locationLabel": "Emplacement",
+      "formDescription": "Mettez à jour les informations de votre compte administrateur — nom, téléphone et emplacement.",
+      "security": {
+        "title": "Sécurité",
+        "description": "Gérez le mot de passe et l'accès de votre compte administrateur",
+        "changePassword": "Changer le Mot de Passe",
+        "deleteAccount": "Supprimer le Compte",
+        "deleteWarning": "La suppression du compte administrateur retirera définitivement l'accès à la plateforme. Assurez-vous qu'un autre compte administrateur existe avant de continuer."
+      },
+      "activity": { "title": "Activité Récente", "description": "Vos actions administratives récentes sur cette plateforme", "empty": "Aucune activité récente enregistrée." },
+      "preferences": {
+        "title": "Préférences",
+        "description": "Préférences de thème et de notification",
+        "appearance": "Apparence",
+        "themeLight": "Clair",
+        "themeDark": "Sombre",
+        "themeSystem": "Système",
+        "notificationsHeading": "Notifications Admin",
+        "notifications": {
+          "platformAlerts": { "title": "Alertes de la Plateforme", "description": "Événements système critiques et avis de sécurité" },
+          "aiModelUpdates": { "title": "Mises à Jour des Modèles IA", "description": "Fin d'entraînement, événements de déploiement" },
+          "newUserRegistrations": { "title": "Nouvelles Inscriptions d'Utilisateurs", "description": "Résumé quotidien des nouvelles inscriptions" },
+          "cooperativeActivity": { "title": "Activité des Coopératives", "description": "Changements de membres et mises à jour des coopératives" }
+        }
       }
     }
   }
