@@ -49,6 +49,48 @@
     --imara-leaf: 0.60 0.20 140;
   }
 
+  .light {
+    --background: 0.98 0.005 140;
+    --foreground: 0.20 0.02 140;
+    --card: 1 0 0;
+    --card-foreground: 0.20 0.02 140;
+    --popover: 1 0 0;
+    --popover-foreground: 0.20 0.02 140;
+    --primary: 0.55 0.18 145;
+    --primary-foreground: 0.99 0 0;
+    --secondary: 0.92 0.03 85;
+    --secondary-foreground: 0.30 0.05 85;
+    --muted: 0.95 0.01 140;
+    --muted-foreground: 0.45 0.02 140;
+    --accent: 0.75 0.15 85;
+    --accent-foreground: 0.25 0.05 85;
+    --destructive: 0.55 0.22 25;
+    --destructive-foreground: 0.98 0 0;
+    --border: 0.90 0.02 140;
+    --input: 0.92 0.02 140;
+    --ring: 0.55 0.18 145;
+    --chart-1: 0.55 0.18 145;
+    --chart-2: 0.65 0.15 85;
+    --chart-3: 0.50 0.12 200;
+    --chart-4: 0.70 0.18 50;
+    --chart-5: 0.60 0.20 300;
+    --radius: 0.75rem;
+    --sidebar: 0.22 0.03 145;
+    --sidebar-foreground: 0.95 0.01 140;
+    --sidebar-primary: 0.65 0.20 145;
+    --sidebar-primary-foreground: 0.99 0 0;
+    --sidebar-accent: 0.30 0.04 145;
+    --sidebar-accent-foreground: 0.95 0.01 140;
+    --sidebar-border: 0.30 0.03 145;
+    --sidebar-ring: 0.65 0.20 145;
+    --imara-green: 0.55 0.18 145;
+    --imara-green-light: 0.75 0.15 145;
+    --imara-earth: 0.55 0.10 60;
+    --imara-gold: 0.75 0.15 85;
+    --imara-sky: 0.65 0.12 230;
+    --imara-leaf: 0.60 0.20 140;
+  }
+
   .dark {
     --background: 0.15 0.02 145;
     --foreground: 0.95 0.01 140;

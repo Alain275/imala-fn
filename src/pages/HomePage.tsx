@@ -154,8 +154,8 @@ export default function HomePage() {
                 placeholder={t("common.search")}
                 className={
                   isScrolled
-                    ? "max-w-md h-11 rounded-full border border-primary-foreground/20 bg-white/10 px-4 text-primary-foreground placeholder:text-primary-foreground/70 shadow-sm backdrop-blur-md focus-visible:border-primary-foreground focus-visible:ring-0"
-                    : "max-w-lg h-11 rounded-full border border-input bg-background/90 px-4 shadow-sm focus-visible:border-primary focus-visible:ring-0"
+                    ? "max-w-md h-11 rounded-full border border-primary-foreground/20 bg-white/10 dark:bg-white/10 px-4 text-primary-foreground placeholder:text-primary-foreground/70 shadow-sm backdrop-blur-md focus-visible:border-primary-foreground focus-visible:ring-0"
+                    : "max-w-lg h-11 rounded-full border border-input bg-white/90 px-4 shadow-sm focus-visible:border-primary focus-visible:ring-0"
                 }
               />
             </div>
@@ -167,6 +167,7 @@ export default function HomePage() {
                     ? "border-primary-foreground/20 bg-white/10 text-primary-foreground hover:bg-white/20"
                     : undefined
                 }
+                contentClassName="light"
               />
               <Button
                 variant="ghost"
@@ -284,7 +285,7 @@ export default function HomePage() {
                     <ArrowRight className="w-5 h-5" />
                   </Link>
                 </Button>
-                <Button size="lg" variant="outline" className="gap-2 text-base">
+                <Button size="lg" variant="outline" className="gap-2 text-base dark:bg-background">
                   <Play className="w-5 h-5" />
                   {t("landing.hero.ctaSecondary")}
                 </Button>
@@ -607,7 +608,7 @@ export default function HomePage() {
                 <ArrowRight className="w-5 h-5" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" className="gap-2 text-base bg-transparent text-white border-white hover:bg-white/10">
+            <Button size="lg" variant="outline" className="gap-2 text-base bg-transparent text-white border-white hover:bg-white/10 dark:bg-transparent dark:border-white dark:hover:bg-white/10">
               {t("landing.cta.secondaryButton")}
             </Button>
           </div>

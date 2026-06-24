@@ -125,7 +125,7 @@ export function ChatWidget() {
             <Button
               variant="ghost"
               size="icon-sm"
-              className="text-white/80 hover:text-white hover:bg-white/20 shrink-0"
+              className="text-white/80 hover:text-white hover:bg-white/20 dark:hover:bg-white/20 shrink-0"
               onClick={() => setOpen(false)}
               aria-label="Close chat"
             >
@@ -193,7 +193,7 @@ export function ChatWidget() {
             {error && (
               <div className="flex flex-col gap-2 items-start pt-1">
                 <p className="text-xs text-destructive">{error}</p>
-                <Button size="sm" variant="outline" onClick={retry} className="gap-1.5 h-7 text-xs">
+                <Button size="sm" variant="outline" onClick={retry} className="gap-1.5 h-7 text-xs dark:bg-background">
                   <RotateCcw className="w-3 h-3" />
                   Retry
                 </Button>

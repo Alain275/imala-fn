@@ -47,6 +47,7 @@ import RegisterPage from './pages/auth/RegisterPage'
 
 import { NotificationsProvider } from './context/NotificationsContext'
 import { ProtectedRoute } from './components/ProtectedRoute'
+import { PublicLayout } from './components/PublicLayout'
 import { authService } from './services/auth'
 
 const roleHome: Record<string, string> = {
@@ -70,9 +71,11 @@ function App() {
   return (
     <NotificationsProvider>
       <Routes>
-        <Route path="/" element={<HomeRoute />} />
-        <Route path="/sign-in" element={<SignInPage />} />
-        <Route path="/register" element={<RegisterPage />} />
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<HomeRoute />} />
+          <Route path="/sign-in" element={<SignInPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+        </Route>
 
         {/* Farmer-only routes */}
         <Route element={<ProtectedRoute allowedRoles={['farmer']} />}>

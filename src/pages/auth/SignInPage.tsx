@@ -92,6 +92,7 @@ export default function SignInPage() {
 
               <LanguageSwitcher
                 triggerClassName="border-emerald-200 bg-white/60 text-emerald-800 hover:bg-emerald-50"
+                contentClassName="light"
               />
             </div>
           </div>
