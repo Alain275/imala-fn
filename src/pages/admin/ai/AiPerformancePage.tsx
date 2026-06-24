@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Header } from "@/components/header"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -23,6 +24,7 @@ function accuracyColor(v: number) {
 }
 
 export default function AiPerformancePage() {
+  const { t } = useTranslation()
   const [perf, setPerf] = useState<AiPerformance | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -34,7 +36,7 @@ export default function AiPerformancePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header title="AI Performance" subtitle="Per-class accuracy, confidence distribution, and historical trends" />
+      <Header title={t('admin.ai.performance.title')} subtitle={t('admin.ai.performance.subtitle')} />
 
       <div className="p-6 space-y-6">
 
@@ -43,9 +45,9 @@ export default function AiPerformancePage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
               <TrendingUp className="w-4 h-4 text-emerald-500" />
-              Accuracy Over Time
+              {t('admin.ai.performance.accuracyOverTime.title')}
             </CardTitle>
-            <CardDescription>Training accuracy vs. validation accuracy per deployed model</CardDescription>
+            <CardDescription>{t('admin.ai.performance.accuracyOverTime.description')}</CardDescription>
           </CardHeader>
           <CardContent>
             {loading ? <Skeleton className="h-52 rounded-xl" /> : (
@@ -56,15 +58,15 @@ export default function AiPerformancePage() {
                     <XAxis dataKey="date" className="fill-muted-foreground" fontSize={11} tickLine={false} />
                     <YAxis domain={[0.75, 1]} tickFormatter={v => `${(v * 100).toFixed(0)}%`} className="fill-muted-foreground" fontSize={11} tickLine={false} axisLine={false} />
                     <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(v: number) => [`${(v * 100).toFixed(1)}%`]} />
-                    <Line type="monotone" dataKey="accuracy" stroke="#10b981" strokeWidth={2} dot={{ fill: '#10b981', r: 3 }} name="Train Acc" />
-                    <Line type="monotone" dataKey="valAccuracy" stroke="#0ea5e9" strokeWidth={2} dot={{ fill: '#0ea5e9', r: 3 }} strokeDasharray="4 2" name="Val Acc" />
+                    <Line type="monotone" dataKey="accuracy" stroke="#10b981" strokeWidth={2} dot={{ fill: '#10b981', r: 3 }} name={t('admin.ai.performance.accuracyOverTime.trainAcc')} />
+                    <Line type="monotone" dataKey="valAccuracy" stroke="#0ea5e9" strokeWidth={2} dot={{ fill: '#0ea5e9', r: 3 }} strokeDasharray="4 2" name={t('admin.ai.performance.accuracyOverTime.valAcc')} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
             )}
             <div className="flex items-center gap-6 mt-3">
-              <div className="flex items-center gap-2"><span className="w-4 h-0.5 bg-emerald-500 rounded" /><span className="text-xs text-muted-foreground">Train Accuracy</span></div>
-              <div className="flex items-center gap-2"><span className="w-4 h-0.5 bg-sky-500 rounded border-dashed" /><span className="text-xs text-muted-foreground">Val Accuracy</span></div>
+              <div className="flex items-center gap-2"><span className="w-4 h-0.5 bg-emerald-500 rounded" /><span className="text-xs text-muted-foreground">{t('admin.ai.performance.accuracyOverTime.trainAcc')}</span></div>
+              <div className="flex items-center gap-2"><span className="w-4 h-0.5 bg-sky-500 rounded border-dashed" /><span className="text-xs text-muted-foreground">{t('admin.ai.performance.accuracyOverTime.valAcc')}</span></div>
             </div>
           </CardContent>
         </Card>
@@ -75,9 +77,9 @@ export default function AiPerformancePage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
                 <BarChart3 className="w-4 h-4 text-sky-500" />
-                Per-Class Accuracy
+                {t('admin.ai.performance.perClassAccuracy.title')}
               </CardTitle>
-              <CardDescription>Validation accuracy for each disease category</CardDescription>
+              <CardDescription>{t('admin.ai.performance.perClassAccuracy.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               {loading ? <Skeleton className="h-64 rounded-xl" /> : (
@@ -87,8 +89,8 @@ export default function AiPerformancePage() {
                       <CartesianGrid strokeDasharray="3 3" horizontal={false} className="stroke-muted" />
                       <XAxis type="number" domain={[0.8, 1]} tickFormatter={v => `${(v * 100).toFixed(0)}%`} className="fill-muted-foreground" fontSize={10} tickLine={false} />
                       <YAxis type="category" dataKey="disease" className="fill-muted-foreground" fontSize={9} tickLine={false} axisLine={false} width={100} />
-                      <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(v: number) => [`${(v * 100).toFixed(1)}%`, 'Accuracy']} />
-                      <Bar dataKey="accuracy" radius={[0, 4, 4, 0]} name="Accuracy">
+                      <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(v: number) => [`${(v * 100).toFixed(1)}%`, t('admin.ai.performance.perClassAccuracy.accuracyLabel')]} />
+                      <Bar dataKey="accuracy" radius={[0, 4, 4, 0]} name={t('admin.ai.performance.perClassAccuracy.accuracyLabel')}>
                         {perf?.perClass.map(c => (
                           <Cell key={c.disease} fill={accuracyColor(c.accuracy)} />
                         ))}
@@ -105,9 +107,9 @@ export default function AiPerformancePage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
                 <Activity className="w-4 h-4 text-amber-500" />
-                Confidence Distribution
+                {t('admin.ai.performance.confidenceDistribution.title')}
               </CardTitle>
-              <CardDescription>How confident is the model across all predictions?</CardDescription>
+              <CardDescription>{t('admin.ai.performance.confidenceDistribution.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               {loading ? <Skeleton className="h-64 rounded-xl" /> : (
@@ -118,7 +120,7 @@ export default function AiPerformancePage() {
                       <XAxis dataKey="range" className="fill-muted-foreground" fontSize={11} tickLine={false} />
                       <YAxis className="fill-muted-foreground" fontSize={11} tickLine={false} axisLine={false} />
                       <Tooltip contentStyle={TOOLTIP_STYLE} />
-                      <Bar dataKey="count" fill="#f59e0b" radius={[4, 4, 0, 0]} name="Predictions" />
+                      <Bar dataKey="count" fill="#f59e0b" radius={[4, 4, 0, 0]} name={t('admin.ai.performance.confidenceDistribution.predictionsLabel')} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -132,9 +134,9 @@ export default function AiPerformancePage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
               <Grid3X3 className="w-4 h-4 text-rose-500" />
-              Common Misclassifications
+              {t('admin.ai.performance.confusionHighlights.title')}
             </CardTitle>
-            <CardDescription>Most frequent prediction errors — areas for model improvement</CardDescription>
+            <CardDescription>{t('admin.ai.performance.confusionHighlights.description')}</CardDescription>
           </CardHeader>
           <CardContent>
             {loading ? (
@@ -146,10 +148,10 @@ export default function AiPerformancePage() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-border">
-                      <th className="text-left py-2 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Predicted As</th>
-                      <th className="text-left py-2 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Actual Disease</th>
-                      <th className="text-left py-2 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Count</th>
-                      <th className="py-2 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide text-right">Severity</th>
+                      <th className="text-left py-2 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t('admin.ai.performance.confusionHighlights.predictedAs')}</th>
+                      <th className="text-left py-2 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t('admin.ai.performance.confusionHighlights.actualDisease')}</th>
+                      <th className="text-left py-2 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t('admin.ai.performance.confusionHighlights.count')}</th>
+                      <th className="py-2 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide text-right">{t('admin.ai.performance.confusionHighlights.severity')}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
@@ -176,7 +178,7 @@ export default function AiPerformancePage() {
                               ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800/40'
                               : 'bg-muted text-muted-foreground border-border'
                           }`}>
-                            {row.count > 25 ? 'High' : row.count > 10 ? 'Medium' : 'Low'}
+                            {row.count > 25 ? t('common.severity.high') : row.count > 10 ? t('common.severity.medium') : t('common.severity.low')}
                           </span>
                         </td>
                       </tr>

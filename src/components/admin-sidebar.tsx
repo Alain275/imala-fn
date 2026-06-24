@@ -1,4 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom"
+import { useTranslation } from "react-i18next"
 import { cn } from "@/lib/utils"
 import {
   LayoutDashboard,
@@ -30,25 +31,26 @@ function getInitials(name: string): string {
 }
 
 const platformNav = [
-  { name: "Overview", href: "/admin", icon: LayoutDashboard, exact: true },
-  { name: "Users", href: "/admin/users", icon: Users },
-  { name: "Cooperatives", href: "/admin/cooperatives", icon: Building2 },
-  { name: "Crops", href: "/admin/crops", icon: Wheat },
-  { name: "Analytics", href: "/admin/analytics", icon: BarChart3 },
-  { name: "Notifications", href: "/admin/notifications", icon: Bell },
+  { key: "overview", href: "/admin", icon: LayoutDashboard, exact: true },
+  { key: "users", href: "/admin/users", icon: Users },
+  { key: "cooperatives", href: "/admin/cooperatives", icon: Building2 },
+  { key: "crops", href: "/admin/crops", icon: Wheat },
+  { key: "analytics", href: "/admin/analytics", icon: BarChart3 },
+  { key: "notifications", href: "/admin/notifications", icon: Bell },
 ]
 
 const aiNav = [
-  { name: "AI Overview", href: "/admin/ai", icon: Brain, exact: true },
-  { name: "Datasets", href: "/admin/ai/datasets", icon: Database },
-  { name: "Training Jobs", href: "/admin/ai/training", icon: PlayCircle },
-  { name: "Model Registry", href: "/admin/ai/models", icon: Package },
-  { name: "Review Queue", href: "/admin/ai/review", icon: ClipboardCheck },
-  { name: "Performance", href: "/admin/ai/performance", icon: Activity },
-  { name: "Optimization", href: "/admin/ai/optimization", icon: Lightbulb },
+  { key: "aiOverview", href: "/admin/ai", icon: Brain, exact: true },
+  { key: "datasets", href: "/admin/ai/datasets", icon: Database },
+  { key: "trainingJobs", href: "/admin/ai/training", icon: PlayCircle },
+  { key: "modelRegistry", href: "/admin/ai/models", icon: Package },
+  { key: "reviewQueue", href: "/admin/ai/review", icon: ClipboardCheck },
+  { key: "performance", href: "/admin/ai/performance", icon: Activity },
+  { key: "optimization", href: "/admin/ai/optimization", icon: Lightbulb },
 ]
 
 export function AdminSidebar() {
+  const { t } = useTranslation()
   const location = useLocation()
   const pathname = location.pathname
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -71,11 +73,11 @@ export function AdminSidebar() {
     return pathname.startsWith(href)
   }
 
-  const navLink = (item: { name: string; href: string; icon: React.ElementType; exact?: boolean }) => {
+  const navLink = (item: { key: string; href: string; icon: React.ElementType; exact?: boolean }) => {
     const active = isActive(item.href, item.exact)
     return (
       <Link
-        key={item.name}
+        key={item.key}
         to={item.href}
         onClick={() => setMobileOpen(false)}
         className={cn(
@@ -87,7 +89,7 @@ export function AdminSidebar() {
         )}
       >
         <item.icon className={cn("w-5 h-5 flex-shrink-0", active && "drop-shadow-md")} />
-        <span className="font-medium">{item.name}</span>
+        <span className="font-medium">{t(`admin.sidebar.nav.${item.key}`)}</span>
       </Link>
     )
   }
@@ -127,7 +129,7 @@ export function AdminSidebar() {
             </div>
             <div>
               <h1 className="text-xl font-bold text-white">IMARA</h1>
-              <p className="text-xs text-sidebar-foreground/70">Admin Console</p>
+              <p className="text-xs text-sidebar-foreground/70">{t("admin.sidebar.tagline")}</p>
             </div>
           </div>
 
@@ -135,7 +137,7 @@ export function AdminSidebar() {
           <div className="px-6 py-3 border-b border-sidebar-border bg-sidebar-accent/20">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-violet-400 animate-pulse" />
-              <span className="text-xs text-sidebar-foreground/80 font-medium">Admin Portal</span>
+              <span className="text-xs text-sidebar-foreground/80 font-medium">{t("admin.sidebar.portalLabel")}</span>
             </div>
           </div>
 
@@ -143,14 +145,14 @@ export function AdminSidebar() {
           <nav className="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
             {/* Platform section */}
             <p className="text-[10px] font-bold text-sidebar-foreground/40 uppercase tracking-widest px-4 pb-1 pt-2">
-              Platform
+              {t("admin.sidebar.platformSection")}
             </p>
             {platformNav.map(navLink)}
 
             {/* AI Management section */}
             <div className="pt-3">
               <p className="text-[10px] font-bold text-sidebar-foreground/40 uppercase tracking-widest px-4 pb-1">
-                AI Management
+                {t("admin.sidebar.aiSection")}
               </p>
               {aiNav.map(navLink)}
             </div>
@@ -170,7 +172,7 @@ export function AdminSidebar() {
               )}
             >
               <UserCog className="w-5 h-5" />
-              <span className="font-medium">My Profile</span>
+              <span className="font-medium">{t("admin.sidebar.myProfile")}</span>
             </Link>
             <Link
               to="/admin/settings"
@@ -178,14 +180,14 @@ export function AdminSidebar() {
               className="flex items-center gap-3 px-4 py-3 rounded-xl text-sidebar-foreground/80 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-all duration-200"
             >
               <Settings className="w-5 h-5" />
-              <span className="font-medium">Settings</span>
+              <span className="font-medium">{t("admin.sidebar.settings")}</span>
             </Link>
             <button
               onClick={handleSignOut}
               className="flex items-center gap-3 px-4 py-3 rounded-xl text-sidebar-foreground/80 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-all duration-200 w-full"
             >
               <LogOut className="w-5 h-5" />
-              <span className="font-medium">Sign Out</span>
+              <span className="font-medium">{t("admin.sidebar.signOut")}</span>
             </button>
           </div>
 
@@ -201,10 +203,13 @@ export function AdminSidebar() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-white truncate">
-                  {currentUser?.name ?? 'Admin'}
+                  {currentUser?.name ?? t("admin.sidebar.adminFallback")}
                 </p>
-                <p className="text-xs text-sidebar-foreground/60 truncate capitalize">
-                  {[currentUser?.role, currentUser?.location].filter(Boolean).join(' · ')}
+                <p className="text-xs text-sidebar-foreground/60 truncate">
+                  {[
+                    currentUser?.role ? t(`common.role.${currentUser.role}`, { defaultValue: currentUser.role }) : null,
+                    currentUser?.location,
+                  ].filter(Boolean).join(' · ')}
                 </p>
               </div>
               <UserCog className="w-4 h-4 text-sidebar-foreground/40 flex-shrink-0" />

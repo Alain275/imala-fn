@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useTheme } from "next-themes"
+import { useTranslation } from "react-i18next"
 import { Header } from "@/components/header"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Icon3D } from "@/components/icon-3d"
@@ -31,6 +32,7 @@ function safeFormat(dateStr: string, fmt: string): string {
 }
 
 export default function AdminProfilePage() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const { resolvedTheme, setTheme } = useTheme()
 
@@ -63,7 +65,7 @@ export default function AdminProfilePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header title="My Profile" subtitle="Admin account settings and activity" />
+      <Header title={t('admin.profile.title')} subtitle={t('admin.profile.subtitle')} />
 
       <div className="p-6 space-y-6 max-w-4xl">
 
@@ -93,7 +95,7 @@ export default function AdminProfilePage() {
             <CardContent className="py-10 flex flex-col items-center gap-3">
               <AlertCircle className="w-10 h-10 text-destructive" />
               <p className="text-sm text-muted-foreground">{error}</p>
-              <Button variant="outline" size="sm" onClick={refetch}>Retry</Button>
+              <Button variant="outline" size="sm" onClick={refetch}>{t('common.actions.retry')}</Button>
             </CardContent>
           </Card>
         ) : profile ? (
@@ -112,17 +114,17 @@ export default function AdminProfilePage() {
                   <div className="flex flex-wrap gap-2 mt-2">
                     <Badge className="bg-violet-500/10 text-violet-700 dark:text-violet-300 border-violet-200 dark:border-violet-800/50">
                       <ShieldCheck className="w-3 h-3 mr-1" />
-                      Admin
+                      {t('common.role.admin')}
                     </Badge>
                     {profile.isEmailVerified ? (
                       <Badge className="bg-emerald-500/10 text-emerald-700 border-emerald-200 dark:text-emerald-400 dark:border-emerald-800">
                         <CheckCircle className="w-3 h-3 mr-1" />
-                        Email Verified
+                        {t('admin.profile.emailVerified')}
                       </Badge>
                     ) : (
                       <Badge variant="outline" className="text-amber-600 border-amber-300 dark:border-amber-700">
                         <AlertCircle className="w-3 h-3 mr-1" />
-                        Email Not Verified
+                        {t('admin.profile.emailNotVerified')}
                       </Badge>
                     )}
                   </div>
@@ -130,11 +132,11 @@ export default function AdminProfilePage() {
                   <div className="flex flex-wrap gap-x-6 gap-y-1 mt-3 text-xs text-muted-foreground">
                     <span className="flex items-center gap-1.5">
                       <Calendar className="w-3.5 h-3.5" />
-                      Member since {safeFormat(profile.createdAt, 'MMM d, yyyy')}
+                      {t('admin.profile.memberSince', { date: safeFormat(profile.createdAt, 'MMM d, yyyy') })}
                     </span>
                     <span className="flex items-center gap-1.5">
                       <Clock className="w-3.5 h-3.5" />
-                      Last login {formatDistanceToNow(new Date(profile.lastLogin), { addSuffix: true })}
+                      {t('admin.profile.lastLogin', { time: formatDistanceToNow(new Date(profile.lastLogin), { addSuffix: true }) })}
                     </span>
                   </div>
                 </div>
@@ -152,8 +154,8 @@ export default function AdminProfilePage() {
             onSaved={handleSaved}
             showAvatar={false}
             showFarmSize={false}
-            locationLabel="Location"
-            description="Update your admin account details — name, phone, and location."
+            locationLabel={t('admin.profile.locationLabel')}
+            description={t('admin.profile.formDescription')}
             avatarGradient="from-violet-400 to-purple-600"
           />
         ) : null}
@@ -165,9 +167,9 @@ export default function AdminProfilePage() {
               <Icon3D gradient="earth" size="sm">
                 <Shield className="w-4 h-4" />
               </Icon3D>
-              <span>Security</span>
+              <span>{t('admin.profile.security.title')}</span>
             </CardTitle>
-            <CardDescription>Manage your admin account password and access</CardDescription>
+            <CardDescription>{t('admin.profile.security.description')}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <Button
@@ -175,18 +177,17 @@ export default function AdminProfilePage() {
               className="w-full justify-start"
               onClick={() => setPwOpen(true)}
             >
-              Change Password
+              {t('admin.profile.security.changePassword')}
             </Button>
             <Button
               variant="outline"
               className="w-full justify-start text-destructive hover:text-destructive"
               onClick={() => setDeleteOpen(true)}
             >
-              Delete Account
+              {t('admin.profile.security.deleteAccount')}
             </Button>
             <p className="text-xs text-muted-foreground">
-              Deleting the admin account will permanently remove access to the platform.
-              Ensure another admin account exists before proceeding.
+              {t('admin.profile.security.deleteWarning')}
             </p>
           </CardContent>
         </Card>
@@ -199,9 +200,9 @@ export default function AdminProfilePage() {
                 <Icon3D gradient="sky" size="sm">
                   <Activity className="w-4 h-4" />
                 </Icon3D>
-                <span>Recent Activity</span>
+                <span>{t('admin.profile.activity.title')}</span>
               </CardTitle>
-              <CardDescription>Your recent administrative actions on this platform</CardDescription>
+              <CardDescription>{t('admin.profile.activity.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               {activityLoading ? (
@@ -220,7 +221,7 @@ export default function AdminProfilePage() {
               ) : activity.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-10">
                   <Activity className="w-8 h-8 text-muted-foreground mb-2" />
-                  <p className="text-sm text-muted-foreground">No recent activity recorded.</p>
+                  <p className="text-sm text-muted-foreground">{t('admin.profile.activity.empty')}</p>
                 </div>
               ) : (
                 <div className="divide-y divide-border">
@@ -251,19 +252,19 @@ export default function AdminProfilePage() {
               <Icon3D gradient="gold" size="sm">
                 <Bell className="w-4 h-4" />
               </Icon3D>
-              <span>Preferences</span>
+              <span>{t('admin.profile.preferences.title')}</span>
             </CardTitle>
-            <CardDescription>Theme and notification preferences</CardDescription>
+            <CardDescription>{t('admin.profile.preferences.description')}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Theme */}
             <div>
-              <p className="text-sm font-medium text-foreground mb-3">Appearance</p>
+              <p className="text-sm font-medium text-foreground mb-3">{t('admin.profile.preferences.appearance')}</p>
               <div className="flex gap-2">
                 {[
-                  { value: 'light', label: 'Light', Icon: Sun },
-                  { value: 'dark', label: 'Dark', Icon: Moon },
-                  { value: 'system', label: 'System', Icon: Monitor },
+                  { value: 'light', label: t('admin.profile.preferences.themeLight'), Icon: Sun },
+                  { value: 'dark', label: t('admin.profile.preferences.themeDark'), Icon: Moon },
+                  { value: 'system', label: t('admin.profile.preferences.themeSystem'), Icon: Monitor },
                 ].map(({ value, label, Icon }) => (
                   <button
                     key={value}
@@ -283,13 +284,13 @@ export default function AdminProfilePage() {
 
             {/* Notification preferences — Local-only until backend is implemented */}
             <div>
-              <p className="text-sm font-medium text-foreground mb-3">Admin Notifications</p>
+              <p className="text-sm font-medium text-foreground mb-3">{t('admin.profile.preferences.notificationsHeading')}</p>
               <div className="space-y-3">
                 {[
-                  { title: "Platform Alerts", description: "Critical system events and security notices", enabled: true },
-                  { title: "AI Model Updates", description: "Training completion, deployment events", enabled: true },
-                  { title: "New User Registrations", description: "Daily digest of new registrations", enabled: false },
-                  { title: "Cooperative Activity", description: "Member changes and cooperative updates", enabled: false },
+                  { title: t('admin.profile.preferences.notifications.platformAlerts.title'), description: t('admin.profile.preferences.notifications.platformAlerts.description'), enabled: true },
+                  { title: t('admin.profile.preferences.notifications.aiModelUpdates.title'), description: t('admin.profile.preferences.notifications.aiModelUpdates.description'), enabled: true },
+                  { title: t('admin.profile.preferences.notifications.newUserRegistrations.title'), description: t('admin.profile.preferences.notifications.newUserRegistrations.description'), enabled: false },
+                  { title: t('admin.profile.preferences.notifications.cooperativeActivity.title'), description: t('admin.profile.preferences.notifications.cooperativeActivity.description'), enabled: false },
                 ].map((pref, i) => (
                   <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-muted/50">
                     <div>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Header } from "@/components/header"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Icon3D } from "@/components/icon-3d"
@@ -39,6 +40,7 @@ const SEVERITY_STYLE: Record<RiskAlert['severity'], {
 }
 
 function RiskAlertCard({ alert }: { alert: RiskAlert }) {
+  const { t } = useTranslation()
   const s = SEVERITY_STYLE[alert.severity]
   const CategoryIcon = alert.category === 'pest_disease' ? Bug : CloudRain
   return (
@@ -51,15 +53,15 @@ function RiskAlertCard({ alert }: { alert: RiskAlert }) {
           <div className="flex items-start justify-between gap-2 mb-1">
             <p className="text-sm font-semibold text-foreground leading-snug">{alert.title}</p>
             <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded border flex-shrink-0 uppercase ${s.badge}`}>
-              {alert.severity}
+              {t(`common.severity.${alert.severity}`)}
             </span>
           </div>
           <p className="text-xs text-muted-foreground mb-2 leading-relaxed">{alert.description}</p>
           <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
-            <span>Region: <strong className="text-foreground">{alert.affectedRegion}</strong></span>
-            {alert.affectedCrop && <span>Crop: <strong className="text-foreground">{alert.affectedCrop}</strong></span>}
-            {alert.probability !== undefined && <span>Probability: <strong className="text-foreground">{alert.probability}%</strong></span>}
-            <span>Timeframe: <strong className="text-foreground">{alert.timeframe}</strong></span>
+            <span>{t('admin.ai.overview.alertRegion')}: <strong className="text-foreground">{alert.affectedRegion}</strong></span>
+            {alert.affectedCrop && <span>{t('admin.ai.overview.alertCrop')}: <strong className="text-foreground">{alert.affectedCrop}</strong></span>}
+            {alert.probability !== undefined && <span>{t('admin.ai.overview.alertProbability')}: <strong className="text-foreground">{alert.probability}%</strong></span>}
+            <span>{t('admin.ai.overview.alertTimeframe')}: <strong className="text-foreground">{alert.timeframe}</strong></span>
           </div>
         </div>
       </div>
@@ -68,6 +70,7 @@ function RiskAlertCard({ alert }: { alert: RiskAlert }) {
 }
 
 export default function AiOverviewPage() {
+  const { t } = useTranslation()
   const [stats, setStats] = useState<AiStats | null>(null)
   const [trend, setTrend] = useState<{ date: string; accuracy: number }[]>([])
   const [confidence, setConfidence] = useState<{ range: string; count: number }[]>([])
@@ -90,12 +93,12 @@ export default function AiOverviewPage() {
   }, [])
 
   const kpis = stats ? [
-    { label: "Deployed Model", value: stats.deployedModel, sub: stats.modelVersion, icon: Package, gradient: "leaf" as const },
-    { label: "Overall Accuracy", value: `${(stats.overallAccuracy * 100).toFixed(1)}%`, sub: "on validation set", icon: Brain, gradient: "green" as const },
-    { label: "Total Predictions", value: stats.totalPredictions.toLocaleString(), sub: "since deployment", icon: BarChart3, gradient: "sky" as const },
-    { label: "Pending Reviews", value: stats.pendingReviews, sub: "awaiting validation", icon: ClipboardCheck, gradient: "gold" as const },
-    { label: "Dataset Images", value: stats.datasetImageCount.toLocaleString(), sub: "training samples", icon: Database, gradient: "earth" as const },
-    { label: "Disease Classes", value: stats.diseaseClassCount, sub: "categories", icon: Activity, gradient: "leaf" as const },
+    { label: t('admin.ai.overview.kpi.deployedModel'), value: stats.deployedModel, sub: stats.modelVersion, icon: Package, gradient: "leaf" as const },
+    { label: t('admin.ai.overview.kpi.overallAccuracy'), value: `${(stats.overallAccuracy * 100).toFixed(1)}%`, sub: t('admin.ai.overview.kpi.onValidationSet'), icon: Brain, gradient: "green" as const },
+    { label: t('admin.ai.overview.kpi.totalPredictions'), value: stats.totalPredictions.toLocaleString(), sub: t('admin.ai.overview.kpi.sinceDeployment'), icon: BarChart3, gradient: "sky" as const },
+    { label: t('admin.ai.overview.kpi.pendingReviews'), value: stats.pendingReviews, sub: t('admin.ai.overview.kpi.awaitingValidation'), icon: ClipboardCheck, gradient: "gold" as const },
+    { label: t('admin.ai.overview.kpi.datasetImages'), value: stats.datasetImageCount.toLocaleString(), sub: t('admin.ai.overview.kpi.trainingSamples'), icon: Database, gradient: "earth" as const },
+    { label: t('admin.ai.overview.kpi.diseaseClasses'), value: stats.diseaseClassCount, sub: t('admin.ai.overview.kpi.categories'), icon: Activity, gradient: "leaf" as const },
   ] : []
 
   const pestAlerts = alerts.filter(a => a.category === 'pest_disease')
@@ -104,7 +107,7 @@ export default function AiOverviewPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header title="AI Overview" subtitle="Crop disease model · Training & deployment status" />
+      <Header title={t('admin.ai.overview.title')} subtitle={t('admin.ai.overview.subtitle')} />
 
       <div className="p-6 space-y-6">
         {/* KPI strip */}
@@ -145,9 +148,9 @@ export default function AiOverviewPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
                 <Activity className="w-4 h-4 text-emerald-500" />
-                Accuracy Trend
+                {t('admin.ai.overview.accuracyTrend.title')}
               </CardTitle>
-              <CardDescription>Model accuracy over time (deployed versions)</CardDescription>
+              <CardDescription>{t('admin.ai.overview.accuracyTrend.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               {loading ? <Skeleton className="h-52 rounded-xl" /> : (
@@ -157,8 +160,8 @@ export default function AiOverviewPage() {
                       <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-muted" />
                       <XAxis dataKey="date" className="fill-muted-foreground" fontSize={11} tickLine={false} />
                       <YAxis domain={[0.75, 1]} tickFormatter={v => `${(v * 100).toFixed(0)}%`} className="fill-muted-foreground" fontSize={11} tickLine={false} axisLine={false} />
-                      <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(v: number) => [`${(v * 100).toFixed(1)}%`, 'Accuracy']} />
-                      <Line type="monotone" dataKey="accuracy" stroke="#10b981" strokeWidth={2.5} dot={{ fill: '#10b981', r: 4 }} name="Accuracy" />
+                      <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(v: number) => [`${(v * 100).toFixed(1)}%`, t('admin.ai.overview.accuracyTrend.tooltipLabel')]} />
+                      <Line type="monotone" dataKey="accuracy" stroke="#10b981" strokeWidth={2.5} dot={{ fill: '#10b981', r: 4 }} name={t('admin.ai.overview.accuracyTrend.tooltipLabel')} />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
@@ -171,9 +174,9 @@ export default function AiOverviewPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
                 <BarChart3 className="w-4 h-4 text-sky-500" />
-                Confidence Distribution
+                {t('admin.ai.overview.confidenceDistribution.title')}
               </CardTitle>
-              <CardDescription>How confident is the model across predictions?</CardDescription>
+              <CardDescription>{t('admin.ai.overview.confidenceDistribution.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               {loading ? <Skeleton className="h-52 rounded-xl" /> : (
@@ -184,7 +187,7 @@ export default function AiOverviewPage() {
                       <XAxis dataKey="range" className="fill-muted-foreground" fontSize={11} tickLine={false} />
                       <YAxis className="fill-muted-foreground" fontSize={11} tickLine={false} axisLine={false} />
                       <Tooltip contentStyle={TOOLTIP_STYLE} />
-                      <Bar dataKey="count" fill="#0ea5e9" radius={[4, 4, 0, 0]} name="Predictions" />
+                      <Bar dataKey="count" fill="#0ea5e9" radius={[4, 4, 0, 0]} name={t('admin.ai.overview.confidenceDistribution.predictionsLabel')} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -200,13 +203,13 @@ export default function AiOverviewPage() {
               <div>
                 <CardTitle className="flex items-center gap-2 text-base">
                   <AlertTriangle className="w-4 h-4 text-rose-500" />
-                  AI Risk Alerts
+                  {t('admin.ai.overview.riskAlerts.title')}
                 </CardTitle>
-                <CardDescription>Pest/disease outbreak predictions and weather-related risks from model analysis</CardDescription>
+                <CardDescription>{t('admin.ai.overview.riskAlerts.description')}</CardDescription>
               </div>
               {!alertsLoading && criticalCount > 0 && (
                 <span className="text-xs font-bold px-2 py-1 rounded-lg bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800/40">
-                  {criticalCount} critical
+                  {t('admin.ai.overview.riskAlerts.criticalCount', { count: criticalCount })}
                 </span>
               )}
             </div>
@@ -219,8 +222,8 @@ export default function AiOverviewPage() {
             ) : alerts.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12">
                 <Activity className="w-8 h-8 text-emerald-500 mb-2" />
-                <p className="font-medium text-foreground">No active risk alerts</p>
-                <p className="text-sm text-muted-foreground mt-1">AI monitoring is running — all clear.</p>
+                <p className="font-medium text-foreground">{t('admin.ai.overview.riskAlerts.emptyTitle')}</p>
+                <p className="text-sm text-muted-foreground mt-1">{t('admin.ai.overview.riskAlerts.emptyDescription')}</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -229,7 +232,7 @@ export default function AiOverviewPage() {
                   <div className="space-y-3">
                     <div className="flex items-center gap-2 mb-2">
                       <Bug className="w-3.5 h-3.5 text-muted-foreground" />
-                      <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Pest & Disease</p>
+                      <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">{t('admin.ai.overview.riskAlerts.pestSectionTitle')}</p>
                     </div>
                     {pestAlerts.map(a => <RiskAlertCard key={a.id} alert={a} />)}
                   </div>
@@ -239,7 +242,7 @@ export default function AiOverviewPage() {
                   <div className="space-y-3">
                     <div className="flex items-center gap-2 mb-2">
                       <CloudRain className="w-3.5 h-3.5 text-muted-foreground" />
-                      <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Weather Risks</p>
+                      <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">{t('admin.ai.overview.riskAlerts.weatherSectionTitle')}</p>
                     </div>
                     {weatherAlerts.map(a => <RiskAlertCard key={a.id} alert={a} />)}
                   </div>

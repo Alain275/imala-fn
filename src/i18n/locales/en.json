@@ -45,7 +45,13 @@
     "severity": {
       "high": "High",
       "medium": "Medium",
-      "low": "Low"
+      "low": "Low",
+      "critical": "Critical"
+    },
+    "activeStatus": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "all": "All"
     },
     "notificationType": {
       "weather": "Weather",
@@ -663,6 +669,600 @@
         "passwordLabel": "Password",
         "deleting": "Deleting…",
         "submit": "Delete Account"
+      }
+    }
+  },
+  "admin": {
+    "sidebar": {
+      "tagline": "Admin Console",
+      "portalLabel": "Admin Portal",
+      "platformSection": "Platform",
+      "aiSection": "AI Management",
+      "nav": {
+        "overview": "Overview",
+        "users": "Users",
+        "cooperatives": "Cooperatives",
+        "crops": "Crops",
+        "analytics": "Analytics",
+        "notifications": "Notifications",
+        "aiOverview": "AI Overview",
+        "datasets": "Datasets",
+        "trainingJobs": "Training Jobs",
+        "modelRegistry": "Model Registry",
+        "reviewQueue": "Review Queue",
+        "performance": "Performance",
+        "optimization": "Optimization"
+      },
+      "myProfile": "My Profile",
+      "settings": "Settings",
+      "signOut": "Sign Out",
+      "adminFallback": "Admin"
+    },
+    "settings": {
+      "title": "Platform Settings",
+      "subtitle": "Configure global platform behaviour and policies",
+      "generalCard": {
+        "title": "General",
+        "description": "Basic platform identity settings"
+      },
+      "platformNameLabel": "Platform Name",
+      "supportEmailLabel": "Support Email",
+      "aiPolicyCard": {
+        "title": "AI Policy",
+        "description": "Control AI prediction validation requirements",
+        "requireReviewTitle": "Require human review for predictions under 85%",
+        "requireReviewDescription": "Low-confidence predictions enter the admin review queue before being sent to farmers",
+        "maintenanceModeTitle": "Maintenance Mode",
+        "maintenanceModeDescription": "Block all farmer/agronomist logins and show maintenance page"
+      },
+      "notificationsCard": {
+        "title": "Notifications",
+        "description": "Admin notification preferences",
+        "notifyNewUsersTitle": "Notify on new user registrations",
+        "notifyNewUsersDescription": "Receive a platform notification each time a new user signs up"
+      },
+      "languageCard": {
+        "title": "Language & Region",
+        "description": "Set the language used across the Admin Dashboard"
+      },
+      "saving": "Saving…",
+      "saveSettings": "Save Settings",
+      "savedMockToast": "Settings saved (mock)",
+      "mockStoreNotice": "Changes saved to mock store only — TODO: wire to real API"
+    },
+    "ai": {
+      "trainingStatus": { "queued": "Queued", "running": "Running", "completed": "Completed", "failed": "Failed" },
+      "modelStatus": { "staged": "Staged", "deployed": "Deployed", "archived": "Archived" },
+      "reviewStatus": { "pending": "Pending", "approved": "Approved", "corrected": "Corrected", "rejected": "Rejected" },
+      "reviewActions": { "approve": "Approve", "correct": "Correct", "reject": "Reject" },
+      "optimizationType": { "planting": "Planting", "harvesting": "Harvesting", "resource": "Resource" },
+      "optimizationStatus": { "pending": "Pending", "applied": "Applied", "dismissed": "Dismissed" },
+      "overview": {
+        "title": "AI Overview",
+        "subtitle": "Crop disease model · Training & deployment status",
+        "kpi": {
+          "deployedModel": "Deployed Model",
+          "overallAccuracy": "Overall Accuracy",
+          "onValidationSet": "on validation set",
+          "totalPredictions": "Total Predictions",
+          "sinceDeployment": "since deployment",
+          "pendingReviews": "Pending Reviews",
+          "awaitingValidation": "awaiting validation",
+          "datasetImages": "Dataset Images",
+          "trainingSamples": "training samples",
+          "diseaseClasses": "Disease Classes",
+          "categories": "categories"
+        },
+        "accuracyTrend": {
+          "title": "Accuracy Trend",
+          "description": "Model accuracy over time (deployed versions)",
+          "tooltipLabel": "Accuracy"
+        },
+        "confidenceDistribution": {
+          "title": "Confidence Distribution",
+          "description": "How confident is the model across predictions?",
+          "predictionsLabel": "Predictions"
+        },
+        "riskAlerts": {
+          "title": "AI Risk Alerts",
+          "description": "Pest/disease outbreak predictions and weather-related risks from model analysis",
+          "criticalCount": "{{count}} critical",
+          "emptyTitle": "No active risk alerts",
+          "emptyDescription": "AI monitoring is running — all clear.",
+          "pestSectionTitle": "Pest & Disease",
+          "weatherSectionTitle": "Weather Risks"
+        },
+        "alertRegion": "Region",
+        "alertCrop": "Crop",
+        "alertProbability": "Probability",
+        "alertTimeframe": "Timeframe"
+      },
+      "datasets": {
+        "title": "Dataset Management",
+        "subtitle": "Manage disease class images for model training",
+        "kpi": {
+          "totalImages": "Total Images",
+          "diseaseClasses": "Disease Classes",
+          "imbalancedClasses": "Imbalanced Classes"
+        },
+        "classBalance": {
+          "title": "Class Balance",
+          "description": "Image count vs. target (10,000) per disease class",
+          "addClass": "Add Class",
+          "targetLabel": "Target",
+          "imagesLabel": "Images",
+          "legendBalanced": "Balanced class",
+          "legendImbalanced": "Imbalanced (below target)",
+          "legendTarget": "Target (10k)"
+        },
+        "diseaseClasses": {
+          "title": "Disease Classes",
+          "description": "Dataset v{{version}} · Last updated {{date}}",
+          "imbalancedBadge": "Imbalanced",
+          "imagesCount": "{{count}} images",
+          "targetLabel": "Target: {{count}}",
+          "updatedLabel": "Updated: {{date}}",
+          "uploadButton": "Upload"
+        },
+        "toast": {
+          "addClassComingSoon": "Add class — coming soon (mock)",
+          "uploadImagesFor": "Upload images for \"{{name}}\" — mock"
+        }
+      },
+      "training": {
+        "title": "Training Jobs",
+        "subtitle": "Start, monitor, and manage model training runs",
+        "jobsSummary": "{{total}} total jobs · {{completed}} completed",
+        "startTrainingRun": "Start Training Run",
+        "emptyTitle": "No training jobs yet",
+        "emptyDescription": "Start a training run to begin.",
+        "job": {
+          "base": "Base",
+          "epochs": "Epochs",
+          "dataset": "Dataset",
+          "bestAcc": "Best acc",
+          "metrics": "Metrics"
+        },
+        "metricsChart": {
+          "title": "Training Metrics (Loss & Accuracy per Epoch)",
+          "epochAxis": "Epoch",
+          "trainLoss": "Train Loss",
+          "valLoss": "Val Loss",
+          "trainAcc": "Train Acc",
+          "valAcc": "Val Acc"
+        },
+        "startDialog": {
+          "title": "Start New Training Run",
+          "baseModel": "Base Model",
+          "epochs": "Epochs",
+          "datasetVersion": "Dataset Version",
+          "starting": "Starting…",
+          "startTraining": "Start Training"
+        },
+        "cancelDialog": {
+          "title": "Cancel \"{{name}}\"?",
+          "description": "This will immediately stop the training run. Progress will be lost.",
+          "keepRunning": "Keep Running",
+          "cancelling": "Cancelling…",
+          "cancelJob": "Cancel Job"
+        },
+        "cancelledByAdmin": "Cancelled by admin.",
+        "toast": {
+          "jobQueued": "Training job \"{{name}}\" queued",
+          "startJobFailed": "Failed to start job",
+          "jobCancelled": "Job \"{{name}}\" cancelled",
+          "cancelFailed": "Cancel failed",
+          "retryQueued": "Retry queued: \"{{name}}\"",
+          "retryFailed": "Retry failed"
+        }
+      },
+      "models": {
+        "title": "Model Registry",
+        "subtitle": "Version history, deployment control, and model metrics",
+        "currentlyDeployed": "Currently Deployed: {{version}}",
+        "deployedOn": "Deployed {{date}}",
+        "metric": {
+          "accuracy": "Accuracy",
+          "f1": "F1",
+          "precision": "Precision",
+          "recall": "Recall",
+          "f1Score": "F1 Score",
+          "trained": "Trained"
+        },
+        "allVersions": {
+          "title": "All Versions",
+          "description": "Only one model can be deployed at a time. Deploy a new model to automatically move the current one to staged."
+        },
+        "deploy": "Deploy",
+        "rollback": "Rollback",
+        "archive": "Archive",
+        "confirmDialog": {
+          "deployTitle": "Deploy {{version}}?",
+          "archiveTitle": "Archive {{version}}?",
+          "deployDescription": "This will deploy {{version}} and move the current model ({{previousVersion}}) to staged. Farmer predictions will immediately use the new model.",
+          "archiveDescription": "This will archive {{version}}. It can be restored by an admin.",
+          "processing": "Processing…",
+          "deployModel": "Deploy Model"
+        },
+        "toast": {
+          "deployed": "Model {{version}} deployed. Previous model moved to staged.",
+          "archived": "Model {{version}} archived.",
+          "actionFailed": "Action failed",
+          "detailsComingSoon": "Details for {{version}} — coming soon",
+          "rollbackHint": "To rollback, deploy a previous staged model."
+        }
+      },
+      "review": {
+        "title": "Prediction Review Queue",
+        "subtitle": "Validate AI disease predictions from farmer scans",
+        "kpi": {
+          "pendingReviews": "Pending Reviews",
+          "approvedToday": "Approved Today",
+          "correctedToTraining": "Corrected (→ Training)"
+        },
+        "itemsCount": "{{count}} items",
+        "emptyTitle": "Queue cleared",
+        "emptyDescription": "No items match the current filter.",
+        "correctedToLabel": "Corrected to",
+        "pagination": {
+          "showing": "Showing {{from}}–{{to}} of {{total}}"
+        },
+        "correctDialog": {
+          "title": "Correct Disease Label",
+          "predicted": "Predicted",
+          "confidence": "{{value}}% confidence",
+          "correctLabel": "Correct Label",
+          "placeholder": "e.g. Cassava Mosaic, Rice Blast…",
+          "helperText": "Corrected items are automatically flagged as training data for the next model run.",
+          "saving": "Saving…",
+          "submit": "Submit Correction"
+        },
+        "toast": {
+          "loadFailed": "Failed to load review queue",
+          "enterCorrectLabel": "Please enter the correct disease label",
+          "corrected": "Corrected to \"{{label}}\" — added to training dataset",
+          "actionFailed": "Action failed",
+          "approved": "Approved — \"{{disease}}\" confirmed for {{farmer}}",
+          "rejected": "Rejected — prediction removed from queue"
+        }
+      },
+      "performance": {
+        "title": "AI Performance",
+        "subtitle": "Per-class accuracy, confidence distribution, and historical trends",
+        "accuracyOverTime": {
+          "title": "Accuracy Over Time",
+          "description": "Training accuracy vs. validation accuracy per deployed model",
+          "trainAcc": "Train Acc",
+          "valAcc": "Val Acc"
+        },
+        "perClassAccuracy": {
+          "title": "Per-Class Accuracy",
+          "description": "Validation accuracy for each disease category",
+          "accuracyLabel": "Accuracy"
+        },
+        "confidenceDistribution": {
+          "title": "Confidence Distribution",
+          "description": "How confident is the model across all predictions?",
+          "predictionsLabel": "Predictions"
+        },
+        "confusionHighlights": {
+          "title": "Common Misclassifications",
+          "description": "Most frequent prediction errors — areas for model improvement",
+          "predictedAs": "Predicted As",
+          "actualDisease": "Actual Disease",
+          "count": "Count",
+          "severity": "Severity"
+        }
+      },
+      "optimization": {
+        "title": "Optimization Suggestions",
+        "subtitle": "AI-powered planting, harvesting, and resource recommendations",
+        "kpi": {
+          "totalSuggestions": "Total Suggestions",
+          "pendingAction": "Pending Action",
+          "applied": "Applied",
+          "avgConfidence": "Avg Confidence"
+        },
+        "suggestionsCard": {
+          "title": "Suggestions",
+          "matchCount": "{{count}} suggestions match current filters",
+          "statusLabel": "Status",
+          "typeLabel": "Type",
+          "emptyTitle": "No suggestions match",
+          "emptyDescription": "Try adjusting the filters above."
+        },
+        "suggestionCard": {
+          "confidence": "Confidence",
+          "expectedImpact": "Expected Impact",
+          "actionWindow": "Action Window",
+          "apply": "Apply",
+          "applying": "Applying…",
+          "dismiss": "Dismiss",
+          "appliedNotice": "Applied — shared with relevant agronomists"
+        },
+        "toast": {
+          "loadFailed": "Failed to load optimization suggestions",
+          "applied": "Suggestion applied — shared with agronomists.",
+          "applyFailed": "Failed to apply suggestion.",
+          "dismissed": "Suggestion dismissed.",
+          "dismissFailed": "Failed to dismiss suggestion."
+        }
+      }
+    },
+    "overview": {
+      "title": "Admin Overview",
+      "subtitle": "Platform management & system health",
+      "loadError": "Failed to load overview data.",
+      "kpis": {
+        "totalUsers": "Total Users",
+        "newThisWeekSub": "+{{count}} this week",
+        "farmers": "Farmers",
+        "registered": "registered",
+        "agronomists": "Agronomists",
+        "active": "active",
+        "cooperatives": "Cooperatives",
+        "onboarded": "onboarded",
+        "activeToday": "Active Today",
+        "uniqueSessions": "unique sessions",
+        "newThisWeek": "New This Week",
+        "growthSub": "+{{rate}}% growth"
+      },
+      "roleDistribution": {
+        "admins": "Admins",
+        "title": "Role Distribution",
+        "description": "Current user breakdown"
+      },
+      "userGrowth": {
+        "title": "User Growth",
+        "description": "Monthly registrations by role"
+      },
+      "quickActions": {
+        "title": "Quick Actions",
+        "description": "Common administrative tasks",
+        "registerCooperative": "Register Cooperative",
+        "addCrop": "Add Crop",
+        "startTrainingRun": "Start Training Run",
+        "reviewPredictions": "Review Predictions",
+        "viewAnalytics": "View Analytics",
+        "manageUsers": "Manage Users"
+      },
+      "recentActivity": {
+        "title": "Recent Activity",
+        "description": "Platform events and user actions",
+        "items": [
+          { "text": "New farmer registered — Nyagatare District", "time": "12m ago" },
+          { "text": "AI model v3.0.0 accuracy reached 93.4%", "time": "1h ago" },
+          { "text": "ABIRUHA Cooperative added 24 new members", "time": "2h ago" },
+          { "text": "Agronomist Patrick Nkurunziza logged in", "time": "3h ago" },
+          { "text": "Platform: 8 active users today", "time": "4h ago" },
+          { "text": "3 new users registered this week", "time": "6h ago" }
+        ]
+      }
+    },
+    "users": {
+      "title": "User Management",
+      "subtitle": "Manage all platform users, roles, and access",
+      "searchPlaceholder": "Search by name or email…",
+      "allRoles": "All Roles",
+      "tableTitle": "Users",
+      "empty": { "title": "No users found", "description": "Try adjusting your filters" },
+      "columns": { "user": "User", "role": "Role", "status": "Status", "joined": "Joined", "lastLogin": "Last Login" },
+      "actions": { "editRole": "Edit Role", "deactivate": "Deactivate", "activate": "Activate" },
+      "pagination": { "showing": "Showing {{from}}–{{to}} of {{total}}" },
+      "editRoleDialog": { "title": "Edit Role — {{name}}", "prompt": "Select new role for this user:", "saveRole": "Save Role" },
+      "deleteDialog": { "title": "Delete {{name}}?", "description": "This will permanently remove this user and all their data. This action cannot be undone.", "deleting": "Deleting…" },
+      "toast": {
+        "loadFailed": "Failed to load users",
+        "activated": "{{name}} activated",
+        "deactivated": "{{name}} deactivated",
+        "actionFailed": "Action failed",
+        "deleted": "{{name}} deleted",
+        "deleteFailed": "Delete failed",
+        "roleUpdated": "{{name}}'s role updated to {{role}}",
+        "roleUpdateFailed": "Role update failed"
+      }
+    },
+    "cooperatives": {
+      "title": "Cooperatives",
+      "subtitle": "Manage registered cooperatives and their members",
+      "kpis": { "total": "Total Cooperatives", "active": "Active", "totalMembers": "Total Members" },
+      "listTitle": "Registered Cooperatives",
+      "listDescription": "All cooperative accounts on the IMARA platform",
+      "registerButton": "Register Cooperative",
+      "empty": { "title": "No cooperatives yet", "description": "Register the first cooperative to get started." },
+      "membersCount": "{{count}}/{{capacity}} members",
+      "joinedLabel": "Joined",
+      "actions": { "editDetails": "Edit Details", "deactivate": "Deactivate", "activate": "Activate" },
+      "dialog": {
+        "editTitle": "Edit Cooperative",
+        "createTitle": "Register Cooperative",
+        "nameLabel": "Cooperative Name *",
+        "namePlaceholder": "e.g. COOPAC Rwamagana",
+        "locationLabel": "Location *",
+        "locationPlaceholder": "e.g. Rwamagana, Eastern Province",
+        "contactPersonLabel": "Contact Person *",
+        "contactPersonPlaceholder": "Full name",
+        "memberCapacityLabel": "Member Capacity",
+        "contactPhoneLabel": "Contact Phone",
+        "contactPhonePlaceholder": "+250 7XX XXX XXX",
+        "contactEmailLabel": "Contact Email *",
+        "contactEmailPlaceholder": "contact@coop.rw",
+        "statusLabel": "Status",
+        "notesLabel": "Notes",
+        "notesPlaceholder": "Optional notes or remarks",
+        "registerSubmit": "Register"
+      },
+      "deleteDialog": {
+        "title": "Delete {{name}}?",
+        "description": "This will permanently remove the cooperative from the platform. All associated member records will be unlinked. This action cannot be undone.",
+        "deleting": "Deleting…",
+        "confirmButton": "Delete Cooperative"
+      },
+      "toast": {
+        "loadFailed": "Failed to load cooperatives",
+        "validationRequired": "Name, location, contact person, and email are required.",
+        "updated": "{{name}} updated successfully.",
+        "registered": "{{name}} registered on the platform.",
+        "saveFailed": "Failed to save cooperative.",
+        "activated": "{{name}} activated.",
+        "deactivated": "{{name}} deactivated.",
+        "statusUpdateFailed": "Failed to update status.",
+        "deleted": "{{name}} removed from the platform.",
+        "deleteFailed": "Failed to delete cooperative."
+      }
+    },
+    "crops": {
+      "title": "Crop Library",
+      "subtitle": "Manage supported crops and their agronomic profiles",
+      "searchPlaceholder": "Search crops or scientific names…",
+      "addCropButton": "Add Crop",
+      "tableTitle": "Crops",
+      "summary": {
+        "total": "{{count}} crops total",
+        "totalMatching": "{{count}} crops matching \"{{search}}\"",
+        "totalInCategory": "{{count}} crops in \"{{category}}\"",
+        "totalInCategoryMatching": "{{count}} crops in \"{{category}}\" matching \"{{search}}\""
+      },
+      "empty": { "title": "No crops found", "description": "Try adjusting the search or filter." },
+      "columns": { "crop": "Crop", "category": "Category", "growingSeason": "Growing Season", "duration": "Duration", "status": "Status" },
+      "durationDays": "{{count}}d",
+      "pagination": { "showing": "{{from}}–{{to}} of {{total}}" },
+      "dialog": {
+        "editTitle": "Edit Crop",
+        "createTitle": "Add Crop",
+        "commonNameLabel": "Common Name *",
+        "commonNamePlaceholder": "e.g. Maize",
+        "scientificNameLabel": "Scientific Name",
+        "scientificNamePlaceholder": "e.g. Zea mays",
+        "categoryLabel": "Category *",
+        "statusLabel": "Status",
+        "growingSeasonLabel": "Growing Season *",
+        "growingSeasonPlaceholder": "e.g. Mar–Jun, Sep–Dec",
+        "growthDurationLabel": "Growth Duration (days) *",
+        "descriptionLabel": "Description",
+        "descriptionPlaceholder": "Optional agronomic notes",
+        "addSubmit": "Add Crop"
+      },
+      "deleteDialog": {
+        "title": "Delete {{name}}?",
+        "description": "This will permanently remove this crop from the library. Farmers who selected it as their primary crop will not be affected immediately, but the crop will no longer appear in new selections.",
+        "deleting": "Deleting…",
+        "confirmButton": "Delete Crop"
+      },
+      "toast": {
+        "loadFailed": "Failed to load crops",
+        "validationRequired": "Name, growing season, and growth duration are required.",
+        "updated": "{{name}} updated.",
+        "added": "{{name}} added to the crop library.",
+        "saveFailed": "Failed to save crop.",
+        "deleted": "{{name}} removed.",
+        "deleteFailed": "Failed to delete crop."
+      },
+      "category": {
+        "cereal": "Cereal",
+        "legume": "Legume",
+        "vegetable": "Vegetable",
+        "tuber": "Tuber",
+        "fruit": "Fruit",
+        "cashCrop": "Cash Crop"
+      }
+    },
+    "analytics": {
+      "title": "Platform Analytics",
+      "subtitle": "Crop performance, soil health, financials & sustainability",
+      "tabs": {
+        "cropPerformance": "Crop Performance", "cropPerformanceShort": "Crops",
+        "soilEnvironmental": "Soil & Environmental", "soilEnvironmentalShort": "Soil",
+        "financialResource": "Financial & Resource", "financialResourceShort": "Finance",
+        "sustainability": "Sustainability", "sustainabilityShort": "Sustain"
+      },
+      "crop": {
+        "kpis": {
+          "totalYield": "Total Yield (tons)",
+          "trackedCrops": "{{count}} tracked crops",
+          "avgDetectionRate": "Avg Detection Rate",
+          "diseaseScans": "disease scans",
+          "mostAffected": "Most Affected",
+          "leafBlightCases": "Leaf Blight — {{count}} cases",
+          "bestYieldRate": "Best Yield Rate",
+          "aboveTarget": "+{{percent}}% above target"
+        },
+        "yieldChart": { "title": "Crop Yield vs Target", "description": "Tons per crop this season", "actual": "Actual (t)", "target": "Target (t)" },
+        "detectionChart": { "title": "Disease Detection Trends", "description": "Monthly AI detections by disease type", "blight": "Blight", "rust": "Rust", "mosaic": "Mosaic", "blast": "Blast" }
+      },
+      "soil": {
+        "kpis": {
+          "avgRainfall": "Avg Rainfall (mm)",
+          "monthlyAvg": "monthly avg {{year}}",
+          "avgTemperature": "Avg Temperature (°C)",
+          "acrossAllZones": "across all zones",
+          "avgSoilPh": "Avg Soil pH",
+          "withinOptimalRange": "within optimal range",
+          "lowNitrogenZones": "Low-Nitrogen Zones",
+          "needIntervention": "need intervention"
+        },
+        "climateChart": { "title": "Climate Trends (12-Month)", "description": "Rainfall (mm) and temperature (°C)", "rainfall": "Rainfall (mm)", "temp": "Temp (°C)" },
+        "nutrientsChart": { "title": "Soil Nutrients by Zone", "description": "Nitrogen / Phosphorus / Potassium index (0–100)", "nitrogen": "Nitrogen", "phosphorus": "Phosphorus", "potassium": "Potassium" }
+      },
+      "finance": {
+        "kpis": {
+          "totalRevenue": "Total Revenue (M RWF)",
+          "allCrops": "all crops {{year}}",
+          "topEarner": "Top Earner",
+          "avgCostPerHa": "Avg Cost / Ha (K RWF)",
+          "seedsInputsLabor": "seeds + inputs + labor",
+          "revenueGrowth": "Revenue Growth",
+          "vsSamePeriod": "vs same period {{year}}"
+        },
+        "revenueChart": { "title": "Revenue by Crop", "description": "Million RWF, all seasons to date", "revenue": "Revenue" },
+        "costChart": { "title": "Input Cost Breakdown", "description": "RWF millions per cost category by season", "seeds": "Seeds", "fertilizer": "Fertilizer", "pesticide": "Pesticide", "labor": "Labor" },
+        "priceChart": { "title": "Market Price Trends", "description": "RWF per kg — Maize, Beans, Coffee (÷10 for scale)", "coffeeScaled": "Coffee (÷10)" }
+      },
+      "sustainability": {
+        "kpis": {
+          "carbonScore": "Carbon Score",
+          "target": "target: {{value}}",
+          "organicCoverage": "Organic Coverage",
+          "targetPercent": "target: {{value}}%",
+          "pesticideCompliance": "Pesticide Compliance",
+          "certifiedFarms": "certified farms",
+          "waterEfficiency": "Water Efficiency"
+        },
+        "carbonChart": { "title": "Carbon Footprint Trend", "description": "Monthly CO₂e tonnes by source", "machinery": "Machinery", "fertilizer": "Fertilizer", "transport": "Transport" },
+        "scoresChart": { "title": "Sustainability Scores", "description": "Current vs target across all indicators", "current": "Current", "target": "Target" }
+      }
+    },
+    "profile": {
+      "title": "My Profile",
+      "subtitle": "Admin account settings and activity",
+      "emailVerified": "Email Verified",
+      "emailNotVerified": "Email Not Verified",
+      "memberSince": "Member since {{date}}",
+      "lastLogin": "Last login {{time}}",
+      "locationLabel": "Location",
+      "formDescription": "Update your admin account details — name, phone, and location.",
+      "security": {
+        "title": "Security",
+        "description": "Manage your admin account password and access",
+        "changePassword": "Change Password",
+        "deleteAccount": "Delete Account",
+        "deleteWarning": "Deleting the admin account will permanently remove access to the platform. Ensure another admin account exists before proceeding."
+      },
+      "activity": { "title": "Recent Activity", "description": "Your recent administrative actions on this platform", "empty": "No recent activity recorded." },
+      "preferences": {
+        "title": "Preferences",
+        "description": "Theme and notification preferences",
+        "appearance": "Appearance",
+        "themeLight": "Light",
+        "themeDark": "Dark",
+        "themeSystem": "System",
+        "notificationsHeading": "Admin Notifications",
+        "notifications": {
+          "platformAlerts": { "title": "Platform Alerts", "description": "Critical system events and security notices" },
+          "aiModelUpdates": { "title": "AI Model Updates", "description": "Training completion, deployment events" },
+          "newUserRegistrations": { "title": "New User Registrations", "description": "Daily digest of new registrations" },
+          "cooperativeActivity": { "title": "Cooperative Activity", "description": "Member changes and cooperative updates" }
+        }
       }
     }
   }

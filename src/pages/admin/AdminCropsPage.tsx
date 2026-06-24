@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react"
+import { useTranslation } from "react-i18next"
 import { Header } from "@/components/header"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -37,6 +38,17 @@ const CATEGORY_BADGE: Record<CropCategory, string> = {
   'cash crop': 'bg-violet-500/10 text-violet-700 dark:text-violet-400 border-violet-200 dark:border-violet-800/40',
 }
 
+// CropCategory 'cash crop' contains a space and isn't a valid template-literal-safe
+// object key segment, so we map each category to a camelCase i18n key segment.
+const CATEGORY_KEY_MAP: Record<CropCategory, string> = {
+  cereal: 'cereal',
+  legume: 'legume',
+  vegetable: 'vegetable',
+  tuber: 'tuber',
+  fruit: 'fruit',
+  'cash crop': 'cashCrop',
+}
+
 const EMPTY_FORM: CropInput = {
   name: '',
   scientificName: '',
@@ -50,6 +62,7 @@ const EMPTY_FORM: CropInput = {
 const PAGE_SIZE = 10
 
 export default function AdminCropsPage() {
+  const { t } = useTranslation()
   const [crops, setCrops] = useState<Crop[]>([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -71,9 +84,9 @@ export default function AdminCropsPage() {
     setLoading(true)
     adminService.getCrops({ page, pageSize: PAGE_SIZE, search, category: categoryFilter })
       .then(({ data, total }) => { setCrops(data); setTotal(total) })
-      .catch(() => toast.error('Failed to load crops'))
+      .catch(() => toast.error(t('admin.crops.toast.loadFailed')))
       .finally(() => setLoading(false))
-  }, [page, search, categoryFilter])
+  }, [page, search, categoryFilter, t])
 
   useEffect(() => { load() }, [load])
   useEffect(() => { setPage(1) }, [search, categoryFilter])
@@ -100,22 +113,22 @@ export default function AdminCropsPage() {
 
   const handleSave = async () => {
     if (!form.name.trim() || !form.growingSeason.trim() || !form.growthDurationDays) {
-      toast.warning('Name, growing season, and growth duration are required.')
+      toast.warning(t('admin.crops.toast.validationRequired'))
       return
     }
     setSaving(true)
     try {
       if (editTarget) {
         await adminService.updateCrop(editTarget.id, form)
-        toast.success(`${form.name} updated.`)
+        toast.success(t('admin.crops.toast.updated', { name: form.name }))
       } else {
         await adminService.createCrop(form)
-        toast.success(`${form.name} added to the crop library.`)
+        toast.success(t('admin.crops.toast.added', { name: form.name }))
       }
       setDialogOpen(false)
       load()
     } catch {
-      toast.error('Failed to save crop.')
+      toast.error(t('admin.crops.toast.saveFailed'))
     } finally {
       setSaving(false)
     }
@@ -126,11 +139,11 @@ export default function AdminCropsPage() {
     setDeleting(true)
     try {
       await adminService.deleteCrop(deleteTarget.id)
-      toast.success(`${deleteTarget.name} removed.`)
+      toast.success(t('admin.crops.toast.deleted', { name: deleteTarget.name }))
       setDeleteTarget(null)
       load()
     } catch {
-      toast.error('Failed to delete crop.')
+      toast.error(t('admin.crops.toast.deleteFailed'))
     } finally {
       setDeleting(false)
     }
@@ -140,7 +153,7 @@ export default function AdminCropsPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header title="Crop Library" subtitle="Manage supported crops and their agronomic profiles" />
+      <Header title={t('admin.crops.title')} subtitle={t('admin.crops.subtitle')} />
 
       <div className="p-6 space-y-6">
         {/* Toolbar */}
@@ -149,7 +162,7 @@ export default function AdminCropsPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               className="pl-9"
-              placeholder="Search crops or scientific names…"
+              placeholder={t('admin.crops.searchPlaceholder')}
               value={search}
               onChange={e => setSearch(e.target.value)}
             />
@@ -165,13 +178,13 @@ export default function AdminCropsPage() {
                     : 'bg-muted text-muted-foreground border-border hover:text-foreground'
                 }`}
               >
-                {cat}
+                {cat === 'all' ? t('common.activeStatus.all') : t(`admin.crops.category.${CATEGORY_KEY_MAP[cat]}`)}
               </button>
             ))}
           </div>
           <Button size="sm" onClick={openCreate} className="gap-2 sm:ml-auto">
             <Plus className="w-4 h-4" />
-            Add Crop
+            {t('admin.crops.addCropButton')}
           </Button>
         </div>
 
@@ -180,9 +193,17 @@ export default function AdminCropsPage() {
           <CardHeader className="border-b border-border py-4">
             <CardTitle className="flex items-center gap-2 text-base">
               <Wheat className="w-4 h-4 text-emerald-500" />
-              Crops
+              {t('admin.crops.tableTitle')}
             </CardTitle>
-            <CardDescription>{total} crops {categoryFilter !== 'all' ? `in "${categoryFilter}"` : 'total'}{search ? ` matching "${search}"` : ''}</CardDescription>
+            <CardDescription>
+              {categoryFilter !== 'all' && search
+                ? t('admin.crops.summary.totalInCategoryMatching', { count: total, category: t(`admin.crops.category.${CATEGORY_KEY_MAP[categoryFilter]}`), search })
+                : categoryFilter !== 'all'
+                  ? t('admin.crops.summary.totalInCategory', { count: total, category: t(`admin.crops.category.${CATEGORY_KEY_MAP[categoryFilter]}`) })
+                  : search
+                    ? t('admin.crops.summary.totalMatching', { count: total, search })
+                    : t('admin.crops.summary.total', { count: total })}
+            </CardDescription>
           </CardHeader>
           <CardContent className="p-0">
             {loading ? (
@@ -192,8 +213,8 @@ export default function AdminCropsPage() {
             ) : crops.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16">
                 <Leaf className="w-10 h-10 text-muted-foreground mb-3" />
-                <p className="font-semibold text-foreground">No crops found</p>
-                <p className="text-sm text-muted-foreground mt-1">Try adjusting the search or filter.</p>
+                <p className="font-semibold text-foreground">{t('admin.crops.empty.title')}</p>
+                <p className="text-sm text-muted-foreground mt-1">{t('admin.crops.empty.description')}</p>
               </div>
             ) : (
               <>
@@ -201,11 +222,11 @@ export default function AdminCropsPage() {
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b border-border bg-muted/20">
-                        <th className="text-left py-3 px-6 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Crop</th>
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Category</th>
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide hidden md:table-cell">Growing Season</th>
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide hidden lg:table-cell">Duration</th>
-                        <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Status</th>
+                        <th className="text-left py-3 px-6 text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t('admin.crops.columns.crop')}</th>
+                        <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t('admin.crops.columns.category')}</th>
+                        <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide hidden md:table-cell">{t('admin.crops.columns.growingSeason')}</th>
+                        <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide hidden lg:table-cell">{t('admin.crops.columns.duration')}</th>
+                        <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">{t('admin.crops.columns.status')}</th>
                         <th className="py-3 px-4" />
                       </tr>
                     </thead>
@@ -222,14 +243,14 @@ export default function AdminCropsPage() {
                           </td>
                           <td className="py-4 px-4">
                             <span className={`text-[11px] px-2 py-0.5 rounded border font-medium capitalize ${CATEGORY_BADGE[crop.category]}`}>
-                              {crop.category}
+                              {t(`admin.crops.category.${CATEGORY_KEY_MAP[crop.category]}`)}
                             </span>
                           </td>
                           <td className="py-4 px-4 text-muted-foreground hidden md:table-cell">{crop.growingSeason}</td>
                           <td className="py-4 px-4 hidden lg:table-cell">
                             <span className="flex items-center gap-1 text-muted-foreground">
                               <Clock className="w-3.5 h-3.5" />
-                              {crop.growthDurationDays}d
+                              {t('admin.crops.durationDays', { count: crop.growthDurationDays })}
                             </span>
                           </td>
                           <td className="py-4 px-4">
@@ -238,7 +259,7 @@ export default function AdminCropsPage() {
                                 ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/40'
                                 : 'bg-muted text-muted-foreground border-border'
                             }`}>
-                              {crop.status}
+                              {t(`common.activeStatus.${crop.status}`)}
                             </span>
                           </td>
                           <td className="py-4 px-4">
@@ -249,13 +270,13 @@ export default function AdminCropsPage() {
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
-                                <DropdownMenuItem onClick={() => openEdit(crop)}>Edit</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => openEdit(crop)}>{t('common.actions.edit')}</DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
                                   onClick={() => setDeleteTarget(crop)}
                                   className="text-rose-600 dark:text-rose-400 focus:text-rose-600"
                                 >
-                                  Delete
+                                  {t('common.actions.delete')}
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
                             </DropdownMenu>
@@ -269,7 +290,7 @@ export default function AdminCropsPage() {
                 {totalPages > 1 && (
                   <div className="flex items-center justify-between px-6 py-4 border-t border-border">
                     <p className="text-xs text-muted-foreground">
-                      {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, total)} of {total}
+                      {t('admin.crops.pagination.showing', { from: (page - 1) * PAGE_SIZE + 1, to: Math.min(page * PAGE_SIZE, total), total })}
                     </p>
                     <div className="flex items-center gap-2">
                       <Button variant="outline" size="icon" className="h-8 w-8" disabled={page === 1} onClick={() => setPage(p => p - 1)}>
@@ -292,41 +313,41 @@ export default function AdminCropsPage() {
       <Dialog open={dialogOpen} onOpenChange={open => { if (!open) setDialogOpen(false) }}>
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>{editTarget ? 'Edit Crop' : 'Add Crop'}</DialogTitle>
+            <DialogTitle>{editTarget ? t('admin.crops.dialog.editTitle') : t('admin.crops.dialog.createTitle')}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-2">
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <Label>Common Name *</Label>
+                <Label>{t('admin.crops.dialog.commonNameLabel')}</Label>
                 <Input
-                  placeholder="e.g. Maize"
+                  placeholder={t('admin.crops.dialog.commonNamePlaceholder')}
                   value={form.name}
                   onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
                 />
               </div>
               <div className="space-y-1.5">
-                <Label>Scientific Name</Label>
+                <Label>{t('admin.crops.dialog.scientificNameLabel')}</Label>
                 <Input
-                  placeholder="e.g. Zea mays"
+                  placeholder={t('admin.crops.dialog.scientificNamePlaceholder')}
                   value={form.scientificName ?? ''}
                   onChange={e => setForm(f => ({ ...f, scientificName: e.target.value }))}
                 />
               </div>
               <div className="space-y-1.5">
-                <Label>Category *</Label>
+                <Label>{t('admin.crops.dialog.categoryLabel')}</Label>
                 <Select value={form.category} onValueChange={v => setForm(f => ({ ...f, category: v as CropCategory }))}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     {CATEGORIES.map(cat => (
-                      <SelectItem key={cat} value={cat} className="capitalize">{cat}</SelectItem>
+                      <SelectItem key={cat} value={cat} className="capitalize">{t(`admin.crops.category.${CATEGORY_KEY_MAP[cat]}`)}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-1.5">
-                <Label>Status</Label>
+                <Label>{t('admin.crops.dialog.statusLabel')}</Label>
                 <div className="flex items-center gap-2 h-10">
                   {(['active', 'inactive'] as const).map(s => (
                     <button
@@ -340,21 +361,21 @@ export default function AdminCropsPage() {
                           : 'border-border text-muted-foreground hover:text-foreground'
                       }`}
                     >
-                      {s.charAt(0).toUpperCase() + s.slice(1)}
+                      {t(`common.activeStatus.${s}`)}
                     </button>
                   ))}
                 </div>
               </div>
               <div className="space-y-1.5">
-                <Label>Growing Season *</Label>
+                <Label>{t('admin.crops.dialog.growingSeasonLabel')}</Label>
                 <Input
-                  placeholder="e.g. Mar–Jun, Sep–Dec"
+                  placeholder={t('admin.crops.dialog.growingSeasonPlaceholder')}
                   value={form.growingSeason}
                   onChange={e => setForm(f => ({ ...f, growingSeason: e.target.value }))}
                 />
               </div>
               <div className="space-y-1.5">
-                <Label>Growth Duration (days) *</Label>
+                <Label>{t('admin.crops.dialog.growthDurationLabel')}</Label>
                 <Input
                   type="number"
                   min={1}
@@ -363,9 +384,9 @@ export default function AdminCropsPage() {
                 />
               </div>
               <div className="col-span-2 space-y-1.5">
-                <Label>Description</Label>
+                <Label>{t('admin.crops.dialog.descriptionLabel')}</Label>
                 <Input
-                  placeholder="Optional agronomic notes"
+                  placeholder={t('admin.crops.dialog.descriptionPlaceholder')}
                   value={form.description ?? ''}
                   onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
                 />
@@ -373,9 +394,9 @@ export default function AdminCropsPage() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
+            <Button variant="outline" onClick={() => setDialogOpen(false)}>{t('common.actions.cancel')}</Button>
             <Button onClick={handleSave} disabled={saving}>
-              {saving ? 'Saving…' : editTarget ? 'Save Changes' : 'Add Crop'}
+              {saving ? t('common.actions.saving') : editTarget ? t('common.actions.save') : t('admin.crops.dialog.addSubmit')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -385,19 +406,19 @@ export default function AdminCropsPage() {
       <AlertDialog open={!!deleteTarget} onOpenChange={open => !open && setDeleteTarget(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete {deleteTarget?.name}?</AlertDialogTitle>
+            <AlertDialogTitle>{t('admin.crops.deleteDialog.title', { name: deleteTarget?.name })}</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently remove this crop from the library. Farmers who selected it as their primary crop will not be affected immediately, but the crop will no longer appear in new selections.
+              {t('admin.crops.deleteDialog.description')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t('common.actions.cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={deleting}
               className="bg-rose-600 hover:bg-rose-700 text-white"
             >
-              {deleting ? 'Deleting…' : 'Delete Crop'}
+              {deleting ? t('admin.crops.deleteDialog.deleting') : t('admin.crops.deleteDialog.confirmButton')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
