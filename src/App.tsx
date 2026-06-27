@@ -38,8 +38,16 @@ import AdminCropsPage from './pages/admin/AdminCropsPage'
 import AiOptimizationPage from './pages/admin/ai/AiOptimizationPage'
 import AdminProfilePage from './pages/admin/AdminProfilePage'
 
-// Cooperative Portal (placeholder)
-import CooperativePage from './pages/cooperative/CooperativePage'
+// Cooperative Portal
+import CooperativeLayout from './pages/cooperative/CooperativeLayout'
+import CooperativeOverviewPage from './pages/cooperative/CooperativeOverviewPage'
+import CooperativeFarmsPage from './pages/cooperative/CooperativeFarmsPage'
+import CooperativeMembersPage from './pages/cooperative/CooperativeMembersPage'
+import CooperativeMarketPage from './pages/cooperative/CooperativeMarketPage'
+import CooperativeAiInsightsPage from './pages/cooperative/CooperativeAiInsightsPage'
+import CooperativeCropAdvisoryPage from './pages/cooperative/CooperativeCropAdvisoryPage'
+import CooperativeDiseaseAlertsPage from './pages/cooperative/CooperativeDiseaseAlertsPage'
+import CooperativeSettingsPage from './pages/cooperative/CooperativeSettingsPage'
 
 // Auth Pages
 import SignInPage from './pages/auth/SignInPage'
@@ -128,9 +136,18 @@ function App() {
           </Route>
         </Route>
 
-        {/* Cooperative placeholder — TODO: build cooperative portal */}
+        {/* Cooperative portal */}
         <Route element={<ProtectedRoute allowedRoles={['cooperative']} />}>
-          <Route path="/cooperative" element={<CooperativePage />} />
+          <Route path="/cooperative" element={<CooperativeLayout />}>
+            <Route index element={<CooperativeOverviewPage />} />
+            <Route path="farms" element={<CooperativeFarmsPage />} />
+            <Route path="members" element={<CooperativeMembersPage />} />
+            <Route path="market" element={<CooperativeMarketPage />} />
+            <Route path="ai-insights" element={<CooperativeAiInsightsPage />} />
+            <Route path="crop-advisory" element={<CooperativeCropAdvisoryPage />} />
+            <Route path="disease-alerts" element={<CooperativeDiseaseAlertsPage />} />
+            <Route path="settings" element={<CooperativeSettingsPage />} />
+          </Route>
         </Route>
       </Routes>
     </NotificationsProvider>

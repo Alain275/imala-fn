@@ -1265,5 +1265,183 @@
         }
       }
     }
+  },
+  "cooperative": {
+    "sidebar": {
+      "tagline": "Urubuga rwa Koperative",
+      "portalLabel": "Urubuga rwa Koperative",
+      "platformSection": "URUBUGA",
+      "aiSection": "IBIKORESHO BY'UBWENGE",
+      "settings": "Igenamiterere",
+      "signOut": "Sohoka",
+      "leaderFallback": "Umuyobozi wa Koperative",
+      "leaderRole": "Umuyobozi · Musanze",
+      "nav": {
+        "overview": "Incamake",
+        "myFarms": "Amapamba Yanjye",
+        "members": "Abanyamuryango",
+        "market": "Isoko",
+        "aiInsights": "Ibisobanuro by'Ubwenge",
+        "cropAdvisory": "Inama z'Ubuhinzi",
+        "diseaseAlerts": "Impuruza z'Indwara"
+      }
+    },
+    "overview": {
+      "title": "Koperative ya Musanze Ruguru",
+      "subtitle": "Incamake y'Ikibaho cya Koperative",
+      "seasonBadge": "Igihembwe B 2026",
+      "kpis": {
+        "totalFarms": "Amapamba Yose",
+        "totalFarmsSub": "ategereje isuzuma",
+        "activeMembers": "Abanyamuryango Bakora",
+        "activeMembersSub": "bose bakora",
+        "totalYield": "Umusaruro Wose",
+        "totalYieldSub": "+14% muri iki gihembwe",
+        "cropsPlanted": "Ibihingwa Byatewe",
+        "cropsPlantedSub": "ubwoko",
+        "aiAlerts": "Impuruza z'Ubwenge",
+        "aiAlertsSub": "zisaba igitonderwa",
+        "seasonProgress": "Iterambere ry'Igihembwe",
+        "seasonProgressSub": "bigenda neza"
+      },
+      "yieldTrend": {
+        "title": "Imikorere y'Umusaruro",
+        "description": "Umusaruro wa buri kwezi ku mapamba yose (toni)",
+        "maize": "Ibigori",
+        "beans": "Ibishyimbo",
+        "potato": "Ibirayi"
+      },
+      "farmStatus": {
+        "title": "Imiterere y'Amapamba",
+        "description": "Igabanyanyigabanya ry'amapamba ubu",
+        "good": "Imikorere Myiza",
+        "fair": "Imikorere Yo Hagati",
+        "low": "Imikorere Nke",
+        "inactive": "Ntikora"
+      },
+      "quickActions": {
+        "title": "Ibikorwa Byihuse",
+        "description": "Imirimo ya buri munsi y'ubugelozi bwa koperative",
+        "viewFarms": "Reba Amapamba Yose",
+        "sendAlert": "Ohereza Impuruza",
+        "bulkSale": "Kugurisha Byinshi",
+        "generateReport": "Kora Raporo",
+        "addMember": "Ongeraho Umunyamuryango",
+        "aiAdvisory": "Inama z'Ubwenge"
+      },
+      "aiInsights": {
+        "title": "Ibisobanuro by'Ubwenge",
+        "description": "Inama zitangwa n'ubwenge bw'ikoranabuhanga kuri koperative yawe",
+        "takeAction": "Fata Igikorwa",
+        "time": {
+          "2h": "Amasaha 2 ashize",
+          "5h": "Amasaha 5 ashize",
+          "1d": "Umunsi 1 ushize"
+        },
+        "items": {
+          "lateBlight":  "Ibyago bya late blight ku mapamba 14 y'ibirayi. Ohereza impuruza ubu.",
+          "maizePrice":  "Ibiciro by'ibigori biriyongera 18% mu mezi 3. Teganya kugurisha byinshi.",
+          "soilAcidity": "Amapamba 3 yerekana ubutumbuke bw'ubutaka. Gukoresha calcium mu itsinda bihereza 40% by'amafaranga."
+        }
+      },
+      "bottomNav": {
+        "home": "Ahabanza", "farms": "Amapamba", "market": "Isoko",
+        "alerts": "Impuruza", "settings": "Igenamiterere"
+      }
+    },
+    "farms": {
+      "title": "Amapamba Yanjye", "subtitle": "Gucunga amapamba yose ya koperative",
+      "searchPlaceholder": "Shakisha ipamba, umuhinzi cyangwa aho ari…",
+      "filterAll": "Yose", "filterPending": "Ategereje", "filterGood": "Myiza",
+      "filterFair": "Hagati", "filterLow": "Nke", "filterInactive": "Ntikora",
+      "statTotal": "Yose", "statGood": "Myiza", "statFair": "Hagati",
+      "statLow": "Nke", "statInactive": "Ntikora", "statPending": "Isuzuma",
+      "noResults": "Nta pamba iboneka.", "lastYield": "Umusaruro", "lastActive": "Igikorwa",
+      "pendingBadge": "Ategereje",
+      "status": { "good": "Myiza", "fair": "Hagati", "low": "Nke", "inactive": "Ntikora" },
+      "viewDetails": "Reba Birambuye", "reviewStatus": "Subiramo Imiterere", "contactFarmer": "Vugana n'Umuhinzi",
+      "reviewSaved": "Imiterere y'ipamba yavuguruwe.", "reviewError": "Kunanirwa kuvugurura.",
+      "reviewDialog": { "title": "Subiramo Imiterere y'Ipamba", "selectStatus": "Hitamo imiterere mishya" },
+      "contactDialog": { "title": "Vugana n'Umuhinzi", "call": "Hamagara" }
+    },
+    "members": {
+      "title": "Abanyamuryango", "subtitle": "Gucunga abanyamuryango ba koperative",
+      "searchPlaceholder": "Shakisha abanyamuryango…",
+      "addBtn": "Ongeraho Umunyamuryango", "listTitle": "Abanyamuryango Bose", "noResults": "Nta munyamuryango uboneka.",
+      "statTotal": "Abanyamuryango Bose", "statActive": "Bakora", "statFarms": "Amapamba Yose",
+      "farmsLabel": "amapamba",
+      "role": { "leader": "Umuyobozi", "treasurer": "Umubitsi", "secretary": "Umunyamabanga", "member": "Umunyamuryango" },
+      "actionContact": "Vugana", "actionViewFarms": "Reba Amapamba", "actionRemove": "Sohora",
+      "addSuccess": "Umunyamuryango yongeweho.", "addError": "Kunanirwa kongeraho.", "removeSuccess": "Umunyamuryango yasohotse.", "removeError": "Kunanirwa gusohotsa.",
+      "addDialog": { "title": "Ongeraho Umunyamuryango Mushya", "name": "Amazina Yuzuye", "phone": "Nimero ya Telefoni", "email": "Imeyili", "location": "Aho Atuye", "role": "Inshingano", "validation": "Amazina na telefoni birakenewe.", "submit": "Ongeraho" },
+      "contactDialog": { "title": "Umunara w'Umunyamuryango" },
+      "removeDialog": { "title": "Sohotsa Umunyamuryango", "description": "Urashaka gusohotsa {{name}} muri koperative?", "confirm": "Sohotsa" }
+    },
+    "market": {
+      "title": "Isoko", "subtitle": "Ibiciro by'ibihingwa no guteganya kugurisha byinshi",
+      "kpiStock": "Ububiko Bwacu Bwose", "kpiBuyers": "Abaguzi Bemejwe", "kpiAvgChange": "Impinduka z'Ibiciro", "kpiRevenue": "Amafaranga Yemejwe",
+      "chartTitle": "Imiterere y'Ibiciro (RWF/kg)", "chartSubtitle": "Impinduka y'ibiciro buri cyumweru",
+      "ordersTitle": "Amabwiriza yo Kugurisha", "newOrder": "Rishya",
+      "pricesTitle": "Ibiciro by'Isoko Ubu", "pricesSubtitle": "Ibiciro by'ibihingwa",
+      "colCrop": "Igihingwa", "colPrice": "Igiciro", "colChange": "Impinduka", "colStock": "Ububiko Bwacu", "colDemand": "Ubusabe", "sellBtn": "Gurisha",
+      "demand": { "high": "Hejuru", "medium": "Hagati", "low": "Hasi" },
+      "orderStatus": { "pending": "Ategereje", "confirmed": "Yemejwe", "completed": "Yarangiye" },
+      "buyersTitle": "Abaguzi Bemejwe", "verified": "Yemejwe", "minQty": "Ingano nto",
+      "bulkSubmitted": "Itegekanyo ryo kugurisha ryakozwe.", "bulkError": "Kunanirwa gukora itegekanyo.",
+      "bulkDialog": { "title": "Teganya Kugurisha Byinshi", "crop": "Hitamo Igihingwa", "quantity": "Ingano", "price": "Igiciro Giteganyijwe", "buyer": "Hitamo Umuguzi", "summary": "Amafaranga yitezwe:", "validation": "Nyamuneka hitamo igihingwa, ingano n'umuguzi.", "noBuyers": "Nta muguzi uboneka.", "submit": "Ohereza" }
+    },
+    "aiInsights": {
+      "pageTitle": "Ibisobanuro by'Ubwenge", "pageSubtitle": "Inama z'ubwenge bw'ikoranabuhanga kuri koperative yawe",
+      "filterAll": "Byose", "filterAlert": "Impuruza", "filterMarket": "Isoko", "filterSoil": "Ubutaka", "filterWeather": "Ikirere",
+      "noInsights": "Nta bisobanuro bikora.", "farmsAffected": "amapamba atangirwa ingaruka",
+      "dismissBtn": "Siba", "dismissed": "Bisobanuro birabwa.", "dismissedSection": "Bisobanuro birabwe",
+      "severity": { "critical": "Bikomeye Cyane", "high": "Bikomeye", "medium": "Hagati", "low": "Buke" }
+    },
+    "cropAdvisory": {
+      "title": "Inama z'Ubuhinzi", "subtitle": "Inama z'ubwenge bw'ikoranabuhanga ku bihingwa",
+      "currentStage": "Icyiciro Ubu", "seasonProgress": "Iterambere ry'Igihembwe", "nextAction": "Igikorwa Gikurikira",
+      "daysToHarvest": "Iminsi Kugeza Gusarura", "expectedYield": "Umusaruro Witezwe", "irrigation": "Kuhira",
+      "everyDays": "Buri {{n}} minsi",
+      "fertilizerTitle": "Gahunda yo Gufumbira", "fertName": "Ifumbire", "fertAmount": "Ingano", "fertTiming": "Igihe",
+      "risksTitle": "Ibyago Ubu", "calendarTitle": "Kalandari y'Igihembwe"
+    },
+    "diseaseAlerts": {
+      "title": "Impuruza z'Indwara", "subtitle": "Kugenzura no gusubiza imbogamizi z'indwara",
+      "sendGroupBtn": "Ohereza Impuruza ku Itsinda",
+      "activeSection": "Impuruza Zikora", "resolvedSection": "Impuruza Zarangiye",
+      "noActive": "Nta mpuruza zikora. Amapamba yose afite ubuzima bwiza!",
+      "farmsAffected": "amapamba atangirwa ingaruka", "detected": "Yasanzwe", "symptoms": "Ibimenyetso", "prevention": "Ukurinda",
+      "broadcastTag": "Impuruza Yoherejwe", "broadcastBtn": "Tangaza Impuruza", "broadcastDone": "Yoherejwe",
+      "viewDetails": "Reba Birambuye", "markResolved": "Garagaza ko Byarangiye", "sending": "Kohereza…", "resolved": "Yarangiye",
+      "broadcastSent": "Impuruza yatangazwe ku {{disease}}.", "broadcastError": "Kunanirwa gutangaza.",
+      "resolveSuccess": "Impuruza igaragarije ko yarangiye.", "resolveError": "Kunanirwa.",
+      "groupSent": "Impuruza yoherejwe ku bagize itsinda bose.", "groupError": "Kunanirwa kohereza.",
+      "severity": { "critical": "Bikomeye Cyane", "high": "Bikomeye", "medium": "Hagati", "low": "Buke" },
+      "resolveDialog": { "title": "Garagaza ko Byarangiye", "description": "Emeza ko {{disease}} yarangiye.", "confirm": "Emeza" },
+      "groupDialog": { "title": "Ohereza Impuruza ku Itsinda", "type": "Ubwoko bw'Impuruza", "typeDisease": "Indwara", "typeWeather": "Ikirere", "typeMarket": "Isoko", "urgency": "Uburyo bw'Ubwihutire", "message": "Ubutumwa", "messagePlaceholder": "Sobanura ikibazo n'ibikorwa bisabwa…", "target": "Ohereza Kuri", "allMembers": "Abanyamuryango Bose", "affectedOnly": "Batangirwa Ingaruka Gusa", "submit": "Ohereza Impuruza" }
+    },
+    "settings": {
+      "title": "Igenamiterere", "subtitle": "Gucunga umwirondoro na maselect",
+      "profileSection": "Umwirondoro wa Koperative", "profileDesc": "Vugurura amakuru ya koperative yawe.",
+      "profileSaved": "Umwirondoro wavuguruwe.", "profileError": "Kunanirwa kuvugurura.",
+      "languageSection": "Ururimi", "languageDesc": "Hitamo ururimi ushaka.",
+      "notifsSection": "Amatangazo", "notifsDesc": "Genzura amatangazo ugira.",
+      "notifSaved": "Ibyo ushaka byabitswe.", "notifError": "Kunanirwa kubika.",
+      "accessSection": "Uburebure no Kwihisha", "accessDesc": "Genzura ibyo abanyamuryango bashoboye kubona.",
+      "accessSaved": "Igenamiterere ry'uburebure ryabitswe.", "accessError": "Kunanirwa.",
+      "profileFields": { "name": "Izina rya Koperative", "location": "Aho Ibarizwa", "district": "Akarere", "regNumber": "Nomero y'Uburenganzira", "email": "Imeyili yo Kuvugana", "phone": "Telefoni yo Kuvugana", "foundedYear": "Umwaka Yashingiwemo", "description": "Ibisobanuro" },
+      "notif": {
+        "diseaseAlerts":     { "label": "Impuruza z'Indwara",           "desc": "Kubimenyeshwa iyo indwara nshya isanzwe." },
+        "marketUpdates":     { "label": "Amakuru y'Isoko",              "desc": "Impinduka z'ibiciro n'amahirwe yo kugurisha." },
+        "weatherWarnings":   { "label": "Impuruza z'Ikirere",           "desc": "Impuruza z'ikirere giteye ubwoba i Musanze." },
+        "aiRecommendations": { "label": "Inama z'Ubwenge",              "desc": "Ibisobanuro bishya by'ubwenge n'inama z'ubuhinzi." },
+        "weeklyReport":      { "label": "Raporo y'Icyumweru",           "desc": "Incamake y'icyumweru y'imikorere ya koperative." }
+      },
+      "access": {
+        "membersCanViewPrices": { "label": "Abanyamuryango Bareba Ibiciro",    "desc": "Uruhushya rwo kubona ibiciro by'isoko." },
+        "requireFarmApproval":  { "label": "Isuzuma ry'Amapamba Rishya",       "desc": "Amapamba mashya agomba kwemezwa n'umuyobozi." },
+        "shareDataWithGov":     { "label": "Sangira Amakuru na Leta",          "desc": "Uruhushya rwa MINAGRI rwo kubona amakuru." }
+      }
+    }
   }
 }

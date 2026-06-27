@@ -28,11 +28,14 @@ async function request<T>(
     headers,
   });
 
-  // Handle 401 Unauthorized
+  // Handle 401 Unauthorized — only force-logout in production builds.
+  // In dev mode a fake/demo token would also 401, causing a redirect loop.
   if (response.status === 401) {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    window.location.href = '/sign-in';
+    if (!import.meta.env.DEV) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = '/sign-in';
+    }
     throw new Error('Unauthorized');
   }
 

@@ -1265,5 +1265,184 @@
         }
       }
     }
+  },
+  "cooperative": {
+    "sidebar": {
+      "tagline": "Portail Coopératif",
+      "portalLabel": "Portail Coopératif",
+      "platformSection": "PLATEFORME",
+      "aiSection": "OUTILS IA",
+      "settings": "Paramètres",
+      "signOut": "Se Déconnecter",
+      "leaderFallback": "Leader Coopératif",
+      "leaderRole": "Leader · Musanze",
+      "nav": {
+        "overview": "Aperçu",
+        "myFarms": "Mes Fermes",
+        "members": "Membres",
+        "market": "Marché",
+        "aiInsights": "Insights IA",
+        "cropAdvisory": "Conseils Agricoles",
+        "diseaseAlerts": "Alertes Maladies"
+      }
+    },
+    "overview": {
+      "title": "Coopérative Nord Musanze",
+      "subtitle": "Aperçu du Tableau de Bord Coopératif",
+      "seasonBadge": "Saison B 2026",
+      "kpis": {
+        "totalFarms": "Total Fermes",
+        "totalFarmsSub": "en attente de révision",
+        "activeMembers": "Membres Actifs",
+        "activeMembersSub": "tous actifs",
+        "totalYield": "Rendement Total",
+        "totalYieldSub": "+14% cette saison",
+        "cropsPlanted": "Cultures Plantées",
+        "cropsPlantedSub": "variétés",
+        "aiAlerts": "Alertes IA",
+        "aiAlertsSub": "nécessitent attention",
+        "seasonProgress": "Avancement Saison",
+        "seasonProgressSub": "dans les délais"
+      },
+      "yieldTrend": {
+        "title": "Tendance des Rendements",
+        "description": "Rendement mensuel de toutes les fermes (tonnes)",
+        "maize": "Maïs",
+        "beans": "Haricots",
+        "potato": "Pomme de Terre"
+      },
+      "farmStatus": {
+        "title": "État des Fermes",
+        "description": "Répartition actuelle des fermes",
+        "good": "Bonne performance",
+        "fair": "Performance moyenne",
+        "low": "Faible performance",
+        "inactive": "Inactive"
+      },
+      "quickActions": {
+        "title": "Actions Rapides",
+        "description": "Tâches courantes de gestion coopérative",
+        "viewFarms": "Voir Toutes les Fermes",
+        "sendAlert": "Envoyer Alerte Groupe",
+        "bulkSale": "Vente en Gros",
+        "generateReport": "Générer Rapport",
+        "addMember": "Ajouter Membre",
+        "aiAdvisory": "Conseil IA"
+      },
+      "aiInsights": {
+        "title": "Insights IA",
+        "description": "Recommandations pour votre coopérative",
+        "takeAction": "Agir",
+        "time": {
+          "2h": "Il y a 2 heures",
+          "5h": "Il y a 5 heures",
+          "1d": "Il y a 1 jour"
+        },
+        "items": {
+          "lateBlight":  "Risque de mildiou tardif sur 14 fermes de pommes de terre. Envoyez une alerte maintenant.",
+          "maizePrice":  "Prix du maïs en hausse de 18% dans 3 semaines. Coordonnez une vente en gros.",
+          "soilAcidity": "3 fermes présentent une acidité du sol. L'application groupée de chaux économise 40% des coûts."
+        }
+      },
+      "bottomNav": {
+        "home": "Accueil", "farms": "Fermes", "market": "Marché",
+        "alerts": "Alertes", "settings": "Paramètres"
+      }
+    },
+    "farms": {
+      "title": "Mes Fermes", "subtitle": "Gérer toutes les fermes de votre coopérative",
+      "searchPlaceholder": "Rechercher par ferme, agriculteur ou lieu…",
+      "filterAll": "Tout", "filterPending": "En attente", "filterGood": "Bien",
+      "filterFair": "Moyen", "filterLow": "Faible", "filterInactive": "Inactive",
+      "statTotal": "Total", "statGood": "Bien", "statFair": "Moyen",
+      "statLow": "Faible", "statInactive": "Inactive", "statPending": "En révision",
+      "noResults": "Aucune ferme ne correspond à votre recherche.",
+      "lastYield": "Dernier rendement", "lastActive": "Dernière activité",
+      "pendingBadge": "En attente",
+      "status": { "good": "Bien", "fair": "Moyen", "low": "Faible", "inactive": "Inactive" },
+      "viewDetails": "Voir Détails", "reviewStatus": "Réviser Statut", "contactFarmer": "Contacter Agriculteur",
+      "reviewSaved": "Statut de la ferme mis à jour.", "reviewError": "Échec de la mise à jour.",
+      "reviewDialog": { "title": "Réviser le Statut", "selectStatus": "Sélectionner le nouveau statut" },
+      "contactDialog": { "title": "Contacter l'Agriculteur", "call": "Appeler" }
+    },
+    "members": {
+      "title": "Membres", "subtitle": "Gestion des membres de la coopérative",
+      "searchPlaceholder": "Rechercher des membres…",
+      "addBtn": "Ajouter Membre", "listTitle": "Tous les Membres", "noResults": "Aucun membre trouvé.",
+      "statTotal": "Total Membres", "statActive": "Actifs", "statFarms": "Total Fermes",
+      "farmsLabel": "fermes",
+      "role": { "leader": "Leader", "treasurer": "Trésorier", "secretary": "Secrétaire", "member": "Membre" },
+      "actionContact": "Contacter", "actionViewFarms": "Voir Fermes", "actionRemove": "Retirer",
+      "addSuccess": "Membre ajouté.", "addError": "Échec de l'ajout.", "removeSuccess": "Membre retiré.", "removeError": "Échec du retrait.",
+      "addDialog": { "title": "Ajouter un Nouveau Membre", "name": "Nom complet", "phone": "Téléphone", "email": "Email", "location": "Lieu", "role": "Rôle", "validation": "Nom et téléphone requis.", "submit": "Ajouter" },
+      "contactDialog": { "title": "Contact du Membre" },
+      "removeDialog": { "title": "Retirer le Membre", "description": "Retirer {{name}} de la coopérative?", "confirm": "Retirer" }
+    },
+    "market": {
+      "title": "Marché", "subtitle": "Prix des cultures et coordination des ventes en gros",
+      "kpiStock": "Notre Stock Total", "kpiBuyers": "Acheteurs Vérifiés", "kpiAvgChange": "Variation Moy. Prix", "kpiRevenue": "Revenu Confirmé",
+      "chartTitle": "Tendance des Prix (RWF/kg)", "chartSubtitle": "Mouvement hebdomadaire des prix",
+      "ordersTitle": "Commandes en Gros", "newOrder": "Nouvelle",
+      "pricesTitle": "Prix du Marché", "pricesSubtitle": "Prix actuels des cultures",
+      "colCrop": "Culture", "colPrice": "Prix", "colChange": "Variation", "colStock": "Notre Stock", "colDemand": "Demande", "sellBtn": "Vendre",
+      "demand": { "high": "Haute", "medium": "Moyenne", "low": "Faible" },
+      "orderStatus": { "pending": "En attente", "confirmed": "Confirmée", "completed": "Complétée" },
+      "buyersTitle": "Acheteurs Vérifiés", "verified": "Vérifié", "minQty": "Qté min.",
+      "bulkSubmitted": "Commande en gros créée.", "bulkError": "Échec de la création.",
+      "bulkDialog": { "title": "Coordonner une Vente en Gros", "crop": "Sélectionner Culture", "quantity": "Quantité", "price": "Prix Cible", "buyer": "Sélectionner Acheteur", "summary": "Revenu estimé:", "validation": "Veuillez sélectionner culture, quantité et acheteur.", "noBuyers": "Aucun acheteur disponible.", "submit": "Soumettre" }
+    },
+    "aiInsights": {
+      "pageTitle": "Insights IA", "pageSubtitle": "Recommandations IA pour votre coopérative",
+      "filterAll": "Tout", "filterAlert": "Alertes", "filterMarket": "Marché", "filterSoil": "Sol", "filterWeather": "Météo",
+      "noInsights": "Aucun insight actif.", "farmsAffected": "fermes concernées",
+      "dismissBtn": "Ignorer", "dismissed": "Insight ignoré.", "dismissedSection": "Insights ignorés",
+      "severity": { "critical": "Critique", "high": "Élevé", "medium": "Moyen", "low": "Faible" }
+    },
+    "cropAdvisory": {
+      "title": "Conseils Agricoles", "subtitle": "Recommandations IA par culture",
+      "currentStage": "Stade Actuel", "seasonProgress": "Avancement Saison", "nextAction": "Prochaine Action",
+      "daysToHarvest": "Jours avant Récolte", "expectedYield": "Rendement Prévu", "irrigation": "Irrigation",
+      "everyDays": "Tous les {{n}}j",
+      "fertilizerTitle": "Programme de Fertilisation", "fertName": "Engrais", "fertAmount": "Quantité", "fertTiming": "Moment",
+      "risksTitle": "Risques Actuels", "calendarTitle": "Calendrier Saisonnier"
+    },
+    "diseaseAlerts": {
+      "title": "Alertes Maladies", "subtitle": "Surveiller et répondre aux menaces de maladies",
+      "sendGroupBtn": "Envoyer Alerte Groupe",
+      "activeSection": "Alertes Actives", "resolvedSection": "Alertes Résolues",
+      "noActive": "Aucune alerte active. Toutes les fermes sont saines!",
+      "farmsAffected": "fermes concernées", "detected": "Détectée", "symptoms": "Symptômes", "prevention": "Prévention",
+      "broadcastTag": "Alerte Envoyée", "broadcastBtn": "Diffuser l'Alerte", "broadcastDone": "Diffusion Envoyée",
+      "viewDetails": "Voir Détails", "markResolved": "Marquer Résolu", "sending": "Envoi…", "resolved": "Résolu",
+      "broadcastSent": "Alerte diffusée pour {{disease}}.", "broadcastError": "Échec de la diffusion.",
+      "resolveSuccess": "Alerte marquée comme résolue.", "resolveError": "Échec de la résolution.",
+      "groupSent": "Alerte groupe envoyée.", "groupError": "Échec de l'envoi.",
+      "severity": { "critical": "Critique", "high": "Élevé", "medium": "Moyen", "low": "Faible" },
+      "resolveDialog": { "title": "Marquer comme Résolu", "description": "Confirmer que {{disease}} a été traité.", "confirm": "Résoudre" },
+      "groupDialog": { "title": "Envoyer Alerte Groupe", "type": "Type d'Alerte", "typeDisease": "Maladie", "typeWeather": "Météo", "typeMarket": "Marché", "urgency": "Urgence", "message": "Message", "messagePlaceholder": "Décrivez la situation et les actions recommandées…", "target": "Envoyer À", "allMembers": "Tous les Membres", "affectedOnly": "Concernés Seulement", "submit": "Envoyer" }
+    },
+    "settings": {
+      "title": "Paramètres", "subtitle": "Gérer le profil et les préférences",
+      "profileSection": "Profil de la Coopérative", "profileDesc": "Mettre à jour les informations officielles.",
+      "profileSaved": "Profil mis à jour.", "profileError": "Échec de la mise à jour.",
+      "languageSection": "Langue", "languageDesc": "Sélectionnez votre langue préférée.",
+      "notifsSection": "Notifications", "notifsDesc": "Contrôler les notifications reçues.",
+      "notifSaved": "Préférences enregistrées.", "notifError": "Échec de l'enregistrement.",
+      "accessSection": "Accès & Confidentialité", "accessDesc": "Contrôler ce que les membres peuvent voir.",
+      "accessSaved": "Paramètres d'accès enregistrés.", "accessError": "Échec.",
+      "profileFields": { "name": "Nom de la Coopérative", "location": "Lieu", "district": "District", "regNumber": "Numéro d'Enregistrement", "email": "Email de Contact", "phone": "Téléphone de Contact", "foundedYear": "Année de Fondation", "description": "Description" },
+      "notif": {
+        "diseaseAlerts":     { "label": "Alertes Maladies",         "desc": "Notification lors de nouvelles menaces détectées." },
+        "marketUpdates":     { "label": "Mises à Jour Marché",      "desc": "Changements de prix et opportunités de vente." },
+        "weatherWarnings":   { "label": "Alertes Météo",            "desc": "Alertes météo sévères affectant Musanze." },
+        "aiRecommendations": { "label": "Recommandations IA",       "desc": "Nouveaux insights IA et conseils agricoles." },
+        "weeklyReport":      { "label": "Rapport Hebdomadaire",     "desc": "Résumé hebdomadaire des performances." }
+      },
+      "access": {
+        "membersCanViewPrices": { "label": "Membres Voient les Prix",      "desc": "Autoriser tous les membres à voir les prix." },
+        "requireFarmApproval":  { "label": "Approbation Fermes Requise",   "desc": "Les nouvelles fermes doivent être approuvées." },
+        "shareDataWithGov":     { "label": "Partager Données Gouvernement","desc": "Permettre au MINAGRI d'accéder aux données." }
+      }
+    }
   }
 }
