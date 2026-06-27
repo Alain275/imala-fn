@@ -118,7 +118,8 @@ export const authService = {
     const result = await response.json();
 
     if (!response.ok) {
-      if (response.status === 401) {
+      // Only force-logout in production — dev uses demo tokens that legitimately 401.
+      if (response.status === 401 && !import.meta.env.DEV) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         window.location.href = '/sign-in';

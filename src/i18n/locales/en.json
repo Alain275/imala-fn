@@ -1265,5 +1265,269 @@
         }
       }
     }
+  },
+  "cooperative": {
+    "sidebar": {
+      "tagline": "Cooperative Portal",
+      "portalLabel": "Cooperative Portal",
+      "platformSection": "PLATFORM",
+      "aiSection": "AI TOOLS",
+      "settings": "Settings",
+      "signOut": "Sign Out",
+      "leaderFallback": "Cooperative Leader",
+      "leaderRole": "Leader · Musanze",
+      "nav": {
+        "overview": "Overview",
+        "myFarms": "My Farms",
+        "members": "Members",
+        "market": "Market",
+        "aiInsights": "AI Insights",
+        "cropAdvisory": "Crop Advisory",
+        "diseaseAlerts": "Disease Alerts"
+      }
+    },
+    "overview": {
+      "title": "Musanze North Cooperative",
+      "subtitle": "Cooperative Dashboard Overview",
+      "seasonBadge": "Season B 2026",
+      "kpis": {
+        "totalFarms": "Total Farms",
+        "totalFarmsSub": "pending review",
+        "activeMembers": "Active Members",
+        "activeMembersSub": "all active",
+        "totalYield": "Total Yield",
+        "totalYieldSub": "+14% this season",
+        "cropsPlanted": "Crops Planted",
+        "cropsPlantedSub": "varieties",
+        "aiAlerts": "AI Alerts",
+        "aiAlertsSub": "need attention",
+        "seasonProgress": "Season Progress",
+        "seasonProgressSub": "on track"
+      },
+      "yieldTrend": {
+        "title": "Yield Trend",
+        "description": "Monthly yield across all farms (tons)",
+        "maize": "Maize",
+        "beans": "Beans",
+        "potato": "Potato"
+      },
+      "farmStatus": {
+        "title": "Farm Status",
+        "description": "Current farm breakdown",
+        "good": "Good performance",
+        "fair": "Fair performance",
+        "low": "Low performance",
+        "inactive": "Inactive"
+      },
+      "quickActions": {
+        "title": "Quick Actions",
+        "description": "Common cooperative management tasks",
+        "viewFarms": "View All Farms",
+        "sendAlert": "Send Group Alert",
+        "bulkSale": "Bulk Market Sale",
+        "generateReport": "Generate Report",
+        "addMember": "Add Member",
+        "aiAdvisory": "AI Advisory"
+      },
+      "aiInsights": {
+        "title": "AI Insights",
+        "description": "Recommendations for your cooperative",
+        "takeAction": "Take Action",
+        "time": {
+          "2h": "2 hours ago",
+          "5h": "5 hours ago",
+          "1d": "1 day ago"
+        },
+        "items": {
+          "lateBlight":  "Late blight risk on 14 potato farms. Send broadcast alert now.",
+          "maizePrice":  "Maize prices rising 18% in 3 weeks. Coordinate bulk sale.",
+          "soilAcidity": "3 farms show soil acidity. Group lime application saves 40% cost."
+        }
+      },
+      "bottomNav": {
+        "home": "Home",
+        "farms": "Farms",
+        "market": "Market",
+        "alerts": "Alerts",
+        "settings": "Settings"
+      }
+    },
+    "farms": {
+      "title": "My Farms",
+      "subtitle": "Manage all farms in your cooperative",
+      "searchPlaceholder": "Search by farm, farmer or location…",
+      "filterAll": "All", "filterPending": "Pending", "filterGood": "Good",
+      "filterFair": "Fair", "filterLow": "Low", "filterInactive": "Inactive",
+      "statTotal": "Total", "statGood": "Good", "statFair": "Fair",
+      "statLow": "Low", "statInactive": "Inactive", "statPending": "Pending Review",
+      "noResults": "No farms match your search or filter.",
+      "lastYield": "Last yield", "lastActive": "Last active",
+      "pendingBadge": "Pending",
+      "status": { "good": "Good", "fair": "Fair", "low": "Low", "inactive": "Inactive" },
+      "viewDetails": "View Details", "reviewStatus": "Review Status", "contactFarmer": "Contact Farmer",
+      "reviewSaved": "Farm status updated successfully.",
+      "reviewError": "Failed to update farm status.",
+      "reviewDialog": {
+        "title": "Review Farm Status",
+        "selectStatus": "Select new status"
+      },
+      "contactDialog": { "title": "Contact Farmer", "call": "Call Now" }
+    },
+    "members": {
+      "title": "Members",
+      "subtitle": "Cooperative member management",
+      "searchPlaceholder": "Search members…",
+      "addBtn": "Add Member",
+      "listTitle": "All Members",
+      "noResults": "No members found.",
+      "statTotal": "Total Members", "statActive": "Active", "statFarms": "Total Farms",
+      "farmsLabel": "farms",
+      "role": { "leader": "Leader", "treasurer": "Treasurer", "secretary": "Secretary", "member": "Member" },
+      "actionContact": "Contact", "actionViewFarms": "View Farms", "actionRemove": "Remove",
+      "addSuccess": "Member added successfully.",
+      "addError": "Failed to add member.",
+      "removeSuccess": "Member removed.",
+      "removeError": "Failed to remove member.",
+      "addDialog": {
+        "title": "Add New Member",
+        "name": "Full Name", "phone": "Phone Number", "email": "Email",
+        "location": "Location", "role": "Role",
+        "validation": "Name and phone are required.",
+        "submit": "Add Member"
+      },
+      "contactDialog": { "title": "Member Contact" },
+      "removeDialog": {
+        "title": "Remove Member",
+        "description": "Are you sure you want to remove {{name}} from the cooperative? This cannot be undone.",
+        "confirm": "Remove"
+      }
+    },
+    "market": {
+      "title": "Market",
+      "subtitle": "Crop prices & bulk sale coordination",
+      "kpiStock": "Our Total Stock", "kpiBuyers": "Verified Buyers",
+      "kpiAvgChange": "Avg Price Change", "kpiRevenue": "Confirmed Revenue",
+      "chartTitle": "Price Trend (RWF/kg)", "chartSubtitle": "Weekly crop price movement",
+      "ordersTitle": "Bulk Orders", "newOrder": "New Order",
+      "pricesTitle": "Current Market Prices", "pricesSubtitle": "Live prices for cooperative crops",
+      "colCrop": "Crop", "colPrice": "Price", "colChange": "Change",
+      "colStock": "Our Stock", "colDemand": "Demand", "sellBtn": "Sell",
+      "demand": { "high": "High", "medium": "Medium", "low": "Low" },
+      "orderStatus": { "pending": "Pending", "confirmed": "Confirmed", "completed": "Completed" },
+      "buyersTitle": "Verified Buyers",
+      "verified": "Verified", "minQty": "Min. qty",
+      "bulkSubmitted": "Bulk sale order created successfully.",
+      "bulkError": "Failed to create bulk sale order.",
+      "bulkDialog": {
+        "title": "Coordinate Bulk Sale",
+        "crop": "Select Crop", "quantity": "Quantity", "price": "Target Price",
+        "buyer": "Select Buyer", "summary": "Estimated revenue:",
+        "validation": "Please select crop, quantity and buyer.",
+        "noBuyers": "No buyers available for this crop.",
+        "submit": "Submit Order"
+      }
+    },
+    "aiInsights": {
+      "pageTitle": "AI Insights",
+      "pageSubtitle": "AI-powered recommendations for your cooperative",
+      "filterAll": "All", "filterAlert": "Alerts", "filterMarket": "Market",
+      "filterSoil": "Soil", "filterWeather": "Weather",
+      "noInsights": "No active insights for the selected filter.",
+      "farmsAffected": "farms affected",
+      "dismissBtn": "Dismiss",
+      "dismissed": "Insight dismissed.",
+      "dismissedSection": "Dismissed insights",
+      "severity": { "critical": "Critical", "high": "High", "medium": "Medium", "low": "Low" }
+    },
+    "cropAdvisory": {
+      "title": "Crop Advisory",
+      "subtitle": "AI-powered recommendations per crop",
+      "currentStage": "Current Stage", "seasonProgress": "Season Progress",
+      "nextAction": "Next Action", "daysToHarvest": "Days to Harvest",
+      "expectedYield": "Expected Yield", "irrigation": "Irrigation",
+      "everyDays": "Every {{n}}d",
+      "fertilizerTitle": "Fertilizer Schedule",
+      "fertName": "Fertilizer", "fertAmount": "Amount", "fertTiming": "Timing",
+      "risksTitle": "Current Risks",
+      "calendarTitle": "Season Calendar"
+    },
+    "diseaseAlerts": {
+      "title": "Disease Alerts",
+      "subtitle": "Monitor and respond to crop disease threats",
+      "sendGroupBtn": "Send Group Alert",
+      "activeSection": "Active Alerts",
+      "resolvedSection": "Resolved Alerts",
+      "noActive": "No active disease alerts. All farms are healthy!",
+      "farmsAffected": "farms affected",
+      "detected": "Detected",
+      "symptoms": "Symptoms",
+      "prevention": "Prevention",
+      "broadcastTag": "Alert Sent",
+      "broadcastBtn": "Broadcast Alert",
+      "broadcastDone": "Broadcast Sent",
+      "viewDetails": "View Details",
+      "markResolved": "Mark Resolved",
+      "sending": "Sending…",
+      "resolved": "Resolved",
+      "broadcastSent": "Broadcast alert sent for {{disease}}.",
+      "broadcastError": "Failed to send broadcast.",
+      "resolveSuccess": "Alert marked as resolved.",
+      "resolveError": "Failed to resolve alert.",
+      "groupSent": "Group alert sent to all members.",
+      "groupError": "Failed to send group alert.",
+      "severity": { "critical": "Critical", "high": "High", "medium": "Medium", "low": "Low" },
+      "resolveDialog": {
+        "title": "Mark Alert as Resolved",
+        "description": "Confirm that {{disease}} has been contained and treated on all affected farms.",
+        "confirm": "Mark Resolved"
+      },
+      "groupDialog": {
+        "title": "Send Group Alert",
+        "type": "Alert Type",
+        "typeDisease": "Disease", "typeWeather": "Weather", "typeMarket": "Market",
+        "urgency": "Urgency Level",
+        "message": "Message",
+        "messagePlaceholder": "Describe the situation and recommended actions for all members…",
+        "target": "Send To",
+        "allMembers": "All Members",
+        "affectedOnly": "Affected Only",
+        "submit": "Send Alert"
+      }
+    },
+    "settings": {
+      "title": "Settings",
+      "subtitle": "Manage cooperative profile and preferences",
+      "profileSection": "Cooperative Profile",
+      "profileDesc": "Update your cooperative's official information.",
+      "profileSaved": "Profile updated successfully.",
+      "profileError": "Failed to update profile.",
+      "languageSection": "Language",
+      "languageDesc": "Select your preferred language for the dashboard.",
+      "notifsSection": "Notifications",
+      "notifsDesc": "Control which notifications you receive.",
+      "notifSaved": "Notification preferences saved.",
+      "notifError": "Failed to save preferences.",
+      "accessSection": "Access & Privacy",
+      "accessDesc": "Control what members can see and data sharing settings.",
+      "accessSaved": "Access settings saved.",
+      "accessError": "Failed to save access settings.",
+      "profileFields": {
+        "name": "Cooperative Name", "location": "Location", "district": "District",
+        "regNumber": "Registration Number", "email": "Contact Email", "phone": "Contact Phone",
+        "foundedYear": "Founded Year", "description": "Description"
+      },
+      "notif": {
+        "diseaseAlerts":    { "label": "Disease Alerts",        "desc": "Get notified when new disease threats are detected on farms." },
+        "marketUpdates":    { "label": "Market Updates",        "desc": "Price changes and bulk sale opportunities." },
+        "weatherWarnings":  { "label": "Weather Warnings",      "desc": "Severe weather alerts affecting Musanze district." },
+        "aiRecommendations":{ "label": "AI Recommendations",    "desc": "New AI insights and crop advisory updates." },
+        "weeklyReport":     { "label": "Weekly Summary Report", "desc": "Receive a weekly digest of cooperative performance." }
+      },
+      "access": {
+        "membersCanViewPrices": { "label": "Members Can View Market Prices", "desc": "Allow all members to see current crop prices." },
+        "requireFarmApproval":  { "label": "Require Approval for New Farms", "desc": "New farm registrations must be reviewed by the leader." },
+        "shareDataWithGov":     { "label": "Share Data with Government",     "desc": "Allow MINAGRI to access cooperative yield and production data." }
+      }
+    }
   }
 }
