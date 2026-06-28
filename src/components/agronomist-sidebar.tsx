@@ -13,6 +13,11 @@ import {
   Menu,
   X,
   Sprout,
+  Users,
+  CalendarCheck,
+  BookOpen,
+  HelpCircle,
+  GraduationCap,  // ← ADDED
 } from "lucide-react"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
@@ -30,6 +35,11 @@ const navigation = [
   { name: "Pathology Lab", href: "/agronomist/pathology", icon: FlaskConical },
   { name: "Advisory Hub", href: "/agronomist/advisory", icon: BarChart3 },
   { name: "Workforce Desk", href: "/agronomist/workforce", icon: Users2 },
+  { name: "Farmers", href: "/agronomist/farmers", icon: Users },
+  { name: "Farm Visits", href: "/agronomist/farm-visits", icon: CalendarCheck },
+  { name: "Advice", href: "/agronomist/advice", icon: BookOpen },
+  { name: "Questions", href: "/agronomist/questions", icon: HelpCircle },
+  { name: "Training Materials", href: "/agronomist/training-materials", icon: GraduationCap },  // ← ADDED
 ]
 
 export function AgronomistSidebar() {

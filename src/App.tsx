@@ -20,6 +20,11 @@ import CommsPage from './pages/dashboard/agronomist/CommsPage'
 import PathologyPage from './pages/dashboard/agronomist/PathologyPage'
 import AdvisoryPage from './pages/dashboard/agronomist/AdvisoryPage'
 import WorkforcePage from './pages/dashboard/agronomist/WorkforcePage'
+import FarmersPage from './pages/dashboard/agronomist/FarmersPage'
+import FarmVisitsPage from './pages/dashboard/agronomist/FarmVisitsPage'
+import AdvicePage from './pages/dashboard/agronomist/AdvicePage'
+import QuestionsPage from './pages/dashboard/agronomist/QuestionsPage'
+import TrainingMaterialsPage from './pages/dashboard/agronomist/TrainingMaterialsPage'  // ← ADDED
 
 // Admin Portal
 import AdminLayout from './pages/admin/AdminLayout'
@@ -102,6 +107,11 @@ function App() {
             <Route path="pathology" element={<PathologyPage />} />
             <Route path="advisory" element={<AdvisoryPage />} />
             <Route path="workforce" element={<WorkforcePage />} />
+            <Route path="farmers" element={<FarmersPage />} />
+            <Route path="farm-visits" element={<FarmVisitsPage />} />
+            <Route path="advice" element={<AdvicePage />} />
+            <Route path="questions" element={<QuestionsPage />} />
+            <Route path="training-materials" element={<TrainingMaterialsPage />} />  {/* ← ADDED */}
             <Route path="settings" element={<SettingsPage />} />
             <Route path="notifications" element={<NotificationsPage />} />
           </Route>

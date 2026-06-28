@@ -1,7 +1,7 @@
 import api from './api'
 
 // Note: auth.ts has a slim UserProfile for auth state (name/email/role/etc).
-// This is the full version from GET /users/profile, which adds verification and timestamp fields.
+// This is the full version from GET /agronomists/profile, which adds verification and timestamp fields.
 export interface UserProfile {
   id: string
   name: string
@@ -50,11 +50,11 @@ async function userRequest<T>(endpoint: string, options?: RequestInit): Promise<
 
 export const userService = {
   getProfile(): Promise<UserProfile> {
-    return userRequest<UserProfile>('/users/profile')
+    return userRequest<UserProfile>('/agronomists/profile')
   },
 
   updateProfile(body: UpdateProfileInput): Promise<UserProfile> {
-    return userRequest<UserProfile>('/users/profile', {
+    return userRequest<UserProfile>('/agronomists/profile', {
       method: 'PATCH',
       body: JSON.stringify(body),
     })
