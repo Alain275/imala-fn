@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Generate PWA Icons - Auto Download</title>
+  <style>
+    body { 
+      font-family: 'Segoe UI', Arial, sans-serif; 
+      padding: 20px; 
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+    }
+    .container { 
+      max-width: 700px; 
+      background: white; 
+      padding: 40px; 
+      border-radius: 16px; 
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    h1 { color: #10b981; margin-top: 0; display: flex; align-items: center; gap: 10px; }
+    .status { background: #f0fdf4; border-left: 4px solid #10b981; padding: 15px; margin: 20px 0; border-radius: 4px; }
+    .status.success { background: #dcfce7; }
+    button { 
+      background: #10b981; 
+      color: white; 
+      border: none; 
+      padding: 15px 30px; 
+      border-radius: 8px; 
+      cursor: pointer; 
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    button:hover { background: #059669; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4); }
+    button:disabled { background: #d1d5db; cursor: not-allowed; }
+    .preview { display: flex; gap: 30px; justify-content: center; margin: 30px 0; flex-wrap: wrap; }
+    .icon-box { text-align: center; }
+    .icon-box canvas { 
+      border: 2px solid #e5e7eb; 
+      border-radius: 12px; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .icon-box h3 { color: #6b7280; margin: 10px 0 5px 0; }
+    .step { margin: 15px 0; padding-left: 30px; position: relative; }
+    .step::before { 
+      content: '✓'; 
+      position: absolute; 
+      left: 0; 
+      width: 24px; 
+      height: 24px; 
+      background: #10b981; 
+      color: white; 
+      border-radius: 50%; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      font-weight: bold;
+    }
+    .step.pending::before { content: '○'; background: #d1d5db; }
+    code { 
+      background: #f3f4f6; 
+      padding: 2px 6px; 
+      border-radius: 4px; 
+      font-family: 'Consolas', monospace;
+      color: #059669;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>
+      <span style="font-size: 32px;">🌱</span>
+      Imala PWA Icon Generator
+    </h1>
+    
+    <div class="status" id="status">
+      <strong>Ready to generate icons</strong>
+      <p style="margin: 10px 0 0 0;">Click the button below to create your PWA icons automatically.</p>
+    </div>
+
+    <div style="text-align: center; margin: 30px 0;">
+      <button onclick="generateAndDownload()" id="genBtn">
+        ✨ Generate & Download Icons
+      </button>
+    </div>
+
+    <div class="preview" id="preview" style="display: none;"></div>
+
+    <div id="steps" style="margin-top: 30px; display: none;">
+      <h3 style="color: #374151;">Next Steps:</h3>
+      <div class="step pending" id="step1">Save <code>icon-192.png</code> to <code>public/icons/</code></div>
+      <div class="step pending" id="step2">Save <code>icon-512.png</code> to <code>public/icons/</code></div>
+      <div class="step pending" id="step3">Run <code>npm run build</code></div>
+      <div class="step pending" id="step4">Run <code>npm run preview</code></div>
+      <div class="step pending" id="step5">Test in Chrome DevTools → Application → Manifest</div>
+    </div>
+  </div>
+
+  <script>
+    function generateAndDownload() {
+      const btn = document.getElementById('genBtn');
+      const status = document.getElementById('status');
+      const preview = document.getElementById('preview');
+      const steps = document.getElementById('steps');
+      
+      btn.disabled = true;
+      btn.textContent = '⏳ Generating...';
+      
+      status.className = 'status';
+      status.innerHTML = '<strong>Generating icons...</strong><p style="margin: 10px 0 0 0;">Please wait...</p>';
+      
+      setTimeout(() => {
+        const sizes = [192, 512];
+        preview.innerHTML = '';
+        preview.style.display = 'flex';
+        let downloaded = 0;
+
+        sizes.forEach((size, index) => {
+          setTimeout(() => {
+            const canvas = createIconCanvas(size);
+            const box = document.createElement('div');
+            box.className = 'icon-box';
+            box.innerHTML = `
+              <canvas width="${size}" height="${size}" style="width: ${Math.min(size, 200)}px; height: ${Math.min(size, 200)}px;"></canvas>
+              <h3>${size}×${size}px</h3>
+            `;
+            
+            const displayCanvas = box.querySelector('canvas');
+            displayCanvas.getContext('2d').drawImage(canvas, 0, 0);
+            preview.appendChild(box);
+            
+            // Auto-download
+            canvas.toBlob((blob) => {
+              const url = URL.createObjectURL(blob);
+              const link = document.createElement('a');
+              link.download = `icon-${size}.png`;
+              link.href = url;
+              link.click();
+              URL.revokeObjectURL(url);
+              
+              downloaded++;
+              if (downloaded === sizes.length) {
+                status.className = 'status success';
+                status.innerHTML = `
+                  <strong>✅ Success! Icons generated and downloaded</strong>
+                  <p style="margin: 10px 0 0 0;">Check your Downloads folder for <code>icon-192.png</code> and <code>icon-512.png</code></p>
+                `;
+                btn.textContent = '✓ Icons Generated';
+                steps.style.display = 'block';
+              }
+            }, 'image/png');
+          }, index * 500);
+        });
+      }, 500);
+    }
+
+    function createIconCanvas(size) {
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+
+      // Background gradient
+      const gradient = ctx.createLinearGradient(0, 0, size, size);
+      gradient.addColorStop(0, '#10b981');
+      gradient.addColorStop(1, '#059669');
+      ctx.fillStyle = gradient;
+      
+      // Rounded rectangle
+      const radius = size * 0.15;
+      ctx.beginPath();
+      ctx.moveTo(radius, 0);
+      ctx.lineTo(size - radius, 0);
+      ctx.arcTo(size, 0, size, radius, radius);
+      ctx.lineTo(size, size - radius);
+      ctx.arcTo(size, size, size - radius, size, radius);
+      ctx.lineTo(radius, size);
+      ctx.arcTo(0, size, 0, size - radius, radius);
+      ctx.lineTo(0, radius);
+      ctx.arcTo(0, 0, radius, 0, radius);
+      ctx.closePath();
+      ctx.fill();
+
+      // White "I" letter with serif style
+      ctx.fillStyle = '#ffffff';
+      ctx.shadowColor = 'rgba(0,0,0,0.2)';
+      ctx.shadowBlur = size * 0.02;
+      ctx.shadowOffsetY = size * 0.01;
+      
+      const barWidth = size * 0.08;
+      const centerX = size * 0.5;
+      const topY = size * 0.25;
+      const bottomY = size * 0.68;
+      const horizontalWidth = size * 0.28;
+      
+      // Top horizontal bar
+      ctx.fillRect(centerX - horizontalWidth/2, topY, horizontalWidth, barWidth);
+      
+      // Vertical bar
+      ctx.fillRect(centerX - barWidth/2, topY, barWidth, bottomY - topY + barWidth);
+      
+      // Bottom horizontal bar
+      ctx.fillRect(centerX - horizontalWidth/2, bottomY, horizontalWidth, barWidth);
+
+      // Plant/leaf decoration
+      ctx.shadowBlur = 0;
+      ctx.globalAlpha = 0.9;
+      
+      // Leaf shape
+      ctx.beginPath();
+      ctx.ellipse(centerX, size * 0.82, size * 0.06, size * 0.09, 0, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Stem
+      ctx.globalAlpha = 0.7;
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = size * 0.015;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(centerX, size * 0.76);
+      ctx.lineTo(centerX, size * 0.88);
+      ctx.stroke();
+      
+      // Small leaves
+      ctx.lineWidth = size * 0.012;
+      ctx.beginPath();
+      ctx.moveTo(centerX, size * 0.80);
+      ctx.quadraticCurveTo(centerX - size * 0.03, size * 0.79, centerX - size * 0.04, size * 0.82);
+      ctx.stroke();
+      
+      ctx.beginPath();
+      ctx.moveTo(centerX, size * 0.84);
+      ctx.quadraticCurveTo(centerX + size * 0.03, size * 0.83, centerX + size * 0.04, size * 0.86);
+      ctx.stroke();
+
+      ctx.globalAlpha = 1;
+      ctx.shadowBlur = 0;
+
+      return canvas;
+    }
+
+    // Auto-run on load after 1 second
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('auto') === 'true') {
+          generateAndDownload();
+        }
+      }, 1000);
+    });
+  </script>
+</body>
+</html>

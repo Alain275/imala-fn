@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Icon Converter - SVG to PNG</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 40px; background: #f5f5f5; }
+    .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; }
+    h1 { color: #10b981; }
+    .icon-preview { display: flex; gap: 20px; margin: 20px 0; }
+    .icon-box { text-align: center; }
+    canvas { border: 1px solid #ddd; }
+    button { background: #10b981; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px; }
+    button:hover { background: #059669; }
+    .instructions { background: #f0fdf4; border-left: 4px solid #10b981; padding: 15px; margin: 20px 0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🌱 Imala PWA Icon Converter</h1>
+    
+    <div class="instructions">
+      <strong>Instructions:</strong>
+      <ol>
+        <li>Click "Generate Icons" button below</li>
+        <li>Right-click each icon and "Save Image As..."</li>
+        <li>Save as <code>icon-192.png</code> and <code>icon-512.png</code></li>
+        <li>Place them in <code>public/icons/</code> folder</li>
+      </ol>
+    </div>
+
+    <div style="text-align: center; margin: 30px 0;">
+      <button onclick="generateIcons()">✨ Generate Icons</button>
+    </div>
+
+    <div class="icon-preview" id="preview"></div>
+  </div>
+
+  <script>
+    function generateIcons() {
+      const sizes = [192, 512];
+      const preview = document.getElementById('preview');
+      preview.innerHTML = '';
+
+      sizes.forEach(size => {
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext('2d');
+
+        // Background with rounded corners
+        const radius = size * 0.1;
+        ctx.fillStyle = '#10b981';
+        ctx.beginPath();
+        ctx.roundRect(0, 0, size, size, radius);
+        ctx.fill();
+
+        // White "I" letter
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(size * 0.35, size * 0.25, size * 0.3, size * 0.05);
+        ctx.fillRect(size * 0.425, size * 0.3, size * 0.15, size * 0.4);
+        ctx.fillRect(size * 0.35, size * 0.7, size * 0.3, size * 0.05);
+
+        // Decorative leaf/plant element
+        ctx.globalAlpha = 0.8;
+        ctx.beginPath();
+        ctx.arc(size * 0.5, size * 0.8, size * 0.08, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.globalAlpha = 0.6;
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = size * 0.02;
+        ctx.beginPath();
+        ctx.moveTo(size * 0.45, size * 0.83);
+        ctx.quadraticCurveTo(size * 0.5, size * 0.87, size * 0.55, size * 0.83);
+        ctx.stroke();
+
+        ctx.globalAlpha = 1;
+
+        // Create download link
+        const box = document.createElement('div');
+        box.className = 'icon-box';
+        box.innerHTML = `
+          <h3>${size}x${size}</h3>
+          <canvas width="${size}" height="${size}" style="width: ${Math.min(size, 200)}px; height: ${Math.min(size, 200)}px;"></canvas>
+          <br>
+          <button onclick="downloadIcon(this.previousElementSibling.previousElementSibling, ${size})">
+            💾 Download icon-${size}.png
+          </button>
+        `;
+        
+        const displayCanvas = box.querySelector('canvas');
+        displayCanvas.getContext('2d').drawImage(canvas, 0, 0);
+        
+        preview.appendChild(box);
+      });
+    }
+
+    function downloadIcon(canvas, size) {
+      const link = document.createElement('a');
+      link.download = `icon-${size}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+  </script>
+</body>
+</html>
