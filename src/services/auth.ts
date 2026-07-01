@@ -5,7 +5,7 @@ export interface RegisterData {
   phone: string;
   location?: string;
   farmSize?: number;
-  role?: 'farmer' | 'agronomist' | 'admin' | 'cooperative';
+  role?: 'farmer' | 'agro-dealer' | 'agronomist' | 'admin' | 'cooperative';
 }
 
 export interface LoginData {

@@ -13,6 +13,7 @@ const delay = (ms = 600) => new Promise(r => setTimeout(r, ms))
 export interface AdminStats {
   totalUsers: number
   farmerCount: number
+  agroDealerCount: number
   agronomistCount: number
   cooperativeCount: number
   adminCount: number
@@ -25,7 +26,7 @@ export interface AdminUser {
   id: string
   name: string
   email: string
-  role: 'farmer' | 'agronomist' | 'admin' | 'cooperative'
+  role: 'farmer' | 'agro-dealer' | 'agronomist' | 'admin' | 'cooperative'
   status: 'active' | 'inactive'
   joinedAt: string
   lastLogin: string
@@ -84,6 +85,7 @@ export interface CropInput {
 export interface UserGrowthPoint {
   month: string
   farmers: number
+  agroDealers: number
   agronomists: number
   cooperatives: number
 }
@@ -117,6 +119,7 @@ let _users: AdminUser[] = [
   { id: 'u1', name: 'Jean Habimana', email: 'jean.h@imara.rw', role: 'farmer', status: 'active', joinedAt: '2025-01-12', lastLogin: '2026-06-22', location: 'Kigali' },
   { id: 'u2', name: 'Amina Uwase', email: 'amina.u@imara.rw', role: 'farmer', status: 'active', joinedAt: '2025-02-05', lastLogin: '2026-06-21', location: 'Bugesera' },
   { id: 'u3', name: 'Patrick Nkurunziza', email: 'p.nkurunziza@imara.rw', role: 'agronomist', status: 'active', joinedAt: '2025-01-20', lastLogin: '2026-06-23', location: 'Musanze' },
+  { id: 'u14', name: 'AgriPlus Inputs Ltd', email: 'sales@agriplus.rw', role: 'agro-dealer', status: 'active', joinedAt: '2025-12-03', lastLogin: '2026-06-24', location: 'Kigali' },
   { id: 'u4', name: 'Claire Mutesi', email: 'c.mutesi@imara.rw', role: 'agronomist', status: 'active', joinedAt: '2025-03-10', lastLogin: '2026-06-20', location: 'Huye' },
   { id: 'u5', name: 'COOPAC Rwamagana', email: 'admin@coopac.rw', role: 'cooperative', status: 'active', joinedAt: '2025-04-01', lastLogin: '2026-06-18', location: 'Rwamagana' },
   { id: 'u6', name: 'Emmanuel Bizimana', email: 'e.bizimana@imara.rw', role: 'farmer', status: 'inactive', joinedAt: '2025-05-14', lastLogin: '2026-04-10', location: 'Gatsibo' },
@@ -158,6 +161,7 @@ export const adminService = {
     return {
       totalUsers: _users.length,
       farmerCount: _users.filter(u => u.role === 'farmer').length,
+      agroDealerCount: _users.filter(u => u.role === 'agro-dealer').length,
       agronomistCount: _users.filter(u => u.role === 'agronomist').length,
       cooperativeCount: _users.filter(u => u.role === 'cooperative').length,
       adminCount: _users.filter(u => u.role === 'admin').length,
@@ -300,12 +304,12 @@ export const adminService = {
   async getUserGrowth(): Promise<UserGrowthPoint[]> {
     await delay()
     return [
-      { month: 'Jan', farmers: 120, agronomists: 8, cooperatives: 1 },
-      { month: 'Feb', farmers: 185, agronomists: 10, cooperatives: 2 },
-      { month: 'Mar', farmers: 260, agronomists: 12, cooperatives: 2 },
-      { month: 'Apr', farmers: 340, agronomists: 14, cooperatives: 3 },
-      { month: 'May', farmers: 430, agronomists: 15, cooperatives: 4 },
-      { month: 'Jun', farmers: 510, agronomists: 17, cooperatives: 4 },
+      { month: 'Jan', farmers: 120, agroDealers: 1, agronomists: 8, cooperatives: 1 },
+      { month: 'Feb', farmers: 185, agroDealers: 2, agronomists: 10, cooperatives: 2 },
+      { month: 'Mar', farmers: 260, agroDealers: 3, agronomists: 12, cooperatives: 2 },
+      { month: 'Apr', farmers: 340, agroDealers: 4, agronomists: 14, cooperatives: 3 },
+      { month: 'May', farmers: 430, agroDealers: 5, agronomists: 15, cooperatives: 4 },
+      { month: 'Jun', farmers: 510, agroDealers: 7, agronomists: 17, cooperatives: 4 },
     ]
   },
 

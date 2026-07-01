@@ -63,6 +63,8 @@
     },
     "role": {
       "farmer": "Farmer",
+      "agro-dealer": "Agro-Dealer",
+      "agroDealer": "Agro-Dealer",
       "agronomist": "Agronomist",
       "admin": "Admin",
       "cooperative": "Cooperative"
@@ -221,6 +223,11 @@
       "confirmPasswordPlaceholder": "Confirm password",
       "confirmPasswordError": "Confirm password must be at least 6 characters",
       "passwordsMismatchError": "Passwords don't match",
+      "accountTypeLabel": "Account Type",
+      "accountTypeHelp": {
+        "farmer": "Register as a farmer to manage crops, disease detection, weather, and farm guidance.",
+        "agro-dealer": "Register as an agro-dealer to supply medicines, manure, and other agricultural inputs."
+      },
       "locationLabel": "Location (Optional)",
       "locationPlaceholder": "e.g. Kigali, Gasabo",
       "farmSizeLabel": "Farm Size (Optional)",
@@ -243,6 +250,7 @@
     "sidebar": {
       "tagline": "Smart Agriculture",
       "portalLabel": "Farmer Portal",
+      "portalLabelAgroDealer": "Agro-Dealer Portal",
       "nav": {
         "dashboard": "Dashboard",
         "cropAdvisory": "Crop Advisory",

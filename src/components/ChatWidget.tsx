@@ -71,7 +71,7 @@ export function ChatWidget() {
       } catch (err) {
         if ((err as Error).name !== "AbortError") {
           setMessages((prev) => prev.slice(0, -1))
-          setError("Something went wrong. Please try again.")
+          setError((err as Error).message || "Something went wrong. Please try again.")
         }
       } finally {
         setStreaming(false)

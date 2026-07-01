@@ -63,6 +63,8 @@
     },
     "role": {
       "farmer": "Umuhinzi",
+      "agro-dealer": "Umucuruzi w'Inyongeramusaruro",
+      "agroDealer": "Umucuruzi w'Inyongeramusaruro",
       "agronomist": "Umuhanga mu Buhinzi",
       "admin": "Umuyobozi",
       "cooperative": "Koperative"
@@ -221,6 +223,11 @@
       "confirmPasswordPlaceholder": "Emeza ijambo ry'ibanga",
       "confirmPasswordError": "Iyemeza ry'ijambo ry'ibanga rigomba kugira nibura inyuguti 6",
       "passwordsMismatchError": "Amagambo y'ibanga ntabwo ahuye",
+      "accountTypeLabel": "Ubwoko bwa Konti",
+      "accountTypeHelp": {
+        "farmer": "Iyandikishe nk'umuhinzi kugira ngo ucunge ibihingwa, imenyekanisha ry'indwara, iteganyagihe n'ubujyanama bw'ubuhinzi.",
+        "agro-dealer": "Iyandikishe nk'umucuruzi w'inyongeramusaruro utanga imiti, ifumbire n'ibindi bicuruzwa by'ubuhinzi."
+      },
       "locationLabel": "Aho Utuye (Bidasabwa)",
       "locationPlaceholder": "urugero: Kigali, Gasabo",
       "farmSizeLabel": "Ubunini bw'Umurima (Bidasabwa)",
@@ -243,6 +250,7 @@
     "sidebar": {
       "tagline": "Ubuhinzi bw'Ikoranabuhanga",
       "portalLabel": "Urubuga rw'Umuhinzi",
+      "portalLabelAgroDealer": "Urubuga rw'Umucuruzi w'Inyongeramusaruro",
       "nav": {
         "dashboard": "Imbonerahamwe",
         "cropAdvisory": "Inama ku Bihingwa",

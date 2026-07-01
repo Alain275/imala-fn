@@ -6,10 +6,11 @@ import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
 import { authService } from '@/services/auth'
 
-export type AppRole = 'farmer' | 'agronomist' | 'admin' | 'cooperative'
+export type AppRole = 'farmer' | 'agro-dealer' | 'agronomist' | 'admin' | 'cooperative'
 
 const roleHome: Record<AppRole, string> = {
   farmer: '/dashboard',
+  'agro-dealer': '/agro-dealer',
   agronomist: '/agronomist',
   admin: '/admin',
   cooperative: '/cooperative',

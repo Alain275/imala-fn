@@ -25,6 +25,14 @@ const buildLoginSchema = (t: TFunction) =>
 
 type LoginFormValues = z.infer<ReturnType<typeof buildLoginSchema>>;
 
+const roleHome: Record<string, string> = {
+  farmer: "/dashboard",
+  "agro-dealer": "/agro-dealer",
+  agronomist: "/agronomist",
+  admin: "/admin",
+  cooperative: "/cooperative",
+};
+
 export default function SignInPage() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
@@ -37,6 +45,8 @@ export default function SignInPage() {
   const {
     register,
     handleSubmit,
+    setError,
+    clearErrors,
     formState: { errors }
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -46,20 +56,31 @@ export default function SignInPage() {
     }
   });
 
+  const emailField = register("email", {
+    onChange: () => clearErrors("root.server"),
+  });
+  const passwordField = register("password", {
+    onChange: () => clearErrors("root.server"),
+  });
+
   const onSubmit = async (data: LoginFormValues) => {
     setSubmitting(true);
+    clearErrors("root.server");
     try {
       const response = await authService.login(data);
 
       toast.success(response.message || t("auth.login.successToast"));
 
       const user = response.data.user;
-      const defaultHome = user.role === "agronomist" ? "/agronomist" : "/dashboard";
+      const defaultHome = roleHome[user.role] ?? "/dashboard";
       const from = (location.state as { from?: { pathname: string } })?.from?.pathname
       navigate(from ?? defaultHome, { replace: true });
     } catch (error: any) {
       const message = error.response?.data?.message || t("auth.login.errorToast");
-      toast.error(message);
+      setError("root.server", {
+        type: "server",
+        message,
+      });
     } finally {
       setSubmitting(false);
     }
@@ -102,6 +123,11 @@ export default function SignInPage() {
 
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              {errors.root?.server?.message && (
+                <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+                  {errors.root.server.message}
+                </div>
+              )}
 
               {/* Email input */}
               <div className="relative">
@@ -111,7 +137,7 @@ export default function SignInPage() {
                 <div className="flex items-center rounded-xl border border-[#e0d6bc] bg-[#faf6ee]/20 px-3.5 py-3.5 focus-within:border-emerald-600 focus-within:ring-1 focus-within:ring-emerald-600/20 transition-all">
                   <Mail className="w-4 h-4 text-emerald-700/50 mr-2.5 flex-shrink-0" />
                   <input
-                    {...register("email")}
+                    {...emailField}
                     type="email"
                     placeholder={t("auth.login.emailPlaceholder")}
                     className="w-full bg-transparent text-sm text-emerald-950 placeholder-emerald-950/30 outline-none"
@@ -130,7 +156,7 @@ export default function SignInPage() {
                 <div className="flex items-center rounded-xl border border-[#e0d6bc] bg-[#faf6ee]/20 px-3.5 py-3.5 focus-within:border-emerald-600 focus-within:ring-1 focus-within:ring-emerald-600/20 transition-all">
                   <Lock className="w-4 h-4 text-emerald-700/50 mr-2.5 flex-shrink-0" />
                   <input
-                    {...register("password")}
+                    {...passwordField}
                     type={showPassword ? "text" : "password"}
                     placeholder={t("auth.login.passwordPlaceholder")}
                     className="w-full bg-transparent text-sm text-emerald-950 placeholder-emerald-950/30 outline-none"

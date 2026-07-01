@@ -63,6 +63,8 @@
     },
     "role": {
       "farmer": "Agriculteur",
+      "agro-dealer": "Agro-distributeur",
+      "agroDealer": "Agro-distributeur",
       "agronomist": "Agronome",
       "admin": "Administrateur",
       "cooperative": "Coopérative"
@@ -221,6 +223,11 @@
       "confirmPasswordPlaceholder": "Confirmez le mot de passe",
       "confirmPasswordError": "La confirmation du mot de passe doit contenir au moins 6 caractères",
       "passwordsMismatchError": "Les mots de passe ne correspondent pas",
+      "accountTypeLabel": "Type de compte",
+      "accountTypeHelp": {
+        "farmer": "Inscrivez-vous comme agriculteur pour gÃ©rer les cultures, la dÃ©tection des maladies, la mÃ©tÃ©o et les conseils agricoles.",
+        "agro-dealer": "Inscrivez-vous comme agro-distributeur pour fournir des mÃ©dicaments, du fumier et d'autres intrants agricoles."
+      },
       "locationLabel": "Localisation (Facultatif)",
       "locationPlaceholder": "ex. Kigali, Gasabo",
       "farmSizeLabel": "Superficie de la Ferme (Facultatif)",
@@ -243,6 +250,7 @@
     "sidebar": {
       "tagline": "Agriculture Intelligente",
       "portalLabel": "Portail Agriculteur",
+      "portalLabelAgroDealer": "Portail Agro-distributeur",
       "nav": {
         "dashboard": "Tableau de Bord",
         "cropAdvisory": "Conseil Agricole",

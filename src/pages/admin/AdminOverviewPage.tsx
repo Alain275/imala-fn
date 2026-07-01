@@ -17,7 +17,7 @@ import {
 } from "recharts"
 import { adminService, type AdminStats, type UserGrowthPoint } from "@/services/adminMock"
 
-const ROLE_COLORS = ['#10b981', '#0ea5e9', '#f59e0b', '#8b5cf6']
+const ROLE_COLORS = ['#10b981', '#84cc16', '#0ea5e9', '#f59e0b', '#8b5cf6']
 
 const TOOLTIP_STYLE = {
   backgroundColor: 'oklch(var(--card))',
@@ -77,6 +77,7 @@ export default function AdminOverviewPage() {
 
   const roleDistribution = stats ? [
     { name: t('common.role.farmer'), value: stats.farmerCount },
+    { name: t('common.role.agro-dealer'), value: stats.agroDealerCount },
     { name: t('common.role.agronomist'), value: stats.agronomistCount },
     { name: t('common.role.cooperative'), value: stats.cooperativeCount },
     { name: t('admin.overview.roleDistribution.admins'), value: stats.adminCount },
@@ -146,12 +147,17 @@ export default function AdminOverviewPage() {
                           <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.3} />
                           <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0} />
                         </linearGradient>
+                        <linearGradient id="gDealer" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#84cc16" stopOpacity={0.3} />
+                          <stop offset="95%" stopColor="#84cc16" stopOpacity={0} />
+                        </linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-muted" />
                       <XAxis dataKey="month" className="fill-muted-foreground" fontSize={11} tickLine={false} />
                       <YAxis className="fill-muted-foreground" fontSize={11} tickLine={false} axisLine={false} />
                       <Tooltip contentStyle={TOOLTIP_STYLE} />
                       <Area type="monotone" dataKey="farmers" stroke="#10b981" fill="url(#gFarmer)" name={t('common.role.farmer')} />
+                      <Area type="monotone" dataKey="agroDealers" stroke="#84cc16" fill="url(#gDealer)" name={t('common.role.agro-dealer')} />
                       <Area type="monotone" dataKey="agronomists" stroke="#0ea5e9" fill="url(#gAgro)" name={t('common.role.agronomist')} />
                     </AreaChart>
                   </ResponsiveContainer>
@@ -159,6 +165,7 @@ export default function AdminOverviewPage() {
               )}
               <div className="flex items-center gap-6 mt-3">
                 <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-emerald-500" /><span className="text-xs text-muted-foreground">{t('common.role.farmer')}</span></div>
+                <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-lime-500" /><span className="text-xs text-muted-foreground">{t('common.role.agro-dealer')}</span></div>
                 <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-sky-500" /><span className="text-xs text-muted-foreground">{t('common.role.agronomist')}</span></div>
               </div>
             </CardContent>
