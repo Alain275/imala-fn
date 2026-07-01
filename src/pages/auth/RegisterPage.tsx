@@ -31,6 +31,7 @@ const buildRegisterSchema = (t: TFunction) =>
     phone: z.string().regex(phoneRegex, t("auth.register.phoneError")),
     password: z.string().min(6, t("auth.register.passwordError")),
     confirmPassword: z.string().min(6, t("auth.register.confirmPasswordError")),
+    role: z.enum(["farmer", "agro-dealer"]),
     location: z.string().optional(),
     farmSize: z.string().optional(),
     agree: z.boolean().refine(val => val === true, {
@@ -42,6 +43,8 @@ const buildRegisterSchema = (t: TFunction) =>
   });
 
 type RegisterFormValues = z.infer<ReturnType<typeof buildRegisterSchema>>;
+
+const registerRoleOptions = ["farmer", "agro-dealer"] as const;
 
 export default function RegisterPage() {
   const { t, i18n } = useTranslation();
@@ -65,6 +68,7 @@ export default function RegisterPage() {
       phone: "",
       password: "",
       confirmPassword: "",
+      role: "farmer",
       location: "",
       farmSize: "",
       agree: false
@@ -72,6 +76,7 @@ export default function RegisterPage() {
   });
 
   const isAgreeChecked = watch("agree");
+  const selectedRole = watch("role");
 
   const onSubmit = async (data: RegisterFormValues) => {
     setSubmitting(true);
@@ -83,18 +88,12 @@ export default function RegisterPage() {
         phone: data.phone,
         location: data.location,
         farmSize: data.farmSize ? parseFloat(data.farmSize) : undefined,
-        role: 'farmer'
+        role: data.role
       });
 
       toast.success(response.message || t("auth.register.successToast"));
 
-      // Redirect based on role
-      const user = response.data.user;
-      if (user.role === "agronomist") {
-        navigate("/agronomist");
-      } else {
-        navigate("/dashboard");
-      }
+      navigate("/sign-in", { replace: true });
     } catch (error: any) {
       const message = error.response?.data?.message || t("auth.register.errorToast");
       toast.error(message);
@@ -180,6 +179,43 @@ export default function RegisterPage() {
                   </div>
                   {errors.email && (
                     <p className="text-[11px] text-rose-600 mt-1 pl-1">{errors.email.message}</p>
+                  )}
+                </div>
+
+                {/* Account Type */}
+                <div className="relative md:col-span-2">
+                  <span className="absolute left-3 -top-2 bg-[#faf6ee] px-1.5 text-[11px] font-semibold text-emerald-800 tracking-wide z-10">
+                    {t("auth.register.accountTypeLabel")}
+                  </span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 rounded-2xl border border-[#e0d6bc] bg-[#faf6ee]/20 p-3">
+                    {registerRoleOptions.map((roleOption) => (
+                      <label
+                        key={roleOption}
+                        className={`flex cursor-pointer items-start gap-3 rounded-xl border px-4 py-3 transition-all ${
+                          selectedRole === roleOption
+                            ? "border-emerald-600 bg-emerald-50 shadow-sm"
+                            : "border-[#e0d6bc] bg-white/60 hover:border-emerald-300"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          value={roleOption}
+                          {...register("role")}
+                          className="mt-1"
+                        />
+                        <div>
+                          <p className="text-sm font-semibold text-emerald-950">
+                            {t(`common.role.${roleOption}`)}
+                          </p>
+                          <p className="text-xs text-emerald-900/70">
+                            {t(`auth.register.accountTypeHelp.${roleOption}`)}
+                          </p>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                  {errors.role && (
+                    <p className="text-[11px] text-rose-600 mt-1 pl-1">{errors.role.message}</p>
                   )}
                 </div>
 
@@ -273,25 +309,26 @@ export default function RegisterPage() {
                   )}
                 </div>
 
-                {/* Farm Size */}
-                <div className="relative">
-                  <span className="absolute left-3 -top-2 bg-[#faf6ee] px-1.5 text-[11px] font-semibold text-emerald-800 tracking-wide z-10">
-                    {t("auth.register.farmSizeLabel")}
-                  </span>
-                  <div className="flex items-center rounded-xl border border-[#e0d6bc] bg-[#faf6ee]/20 px-3.5 py-3.5 focus-within:border-emerald-600 focus-within:ring-1 focus-within:ring-emerald-600/20 transition-all">
-                    <span className="text-emerald-700/50 text-sm mr-2.5 flex-shrink-0">ha</span>
-                    <input
-                      {...register("farmSize")}
-                      type="number"
-                      step="0.1"
-                      placeholder={t("auth.register.farmSizePlaceholder")}
-                      className="w-full bg-transparent text-sm text-emerald-950 placeholder-emerald-950/30 outline-none"
-                    />
+                {selectedRole === "farmer" && (
+                  <div className="relative">
+                    <span className="absolute left-3 -top-2 bg-[#faf6ee] px-1.5 text-[11px] font-semibold text-emerald-800 tracking-wide z-10">
+                      {t("auth.register.farmSizeLabel")}
+                    </span>
+                    <div className="flex items-center rounded-xl border border-[#e0d6bc] bg-[#faf6ee]/20 px-3.5 py-3.5 focus-within:border-emerald-600 focus-within:ring-1 focus-within:ring-emerald-600/20 transition-all">
+                      <span className="text-emerald-700/50 text-sm mr-2.5 flex-shrink-0">ha</span>
+                      <input
+                        {...register("farmSize")}
+                        type="number"
+                        step="0.1"
+                        placeholder={t("auth.register.farmSizePlaceholder")}
+                        className="w-full bg-transparent text-sm text-emerald-950 placeholder-emerald-950/30 outline-none"
+                      />
+                    </div>
+                    {errors.farmSize && (
+                      <p className="text-[11px] text-rose-600 mt-1 pl-1">{errors.farmSize.message}</p>
+                    )}
                   </div>
-                  {errors.farmSize && (
-                    <p className="text-[11px] text-rose-600 mt-1 pl-1">{errors.farmSize.message}</p>
-                  )}
-                </div>
+                )}
               </div>
 
               {/* Agreement checkbox */}

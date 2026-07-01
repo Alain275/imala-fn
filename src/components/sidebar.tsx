@@ -52,6 +52,11 @@ export function Sidebar() {
     navigate('/sign-in')
   }
 
+  const portalLabel =
+    currentUser?.role === 'agro-dealer'
+      ? t('dashboard.sidebar.portalLabelAgroDealer')
+      : t('dashboard.sidebar.portalLabel')
+
   return (
     <>
       {/* Mobile menu button */}
@@ -95,7 +100,7 @@ export function Sidebar() {
           <div className="px-6 py-3 border-b border-sidebar-border bg-sidebar-accent/20">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-xs text-sidebar-foreground/80 font-medium">{t('dashboard.sidebar.portalLabel')}</span>
+              <span className="text-xs text-sidebar-foreground/80 font-medium">{portalLabel}</span>
             </div>
           </div>
 

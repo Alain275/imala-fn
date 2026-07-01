@@ -60,6 +60,7 @@ import { authService } from './services/auth'
 
 const roleHome: Record<string, string> = {
   farmer: '/dashboard',
+  'agro-dealer': '/agro-dealer',
   agronomist: '/agronomist',
   admin: '/admin',
   cooperative: '/cooperative',
@@ -86,7 +87,7 @@ function App() {
         </Route>
 
         {/* Farmer-only routes */}
-        <Route element={<ProtectedRoute allowedRoles={['farmer']} />}>
+        <Route element={<ProtectedRoute allowedRoles={['farmer', 'agro-dealer']} />}>
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route index element={<DashboardPage />} />
             <Route path="crops" element={<CropsPage />} />
@@ -98,6 +99,10 @@ function App() {
             <Route path="settings" element={<SettingsPage />} />
             <Route path="notifications" element={<NotificationsPage />} />
           </Route>
+        </Route>
+
+        <Route element={<ProtectedRoute allowedRoles={['agro-dealer']} />}>
+          <Route path="/agro-dealer" element={<Navigate to="/dashboard" replace />} />
         </Route>
 
         {/* Agronomist-only routes */}

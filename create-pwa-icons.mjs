@@ -7,7 +7,7 @@ function createIcon(size) {
 
   // Background with rounded corners
   const radius = size * 0.1;
-  ctx.fillStyle = '#10b981';
+  ctx.fillStyle = '#10b981'; 
   
   // Rounded rectangle
   ctx.beginPath();

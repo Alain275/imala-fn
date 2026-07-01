@@ -42,6 +42,7 @@ type StatusFilter = 'all' | 'active' | 'inactive'
 
 const ROLE_BADGE: Record<AdminUser['role'], string> = {
   farmer: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/40",
+  'agro-dealer': "bg-lime-500/10 text-lime-700 dark:text-lime-400 border-lime-200 dark:border-lime-800/40",
   agronomist: "bg-sky-500/10 text-sky-700 dark:text-sky-400 border-sky-200 dark:border-sky-800/40",
   admin: "bg-violet-500/10 text-violet-700 dark:text-violet-400 border-violet-200 dark:border-violet-800/40",
   cooperative: "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800/40",
@@ -71,7 +72,7 @@ function getInitials(name: string) {
   return name.split(' ').map(w => w[0]).filter(Boolean).join('').slice(0, 2).toUpperCase()
 }
 
-const ROLES: RoleFilter[] = ['all', 'farmer', 'agronomist', 'admin', 'cooperative']
+const ROLES: RoleFilter[] = ['all', 'farmer', 'agro-dealer', 'agronomist', 'admin', 'cooperative']
 
 export default function AdminUsersPage() {
   const { t } = useTranslation()
@@ -326,7 +327,7 @@ export default function AdminUsersPage() {
           <div className="py-4">
             <p className="text-sm text-muted-foreground mb-3">{t('admin.users.editRoleDialog.prompt')}</p>
             <div className="grid grid-cols-2 gap-2">
-              {(['farmer', 'agronomist', 'admin', 'cooperative'] as AdminUser['role'][]).map(r => (
+              {(['farmer', 'agro-dealer', 'agronomist', 'admin', 'cooperative'] as AdminUser['role'][]).map(r => (
                 <button
                   key={r}
                   onClick={() => setEditRole(r)}

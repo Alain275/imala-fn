@@ -1,11 +1,12 @@
 // IMPORTANT: No AI provider API key (OpenAI, Anthropic, Gemini, etc.) belongs here
 // or in any VITE_ env var. Anything in the frontend bundle is public.
 // The key lives on the backend only. This file only talks to OUR backend /api/chat.
-// To switch to real mode: set USE_MOCK_CHAT = false.
+// Set VITE_USE_MOCK_CHAT=true only when you explicitly want frontend-only demo replies.
 
 import type { ChatMessage } from "@/types/chat";
 
-const USE_MOCK_CHAT = true;
+const USE_MOCK_CHAT = import.meta.env.VITE_USE_MOCK_CHAT === "true";
+const CHAT_API_URL = `${import.meta.env.VITE_API_BASE_URL ?? ""}/api/chat`;
 
 const MOCK_DELAY_MS = 550;
 const MOCK_CHAR_DELAY_MS = 16;
@@ -60,16 +61,27 @@ export async function sendChatMessage(
     return;
   }
 
-  // TODO: replace with real POST /api/chat (backend holds the AI key — never put it here)
-  // The dev proxy in vite.config.ts forwards /api/* to the backend, so no absolute URL needed in dev.
-  const res = await fetch("/api/chat", {
+  // Use the backend chat endpoint so provider keys stay server-side.
+  // When VITE_API_BASE_URL is unset, the Vite dev proxy forwards /api/* to localhost:5000.
+  const res = await fetch(CHAT_API_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ messages }),
     signal,
   });
 
-  if (!res.ok) throw new Error(`Chat request failed: ${res.status}`);
+  if (!res.ok) {
+    let errorMessage = `Chat request failed: ${res.status}`;
+
+    try {
+      const data = await res.json();
+      errorMessage = data?.message || errorMessage;
+    } catch {
+      // Keep the fallback message when the response body is not JSON.
+    }
+
+    throw new Error(errorMessage);
+  }
 
   const reader = res.body?.getReader();
   const decoder = new TextDecoder();
@@ -78,7 +90,10 @@ export async function sendChatMessage(
   while (true) {
     const { done, value } = await reader.read();
     if (done) break;
-    if (signal?.aborted) { reader.cancel(); return; }
+    if (signal?.aborted) {
+      reader.cancel();
+      return;
+    }
     for (const char of decoder.decode(value, { stream: true })) {
       onToken(char);
     }
