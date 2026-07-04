@@ -13,6 +13,7 @@ import {
   Menu,
   X,
   Sprout,
+  MapPinned,
 } from "lucide-react"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
@@ -24,6 +25,7 @@ function getInitials(name: string): string {
 
 const navigation = [
   { name: "Overview", href: "/agronomist", icon: LayoutDashboard },
+  { name: "Profile", href: "/agronomist/profile", icon: MapPinned },
   { name: "GIS & Field Scouting", href: "/agronomist/gis", icon: Map },
   { name: "AI Validation Engine", href: "/agronomist/ai-validation", icon: BrainCircuit },
   { name: "Comms Studio", href: "/agronomist/comms", icon: MessageSquare },

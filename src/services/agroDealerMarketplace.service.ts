@@ -1,8 +1,6 @@
-const API_ROOT =
-  import.meta.env.VITE_API_BASE_URL ??
-  import.meta.env.VITE_BASE_API_URL ??
-  '';
-const API_BASE_URL = `${API_ROOT}/api/agro-dealer-marketplace`;
+import { buildApiUrl, buildAssetUrl } from './api';
+
+const API_BASE_URL = buildApiUrl('/agro-dealer-marketplace');
 
 function getAuthHeaders(includeContentType = true): HeadersInit {
   const token = localStorage.getItem('token');
@@ -58,13 +56,21 @@ export interface AgroDealerProduct {
 export interface DealerConversation {
   id: string;
   farmerId: string;
-  agroDealerId: string;
+  agroDealerId?: string;
+  agronomistId?: string;
   productId?: string;
+  topicName?: string;
   status: 'open' | 'closed';
   lastMessage?: string;
   lastMessageAt?: string;
   farmer?: MarketplaceDealer;
   agroDealer?: MarketplaceDealer;
+  agronomist?: {
+    id: string;
+    name: string;
+    phone?: string;
+    location?: string;
+  };
   product?: AgroDealerProduct;
 }
 
@@ -97,9 +103,7 @@ export interface CreateProductInput {
 
 export const agroDealerMarketplaceService = {
   getImageUrl(path?: string) {
-    if (!path) return '';
-    if (path.startsWith('http://') || path.startsWith('https://')) return path;
-    return `${API_ROOT}${path}`;
+    return buildAssetUrl(path);
   },
 
   async getMarketplaceProducts(): Promise<AgroDealerProduct[]> {
@@ -154,8 +158,10 @@ export const agroDealerMarketplaceService = {
 
   async startConversation(payload: {
     agroDealerId?: string;
+    agronomistId?: string;
     farmerId?: string;
     productId?: string;
+    topicName?: string;
     initialMessage?: string;
   }): Promise<DealerConversation> {
     const response = await fetch(`${API_BASE_URL}/conversations`, {

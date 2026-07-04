@@ -40,11 +40,7 @@ export interface UserProfile {
   role: string;
 }
 
-const API_ROOT =
-  import.meta.env.VITE_API_BASE_URL ??
-  import.meta.env.VITE_BASE_API_URL ??
-  '';
-const API_BASE_URL = `${API_ROOT}/api`;
+const API_BASE_URL = buildApiUrl('');
 
 export const authService = {
   async register(data: RegisterData): Promise<AuthResponse> {
@@ -168,3 +164,4 @@ export const authService = {
     return !!localStorage.getItem('token');
   },
 };
+import { buildApiUrl } from './api';

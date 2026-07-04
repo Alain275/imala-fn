@@ -59,7 +59,9 @@ export default function DealerMessagesPage() {
   const counterpart = selectedConversation
     ? currentUser?.role === "agro-dealer"
       ? selectedConversation.farmer
-      : selectedConversation.agroDealer
+      : currentUser?.role === "agronomist"
+        ? selectedConversation.farmer
+        : selectedConversation.agronomist || selectedConversation.agroDealer
     : null;
 
   async function sendMessage() {
@@ -124,7 +126,7 @@ export default function DealerMessagesPage() {
           <CardHeader>
             <CardTitle>{counterpart?.name || "Conversation"}</CardTitle>
             <CardDescription>
-              {selectedConversation?.product?.name || "General discussion"}
+              {selectedConversation?.topicName || selectedConversation?.product?.name || "General discussion"}
               {counterpart?.location ? ` · ${counterpart.location}` : ""}
             </CardDescription>
           </CardHeader>

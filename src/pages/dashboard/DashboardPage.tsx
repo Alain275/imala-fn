@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next"
+import { Link } from "react-router-dom"
 import { Header } from "@/components/header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Icon3D } from "@/components/icon-3d"
@@ -74,12 +75,12 @@ const quickStats = [
 ]
 
 const quickActions = [
-  { key: "addCrop", icon: Sprout, gradient: "green" as const },
-  { key: "reportDisease", icon: Bug, gradient: "earth" as const },
-  { key: "checkWeather", icon: CloudSun, gradient: "sky" as const },
-  { key: "soilTest", icon: Mountain, gradient: "earth" as const },
-  { key: "viewPrices", icon: TrendingUp, gradient: "gold" as const },
-  { key: "findExpert", icon: Users, gradient: "leaf" as const },
+  { key: "addCrop", icon: Sprout, gradient: "green" as const, href: "/dashboard/crops" },
+  { key: "reportDisease", icon: Bug, gradient: "earth" as const, href: "/dashboard/disease" },
+  { key: "checkWeather", icon: CloudSun, gradient: "sky" as const, href: "/dashboard/weather" },
+  { key: "soilTest", icon: Mountain, gradient: "earth" as const, href: "/dashboard/soil" },
+  { key: "viewPrices", icon: TrendingUp, gradient: "gold" as const, href: "/dashboard/market" },
+  { key: "findExpert", icon: Users, gradient: "leaf" as const, href: "/dashboard/agronomists" },
 ]
 
 export default function DashboardPage() {
@@ -327,15 +328,16 @@ export default function DashboardPage() {
           <CardContent>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
               {quickActions.map((action) => (
-                <button
+                <Link
                   key={action.key}
+                  to={action.href}
                   className="flex flex-col items-center gap-3 p-4 rounded-xl bg-muted/50 hover:bg-muted transition-all hover:scale-105"
                 >
                   <Icon3D gradient={action.gradient} size="md">
                     <action.icon className="w-5 h-5" />
                   </Icon3D>
                   <span className="text-sm font-medium text-foreground">{t(`dashboard.overview.quickActions.${action.key}`)}</span>
-                </button>
+                </Link>
               ))}
             </div>
           </CardContent>

@@ -1,9 +1,6 @@
-const API_ROOT =
-  import.meta.env.VITE_API_BASE_URL ??
-  import.meta.env.VITE_BASE_API_URL ??
-  import.meta.env.VITE_API_URL ??
-  'http://localhost:5050';
-const API_URL = `${API_ROOT}/api`;
+import { buildApiUrl } from './api';
+
+const API_URL = buildApiUrl('');
 
 export interface AgroDealerProfileData {
   // Basic Information

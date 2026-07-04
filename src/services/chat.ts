@@ -6,11 +6,7 @@
 import type { ChatMessage } from "@/types/chat";
 
 const USE_MOCK_CHAT = import.meta.env.VITE_USE_MOCK_CHAT === "true";
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ??
-  import.meta.env.VITE_BASE_API_URL ??
-  "";
-const CHAT_API_URL = `${API_BASE_URL}/api/chat`;
+const CHAT_API_URL = buildApiUrl("/chat");
 
 const MOCK_DELAY_MS = 550;
 const MOCK_CHAR_DELAY_MS = 16;
@@ -66,7 +62,7 @@ export async function sendChatMessage(
   }
 
   // Use the backend chat endpoint so provider keys stay server-side.
-  // When VITE_API_BASE_URL is unset, the Vite dev proxy forwards /api/* to localhost:5000.
+  // In development the Vite dev proxy forwards /api/* to the configured backend target.
   const res = await fetch(CHAT_API_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -103,3 +99,4 @@ export async function sendChatMessage(
     }
   }
 }
+import { buildApiUrl } from "./api";

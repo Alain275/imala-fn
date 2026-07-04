@@ -1,8 +1,25 @@
-const API_ROOT =
+const configuredApiRoot =
   import.meta.env.VITE_API_BASE_URL ??
   import.meta.env.VITE_BASE_API_URL ??
   '';
-const API_URL = `${API_ROOT}/api`;
+
+export const API_ROOT = import.meta.env.DEV ? '' : configuredApiRoot.replace(/\/$/, '');
+export const API_URL = `${API_ROOT}/api`;
+
+export function buildApiUrl(path: string): string {
+  if (!path) {
+    return API_URL;
+  }
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  return `${API_URL}${normalizedPath}`;
+}
+
+export function buildAssetUrl(path?: string): string {
+  if (!path) return '';
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  return `${API_ROOT}${normalizedPath}`;
+}
 
 interface RequestOptions extends RequestInit {
   requiresAuth?: boolean;
@@ -27,7 +44,7 @@ async function request<T>(
     }
   }
 
-  const response = await fetch(`${API_URL}${endpoint}`, {
+  const response = await fetch(buildApiUrl(endpoint), {
     ...fetchOptions,
     headers,
   });

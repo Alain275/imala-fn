@@ -13,7 +13,9 @@ import NotificationsPage from './pages/dashboard/NotificationsPage'
 import DealerProfilePage from './pages/dashboard/agrodealer/DealerProfilePage'
 import DealerProductsPage from './pages/dashboard/agrodealer/DealerProductsPage'
 import DealerMarketplacePage from './pages/dashboard/farmer/DealerMarketplacePage'
+import AgronomistsDirectoryPage from './pages/dashboard/farmer/AgronomistsDirectoryPage'
 import DealerMessagesPage from './pages/dashboard/shared/DealerMessagesPage'
+import AgronomistProfilePage from './pages/agronomist/AgronomistProfilePage'
 
 // Agronomist Portal
 import AgronomistLayout from './pages/agronomist/AgronomistLayout'
@@ -102,6 +104,7 @@ function App() {
             <Route path="dealer-profile" element={<DealerProfilePage />} />
             <Route path="dealer-products" element={<DealerProductsPage />} />
             <Route path="dealer-marketplace" element={<DealerMarketplacePage />} />
+            <Route path="agronomists" element={<AgronomistsDirectoryPage />} />
             <Route path="dealer-messages" element={<DealerMessagesPage />} />
             <Route path="training" element={<TrainingPage />} />
             <Route path="settings" element={<SettingsPage />} />
@@ -117,6 +120,7 @@ function App() {
         <Route element={<ProtectedRoute allowedRoles={['agronomist']} />}>
           <Route path="/agronomist" element={<AgronomistLayout />}>
             <Route index element={<AgronomistOverviewPage />} />
+            <Route path="profile" element={<AgronomistProfilePage />} />
             <Route path="gis" element={<GISPage />} />
             <Route path="ai-validation" element={<AIValidationPage />} />
             <Route path="comms" element={<CommsPage />} />

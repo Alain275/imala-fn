@@ -18,6 +18,7 @@ import {
   Package,
   MessageSquare,
   BadgeCheck,
+  Stethoscope,
 } from "lucide-react"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
@@ -45,6 +46,7 @@ const agroDealerNavigation = [
 
 const farmerMarketplaceNavigation = [
   { key: "dealerMarketplace", href: "/dashboard/dealer-marketplace", icon: Store, label: "Dealer Marketplace" },
+  { key: "agronomists", href: "/dashboard/agronomists", icon: Stethoscope, label: "Agronomists Nearby" },
   { key: "dealerMessages", href: "/dashboard/dealer-messages", icon: MessageSquare, label: "Dealer Messages" },
 ]
 
