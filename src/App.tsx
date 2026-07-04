@@ -151,7 +151,7 @@ function App() {
             <Route path="crops" element={<AdminCropsPage />} />
             <Route path="profile" element={<AdminProfilePage />} />
           </Route>
-        </Route>
+        </Route>   
 
         {/* Cooperative portal */}
         <Route element={<ProtectedRoute allowedRoles={['cooperative']} />}>
