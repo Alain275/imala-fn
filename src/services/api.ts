@@ -1,4 +1,8 @@
-const API_URL = `${import.meta.env.VITE_API_BASE_URL ?? ''}/api`;
+const API_ROOT =
+  import.meta.env.VITE_API_BASE_URL ??
+  import.meta.env.VITE_BASE_API_URL ??
+  '';
+const API_URL = `${API_ROOT}/api`;
 
 interface RequestOptions extends RequestInit {
   requiresAuth?: boolean;

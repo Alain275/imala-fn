@@ -6,7 +6,11 @@
 import type { ChatMessage } from "@/types/chat";
 
 const USE_MOCK_CHAT = import.meta.env.VITE_USE_MOCK_CHAT === "true";
-const CHAT_API_URL = `${import.meta.env.VITE_API_BASE_URL ?? ""}/api/chat`;
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ??
+  import.meta.env.VITE_BASE_API_URL ??
+  "";
+const CHAT_API_URL = `${API_BASE_URL}/api/chat`;
 
 const MOCK_DELAY_MS = 550;
 const MOCK_CHAR_DELAY_MS = 16;

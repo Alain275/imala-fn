@@ -44,7 +44,11 @@ interface ApiResponse<T> {
   message?: string
 }
 
-const API_BASE = `${import.meta.env.VITE_API_BASE_URL}/api`
+const API_ROOT =
+  import.meta.env.VITE_API_BASE_URL ??
+  import.meta.env.VITE_BASE_API_URL ??
+  ""
+const API_BASE = `${API_ROOT}/api`
 
 async function detectDisease(file: File): Promise<Detection> {
   const token = localStorage.getItem('token')

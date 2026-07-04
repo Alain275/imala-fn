@@ -13,7 +13,11 @@ import {
   LogOut,
   Menu,
   X,
-  Leaf
+  Leaf,
+  Store,
+  Package,
+  MessageSquare,
+  BadgeCheck,
 } from "lucide-react"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
@@ -31,6 +35,17 @@ const navigation = [
   { key: "soilAnalysis", href: "/dashboard/soil", icon: Mountain },
   { key: "marketPrices", href: "/dashboard/market", icon: TrendingUp },
   { key: "training", href: "/dashboard/training", icon: BookOpen },
+]
+
+const agroDealerNavigation = [
+  { key: "dealerProfile", href: "/dashboard/dealer-profile", icon: BadgeCheck, label: "Dealer Profile" },
+  { key: "dealerProducts", href: "/dashboard/dealer-products", icon: Package, label: "My Products" },
+  { key: "dealerMessages", href: "/dashboard/dealer-messages", icon: MessageSquare, label: "Messages" },
+]
+
+const farmerMarketplaceNavigation = [
+  { key: "dealerMarketplace", href: "/dashboard/dealer-marketplace", icon: Store, label: "Dealer Marketplace" },
+  { key: "dealerMessages", href: "/dashboard/dealer-messages", icon: MessageSquare, label: "Dealer Messages" },
 ]
 
 export function Sidebar() {
@@ -56,6 +71,13 @@ export function Sidebar() {
     currentUser?.role === 'agro-dealer'
       ? t('dashboard.sidebar.portalLabelAgroDealer')
       : t('dashboard.sidebar.portalLabel')
+  const roleNavigation =
+    currentUser?.role === 'agro-dealer'
+      ? agroDealerNavigation
+      : currentUser?.role === 'farmer'
+        ? farmerMarketplaceNavigation
+        : []
+  const fullNavigation = [...navigation, ...roleNavigation]
 
   return (
     <>
@@ -106,7 +128,7 @@ export function Sidebar() {
 
           {/* Navigation */}
           <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
-            {navigation.map((item) => {
+            {fullNavigation.map((item) => {
               const isActive = pathname === item.href
               return (
                 <Link
@@ -125,7 +147,9 @@ export function Sidebar() {
                     "w-5 h-5 flex-shrink-0",
                     isActive && "drop-shadow-md"
                   )} />
-                  <span className="font-medium">{t(`dashboard.sidebar.nav.${item.key}`)}</span>
+                  <span className="font-medium">
+                    {'label' in item && item.label ? item.label : t(`dashboard.sidebar.nav.${item.key}`)}
+                  </span>
                 </Link>
               )
             })}

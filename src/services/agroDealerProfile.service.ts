@@ -1,6 +1,9 @@
-import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_ROOT =
+  import.meta.env.VITE_API_BASE_URL ??
+  import.meta.env.VITE_BASE_API_URL ??
+  import.meta.env.VITE_API_URL ??
+  'http://localhost:5050';
+const API_URL = `${API_ROOT}/api`;
 
 export interface AgroDealerProfileData {
   // Basic Information
@@ -85,89 +88,79 @@ export interface AgroDealerProfileData {
   };
 }
 
+type ApiEnvelope<T> = {
+  success: boolean;
+  message?: string;
+  data: T;
+};
+
+function authHeaders(contentType = 'application/json'): HeadersInit {
+  const token = localStorage.getItem('token');
+  return {
+    ...(contentType ? { 'Content-Type': contentType } : {}),
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+}
+
+async function parseEnvelope<T>(response: Response): Promise<ApiEnvelope<T>> {
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result?.message || 'Request failed');
+  }
+  return result as ApiEnvelope<T>;
+}
+
 const agroDealerProfileService = {
-  // Get profile
   async getProfile() {
-    const token = localStorage.getItem('token');
-    const response = await axios.get(`${API_URL}/agro-dealers/profile`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    const response = await fetch(`${API_URL}/agro-dealers/profile`, {
+      headers: authHeaders(),
     });
-    return response.data;
+    return parseEnvelope<AgroDealerProfileData>(response);
   },
 
-  // Update profile
   async updateProfile(data: Partial<AgroDealerProfileData>) {
-    const token = localStorage.getItem('token');
-    const response = await axios.put(`${API_URL}/agro-dealers/profile`, data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
+    const response = await fetch(`${API_URL}/agro-dealers/profile`, {
+      method: 'PUT',
+      headers: authHeaders(),
+      body: JSON.stringify(data),
     });
-    return response.data;
+    return parseEnvelope<AgroDealerProfileData>(response);
   },
 
-  // Upload business logo
   async uploadLogo(file: File) {
-    const token = localStorage.getItem('token');
     const formData = new FormData();
     formData.append('logo', file);
 
-    const response = await axios.post(
-      `${API_URL}/agro-dealers/profile/logo`,
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      }
-    );
-    return response.data;
+    const response = await fetch(`${API_URL}/agro-dealers/profile/logo`, {
+      method: 'POST',
+      headers: authHeaders(''),
+      body: formData,
+    });
+    return parseEnvelope<{ logoUrl: string }>(response);
   },
 
-  // Upload business images
   async uploadImages(files: File[]) {
-    const token = localStorage.getItem('token');
     const formData = new FormData();
-    files.forEach((file) => {
-      formData.append('images', file);
-    });
+    files.forEach((file) => formData.append('images', file));
 
-    const response = await axios.post(
-      `${API_URL}/agro-dealers/profile/images`,
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      }
-    );
-    return response.data;
+    const response = await fetch(`${API_URL}/agro-dealers/profile/images`, {
+      method: 'POST',
+      headers: authHeaders(''),
+      body: formData,
+    });
+    return parseEnvelope<{ imageUrls: string[] }>(response);
   },
 
-  // Upload verification documents
   async uploadDocuments(files: File[]) {
-    const token = localStorage.getItem('token');
     const formData = new FormData();
-    files.forEach((file) => {
-      formData.append('documents', file);
-    });
+    files.forEach((file) => formData.append('documents', file));
 
-    const response = await axios.post(
-      `${API_URL}/agro-dealers/profile/documents`,
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      }
-    );
-    return response.data;
+    const response = await fetch(`${API_URL}/agro-dealers/profile/documents`, {
+      method: 'POST',
+      headers: authHeaders(''),
+      body: formData,
+    });
+    return parseEnvelope<{ documentUrls: string[] }>(response);
   },
 };
 

@@ -10,6 +10,10 @@ import MarketPage from './pages/dashboard/MarketPage'
 import TrainingPage from './pages/dashboard/TrainingPage'
 import SettingsPage from './pages/dashboard/SettingsPage'
 import NotificationsPage from './pages/dashboard/NotificationsPage'
+import DealerProfilePage from './pages/dashboard/agrodealer/DealerProfilePage'
+import DealerProductsPage from './pages/dashboard/agrodealer/DealerProductsPage'
+import DealerMarketplacePage from './pages/dashboard/farmer/DealerMarketplacePage'
+import DealerMessagesPage from './pages/dashboard/shared/DealerMessagesPage'
 
 // Agronomist Portal
 import AgronomistLayout from './pages/agronomist/AgronomistLayout'
@@ -95,6 +99,10 @@ function App() {
             <Route path="weather" element={<WeatherPage />} />
             <Route path="soil" element={<SoilPage />} />
             <Route path="market" element={<MarketPage />} />
+            <Route path="dealer-profile" element={<DealerProfilePage />} />
+            <Route path="dealer-products" element={<DealerProductsPage />} />
+            <Route path="dealer-marketplace" element={<DealerMarketplacePage />} />
+            <Route path="dealer-messages" element={<DealerMessagesPage />} />
             <Route path="training" element={<TrainingPage />} />
             <Route path="settings" element={<SettingsPage />} />
             <Route path="notifications" element={<NotificationsPage />} />
