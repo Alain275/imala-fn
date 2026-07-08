@@ -9,6 +9,7 @@ import {
 } from 'react'
 import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
+import { useLocation } from 'react-router-dom'
 import {
   notificationsService,
   Notification,
@@ -28,14 +29,26 @@ interface NotificationsContextValue {
 const NotificationsContext = createContext<NotificationsContextValue | null>(null)
 
 const POLL_INTERVAL_MS = 60_000
+const PUBLIC_NOTIFICATION_FREE_PATHS = new Set([
+  '/',
+  '/sign-in',
+  '/register',
+  '/dashboard',
+  '/dashboard/crops',
+  '/dashboard/ai',
+  '/dashboard/disease',
+  '/dashboard/weather',
+])
 
 export function NotificationsProvider({ children }: { children: ReactNode }) {
   const { t } = useTranslation()
+  const location = useLocation()
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
   const [loading, setLoading] = useState(false)
   const [version, setVersion] = useState(0)
   const [isAuthed, setIsAuthed] = useState(() => authService.isAuthenticated())
+  const notificationsEnabled = isAuthed && !PUBLIC_NOTIFICATION_FREE_PATHS.has(location.pathname)
 
   // Always-current snapshot used in mutation callbacks to avoid stale closures
   const notificationsRef = useRef<Notification[]>([])
@@ -66,7 +79,12 @@ export function NotificationsProvider({ children }: { children: ReactNode }) {
 
   // Fetch recent 20 notifications for the bell panel
   useEffect(() => {
-    if (!isAuthed) return
+    if (!notificationsEnabled) {
+      setNotifications([])
+      setUnreadCount(0)
+      setLoading(false)
+      return
+    }
     let cancelled = false
     setLoading(true)
     notificationsService.getNotifications({ limit: 20 })
@@ -83,22 +101,22 @@ export function NotificationsProvider({ children }: { children: ReactNode }) {
         setLoading(false)
       })
     return () => { cancelled = true }
-  }, [version, isAuthed])
+  }, [version, notificationsEnabled])
 
   // Fetch + poll unread count
   const fetchUnreadCount = useCallback(() => {
-    if (!authService.isAuthenticated()) return
+    if (!authService.isAuthenticated() || PUBLIC_NOTIFICATION_FREE_PATHS.has(window.location.pathname)) return
     notificationsService.getUnreadCount()
       .then(count => setUnreadCount(count))
       .catch(() => { /* silent — don't disrupt the UI on a background poll failure */ })
   }, [])
 
   useEffect(() => {
-    if (!isAuthed) return
+    if (!notificationsEnabled) return
     fetchUnreadCount()
     const id = setInterval(fetchUnreadCount, POLL_INTERVAL_MS)
     return () => clearInterval(id)
-  }, [fetchUnreadCount, isAuthed])
+  }, [fetchUnreadCount, notificationsEnabled])
 
   const markAsRead = useCallback(async (id: string) => {
     // Optimistic

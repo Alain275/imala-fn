@@ -2,6 +2,8 @@ import api from './api'
 
 export interface CurrentWeather {
   location: string
+  latitude?: number
+  longitude?: number
   temperature: number
   feelsLike: number
   humidity: number
@@ -61,35 +63,57 @@ interface ApiResponse<T> {
   data: T
 }
 
-async function weatherRequest<T>(endpoint: string, params: Record<string, string | number>): Promise<T> {
+export interface WeatherQuery {
+  location?: string
+  lat?: number
+  lon?: number
+}
+
+function normalizeWeatherQuery(query: string | WeatherQuery): WeatherQuery {
+  if (typeof query === 'string') return { location: query }
+  return query
+}
+
+function weatherParams(query: string | WeatherQuery): Record<string, string | number | undefined> {
+  const normalized = normalizeWeatherQuery(query)
+  return {
+    location: normalized.location,
+    lat: normalized.lat,
+    lon: normalized.lon,
+  }
+}
+
+async function weatherRequest<T>(endpoint: string, params: Record<string, string | number | undefined>): Promise<T> {
   const qs = new URLSearchParams(
-    Object.entries(params).map(([k, v]) => [k, String(v)])
+    Object.entries(params)
+      .filter(([, v]) => v !== undefined && v !== '')
+      .map(([k, v]) => [k, String(v)])
   ).toString()
   const result = await api.request<ApiResponse<T>>(`/weather${endpoint}?${qs}`, {
-    requiresAuth: true,
+    requiresAuth: false,
   })
   if (!result.success) throw new Error(`Weather API error: ${endpoint}`)
   return result.data
 }
 
 export const weatherService = {
-  getCurrentWeather(location: string): Promise<CurrentWeather> {
-    return weatherRequest<CurrentWeather>('/current', { location })
+  getCurrentWeather(query: string | WeatherQuery): Promise<CurrentWeather> {
+    return weatherRequest<CurrentWeather>('/current', weatherParams(query))
   },
 
-  getHourlyForecast(location: string, hours = 12): Promise<HourlyForecast[]> {
-    return weatherRequest<HourlyForecast[]>('/hourly', { location, hours })
+  getHourlyForecast(query: string | WeatherQuery, hours = 12): Promise<HourlyForecast[]> {
+    return weatherRequest<HourlyForecast[]>('/hourly', { ...normalizeWeatherQuery(query), hours })
   },
 
-  getDailyForecast(location: string, days = 7): Promise<DailyForecast[]> {
-    return weatherRequest<DailyForecast[]>('/daily', { location, days })
+  getDailyForecast(query: string | WeatherQuery, days = 7): Promise<DailyForecast[]> {
+    return weatherRequest<DailyForecast[]>('/daily', { ...normalizeWeatherQuery(query), days })
   },
 
-  getFarmingAlerts(location: string): Promise<FarmingAlert[]> {
-    return weatherRequest<FarmingAlert[]>('/alerts', { location })
+  getFarmingAlerts(query: string | WeatherQuery): Promise<FarmingAlert[]> {
+    return weatherRequest<FarmingAlert[]>('/alerts', weatherParams(query))
   },
 
-  getRainfallHistory(location: string, months = 12): Promise<RainfallHistory[]> {
-    return weatherRequest<RainfallHistory[]>('/rainfall', { location, months })
+  getRainfallHistory(query: string | WeatherQuery, months = 12): Promise<RainfallHistory[]> {
+    return weatherRequest<RainfallHistory[]>('/rainfall', { ...normalizeWeatherQuery(query), months })
   },
 }

@@ -1,9 +1,12 @@
 import { useTranslation } from "react-i18next"
+import { type FormEvent, useEffect, useMemo, useState } from "react"
 import { getIntlLocale } from "@/lib/dateLocale"
 import { Header } from "@/components/header"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Icon3D } from "@/components/icon-3d"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 
 import {
   CloudSun,
@@ -17,6 +20,8 @@ import {
   ArrowDown,
   Clock,
   MapPin,
+  LocateFixed,
+  Search,
 } from "lucide-react"
 import {
   AreaChart,
@@ -39,6 +44,7 @@ import {
 import type { HourlyForecast, DailyForecast, FarmingAlert } from "@/services/weather"
 
 const LOCATION = "Musanze"
+const LOCATION_LABEL = "Current location"
 
 function formatHourLabel(isoTime: string, index: number, intlLocale: string, nowLabel: string): string {
   if (index === 0) return nowLabel
@@ -142,11 +148,62 @@ function DailyRow({ day, index, todayLabel, conditionLabel }: { day: DailyForeca
 export default function WeatherPage() {
   const { t, i18n } = useTranslation()
   const intlLocale = getIntlLocale(i18n.language)
-  const { data: current, loading: currentLoading } = useCurrentWeather(LOCATION)
-  const { data: hourly, loading: hourlyLoading } = useHourlyForecast(LOCATION, 12)
-  const { data: daily, loading: dailyLoading } = useDailyForecast(LOCATION, 7)
-  const { data: alerts, loading: alertsLoading } = useFarmingAlerts(LOCATION)
-  const { data: rainfall, loading: rainfallLoading } = useRainfallHistory(LOCATION, 12)
+  const [coords, setCoords] = useState<{ lat: number; lon: number } | null>(null)
+  const [activeLocation, setActiveLocation] = useState(LOCATION)
+  const [locationInput, setLocationInput] = useState(LOCATION)
+  const [locationStatus, setLocationStatus] = useState("Using Musanze fallback until location is allowed")
+
+  const requestLocation = () => {
+    if (!navigator.geolocation) {
+      setLocationStatus("Location is not supported by this browser. Using Musanze fallback.")
+      return
+    }
+
+    setLocationStatus("Requesting your current location...")
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setCoords({
+          lat: position.coords.latitude,
+          lon: position.coords.longitude,
+        })
+        setActiveLocation(LOCATION_LABEL)
+        setLocationInput("")
+        setLocationStatus("Using your current location")
+      },
+      () => {
+        setLocationStatus("Location permission denied or unavailable. Using Musanze fallback.")
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 10 * 60 * 1000,
+      }
+    )
+  }
+
+  useEffect(() => {
+    requestLocation()
+  }, [])
+
+  const weatherQuery = useMemo(
+    () => coords ? { lat: coords.lat, lon: coords.lon, location: LOCATION_LABEL } : activeLocation,
+    [activeLocation, coords]
+  )
+
+  const submitLocation = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const nextLocation = locationInput.trim()
+    if (!nextLocation) return
+    setCoords(null)
+    setActiveLocation(nextLocation)
+    setLocationStatus(`Using forecast for ${nextLocation}`)
+  }
+
+  const { data: current, loading: currentLoading } = useCurrentWeather(weatherQuery)
+  const { data: hourly, loading: hourlyLoading } = useHourlyForecast(weatherQuery, 12)
+  const { data: daily, loading: dailyLoading } = useDailyForecast(weatherQuery, 7)
+  const { data: alerts, loading: alertsLoading } = useFarmingAlerts(weatherQuery)
+  const { data: rainfall, loading: rainfallLoading } = useRainfallHistory(weatherQuery, 12)
 
   return (
     <div className="min-h-screen">
@@ -156,6 +213,38 @@ export default function WeatherPage() {
       />
 
       <div className="p-6 space-y-6">
+        <Card className="border-0 shadow-md">
+          <CardContent className="grid gap-4 p-4 lg:grid-cols-[1fr_auto] lg:items-center">
+            <div className="flex items-start gap-3">
+              <div className="mt-0.5 flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-100 text-emerald-700">
+                <LocateFixed className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="font-medium text-foreground">Real-time weather intelligence</p>
+                <p className="text-sm text-muted-foreground">{locationStatus}</p>
+              </div>
+            </div>
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <form onSubmit={submitLocation} className="flex min-w-0 gap-2">
+                <Input
+                  value={locationInput}
+                  onChange={(event) => setLocationInput(event.target.value)}
+                  placeholder="Enter location"
+                  className="h-10 min-w-0 sm:w-56"
+                />
+                <Button type="submit" variant="secondary" className="gap-2">
+                  <Search className="h-4 w-4" />
+                  Search
+                </Button>
+              </form>
+              <Button variant="outline" className="gap-2" onClick={requestLocation}>
+                <LocateFixed className="h-4 w-4" />
+                Use current location
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Current Weather */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <Card className="lg:col-span-2 border-0 shadow-md bg-gradient-to-br from-sky-500 to-blue-600 text-white overflow-hidden">

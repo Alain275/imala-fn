@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useEffect, useState } from "react"
+import { useLocation } from "react-router-dom"
 import { useTheme } from "next-themes"
 import { authService } from "@/services/auth"
 import { NotificationsBell } from "@/components/NotificationsBell"
@@ -16,8 +17,20 @@ interface HeaderProps {
   subtitle?: string
 }
 
+const PUBLIC_NOTIFICATION_FREE_PATHS = new Set([
+  '/',
+  '/sign-in',
+  '/register',
+  '/dashboard',
+  '/dashboard/crops',
+  '/dashboard/ai',
+  '/dashboard/disease',
+  '/dashboard/weather',
+])
+
 export function Header({ title, subtitle }: HeaderProps) {
   const { t } = useTranslation()
+  const location = useLocation()
   const { resolvedTheme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const [currentUser, setCurrentUser] = useState(() => authService.getCurrentUser())
@@ -32,6 +45,11 @@ export function Header({ title, subtitle }: HeaderProps) {
   const toggleTheme = () => {
     setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')
   }
+
+  const showAccountControls =
+    !!currentUser &&
+    authService.isAuthenticated() &&
+    !PUBLIC_NOTIFICATION_FREE_PATHS.has(location.pathname)
 
   return (
     <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-md border-b border-border">
@@ -64,12 +82,14 @@ export function Header({ title, subtitle }: HeaderProps) {
           </Button>
 
           {/* Notifications */}
-          <NotificationsBell />
+          {showAccountControls && <NotificationsBell />}
 
           {/* User avatar - mobile */}
-          <div className="lg:hidden w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-green-500 flex items-center justify-center text-white font-semibold text-sm">
-            {currentUser ? getInitials(currentUser.name) : '?'}
-          </div>
+          {showAccountControls && (
+            <div className="lg:hidden w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-green-500 flex items-center justify-center text-white font-semibold text-sm">
+              {getInitials(currentUser.name)}
+            </div>
+          )}
         </div>
       </div>
     </header>

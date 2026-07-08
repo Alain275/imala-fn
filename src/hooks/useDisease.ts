@@ -18,6 +18,18 @@ export function useMyDetections(params?: { page?: number; limit?: number }) {
 
   useEffect(() => {
     let cancelled = false
+
+    if (!localStorage.getItem('token')) {
+      setState({
+        data: { detections: [], pagination: { total: 0, page: 1, limit: 10, pages: 0 } },
+        loading: false,
+        error: null,
+      })
+      return () => {
+        cancelled = true
+      }
+    }
+
     setState(prev => ({ ...prev, loading: true, error: null }))
 
     diseaseService

@@ -161,7 +161,7 @@ export const authService = {
   },
 
   isAuthenticated(): boolean {
-    return !!localStorage.getItem('token');
+    return !!localStorage.getItem('token') && !!localStorage.getItem('user');
   },
 };
 import { buildApiUrl } from './api';

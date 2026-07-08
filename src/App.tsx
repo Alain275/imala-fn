@@ -1,12 +1,12 @@
-import { Navigate, Routes, Route, useLocation } from 'react-router-dom'
+import { Navigate, Routes, Route } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import DashboardLayout from './pages/dashboard/DashboardLayout'
 import DashboardPage from './pages/dashboard/DashboardPage'
-import CropsPage from './pages/dashboard/CropsPage'
 import DiseasePage from './pages/dashboard/DiseasePage'
 import WeatherPage from './pages/dashboard/WeatherPage'
 import SoilPage from './pages/dashboard/SoilPage'
 import MarketPage from './pages/dashboard/MarketPage'
+import AIPage from './pages/dashboard/AIPage'
 import TrainingPage from './pages/dashboard/TrainingPage'
 import SettingsPage from './pages/dashboard/SettingsPage'
 import NotificationsPage from './pages/dashboard/NotificationsPage'
@@ -62,43 +62,29 @@ import RegisterPage from './pages/auth/RegisterPage'
 import { NotificationsProvider } from './context/NotificationsContext'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { PublicLayout } from './components/PublicLayout'
-import { authService } from './services/auth'
-
-const roleHome: Record<string, string> = {
-  farmer: '/dashboard',
-  'agro-dealer': '/agro-dealer',
-  agronomist: '/agronomist',
-  admin: '/admin',
-  cooperative: '/cooperative',
-}
-
-function HomeRoute() {
-  const location = useLocation()
-  const user = authService.getCurrentUser()
-  if (user && authService.isAuthenticated()) {
-    const home = roleHome[user.role] ?? '/dashboard'
-    return <Navigate to={home} state={{ from: location }} replace />
-  }
-  return <HomePage />
-}
 
 function App() {
   return (
     <NotificationsProvider>
       <Routes>
         <Route element={<PublicLayout />}>
-          <Route path="/" element={<HomeRoute />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/sign-in" element={<SignInPage />} />
           <Route path="/register" element={<RegisterPage />} />
         </Route>
 
-        {/* Farmer-only routes */}
+        {/* Public farmer dashboard routes - no farmer account required */}
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<DashboardPage />} />
+          <Route path="crops" element={<AIPage />} />
+          <Route path="ai" element={<AIPage />} />
+          <Route path="disease" element={<DiseasePage />} />
+          <Route path="weather" element={<WeatherPage />} />
+        </Route>
+
+        {/* Account-protected farmer and agro-dealer routes */}
         <Route element={<ProtectedRoute allowedRoles={['farmer', 'agro-dealer']} />}>
           <Route path="/dashboard" element={<DashboardLayout />}>
-            <Route index element={<DashboardPage />} />
-            <Route path="crops" element={<CropsPage />} />
-            <Route path="disease" element={<DiseasePage />} />
-            <Route path="weather" element={<WeatherPage />} />
             <Route path="soil" element={<SoilPage />} />
             <Route path="market" element={<MarketPage />} />
             <Route path="dealer-profile" element={<DealerProfilePage />} />

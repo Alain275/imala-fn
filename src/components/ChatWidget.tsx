@@ -6,9 +6,9 @@ import { sendChatMessage } from "@/services/chat"
 import type { ChatMessage } from "@/types/chat"
 
 const STARTER_QUESTIONS = [
-  "How does IMARA's crop advisory work?",
-  "Can IMARA detect crop diseases from photos?",
-  "How do I get started with IMARA?",
+  "What crops should I plant this season?",
+  "When should I plant maize after rain starts?",
+  "How much fertilizer should I use for beans?",
 ]
 
 export function ChatWidget() {
@@ -120,7 +120,7 @@ export function ChatWidget() {
             </div>
             <div className="flex-1 min-w-0">
               <p className="font-semibold text-white text-sm leading-tight">IMARA Assistant</p>
-              <p className="text-white/70 text-xs">Ask me anything about IMARA</p>
+              <p className="text-white/70 text-xs">Ask for crop advisory</p>
             </div>
             <Button
               variant="ghost"
@@ -141,9 +141,9 @@ export function ChatWidget() {
                   <Leaf className="w-7 h-7 text-white" />
                 </div>
                 <div className="space-y-1">
-                  <p className="font-semibold text-foreground text-sm">Hi! I'm your IMARA guide.</p>
+                  <p className="font-semibold text-foreground text-sm">Hi! I'm your crop advisor.</p>
                   <p className="text-sm text-muted-foreground leading-snug">
-                    Ask me anything about how IMARA helps farmers across Rwanda.
+                    Ask what to plant, when to plant, or how to care for your crop.
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 w-full text-left">

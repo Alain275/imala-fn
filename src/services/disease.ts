@@ -2,7 +2,7 @@ import api from './api'
 
 export interface Detection {
   id: string
-  userId: string
+  userId: string | null
   farmId: string | null
   cropId: string | null
   imageUrl: string | null
@@ -63,13 +63,6 @@ async function detectDisease(file: File): Promise<Detection> {
     headers,
     body: formData,
   })
-
-  if (response.status === 401) {
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
-    window.location.href = '/sign-in'
-    throw new Error('Unauthorized')
-  }
 
   const json: ApiResponse<Detection> = await response.json()
   if (!response.ok || !json.success) throw new Error(json.message || 'Detection failed')

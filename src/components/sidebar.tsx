@@ -79,7 +79,10 @@ export function Sidebar() {
       : currentUser?.role === 'farmer'
         ? farmerMarketplaceNavigation
         : []
-  const fullNavigation = [...navigation, ...roleNavigation]
+  const publicNavigation = navigation.filter((item) =>
+    ["/dashboard", "/dashboard/crops", "/dashboard/disease", "/dashboard/weather"].includes(item.href)
+  )
+  const fullNavigation = currentUser ? [...navigation, ...roleNavigation] : publicNavigation
 
   return (
     <>
@@ -132,6 +135,9 @@ export function Sidebar() {
           <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
             {fullNavigation.map((item) => {
               const isActive = pathname === item.href
+              const label = 'label' in item && typeof item.label === 'string'
+                ? item.label
+                : t(`dashboard.sidebar.nav.${item.key}`)
               return (
                 <Link
                   key={item.key}
@@ -150,7 +156,7 @@ export function Sidebar() {
                     isActive && "drop-shadow-md"
                   )} />
                   <span className="font-medium">
-                    {'label' in item && item.label ? item.label : t(`dashboard.sidebar.nav.${item.key}`)}
+                    {label}
                   </span>
                 </Link>
               )
@@ -159,6 +165,8 @@ export function Sidebar() {
 
           {/* Bottom section */}
           <div className="px-4 py-4 border-t border-sidebar-border space-y-1">
+            {currentUser ? (
+              <>
             <Link
               to="/dashboard/settings"
               className="flex items-center gap-3 px-4 py-3 rounded-xl text-sidebar-foreground/80 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-all duration-200"
@@ -173,9 +181,21 @@ export function Sidebar() {
               <LogOut className="w-5 h-5" />
               <span className="font-medium">{t('dashboard.sidebar.signOut')}</span>
             </button>
+              </>
+            ) : (
+              <div className="grid grid-cols-2 gap-2 px-2">
+                <Button variant="secondary" size="sm" asChild>
+                  <Link to="/sign-in">Login</Link>
+                </Button>
+                <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700" asChild>
+                  <Link to="/register">Register</Link>
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* User info */}
+          {currentUser && (
           <div className="px-4 py-4 border-t border-sidebar-border">
             <div className="flex items-center gap-3 px-2">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-green-500 flex items-center justify-center text-white font-semibold">
@@ -194,6 +214,7 @@ export function Sidebar() {
               </div>
             </div>
           </div>
+          )}
         </div>
       </aside>
     </>

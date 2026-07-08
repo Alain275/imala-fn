@@ -7,6 +7,7 @@ import {
   DailyForecast,
   FarmingAlert,
   RainfallHistory,
+  WeatherQuery,
 } from '@/services/weather'
 
 interface WeatherState<T> {
@@ -48,42 +49,48 @@ function useWeatherFetch<T>(
   return state
 }
 
-export function useCurrentWeather(location: string) {
+function queryKey(query: string | WeatherQuery): string {
+  return typeof query === 'string'
+    ? query
+    : `${query.location ?? ''}:${query.lat ?? ''}:${query.lon ?? ''}`
+}
+
+export function useCurrentWeather(query: string | WeatherQuery) {
   return useWeatherFetch<CurrentWeather>(
-    () => weatherService.getCurrentWeather(location),
-    [location],
+    () => weatherService.getCurrentWeather(query),
+    [queryKey(query)],
     'current weather'
   )
 }
 
-export function useHourlyForecast(location: string, hours = 12) {
+export function useHourlyForecast(query: string | WeatherQuery, hours = 12) {
   return useWeatherFetch<HourlyForecast[]>(
-    () => weatherService.getHourlyForecast(location, hours),
-    [location, hours],
+    () => weatherService.getHourlyForecast(query, hours),
+    [queryKey(query), hours],
     'hourly forecast'
   )
 }
 
-export function useDailyForecast(location: string, days = 7) {
+export function useDailyForecast(query: string | WeatherQuery, days = 7) {
   return useWeatherFetch<DailyForecast[]>(
-    () => weatherService.getDailyForecast(location, days),
-    [location, days],
+    () => weatherService.getDailyForecast(query, days),
+    [queryKey(query), days],
     'daily forecast'
   )
 }
 
-export function useFarmingAlerts(location: string) {
+export function useFarmingAlerts(query: string | WeatherQuery) {
   return useWeatherFetch<FarmingAlert[]>(
-    () => weatherService.getFarmingAlerts(location),
-    [location],
+    () => weatherService.getFarmingAlerts(query),
+    [queryKey(query)],
     'farming alerts'
   )
 }
 
-export function useRainfallHistory(location: string, months = 12) {
+export function useRainfallHistory(query: string | WeatherQuery, months = 12) {
   return useWeatherFetch<RainfallHistory[]>(
-    () => weatherService.getRainfallHistory(location, months),
-    [location, months],
+    () => weatherService.getRainfallHistory(query, months),
+    [queryKey(query), months],
     'rainfall history'
   )
 }
