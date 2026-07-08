@@ -23,13 +23,31 @@ export function buildAssetUrl(path?: string): string {
 
 interface RequestOptions extends RequestInit {
   requiresAuth?: boolean;
+  redirectOnUnauthorized?: boolean;
+}
+
+const PUBLIC_ROUTES = new Set([
+  '/',
+  '/sign-in',
+  '/register',
+  '/dashboard',
+  '/dashboard/crops',
+  '/dashboard/ai',
+  '/dashboard/disease',
+  '/dashboard/weather',
+]);
+
+function shouldRedirectOnUnauthorized(option: boolean): boolean {
+  if (!option) return false;
+  if (PUBLIC_ROUTES.has(window.location.pathname)) return false;
+  return true;
 }
 
 async function request<T>(
   endpoint: string,
   options: RequestOptions = {}
 ): Promise<T> {
-  const { requiresAuth = false, ...fetchOptions } = options;
+  const { requiresAuth = false, redirectOnUnauthorized = true, ...fetchOptions } = options;
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -52,9 +70,10 @@ async function request<T>(
   // Handle 401 Unauthorized — only force-logout in production builds.
   // In dev mode a fake/demo token would also 401, causing a redirect loop.
   if (response.status === 401) {
-    if (!import.meta.env.DEV) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.dispatchEvent(new Event('user-updated'));
+    if (!import.meta.env.DEV && shouldRedirectOnUnauthorized(redirectOnUnauthorized)) {
       window.location.href = '/sign-in';
     }
     throw new Error('Unauthorized');

@@ -42,6 +42,7 @@ interface ApiResponse<T> {
 async function notifRequest<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const result = await api.request<ApiResponse<T>>(endpoint, {
     requiresAuth: true,
+    redirectOnUnauthorized: false,
     ...options,
   })
   if (!result.success) throw new Error(`Notifications API error: ${endpoint}`)
