@@ -23,54 +23,12 @@ import {
   Search,
   Leaf,
 } from "lucide-react"
-import { useState, useRef, useCallback } from "react"
+import { useState, useRef, useCallback, useEffect } from "react"
 import { formatDistanceToNow } from "date-fns"
 import { useMyDetections, useDetectDisease } from "@/hooks/useDisease"
 import type { Detection } from "@/services/disease"
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024
-const supportedCropValues = new Set([
-  "Apple",
-  "Blueberry",
-  "Cherry",
-  "Maize",
-  "Corn",
-  "Grape",
-  "Orange",
-  "Peach",
-  "Bell pepper",
-  "Potato",
-  "Irish potato",
-  "Raspberry",
-  "Soybean",
-  "Squash",
-  "Strawberry",
-  "Tomato",
-])
-
-const cropOptions = [
-  "Apple",
-  "Blueberry",
-  "Cherry",
-  "Maize",
-  "Grape",
-  "Orange",
-  "Peach",
-  "Bell pepper",
-  "Potato",
-  "Raspberry",
-  "Soybean",
-  "Squash",
-  "Strawberry",
-  "Tomato",
-  "Beans",
-  "Cassava",
-  "Banana",
-  "Coffee",
-  "Rice",
-  "Sorghum",
-  "Other",
-]
 
 function StatusBadge({ status }: { status: string }) {
   const s = status.toLowerCase()
@@ -123,7 +81,6 @@ export default function DiseasePage() {
   const { t } = useTranslation()
   const [dragActive, setDragActive] = useState(false)
   const [selectedDetection, setSelectedDetection] = useState<Detection | null>(null)
-  const [selectedCrop, setSelectedCrop] = useState("Maize")
   const [uploadNotice, setUploadNotice] = useState<string | null>(null)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -133,7 +90,7 @@ export default function DiseasePage() {
   const [searchQuery, setSearchQuery] = useState("")
 
   const { data: detectionsData, loading: listLoading, refetch } = useMyDetections()
-  const { mutate: detect, loading: detectLoading } = useDetectDisease()
+  const { mutate: detect, loading: detectLoading, error: detectError } = useDetectDisease()
 
   const detections = detectionsData?.detections ?? []
   const visibleRecent = showAllRecent ? detections : detections.slice(0, 3)
@@ -149,6 +106,10 @@ export default function DiseasePage() {
     : detections
   // TODO: server-side search via my-detections query params when list grows large
 
+  useEffect(() => {
+    if (detectError) setUploadNotice(detectError)
+  }, [detectError])
+
   const handleFile = useCallback(
     async (file: File) => {
       if (!file.type.startsWith("image/")) {
@@ -159,17 +120,13 @@ export default function DiseasePage() {
         setUploadNotice(t("dashboard.disease.fileTooLargeMessage"))
         return
       }
-      if (!supportedCropValues.has(selectedCrop)) {
-        setUploadNotice(t("dashboard.disease.unsupportedCropMessage", { crop: selectedCrop }))
-        return
-      }
       setUploadNotice(null)
-      await detect(file, selectedCrop, (detection) => {
+      await detect(file, (detection) => {
         setSelectedDetection(detection)
         refetch()
       })
     },
-    [detect, refetch, selectedCrop, t]
+    [detect, refetch, t]
   )
 
   const handleDrag = (e: React.DragEvent) => {
@@ -227,31 +184,6 @@ export default function DiseasePage() {
             <CardDescription>{t("dashboard.disease.scanCardDescription")}</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="mb-5 grid gap-3 md:grid-cols-[1fr_1.4fr] md:items-end">
-              <div className="space-y-2">
-                <label htmlFor="disease-crop" className="text-sm font-medium text-foreground">
-                  {t("dashboard.disease.cropSelectLabel")}
-                </label>
-                <select
-                  id="disease-crop"
-                  value={selectedCrop}
-                  onChange={(event) => {
-                    setSelectedCrop(event.target.value)
-                    setUploadNotice(null)
-                  }}
-                  className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
-                >
-                  {cropOptions.map((crop) => (
-                    <option key={crop} value={crop}>
-                      {crop}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                {t("dashboard.disease.supportedCropHint")}
-              </p>
-            </div>
             {uploadNotice && (
               <div className="mb-5 flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
                 <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0" />

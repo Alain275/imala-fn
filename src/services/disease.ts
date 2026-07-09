@@ -50,11 +50,10 @@ const API_ROOT =
   ""
 const API_BASE = `${API_ROOT}/api`
 
-async function detectDisease(file: File, cropType?: string): Promise<Detection> {
+async function detectDisease(file: File): Promise<Detection> {
   const token = localStorage.getItem('token')
   const formData = new FormData()
   formData.append('file', file)
-  if (cropType) formData.append('cropType', cropType)
 
   const headers: Record<string, string> = {}
   if (token) headers.Authorization = `Bearer ${token}`

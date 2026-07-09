@@ -11,6 +11,14 @@ const CHAT_API_URL = buildApiUrl("/chat");
 const MOCK_DELAY_MS = 550;
 const MOCK_CHAR_DELAY_MS = 16;
 
+export interface ChatContext {
+  location?: {
+    label?: string;
+    latitude?: number;
+    longitude?: number;
+  };
+}
+
 function getMockReply(messages: ChatMessage[]): string {
   const last = [...messages].reverse().find((m) => m.role === "user");
   const q = last?.content.toLowerCase() ?? "";
@@ -46,7 +54,8 @@ function getMockReply(messages: ChatMessage[]): string {
 export async function sendChatMessage(
   messages: ChatMessage[],
   onToken: (char: string) => void,
-  signal?: AbortSignal
+  signal?: AbortSignal,
+  context?: ChatContext
 ): Promise<void> {
   if (USE_MOCK_CHAT) {
     const reply = getMockReply(messages);
@@ -66,7 +75,7 @@ export async function sendChatMessage(
   const res = await fetch(CHAT_API_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ messages }),
+    body: JSON.stringify({ messages, context }),
     signal,
   });
 

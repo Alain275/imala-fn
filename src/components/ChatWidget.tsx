@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect, useCallback } from "react"
-import { X, Send, RotateCcw, Leaf } from "lucide-react"
+import { X, Send, RotateCcw, Leaf, MapPin, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { sendChatMessage } from "@/services/chat"
+import type { ChatContext } from "@/services/chat"
 import type { ChatMessage } from "@/types/chat"
 
 const STARTER_QUESTIONS = [
@@ -15,6 +16,9 @@ export function ChatWidget() {
   const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [input, setInput] = useState("")
+  const [locationText, setLocationText] = useState("")
+  const [geoLocation, setGeoLocation] = useState<ChatContext["location"] | null>(null)
+  const [locating, setLocating] = useState(false)
   const [streaming, setStreaming] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -52,6 +56,13 @@ export function ChatWidget() {
       const assistantIdx = history.length
       const controller = new AbortController()
       abortRef.current = controller
+      const context: ChatContext = {
+        location: {
+          label: locationText.trim() || geoLocation?.label,
+          latitude: geoLocation?.latitude,
+          longitude: geoLocation?.longitude,
+        },
+      }
 
       try {
         await sendChatMessage(
@@ -66,7 +77,8 @@ export function ChatWidget() {
               return next
             })
           },
-          controller.signal
+          controller.signal,
+          context
         )
       } catch (err) {
         if ((err as Error).name !== "AbortError") {
@@ -77,8 +89,30 @@ export function ChatWidget() {
         setStreaming(false)
       }
     },
-    [messages, streaming]
+    [geoLocation, locationText, messages, streaming]
   )
+
+  const useCurrentLocation = () => {
+    if (!navigator.geolocation || locating) return
+    setLocating(true)
+    setError(null)
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setGeoLocation({
+          label: "Current location",
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        })
+        setLocationText("Current location")
+        setLocating(false)
+      },
+      () => {
+        setError("Location permission was not allowed. You can type your district instead.")
+        setLocating(false)
+      },
+      { enableHighAccuracy: false, timeout: 8000, maximumAge: 10 * 60 * 1000 }
+    )
+  }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -145,6 +179,31 @@ export function ChatWidget() {
                   <p className="text-sm text-muted-foreground leading-snug">
                     Ask what to plant, when to plant, or how to care for your crop.
                   </p>
+                </div>
+                <div className="flex w-full gap-2">
+                  <div className="relative flex-1">
+                    <MapPin className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+                    <input
+                      value={locationText}
+                      onChange={(event) => {
+                        setLocationText(event.target.value)
+                        if (geoLocation) setGeoLocation(null)
+                      }}
+                      placeholder="District or current location"
+                      className="h-9 w-full rounded-lg border border-input bg-background pl-8 pr-3 text-xs"
+                    />
+                  </div>
+                  <Button
+                    type="button"
+                    size="icon-sm"
+                    variant="outline"
+                    onClick={useCurrentLocation}
+                    disabled={locating}
+                    aria-label="Use current location"
+                    title="Use current location"
+                  >
+                    {locating ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <MapPin className="h-3.5 w-3.5" />}
+                  </Button>
                 </div>
                 <div className="flex flex-col gap-2 w-full text-left">
                   {STARTER_QUESTIONS.map((q) => (

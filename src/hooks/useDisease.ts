@@ -60,11 +60,11 @@ export function useDetectDisease() {
   const [error, setError] = useState<string | null>(null)
 
   const mutate = useCallback(
-    async (file: File, cropType?: string, onSuccess?: (detection: Detection) => void) => {
+    async (file: File, onSuccess?: (detection: Detection) => void) => {
       setLoading(true)
       setError(null)
       try {
-        const detection = await diseaseService.detectDisease(file, cropType)
+        const detection = await diseaseService.detectDisease(file)
         onSuccess?.(detection)
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : 'Detection failed'
