@@ -19,6 +19,7 @@ import {
   MessageSquare,
   BadgeCheck,
   Stethoscope,
+  UserRound,
 } from "lucide-react"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
@@ -45,6 +46,7 @@ const agroDealerNavigation = [
 ]
 
 const farmerMarketplaceNavigation = [
+  { key: "farmerProfile", href: "/dashboard/farmer-profile", icon: UserRound, label: "Farmer Profile" },
   { key: "dealerMarketplace", href: "/dashboard/dealer-marketplace", icon: Store, label: "Dealer Marketplace" },
   { key: "agronomists", href: "/dashboard/agronomists", icon: Stethoscope, label: "Agronomists Nearby" },
   { key: "dealerMessages", href: "/dashboard/dealer-messages", icon: MessageSquare, label: "Dealer Messages" },
@@ -83,6 +85,30 @@ export function Sidebar() {
     ["/dashboard", "/dashboard/crops", "/dashboard/disease", "/dashboard/weather"].includes(item.href)
   )
   const fullNavigation = currentUser ? [...navigation, ...roleNavigation] : publicNavigation
+  const mobileNavigation = (currentUser?.role === 'agro-dealer'
+    ? [
+        agroDealerNavigation[0],
+        agroDealerNavigation[1],
+        agroDealerNavigation[2],
+        { key: "marketPrices", href: "/dashboard/market", icon: TrendingUp },
+        { key: "settings", href: "/dashboard/settings", icon: Settings },
+      ]
+    : currentUser?.role === 'farmer'
+      ? [
+          navigation[0],
+          navigation[1],
+          navigation[2],
+          farmerMarketplaceNavigation[0],
+          { key: "settings", href: "/dashboard/settings", icon: Settings },
+        ]
+      : [
+          navigation[0],
+          navigation[1],
+          navigation[2],
+          navigation[3],
+          { key: "signIn", href: "/sign-in", icon: Settings, label: "Account" },
+        ]
+  ).filter(Boolean)
 
   return (
     <>
@@ -135,9 +161,10 @@ export function Sidebar() {
           <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
             {fullNavigation.map((item) => {
               const isActive = pathname === item.href
-              const label = 'label' in item && typeof item.label === 'string'
-                ? item.label
-                : t(`dashboard.sidebar.nav.${item.key}`)
+              const label = t(
+                `dashboard.sidebar.nav.${item.key}`,
+                { defaultValue: 'label' in item && typeof item.label === 'string' ? item.label : item.key }
+              )
               return (
                 <Link
                   key={item.key}
@@ -217,6 +244,34 @@ export function Sidebar() {
           )}
         </div>
       </aside>
+
+      <nav className="fixed inset-x-3 bottom-3 z-40 rounded-2xl border border-border/80 bg-background/95 shadow-lg shadow-black/15 backdrop-blur lg:hidden">
+        <div className="grid h-16 grid-cols-5 px-1">
+          {mobileNavigation.map((item) => {
+            const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href))
+            const label = item.key === 'settings'
+              ? t('dashboard.sidebar.settings')
+              : t(
+                  `dashboard.sidebar.nav.${item.key}`,
+                  { defaultValue: 'label' in item && typeof item.label === 'string' ? item.label : item.key }
+                )
+
+            return (
+              <Link
+                key={item.key}
+                to={item.href}
+                className={cn(
+                  "flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[10px] font-semibold transition-colors",
+                  isActive ? "text-emerald-600" : "text-muted-foreground hover:text-foreground"
+                )}
+              >
+                <item.icon className="h-5 w-5 shrink-0" />
+                <span className="max-w-full truncate leading-none">{label}</span>
+              </Link>
+            )
+          })}
+        </div>
+      </nav>
     </>
   )
 }

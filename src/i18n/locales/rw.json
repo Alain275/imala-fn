@@ -83,6 +83,157 @@
       "profileLoadFailed": "Gushaka umwirondoro byanze"
     }
   },
+  "home": {
+    "header": {
+      "subtitle": "Urubuga rusange rw'umuhinzi",
+      "searchPlaceholder": "Shakisha igihingwa, indwara, ikirere cyangwa inama"
+    },
+    "hero": {
+      "location": "Imiterere y'imirima i Kigali",
+      "title": "Suzuma ibihingwa, tegura uyu munsi, uhinge neza.",
+      "subtitle": "Abahinzi bashobora gukoresha ibikoresho by'ingenzi bya IMARA kuri uru rupapuro. Nta konti y'umuhinzi ikenewe ku nama za AI, gusuzuma indwara cyangwa amakuru y'ikirere."
+    },
+    "fieldActions": {
+      "diseaseDetection": {
+        "title": "Gusuzuma indwara",
+        "description": "Ohereza ifoto y'igihingwa ubone isuzuma rya AI ako kanya n'inama zo kuvura."
+      },
+      "cropAdvisory": {
+        "title": "Inama ku bihingwa",
+        "description": "Reba ibihingwa, igihe cyo gutera, ifumbire ikenewe n'imirimo ijyanye n'ikiciro cyo gukura."
+      },
+      "weatherIntelligence": {
+        "title": "Amakuru y'ikirere",
+        "description": "Reba imvura, ubushyuhe n'igihe cyiza cyo gutera imiti mbere yo gukora."
+      }
+    },
+    "scan": {
+      "eyebrow": "Isuzuma ryihuse",
+      "title": "AI y'indwara z'ibihingwa",
+      "badge": "Rusange",
+      "uploadTitle": "Shyiramo cyangwa wohereze ifoto y'ikibabi",
+      "description": "Serivisi rusange ishobora gusuzuma amafoto mbere y'uko umuhinzi akora konti.",
+      "button": "Tangira gusuzuma"
+    },
+    "weather": {
+      "title": "Uyu munsi",
+      "loading": "Gushaka amakuru nyayo y'ikirere",
+      "currentLocation": "Aho uri ubu",
+      "rain": "Imvura",
+      "humidity": "Ubuhehere",
+      "wind": "Umuyaga"
+    },
+    "otherUsers": {
+      "title": "Abandi bakoresha",
+      "description": "Abacuruzi b'inyongeramusaruro, abahanga mu buhinzi, abayobozi na koperative bakomeza gukoresha konti mu gucunga aho bakorera harinzwe."
+    },
+    "cropAdvisory": {
+      "title": "Inama ku bihingwa",
+      "match": "Bikwiriye {{value}}",
+      "open": "Fungura",
+      "items": {
+        "maize": {
+          "crop": "Ibigori",
+          "stage": "Gukura kw'amababi",
+          "action": "Ongeraho ifumbire ya azote muri iki cyumweru"
+        },
+        "beans": {
+          "crop": "Ibishyimbo",
+          "stage": "Kurabya",
+          "action": "Reba udukoko nyuma y'imvura"
+        },
+        "irishPotato": {
+          "crop": "Ibirayi",
+          "stage": "Kumera",
+          "action": "Komeza gutwikira imirongo n'ubutaka"
+        }
+      }
+    },
+    "fieldAlerts": {
+      "title": "Amatangazo y'umurima",
+      "items": {
+        "sprayingWindow": {
+          "title": "Igihe cyo gutera imiti",
+          "body": "Igihe cyiza uyu munsi ni kuva 08:00 kugeza 10:30."
+        },
+        "diseaseRisk": {
+          "title": "Ibyago by'indwara",
+          "body": "Ibyago byo kwangirika kw'amababi biziyongera nyuma y'imvura y'ejo."
+        },
+        "plantingAdvice": {
+          "title": "Inama yo gutera",
+          "body": "Ibishyimbo biracyakwiriye guterwa mu minsi 3 iri imbere."
+        }
+      }
+    },
+    "mobileNav": {
+      "home": "Ahabanza",
+      "advisory": "Inama",
+      "scan": "Suzuma",
+      "weather": "Ikirere",
+      "account": "Konti"
+    }
+  },
+  "farmerProfile": {
+    "title": "Uzuza umwirondoro w'umuhinzi",
+    "subtitle": "Andika amakuru y'ubuhinzi mbere yo gukoresha aho umuhinzi akorera.",
+    "reviewTitle": "Umwirondoro w'umuhinzi",
+    "reviewSubtitle": "Reba kandi uhindure umwirondoro w'umuhinzi n'amakuru y'umurima.",
+    "save": "Bika ukomeze",
+    "update": "Hindura umwirondoro",
+    "toast": {
+      "signInAgain": "Ongera winjire kugira ngo wuzuze umwirondoro w'umuhinzi.",
+      "selectFarmingType": "Hitamo nibura ubwoko bumwe bw'ubuhinzi.",
+      "completed": "Umwirondoro w'umuhinzi wuzuye.",
+      "saveFailed": "Kubika umwirondoro w'umuhinzi byanze."
+    },
+    "gender": {
+      "female": "Gore",
+      "male": "Gabo",
+      "other": "Ikindi",
+      "preferNotToSay": "Sinshaka kubivuga"
+    },
+    "personal": {
+      "title": "Amakuru bwite",
+      "description": "Umwirondoro wawe n'aho utuye mu mudugudu.",
+      "fullName": "Amazina yose",
+      "phone": "Numero ya telefone",
+      "nationalId": "Numero y'indangamuntu (ntabwo ari ngombwa)",
+      "gender": "Igitsina",
+      "age": "Imyaka",
+      "district": "Akarere",
+      "sector": "Umurenge",
+      "cell": "Akagari",
+      "village": "Umudugudu"
+    },
+    "farming": {
+      "title": "Amakuru y'ubuhinzi",
+      "description": "Bwira IMARA ibyo uhinga n'uko ubihinga.",
+      "type": "Ubwoko bw'ubuhinzi",
+      "landSize": "Ingano y'ubutaka buhingwa (ha)",
+      "yearsFarming": "Imyaka umaze uhinga",
+      "irrigation": "Kuhira",
+      "usesIrrigation": "Arahira",
+      "noIrrigation": "Nta kuhira",
+      "types": {
+        "irishPotatoes": "Ibirayi",
+        "maize": "Ibigori",
+        "beans": "Ibishyimbo",
+        "vegetables": "Imboga",
+        "fruits": "Imbuto"
+      }
+    },
+    "farm": {
+      "title": "Kwandikisha umurima",
+      "description": "Andikisha umurima wawe wa mbere. Indi mirima izongerwamo nyuma.",
+      "name": "Izina ry'umurima",
+      "size": "Ingano y'umurima (ha)",
+      "location": "Aho umurima uherereye",
+      "cropType": "Ubwoko bw'igihingwa",
+      "plantingDate": "Itariki yo gutera",
+      "seedType": "Ubwoko bw'imbuto yakoreshejwe"
+    }
+  },
   "landing": {
     "hero": {
       "titlePrefix": "Ubuhinzi Bwa None Bugamije",
@@ -258,7 +409,14 @@
         "weatherIntelligence": "Amakuru ku Kirere",
         "soilAnalysis": "Isuzuma ry'Ubutaka",
         "marketPrices": "Ibiciro ku Isoko",
-        "training": "Amahugurwa"
+        "training": "Amahugurwa",
+        "dealerProfile": "Umwirondoro w'umucuruzi",
+        "dealerProducts": "Ibicuruzwa byanjye",
+        "dealerMessages": "Ubutumwa",
+        "dealerMarketplace": "Isoko",
+        "agronomists": "Abajyanama",
+        "farmerProfile": "Umwirondoro w'umuhinzi",
+        "signIn": "Konti"
       },
       "settings": "Igenamiterere",
       "signOut": "Gusohoka"
@@ -312,6 +470,7 @@
         "checkWeather": "Reba Ikirere",
         "soilTest": "Isuzuma ry'Ubutaka",
         "viewPrices": "Reba Ibiciro",
+        "checkProfile": "Reba Umwirondoro",
         "findExpert": "Shaka Umuhanga"
       }
     },
@@ -443,6 +602,11 @@
       "pageSubtitle": "Menya indwara z'ibihingwa ako kanya ukoresheje isesengura ry'ifoto rikoresha ubwenge bw'ikoranabuhanga",
       "scanCardTitle": "Suzuma Igihingwa Cyawe",
       "scanCardDescription": "Ohereza cyangwa fata ifoto y'igihingwa kirwaye kugira ngo ubone isuzuma ako kanya",
+      "cropSelectLabel": "Igihingwa kiri ku ifoto",
+      "supportedCropHint": "Kumenya indwara ubu bikora kuri pome, blueberry, cherry, ibigori, inzabibu, orange, peach, poivron, ibirayi, raspberry, soybean, squash, strawberry n'inyanya.",
+      "unsupportedCropMessage": "Kumenya indwara ntibiraboneka kuri {{crop}}. Hitamo igihingwa gishyigikiwe cyangwa uvugane n'umuhanga mu buhinzi.",
+      "invalidImageMessage": "Ohereza dosiye y'ifoto.",
+      "fileTooLargeMessage": "Ifoto ni nini cyane. Ohereza dosiye iri munsi ya 10MB.",
       "dragDropTitle": "Kurura kandi ushyire ifoto, cyangwa ukande kugira ngo ushakishe",
       "dragDropSubtitle": "Bona ibisubizo byo kumenya indwara ako kanya bikoresheje ubwenge bw'ikoranabuhanga",
       "uploadImageButton": "Ohereza Ifoto",

@@ -83,6 +83,157 @@
       "profileLoadFailed": "Échec du chargement du profil"
     }
   },
+  "home": {
+    "header": {
+      "subtitle": "Tableau de bord public des agriculteurs",
+      "searchPlaceholder": "Rechercher culture, maladie, meteo, conseil"
+    },
+    "hero": {
+      "location": "Conditions des champs a Kigali",
+      "title": "Diagnostiquez les cultures, planifiez la journee et cultivez mieux.",
+      "subtitle": "Les agriculteurs peuvent utiliser les outils essentiels d'IMARA directement depuis cette page. Aucun compte agriculteur n'est requis pour les conseils IA, la detection des maladies ou la meteo agricole."
+    },
+    "fieldActions": {
+      "diseaseDetection": {
+        "title": "Detection des maladies",
+        "description": "Importez une photo de culture et recevez un diagnostic IA instantane avec des conseils de traitement."
+      },
+      "cropAdvisory": {
+        "title": "Conseil agricole",
+        "description": "Consultez les cultures, les periodes de plantation, les besoins en engrais et les taches par stade."
+      },
+      "weatherIntelligence": {
+        "title": "Meteo agricole",
+        "description": "Voyez la pluie, la temperature et les conditions de pulverisation avant d'agir."
+      }
+    },
+    "scan": {
+      "eyebrow": "Scan rapide",
+      "title": "IA des maladies des cultures",
+      "badge": "Public",
+      "uploadTitle": "Deposez ou importez une photo de feuille",
+      "description": "Le point d'acces public peut analyser les images avant qu'un agriculteur cree un compte.",
+      "button": "Lancer le scan"
+    },
+    "weather": {
+      "title": "Aujourd'hui",
+      "loading": "Chargement de la meteo reelle",
+      "currentLocation": "Position actuelle",
+      "rain": "Pluie",
+      "humidity": "Humidite",
+      "wind": "Vent"
+    },
+    "otherUsers": {
+      "title": "Autres utilisateurs",
+      "description": "Les agro-distributeurs, agronomes, administrateurs et cooperatives utilisent toujours des comptes pour gerer leurs espaces proteges."
+    },
+    "cropAdvisory": {
+      "title": "Conseil agricole",
+      "match": "{{value}} de correspondance",
+      "open": "Ouvrir",
+      "items": {
+        "maize": {
+          "crop": "Mais",
+          "stage": "Vegetatif",
+          "action": "Ajouter de l'azote en couverture cette semaine"
+        },
+        "beans": {
+          "crop": "Haricots",
+          "stage": "Floraison",
+          "action": "Surveiller les pucerons apres la pluie"
+        },
+        "irishPotato": {
+          "crop": "Pomme de terre",
+          "stage": "Levee",
+          "action": "Garder les buttes bien couvertes"
+        }
+      }
+    },
+    "fieldAlerts": {
+      "title": "Alertes terrain",
+      "items": {
+        "sprayingWindow": {
+          "title": "Fenetre de pulverisation",
+          "body": "Meilleures conditions aujourd'hui de 08:00 a 10:30."
+        },
+        "diseaseRisk": {
+          "title": "Risque de maladie",
+          "body": "Le risque de brulure des feuilles augmente apres la pluie de demain."
+        },
+        "plantingAdvice": {
+          "title": "Conseil de plantation",
+          "body": "Les haricots restent adaptes pour les 3 prochains jours."
+        }
+      }
+    },
+    "mobileNav": {
+      "home": "Accueil",
+      "advisory": "Conseils",
+      "scan": "Scan",
+      "weather": "Meteo",
+      "account": "Compte"
+    }
+  },
+  "farmerProfile": {
+    "title": "Completer le profil agriculteur",
+    "subtitle": "Ajoutez vos informations agricoles avant d'utiliser votre espace agriculteur.",
+    "reviewTitle": "Profil agriculteur",
+    "reviewSubtitle": "Verifiez et mettez a jour votre profil agriculteur et les details de votre ferme.",
+    "save": "Enregistrer et continuer",
+    "update": "Mettre a jour le profil",
+    "toast": {
+      "signInAgain": "Veuillez vous reconnecter pour completer votre profil agriculteur.",
+      "selectFarmingType": "Selectionnez au moins un type d'agriculture.",
+      "completed": "Profil agriculteur complete.",
+      "saveFailed": "Echec de l'enregistrement du profil agriculteur."
+    },
+    "gender": {
+      "female": "Femme",
+      "male": "Homme",
+      "other": "Autre",
+      "preferNotToSay": "Prefere ne pas dire"
+    },
+    "personal": {
+      "title": "Informations personnelles",
+      "description": "Votre identite et votre localisation au village.",
+      "fullName": "Nom complet",
+      "phone": "Numero de telephone",
+      "nationalId": "Numero d'identite nationale (facultatif)",
+      "gender": "Genre",
+      "age": "Age",
+      "district": "District",
+      "sector": "Secteur",
+      "cell": "Cellule",
+      "village": "Village"
+    },
+    "farming": {
+      "title": "Informations agricoles",
+      "description": "Dites a IMARA ce que vous cultivez et comment vous travaillez.",
+      "type": "Type d'agriculture",
+      "landSize": "Surface cultivee (ha)",
+      "yearsFarming": "Annees d'experience agricole",
+      "irrigation": "Irrigation",
+      "usesIrrigation": "Utilise l'irrigation",
+      "noIrrigation": "Pas d'irrigation",
+      "types": {
+        "irishPotatoes": "Pommes de terre",
+        "maize": "Mais",
+        "beans": "Haricots",
+        "vegetables": "Legumes",
+        "fruits": "Fruits"
+      }
+    },
+    "farm": {
+      "title": "Enregistrement de la ferme",
+      "description": "Enregistrez votre premiere ferme. Vous pourrez en ajouter d'autres plus tard.",
+      "name": "Nom de la ferme",
+      "size": "Taille de la ferme (ha)",
+      "location": "Localisation de la ferme",
+      "cropType": "Type de culture",
+      "plantingDate": "Date de plantation",
+      "seedType": "Type de semence utilise"
+    }
+  },
   "landing": {
     "hero": {
       "titlePrefix": "Une Agriculture Intelligente pour une",
@@ -258,7 +409,14 @@
         "weatherIntelligence": "Intelligence Météo",
         "soilAnalysis": "Analyse du Sol",
         "marketPrices": "Prix du Marché",
-        "training": "Formation"
+        "training": "Formation",
+        "dealerProfile": "Profil vendeur",
+        "dealerProducts": "Mes produits",
+        "dealerMessages": "Messages",
+        "dealerMarketplace": "Marche",
+        "agronomists": "Agronomes",
+        "farmerProfile": "Profil agriculteur",
+        "signIn": "Compte"
       },
       "settings": "Paramètres",
       "signOut": "Déconnexion"
@@ -312,6 +470,7 @@
         "checkWeather": "Vérifier la Météo",
         "soilTest": "Test de Sol",
         "viewPrices": "Voir les Prix",
+        "checkProfile": "Verifier le Profil",
         "findExpert": "Trouver un Expert"
       }
     },
@@ -443,6 +602,11 @@
       "pageSubtitle": "Identifiez instantanément les maladies des plantes grâce à l'analyse d'image par IA",
       "scanCardTitle": "Scannez Votre Culture",
       "scanCardDescription": "Téléchargez ou prenez une photo de la plante affectée pour un diagnostic instantané",
+      "cropSelectLabel": "Culture sur la photo",
+      "supportedCropHint": "La detection des maladies prend actuellement en charge pomme, myrtille, cerise, mais, raisin, orange, peche, poivron, pomme de terre, framboise, soja, courge, fraise et tomate.",
+      "unsupportedCropMessage": "La detection des maladies n'est pas encore disponible pour {{crop}}. Choisissez une culture prise en charge ou contactez un agronome.",
+      "invalidImageMessage": "Veuillez telecharger un fichier image.",
+      "fileTooLargeMessage": "L'image est trop volumineuse. Veuillez telecharger un fichier de moins de 10 Mo.",
       "dragDropTitle": "Glissez-déposez une image, ou cliquez pour parcourir",
       "dragDropSubtitle": "Obtenez des résultats de détection de maladies instantanés grâce à l'IA",
       "uploadImageButton": "Télécharger une Image",

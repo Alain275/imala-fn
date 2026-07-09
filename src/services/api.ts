@@ -3,7 +3,9 @@ const configuredApiRoot =
   import.meta.env.VITE_BASE_API_URL ??
   '';
 
-export const API_ROOT = import.meta.env.DEV ? '' : configuredApiRoot.replace(/\/$/, '');
+export const API_ROOT = configuredApiRoot
+  ? configuredApiRoot.replace(/\/$/, '')
+  : '';
 export const API_URL = `${API_ROOT}/api`;
 
 export function buildApiUrl(path: string): string {

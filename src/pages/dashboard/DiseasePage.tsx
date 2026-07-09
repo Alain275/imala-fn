@@ -29,6 +29,48 @@ import { useMyDetections, useDetectDisease } from "@/hooks/useDisease"
 import type { Detection } from "@/services/disease"
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024
+const supportedCropValues = new Set([
+  "Apple",
+  "Blueberry",
+  "Cherry",
+  "Maize",
+  "Corn",
+  "Grape",
+  "Orange",
+  "Peach",
+  "Bell pepper",
+  "Potato",
+  "Irish potato",
+  "Raspberry",
+  "Soybean",
+  "Squash",
+  "Strawberry",
+  "Tomato",
+])
+
+const cropOptions = [
+  "Apple",
+  "Blueberry",
+  "Cherry",
+  "Maize",
+  "Grape",
+  "Orange",
+  "Peach",
+  "Bell pepper",
+  "Potato",
+  "Raspberry",
+  "Soybean",
+  "Squash",
+  "Strawberry",
+  "Tomato",
+  "Beans",
+  "Cassava",
+  "Banana",
+  "Coffee",
+  "Rice",
+  "Sorghum",
+  "Other",
+]
 
 function StatusBadge({ status }: { status: string }) {
   const s = status.toLowerCase()
@@ -81,6 +123,8 @@ export default function DiseasePage() {
   const { t } = useTranslation()
   const [dragActive, setDragActive] = useState(false)
   const [selectedDetection, setSelectedDetection] = useState<Detection | null>(null)
+  const [selectedCrop, setSelectedCrop] = useState("Maize")
+  const [uploadNotice, setUploadNotice] = useState<string | null>(null)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const cameraInputRef = useRef<HTMLInputElement>(null)
@@ -108,17 +152,24 @@ export default function DiseasePage() {
   const handleFile = useCallback(
     async (file: File) => {
       if (!file.type.startsWith("image/")) {
+        setUploadNotice(t("dashboard.disease.invalidImageMessage"))
         return
       }
       if (file.size > MAX_FILE_SIZE) {
+        setUploadNotice(t("dashboard.disease.fileTooLargeMessage"))
         return
       }
-      await detect(file, (detection) => {
+      if (!supportedCropValues.has(selectedCrop)) {
+        setUploadNotice(t("dashboard.disease.unsupportedCropMessage", { crop: selectedCrop }))
+        return
+      }
+      setUploadNotice(null)
+      await detect(file, selectedCrop, (detection) => {
         setSelectedDetection(detection)
         refetch()
       })
     },
-    [detect, refetch]
+    [detect, refetch, selectedCrop, t]
   )
 
   const handleDrag = (e: React.DragEvent) => {
@@ -176,6 +227,37 @@ export default function DiseasePage() {
             <CardDescription>{t("dashboard.disease.scanCardDescription")}</CardDescription>
           </CardHeader>
           <CardContent>
+            <div className="mb-5 grid gap-3 md:grid-cols-[1fr_1.4fr] md:items-end">
+              <div className="space-y-2">
+                <label htmlFor="disease-crop" className="text-sm font-medium text-foreground">
+                  {t("dashboard.disease.cropSelectLabel")}
+                </label>
+                <select
+                  id="disease-crop"
+                  value={selectedCrop}
+                  onChange={(event) => {
+                    setSelectedCrop(event.target.value)
+                    setUploadNotice(null)
+                  }}
+                  className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+                >
+                  {cropOptions.map((crop) => (
+                    <option key={crop} value={crop}>
+                      {crop}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {t("dashboard.disease.supportedCropHint")}
+              </p>
+            </div>
+            {uploadNotice && (
+              <div className="mb-5 flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+                <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0" />
+                <p>{uploadNotice}</p>
+              </div>
+            )}
             <div
               className={`relative border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-300 ${
                 dragActive

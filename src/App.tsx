@@ -10,6 +10,7 @@ import AIPage from './pages/dashboard/AIPage'
 import TrainingPage from './pages/dashboard/TrainingPage'
 import SettingsPage from './pages/dashboard/SettingsPage'
 import NotificationsPage from './pages/dashboard/NotificationsPage'
+import FarmerProfileCompletionPage from './pages/dashboard/FarmerProfileCompletionPage'
 import DealerProfilePage from './pages/dashboard/agrodealer/DealerProfilePage'
 import DealerProductsPage from './pages/dashboard/agrodealer/DealerProductsPage'
 import DealerMarketplacePage from './pages/dashboard/farmer/DealerMarketplacePage'
@@ -95,6 +96,7 @@ function App() {
             <Route path="training" element={<TrainingPage />} />
             <Route path="settings" element={<SettingsPage />} />
             <Route path="notifications" element={<NotificationsPage />} />
+            <Route path="farmer-profile" element={<FarmerProfileCompletionPage />} />
           </Route>
         </Route>
 

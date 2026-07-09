@@ -93,7 +93,7 @@ export default function RegisterPage() {
 
       toast.success(response.message || t("auth.register.successToast"));
 
-      navigate("/sign-in", { replace: true });
+      navigate(data.role === "farmer" ? "/dashboard/farmer-profile" : "/sign-in", { replace: true });
     } catch (error: any) {
       const message = error.response?.data?.message || t("auth.register.errorToast");
       toast.error(message);

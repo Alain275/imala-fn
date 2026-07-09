@@ -15,7 +15,8 @@ import {
   Sun,
   Wind,
   ArrowUpRight,
-  ArrowDownRight
+  ArrowDownRight,
+  UserRound
 } from "lucide-react"
 import {
   AreaChart,
@@ -80,6 +81,7 @@ const quickActions = [
   { key: "checkWeather", icon: CloudSun, gradient: "sky" as const, href: "/dashboard/weather" },
   { key: "soilTest", icon: Mountain, gradient: "earth" as const, href: "/dashboard/soil" },
   { key: "viewPrices", icon: TrendingUp, gradient: "gold" as const, href: "/dashboard/market" },
+  { key: "checkProfile", icon: UserRound, gradient: "green" as const, href: "/dashboard/farmer-profile" },
   { key: "findExpert", icon: Users, gradient: "leaf" as const, href: "/dashboard/agronomists" },
 ]
 

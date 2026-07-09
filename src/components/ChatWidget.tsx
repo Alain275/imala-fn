@@ -105,7 +105,7 @@ export function ChatWidget() {
       {open && (
         <div
           className={cn(
-            "fixed bottom-[4.5rem] right-4 sm:right-6 z-50",
+            "fixed bottom-[10rem] right-4 sm:bottom-[4.5rem] sm:right-6 z-50",
             "w-[min(calc(100vw-2rem),380px)]",
             "bg-card text-card-foreground border border-border",
             "rounded-xl shadow-2xl flex flex-col overflow-hidden",
@@ -240,7 +240,7 @@ export function ChatWidget() {
       )}
 
       {/* Outer div carries the bounce; button handles hover:scale so transforms don't conflict */}
-      <div className={cn("fixed bottom-4 right-4 sm:right-6 z-50", !open && "animate-bounce")}>
+      <div className={cn("fixed bottom-24 right-4 sm:bottom-4 sm:right-6 z-50", !open && "animate-bounce")}>
         <button
           onClick={() => setOpen((o) => !o)}
           aria-label={open ? "Close IMARA chat" : "Chat with IMARA assistant"}

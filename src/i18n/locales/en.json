@@ -83,6 +83,157 @@
       "profileLoadFailed": "Failed to load profile"
     }
   },
+  "home": {
+    "header": {
+      "subtitle": "Public farmer dashboard",
+      "searchPlaceholder": "Search crop, disease, weather, advisory"
+    },
+    "hero": {
+      "location": "Kigali field conditions",
+      "title": "Diagnose crops, plan today, and farm smarter.",
+      "subtitle": "Farmers can use the core IMARA tools directly from this homepage. No farmer account is required for AI crop advice, disease detection, or weather intelligence."
+    },
+    "fieldActions": {
+      "diseaseDetection": {
+        "title": "Disease detection",
+        "description": "Upload a crop photo and get an instant AI diagnosis with treatment guidance."
+      },
+      "cropAdvisory": {
+        "title": "Crop advisory",
+        "description": "Check crops, planting windows, fertilizer needs, and growing-stage tasks."
+      },
+      "weatherIntelligence": {
+        "title": "Weather intelligence",
+        "description": "See field-ready rain, temperature, and spraying conditions before you act."
+      }
+    },
+    "scan": {
+      "eyebrow": "Quick scan",
+      "title": "Crop disease AI",
+      "badge": "Public",
+      "uploadTitle": "Drop or upload a leaf photo",
+      "description": "The public endpoint can analyze images before a farmer creates an account.",
+      "button": "Start scan"
+    },
+    "weather": {
+      "title": "Today",
+      "loading": "Loading real weather",
+      "currentLocation": "Current location",
+      "rain": "Rain",
+      "humidity": "Humidity",
+      "wind": "Wind"
+    },
+    "otherUsers": {
+      "title": "Other users",
+      "description": "Agro-dealers, agronomists, admins, and cooperatives still use accounts to manage protected workspaces."
+    },
+    "cropAdvisory": {
+      "title": "Crop advisory",
+      "match": "{{value}} match",
+      "open": "Open",
+      "items": {
+        "maize": {
+          "crop": "Maize",
+          "stage": "Vegetative",
+          "action": "Top-dress nitrogen this week"
+        },
+        "beans": {
+          "crop": "Beans",
+          "stage": "Flowering",
+          "action": "Scout for aphids after rain"
+        },
+        "irishPotato": {
+          "crop": "Irish potato",
+          "stage": "Emergence",
+          "action": "Keep ridges covered"
+        }
+      }
+    },
+    "fieldAlerts": {
+      "title": "Field alerts",
+      "items": {
+        "sprayingWindow": {
+          "title": "Spraying window",
+          "body": "Best conditions today from 08:00 to 10:30."
+        },
+        "diseaseRisk": {
+          "title": "Disease risk",
+          "body": "Leaf blight risk rises after tomorrow's rain."
+        },
+        "plantingAdvice": {
+          "title": "Planting advice",
+          "body": "Beans remain suitable for the next 3 days."
+        }
+      }
+    },
+    "mobileNav": {
+      "home": "Home",
+      "advisory": "Advisory",
+      "scan": "Scan",
+      "weather": "Weather",
+      "account": "Account"
+    }
+  },
+  "farmerProfile": {
+    "title": "Complete farmer profile",
+    "subtitle": "Add your farming details before using your farmer workspace.",
+    "reviewTitle": "Farmer profile",
+    "reviewSubtitle": "Check and update your farmer and farm registration details.",
+    "save": "Save and continue",
+    "update": "Update profile",
+    "toast": {
+      "signInAgain": "Please sign in again to complete your farmer profile.",
+      "selectFarmingType": "Select at least one farming type.",
+      "completed": "Farmer profile completed.",
+      "saveFailed": "Failed to save farmer profile."
+    },
+    "gender": {
+      "female": "Female",
+      "male": "Male",
+      "other": "Other",
+      "preferNotToSay": "Prefer not to say"
+    },
+    "personal": {
+      "title": "Personal information",
+      "description": "Your identity and village location.",
+      "fullName": "Full name",
+      "phone": "Phone number",
+      "nationalId": "National ID number (optional)",
+      "gender": "Gender",
+      "age": "Age",
+      "district": "District",
+      "sector": "Sector",
+      "cell": "Cell",
+      "village": "Village"
+    },
+    "farming": {
+      "title": "Farming information",
+      "description": "Tell IMARA what you grow and how you farm.",
+      "type": "Type of farming",
+      "landSize": "Size of land cultivated (ha)",
+      "yearsFarming": "Years farming",
+      "irrigation": "Irrigation",
+      "usesIrrigation": "Uses irrigation",
+      "noIrrigation": "No irrigation",
+      "types": {
+        "irishPotatoes": "Irish potatoes",
+        "maize": "Maize",
+        "beans": "Beans",
+        "vegetables": "Vegetables",
+        "fruits": "Fruits"
+      }
+    },
+    "farm": {
+      "title": "Farm registration",
+      "description": "Register your first farm. More farms can be added later.",
+      "name": "Farm name",
+      "size": "Farm size (ha)",
+      "location": "Farm location",
+      "cropType": "Type of crop",
+      "plantingDate": "Planting date",
+      "seedType": "Type of seed used"
+    }
+  },
   "landing": {
     "hero": {
       "titlePrefix": "Smart Farming for a",
@@ -258,7 +409,14 @@
         "weatherIntelligence": "Weather Intelligence",
         "soilAnalysis": "Soil Analysis",
         "marketPrices": "Market Prices",
-        "training": "Training"
+        "training": "Training",
+        "dealerProfile": "Dealer Profile",
+        "dealerProducts": "My Products",
+        "dealerMessages": "Messages",
+        "dealerMarketplace": "Marketplace",
+        "agronomists": "Agronomists",
+        "farmerProfile": "Farmer Profile",
+        "signIn": "Account"
       },
       "settings": "Settings",
       "signOut": "Sign Out"
@@ -312,6 +470,7 @@
         "checkWeather": "Check Weather",
         "soilTest": "Soil Test",
         "viewPrices": "View Prices",
+        "checkProfile": "Check Profile",
         "findExpert": "Find Expert"
       }
     },
@@ -443,6 +602,11 @@
       "pageSubtitle": "Identify plant diseases instantly with AI-powered image analysis",
       "scanCardTitle": "Scan Your Crop",
       "scanCardDescription": "Upload or take a photo of the affected plant for an instant diagnosis",
+      "cropSelectLabel": "Crop in the photo",
+      "supportedCropHint": "Disease detection currently supports apple, blueberry, cherry, maize/corn, grape, orange, peach, bell pepper, potato, raspberry, soybean, squash, strawberry, and tomato.",
+      "unsupportedCropMessage": "Disease detection is not available for {{crop}} yet. Please choose a supported crop or contact an agronomist for help.",
+      "invalidImageMessage": "Please upload an image file.",
+      "fileTooLargeMessage": "The image is too large. Please upload a file under 10MB.",
       "dragDropTitle": "Drag and drop an image, or click to browse",
       "dragDropSubtitle": "Get instant disease detection results powered by AI",
       "uploadImageButton": "Upload Image",
