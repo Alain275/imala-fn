@@ -1,8 +1,11 @@
 import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
+import { useEffect, useState } from "react"
 import { Header } from "@/components/header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 import { Icon3D } from "@/components/icon-3d"
+import { farmerOverviewService, type FarmerOverview } from "@/services/farmerOverview"
 import {
   Sprout,
   Bug,
@@ -33,46 +36,19 @@ import {
   Cell
 } from "recharts"
 
-// Dummy data
-const weatherData = [
-  { day: "Mon", temp: 24, rain: 10 },
-  { day: "Tue", temp: 26, rain: 5 },
-  { day: "Wed", temp: 25, rain: 15 },
-  { day: "Thu", temp: 23, rain: 30 },
-  { day: "Fri", temp: 22, rain: 45 },
-  { day: "Sat", temp: 24, rain: 20 },
-  { day: "Sun", temp: 27, rain: 8 },
-]
-
-const cropYieldData = [
-  { month: "Jan", maize: 400, beans: 240, rice: 180 },
-  { month: "Feb", maize: 300, beans: 139, rice: 220 },
-  { month: "Mar", maize: 520, beans: 280, rice: 250 },
-  { month: "Apr", maize: 470, beans: 390, rice: 200 },
-  { month: "May", maize: 540, beans: 480, rice: 280 },
-  { month: "Jun", maize: 580, beans: 380, rice: 300 },
-]
-
 const soilHealthKeys = ["excellent", "good", "fair", "poor"] as const
-const soilHealthMeta: Record<typeof soilHealthKeys[number], { value: number; color: string }> = {
-  excellent: { value: 35, color: "#22c55e" },
-  good: { value: 40, color: "#84cc16" },
-  fair: { value: 18, color: "#eab308" },
-  poor: { value: 7, color: "#ef4444" },
+const soilHealthColors: Record<typeof soilHealthKeys[number], string> = {
+  excellent: "#22c55e",
+  good: "#84cc16",
+  fair: "#eab308",
+  poor: "#ef4444",
 }
 
-const recentAlerts = [
-  { id: 1, severity: "warning" },
-  { id: 2, severity: "danger" },
-  { id: 3, severity: "info" },
-  { id: 4, severity: "success" },
-]
-
-const quickStats = [
-  { key: "activeFarms", value: "2,847", change: "+12%", up: true, icon: Leaf, gradient: "green" as const },
-  { key: "cropsMonitored", value: "15,234", change: "+8%", up: true, icon: Sprout, gradient: "leaf" as const },
-  { key: "diseaseAlerts", value: "23", change: "-15%", up: false, icon: Bug, gradient: "earth" as const },
-  { key: "marketListings", value: "1,456", change: "+25%", up: true, icon: TrendingUp, gradient: "gold" as const },
+const statMeta = [
+  { key: "activeFarms", icon: Leaf, gradient: "green" as const },
+  { key: "cropsMonitored", icon: Sprout, gradient: "leaf" as const },
+  { key: "diseaseAlerts", icon: Bug, gradient: "earth" as const },
+  { key: "marketListings", icon: TrendingUp, gradient: "gold" as const },
 ]
 
 const quickActions = [
@@ -87,27 +63,62 @@ const quickActions = [
 
 export default function DashboardPage() {
   const { t } = useTranslation()
+  const [overview, setOverview] = useState<FarmerOverview | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    setLoading(true)
+    setError(null)
+
+    farmerOverviewService
+      .getOverview()
+      .then((data) => {
+        if (!cancelled) setOverview(data)
+      })
+      .catch((err: unknown) => {
+        if (cancelled) return
+        setError(err instanceof Error ? err.message : "Failed to load dashboard overview")
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  const stats = overview?.stats
+  const quickStats = statMeta.map((meta) => ({
+    ...meta,
+    value: stats?.[meta.key as keyof typeof stats]?.value ?? 0,
+    change: stats?.[meta.key as keyof typeof stats]?.change ?? "+0%",
+    up: stats?.[meta.key as keyof typeof stats]?.up ?? true,
+  }))
 
   const soilHealthData = soilHealthKeys.map(key => ({
     key,
     name: t(`common.status.${key}`),
-    value: soilHealthMeta[key].value,
-    color: soilHealthMeta[key].color,
+    value: overview?.soilHealth.find((item) => item.key === key)?.value ?? 0,
+    color: soilHealthColors[key],
   }))
-
-  const alertItems = t("dashboard.overview.recentAlerts.items", { returnObjects: true }) as {
-    message: string
-    time: string
-  }[]
 
   return (
     <div className="min-h-screen">
       <Header
         title={t("dashboard.overview.title")}
-        subtitle={t("dashboard.overview.subtitle", { name: "Jean" })}
+        subtitle={t("dashboard.overview.subtitle", { name: overview?.farmer.name || "Farmer" })}
       />
 
       <div className="p-6 space-y-6">
+        {error && (
+          <Card className="border-destructive/30 bg-destructive/5 shadow-sm">
+            <CardContent className="p-4 text-sm text-destructive">{error}</CardContent>
+          </Card>
+        )}
+
         {/* Quick Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {quickStats.map((stat) => (
@@ -116,7 +127,11 @@ export default function DashboardPage() {
                 <div className="flex items-start justify-between">
                   <div className="space-y-2">
                     <p className="text-sm text-muted-foreground font-medium">{t(`dashboard.overview.stats.${stat.key}`)}</p>
-                    <p className="text-3xl font-bold text-foreground">{stat.value}</p>
+                    {loading ? (
+                      <Skeleton className="h-9 w-20" />
+                    ) : (
+                      <p className="text-3xl font-bold text-foreground">{stat.value.toLocaleString()}</p>
+                    )}
                     <div className={`flex items-center text-sm font-medium ${stat.up ? 'text-emerald-600' : 'text-red-500'}`}>
                       {stat.up ? <ArrowUpRight className="w-4 h-4 mr-1" /> : <ArrowDownRight className="w-4 h-4 mr-1" />}
                       {t("dashboard.overview.changeFromLastMonth", { change: stat.change })}
@@ -149,7 +164,7 @@ export default function DashboardPage() {
             <CardContent>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={weatherData}>
+                  <AreaChart data={overview?.weatherForecast ?? []}>
                     <defs>
                       <linearGradient id="colorTemp" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.3}/>
@@ -197,15 +212,15 @@ export default function DashboardPage() {
                   <Icon3D gradient="green" size="sm">
                     <Sprout className="w-4 h-4" />
                   </Icon3D>
-                  <span>{t("dashboard.overview.cropYield.title")}</span>
+                  <span>{t("dashboard.overview.cropYield.areaTitle", { defaultValue: "Registered Crop Area" })}</span>
                 </CardTitle>
-                <span className="text-sm text-muted-foreground">{t("dashboard.overview.cropYield.last6Months")}</span>
+                <span className="text-sm text-muted-foreground">{t("dashboard.overview.cropYield.registeredArea", { defaultValue: "Registered area" })}</span>
               </div>
             </CardHeader>
             <CardContent>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={cropYieldData}>
+                  <BarChart data={overview?.cropArea.data ?? []}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-muted" />
                     <XAxis dataKey="month" className="fill-muted-foreground" fontSize={12} tickLine={false} />
                     <YAxis className="fill-muted-foreground" fontSize={12} tickLine={false} axisLine={false} />
@@ -217,25 +232,30 @@ export default function DashboardPage() {
                         color: 'oklch(var(--foreground))',
                       }}
                     />
-                    <Bar dataKey="maize" fill="#22c55e" radius={[4, 4, 0, 0]} name={t("dashboard.overview.cropYield.maizeLegend")} />
-                    <Bar dataKey="beans" fill="#84cc16" radius={[4, 4, 0, 0]} name={t("dashboard.overview.cropYield.beansLegend")} />
-                    <Bar dataKey="rice" fill="#14b8a6" radius={[4, 4, 0, 0]} name={t("dashboard.overview.cropYield.riceLegend")} />
+                    {(overview?.cropArea.cropSeries ?? []).map((series) => (
+                      <Bar
+                        key={series.key}
+                        dataKey={series.key}
+                        fill={series.color}
+                        radius={[4, 4, 0, 0]}
+                        name={`${series.name} (ha)`}
+                      />
+                    ))}
                   </BarChart>
                 </ResponsiveContainer>
               </div>
               <div className="flex items-center justify-center gap-6 mt-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-emerald-500" />
-                  <span className="text-sm text-muted-foreground">{t("dashboard.overview.cropYield.maize")}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-lime-500" />
-                  <span className="text-sm text-muted-foreground">{t("dashboard.overview.cropYield.beans")}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-teal-500" />
-                  <span className="text-sm text-muted-foreground">{t("dashboard.overview.cropYield.rice")}</span>
-                </div>
+                {(overview?.cropArea.cropSeries ?? []).map((series) => (
+                  <div key={series.key} className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: series.color }} />
+                    <span className="text-sm text-muted-foreground">{series.name}</span>
+                  </div>
+                ))}
+                {!loading && (overview?.cropArea.cropSeries.length ?? 0) === 0 && (
+                  <span className="text-sm text-muted-foreground">
+                    {t("dashboard.overview.cropYield.noRegisteredCrops", { defaultValue: "No registered crops yet" })}
+                  </span>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -300,7 +320,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {recentAlerts.map((alert, i) => (
+                {(overview?.recentAlerts ?? []).map((alert) => (
                   <div
                     key={alert.id}
                     className="flex items-start gap-4 p-4 rounded-xl bg-muted/50 hover:bg-muted transition-colors"
@@ -312,8 +332,17 @@ export default function DashboardPage() {
                       'bg-blue-500'
                     }`} />
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-foreground">{alertItems[i].message}</p>
-                      <p className="text-xs text-muted-foreground mt-1">{alertItems[i].time}</p>
+                      <p className="text-sm font-medium text-foreground">{alert.message}</p>
+                      <p className="text-xs text-muted-foreground mt-1">{alert.time}</p>
+                    </div>
+                  </div>
+                ))}
+                {loading && [0, 1, 2].map((item) => (
+                  <div key={item} className="flex items-start gap-4 p-4 rounded-xl bg-muted/50">
+                    <Skeleton className="mt-1 h-3 w-3 rounded-full" />
+                    <div className="flex-1 space-y-2">
+                      <Skeleton className="h-4 w-3/4" />
+                      <Skeleton className="h-3 w-24" />
                     </div>
                   </div>
                 ))}
