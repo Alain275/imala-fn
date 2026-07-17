@@ -15,6 +15,7 @@ import DealerProfilePage from './pages/dashboard/agrodealer/DealerProfilePage'
 import DealerProductsPage from './pages/dashboard/agrodealer/DealerProductsPage'
 import DealerMarketplacePage from './pages/dashboard/farmer/DealerMarketplacePage'
 import AgronomistsDirectoryPage from './pages/dashboard/farmer/AgronomistsDirectoryPage'
+import FarmPlanPage from './pages/dashboard/farmer/FarmPlanPage'
 import DealerMessagesPage from './pages/dashboard/shared/DealerMessagesPage'
 import AgronomistProfilePage from './pages/agronomist/AgronomistProfilePage'
 
@@ -90,6 +91,7 @@ function App() {
             <Route path="market" element={<MarketPage />} />
             <Route path="dealer-profile" element={<DealerProfilePage />} />
             <Route path="dealer-products" element={<DealerProductsPage />} />
+            <Route path="farm-plan" element={<FarmPlanPage />} />
             <Route path="dealer-marketplace" element={<DealerMarketplacePage />} />
             <Route path="agronomists" element={<AgronomistsDirectoryPage />} />
             <Route path="dealer-messages" element={<DealerMessagesPage />} />

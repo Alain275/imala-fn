@@ -71,7 +71,7 @@ export default function AIPage() {
           const updated = [...prev]
           const last = updated[updated.length - 1]
           if (last && last.role === "assistant") {
-            last.content = "Sorry, I could not get crop advice right now. Please try again."
+            last.content = error.message || "Sorry, I could not get crop advice right now. Please try again."
           }
           return updated
         })

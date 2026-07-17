@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next"
 import { Header } from "@/components/header"
+import { UnderDevelopmentBanner } from "@/components/UnderDevelopmentBanner"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Icon3D } from "@/components/icon-3d"
 import { Button } from "@/components/ui/button"
@@ -101,7 +102,7 @@ const marketInsights = [
   { key: "exportOpportunity" },
 ]
 
-export default function MarketPage() {
+function MarketPageLegacy() {
   const { t } = useTranslation()
   const marketDemandData = marketDemand.map((d) => ({
     crop: t(`dashboard.shared.crops.${d.cropKey}`),
@@ -403,6 +404,27 @@ export default function MarketPage() {
           </Card>
         </div>
       </div>
+    </div>
+  )
+}
+
+export default function MarketPage() {
+  const { t } = useTranslation()
+
+  return (
+    <div className="min-h-screen">
+      <Header
+        title={t("dashboard.market.pageTitle")}
+        subtitle={t("dashboard.market.pageSubtitle")}
+      />
+      {/* The complete market prices workspace is preserved above and intentionally inactive. */}
+      <UnderDevelopmentBanner
+        icon={TrendingUp}
+        headline="Better market intelligence is"
+        accent="on the horizon."
+        description="We are preparing reliable crop prices, market trends, buyer connections, and timely insights to support better selling decisions."
+        statusText="Live market tools are on the way"
+      />
     </div>
   )
 }

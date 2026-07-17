@@ -20,6 +20,7 @@ import {
   BadgeCheck,
   Stethoscope,
   UserRound,
+  ClipboardList,
 } from "lucide-react"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
@@ -34,6 +35,10 @@ const navigation = [
   { key: "cropAdvisory", href: "/dashboard/crops", icon: Sprout },
   { key: "diseaseDetection", href: "/dashboard/disease", icon: Bug },
   { key: "weatherIntelligence", href: "/dashboard/weather", icon: CloudSun },
+]
+
+// Keep unavailable features together at the end of the sidebar.
+const underDevelopmentNavigation = [
   { key: "soilAnalysis", href: "/dashboard/soil", icon: Mountain },
   { key: "marketPrices", href: "/dashboard/market", icon: TrendingUp },
   { key: "training", href: "/dashboard/training", icon: BookOpen },
@@ -47,6 +52,7 @@ const agroDealerNavigation = [
 
 const farmerMarketplaceNavigation = [
   { key: "farmerProfile", href: "/dashboard/farmer-profile", icon: UserRound, label: "Farmer Profile" },
+  { key: "farmPlan", href: "/dashboard/farm-plan", icon: ClipboardList, label: "Farm Plan" },
   { key: "dealerMarketplace", href: "/dashboard/dealer-marketplace", icon: Store, label: "Dealer Marketplace" },
   { key: "agronomists", href: "/dashboard/agronomists", icon: Stethoscope, label: "Agronomists Nearby" },
   { key: "dealerMessages", href: "/dashboard/dealer-messages", icon: MessageSquare, label: "Dealer Messages" },
@@ -81,10 +87,10 @@ export function Sidebar() {
       : currentUser?.role === 'farmer'
         ? farmerMarketplaceNavigation
         : []
-  const publicNavigation = navigation.filter((item) =>
-    ["/dashboard", "/dashboard/crops", "/dashboard/disease", "/dashboard/weather"].includes(item.href)
-  )
-  const fullNavigation = currentUser ? [...navigation, ...roleNavigation] : publicNavigation
+  const publicNavigation = navigation
+  const fullNavigation = currentUser
+    ? [...navigation, ...roleNavigation, ...underDevelopmentNavigation]
+    : publicNavigation
   const mobileNavigation = (currentUser?.role === 'agro-dealer'
     ? [
         agroDealerNavigation[0],
@@ -97,6 +103,7 @@ export function Sidebar() {
       ? [
           navigation[0],
           navigation[1],
+          farmerMarketplaceNavigation[1],
           navigation[2],
           farmerMarketplaceNavigation[0],
           { key: "settings", href: "/dashboard/settings", icon: Settings },

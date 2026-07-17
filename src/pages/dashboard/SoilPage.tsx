@@ -3,6 +3,7 @@ import { toast } from "sonner"
 import { useTranslation } from "react-i18next"
 import { getIntlLocale } from "@/lib/dateLocale"
 import { Header } from "@/components/header"
+import { UnderDevelopmentBanner } from "@/components/UnderDevelopmentBanner"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Icon3D } from "@/components/icon-3d"
 import { Button } from "@/components/ui/button"
@@ -414,7 +415,7 @@ function CropCard({ crop }: { crop: CropSuitability }) {
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
-export default function SoilPage() {
+function SoilPageLegacy() {
   const { t, i18n } = useTranslation()
   const intlLocale = getIntlLocale(i18n.language)
 
@@ -1043,6 +1044,27 @@ export default function SoilPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+    </div>
+  )
+}
+
+export default function SoilPage() {
+  const { t } = useTranslation()
+
+  return (
+    <div className="min-h-screen">
+      <Header
+        title={t("dashboard.soil.pageTitle")}
+        subtitle={t("dashboard.soil.pageSubtitle")}
+      />
+      {/* The complete soil analysis workspace is preserved above and intentionally inactive. */}
+      <UnderDevelopmentBanner
+        icon={FlaskConical}
+        headline="Smarter soil insights are"
+        accent="taking root."
+        description="We are building a dependable soil analysis experience with nutrient insights, test history, crop suitability, and practical recommendations."
+        statusText="Advanced soil tools are on the way"
+      />
     </div>
   )
 }
