@@ -1,4 +1,4 @@
-import api from './api'
+import api, { API_URL } from './api'
 
 export interface Detection {
   id: string
@@ -44,12 +44,6 @@ interface ApiResponse<T> {
   message?: string
 }
 
-const API_ROOT =
-  import.meta.env.VITE_API_BASE_URL ??
-  import.meta.env.VITE_BASE_API_URL ??
-  ""
-const API_BASE = `${API_ROOT}/api`
-
 async function detectDisease(file: File): Promise<Detection> {
   const token = localStorage.getItem('token')
   const formData = new FormData()
@@ -58,7 +52,7 @@ async function detectDisease(file: File): Promise<Detection> {
   const headers: Record<string, string> = {}
   if (token) headers.Authorization = `Bearer ${token}`
 
-  const response = await fetch(`${API_BASE}/disease/detect`, {
+  const response = await fetch(`${API_URL}/disease/detect`, {
     method: 'POST',
     headers,
     body: formData,

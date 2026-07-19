@@ -1,12 +1,13 @@
-const configuredApiRoot =
+const configuredApiBase = (
   import.meta.env.VITE_API_BASE_URL ??
   import.meta.env.VITE_BASE_API_URL ??
-  '';
+  '/api'
+).replace(/\/$/, '');
 
-export const API_ROOT = configuredApiRoot
-  ? configuredApiRoot.replace(/\/$/, '')
-  : '';
-export const API_URL = `${API_ROOT}/api`;
+export const API_URL = configuredApiBase.endsWith('/api')
+  ? configuredApiBase
+  : `${configuredApiBase}/api`;
+export const API_ROOT = API_URL.slice(0, -4);
 
 export function buildApiUrl(path: string): string {
   if (!path) {

@@ -1,4 +1,6 @@
-const API_BASE_URL = 'https://imara-bn.onrender.com/api';
+import { API_URL } from './api';
+
+const API_BASE_URL = API_URL;
 
 export interface Farm {
   id: string;

@@ -1,5 +1,4 @@
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
 import {
   Store,
   User,
@@ -16,13 +15,22 @@ const navigation = [
 ];
 
 export default function AgroDealerLayout() {
-  const { user, logout } = useAuth();
+  const [user] = useState<{ name?: string; email?: string } | null>(() => {
+    try {
+      const stored = localStorage.getItem('user');
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      return null;
+    }
+  });
   const location = useLocation();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleLogout = () => {
-    logout();
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.dispatchEvent(new Event('user-updated'));
     navigate('/sign-in');
   };
 
