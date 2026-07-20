@@ -155,7 +155,7 @@ export default function AdminCropsPage() {
     <div className="min-h-screen bg-background">
       <Header title={t('admin.crops.title')} subtitle={t('admin.crops.subtitle')} />
 
-      <div className="p-6 space-y-6">
+      <div className="p-3 sm:p-6 space-y-6">
         {/* Toolbar */}
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
@@ -207,7 +207,7 @@ export default function AdminCropsPage() {
           </CardHeader>
           <CardContent className="p-0">
             {loading ? (
-              <div className="p-6 space-y-3">
+              <div className="p-3 sm:p-6 space-y-3">
                 {Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-14 rounded-xl" />)}
               </div>
             ) : crops.length === 0 ? (

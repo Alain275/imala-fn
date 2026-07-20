@@ -133,7 +133,7 @@ export default function CooperativeMembersPage() {
     <div className="min-h-screen bg-background pb-20 lg:pb-0">
       <Header title={t('cooperative.members.title')} subtitle={t('cooperative.members.subtitle')} />
 
-      <div className="p-6 space-y-5">
+      <div className="p-3 sm:p-6 space-y-5">
 
         {/* ── Stats ──────────────────────────────────────────────────────── */}
         <div className="grid grid-cols-3 gap-4">

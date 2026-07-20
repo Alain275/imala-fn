@@ -135,7 +135,7 @@ export default function CooperativeFarmsPage() {
     <div className="min-h-screen bg-background pb-20 lg:pb-0">
       <Header title={t('cooperative.farms.title')} subtitle={t('cooperative.farms.subtitle')} />
 
-      <div className="p-6 space-y-5">
+      <div className="p-3 sm:p-6 space-y-5">
 
         {/* ── Stat pills ─────────────────────────────────────────────────── */}
         <div className="flex flex-wrap gap-3">

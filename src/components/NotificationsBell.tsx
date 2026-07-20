@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { formatDistanceToNow } from 'date-fns'
 import { useTranslation } from 'react-i18next'
-import { Bell, X, CheckCheck } from 'lucide-react'
+import { Bell, X, CheckCheck, Smartphone } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -56,7 +56,7 @@ function NotificationItem({ n, onOpen }: NotificationItemProps) {
 
       {/* Delete — stop propagation so it doesn't also open the detail */}
       <button
-        className="opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 mt-0.5 text-muted-foreground hover:text-destructive"
+        className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity flex-shrink-0 mt-0.5 text-muted-foreground hover:text-destructive"
         onClick={e => { e.stopPropagation(); remove(n.id) }}
         aria-label={t('dashboard.notifications.deleteAria')}
       >
@@ -68,13 +68,13 @@ function NotificationItem({ n, onOpen }: NotificationItemProps) {
 
 export function NotificationsBell() {
   const { t } = useTranslation()
-  const { notifications, unreadCount, loading, markAsRead, markAllRead } = useNotifications()
+  const { notifications, unreadCount, loading, browserPermission, pushSupported, pushSubscribed, requestBrowserPermission, disablePushNotifications, markAsRead, markAllRead } = useNotifications()
   const hasUnread = unreadCount > 0
 
   const user = authService.getCurrentUser()
   const notificationsPath = user?.role === 'agronomist'
     ? '/agronomist/notifications'
-    : '/dashboard/notifications'
+    : user ? '/dashboard/notifications' : '/dashboard/weather'
 
   const [popoverOpen, setPopoverOpen] = useState(false)
   const [selected, setSelected] = useState<Notification | null>(null)
@@ -106,10 +106,13 @@ export function NotificationsBell() {
           </Button>
         </PopoverTrigger>
 
-        <PopoverContent align="end" sideOffset={8} className="w-96 p-0 overflow-hidden">
+        <PopoverContent align="end" sideOffset={8} className="w-[calc(100vw-1rem)] p-0 overflow-hidden sm:w-96">
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b">
             <span className="font-semibold text-sm">{t('dashboard.notifications.ariaLabel')}</span>
+            <div className="flex items-center gap-2">
+            {pushSupported && !pushSubscribed && browserPermission !== 'denied' && <button onClick={() => requestBrowserPermission()} className="flex items-center gap-1 text-xs text-primary"><Smartphone className="h-3.5 w-3.5" />Enable device alerts</button>}
+            {pushSubscribed && <button onClick={() => disablePushNotifications()} className="hidden text-xs text-muted-foreground hover:text-foreground sm:inline">Device alerts on</button>}
             {hasUnread && (
               <button
                 onClick={() => markAllRead()}
@@ -119,6 +122,7 @@ export function NotificationsBell() {
                 {t('dashboard.notifications.markAllRead')}
               </button>
             )}
+            </div>
           </div>
 
           {/* Body */}

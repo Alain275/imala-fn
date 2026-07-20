@@ -38,7 +38,7 @@ export default function AiPerformancePage() {
     <div className="min-h-screen bg-background">
       <Header title={t('admin.ai.performance.title')} subtitle={t('admin.ai.performance.subtitle')} />
 
-      <div className="p-6 space-y-6">
+      <div className="p-3 sm:p-6 space-y-6">
 
         {/* Accuracy over time */}
         <Card className="border-0 shadow-md">

@@ -67,7 +67,7 @@ export default function AdminProfilePage() {
     <div className="min-h-screen bg-background">
       <Header title={t('admin.profile.title')} subtitle={t('admin.profile.subtitle')} />
 
-      <div className="p-6 space-y-6 max-w-4xl">
+      <div className="p-3 sm:p-6 space-y-6 max-w-4xl">
 
         {/* ── Section 1: Profile header card ─────────────────────────────── */}
         {loading ? (

@@ -498,7 +498,7 @@ function SoilPageLegacy() {
         subtitle={t("dashboard.soil.pageSubtitle")}
       />
 
-      <div className="p-6 space-y-6">
+      <div className="p-3 sm:p-6 space-y-6">
 
         {/* ── Soil Overview ───────────────────────────────────────────────── */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

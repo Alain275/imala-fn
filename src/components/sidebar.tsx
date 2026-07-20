@@ -156,13 +156,15 @@ export function Sidebar() {
             </div>
           </div>
 
-          {/* Portal indicator */}
-          <div className="px-6 py-3 border-b border-sidebar-border bg-sidebar-accent/20">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-xs text-sidebar-foreground/80 font-medium">{portalLabel}</span>
+          {/* Portal indicator is only relevant after login. */}
+          {currentUser && (
+            <div className="px-6 py-3 border-b border-sidebar-border bg-sidebar-accent/20">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-xs text-sidebar-foreground/80 font-medium">{portalLabel}</span>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Navigation */}
           <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">

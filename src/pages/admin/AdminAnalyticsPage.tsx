@@ -352,7 +352,7 @@ export default function AdminAnalyticsPage() {
     <div className="min-h-screen bg-background">
       <Header title={t('admin.analytics.title')} subtitle={t('admin.analytics.subtitle')} />
 
-      <div className="p-6 space-y-6">
+      <div className="p-3 sm:p-6 space-y-6">
         <Tabs defaultValue="crop">
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="crop" className="flex items-center gap-1.5 text-xs sm:text-sm">

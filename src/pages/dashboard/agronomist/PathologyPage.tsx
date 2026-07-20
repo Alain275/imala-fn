@@ -90,7 +90,7 @@ export default function PathologyPage() {
         subtitle="Disease Diagnostics · Treatment Ledger · Prescription Builder"
       />
 
-      <div className="flex-1 overflow-y-auto p-6 space-y-6">
+      <div className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-6">
 
         {/* Stats row */}
         <div className="grid grid-cols-3 gap-4">

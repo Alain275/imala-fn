@@ -175,7 +175,7 @@ export default function BusinessProfilePage() {
         )}
 
         {/* Form Sections */}
-        <div className="p-6 space-y-3">
+        <div className="p-3 sm:p-6 space-y-3">
           
           {/* SECTION 1: General Information */}
           <Section id="general" title="📝 General Information">

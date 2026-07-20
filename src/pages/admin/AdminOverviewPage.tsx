@@ -98,7 +98,7 @@ export default function AdminOverviewPage() {
     <div className="min-h-screen bg-background">
       <Header title={t('admin.overview.title')} subtitle={t('admin.overview.subtitle')} />
 
-      <div className="p-6 space-y-6">
+      <div className="p-3 sm:p-6 space-y-6">
         {/* KPI cards */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {loading

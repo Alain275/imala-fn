@@ -115,7 +115,7 @@ export default function NotificationsPage() {
     <div className="min-h-screen">
       <Header title={t('dashboard.notifications.pageTitle')} subtitle={t('dashboard.notifications.pageSubtitle')} />
 
-      <div className="p-6 space-y-4 max-w-4xl">
+      <div className="max-w-4xl space-y-4 p-3 sm:p-6">
 
         {/* Filters + actions bar */}
         <div className="flex flex-wrap items-end gap-4">
@@ -201,7 +201,7 @@ export default function NotificationsPage() {
                   return (
                     <div
                       key={n.id}
-                      className={`flex items-start gap-4 px-6 py-4 group cursor-pointer hover:bg-muted/40 transition-colors ${!n.isRead ? 'bg-primary/5' : ''}`}
+                      className={`group flex cursor-pointer items-start gap-3 px-3 py-4 transition-colors hover:bg-muted/40 sm:gap-4 sm:px-6 ${!n.isRead ? 'bg-primary/5' : ''}`}
                       onClick={() => handleOpenDetail(n)}
                     >
                       {/* Type icon with priority ring */}
@@ -226,7 +226,7 @@ export default function NotificationsPage() {
                       </div>
 
                       {/* Actions — stop propagation so they don't also open the detail dialog */}
-                      <div className="flex items-center gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="flex flex-shrink-0 items-center gap-1 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100">
                         {!n.isRead && (
                           <button
                             onClick={e => handleMarkAsRead(e, n.id)}

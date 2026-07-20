@@ -126,7 +126,7 @@ export default function AdvisoryPage() {
         subtitle="NPK Calculator · Risk Profiler · Regional Market Arbitrage"
       />
 
-      <div className="p-6 space-y-6">
+      <div className="p-3 sm:p-6 space-y-6">
 
         {/* Row 1: NPK Calculator + Risk Profiler */}
         <div className="grid grid-cols-3 gap-6">

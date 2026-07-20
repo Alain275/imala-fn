@@ -124,7 +124,7 @@ export default function WorkforcePage() {
         subtitle="Offline Sync · Daily Itinerary · KPI Dashboard"
       />
 
-      <div className="flex-1 overflow-y-auto p-6 space-y-6">
+      <div className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-6">
 
         {/* Quick KPIs */}
         <div className="grid grid-cols-4 gap-4">

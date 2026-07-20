@@ -142,7 +142,7 @@ export default function AdminCooperativesPage() {
     <div className="min-h-screen bg-background">
       <Header title={t('admin.cooperatives.title')} subtitle={t('admin.cooperatives.subtitle')} />
 
-      <div className="p-6 space-y-6">
+      <div className="p-3 sm:p-6 space-y-6">
         {/* KPIs */}
         <div className="grid grid-cols-3 gap-4">
           {[
@@ -183,7 +183,7 @@ export default function AdminCooperativesPage() {
           </CardHeader>
           <CardContent className="p-0">
             {loading ? (
-              <div className="p-6 space-y-4">
+              <div className="p-3 sm:p-6 space-y-4">
                 {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-24 w-full rounded-xl" />)}
               </div>
             ) : cooperatives.length === 0 ? (

@@ -105,7 +105,7 @@ export default function CooperativeSettingsPage() {
     return (
       <div className="min-h-screen bg-background">
         <Header title={t('cooperative.settings.title')} />
-        <div className="p-6 space-y-5">
+        <div className="p-3 sm:p-6 space-y-5">
           {Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-48 rounded-xl" />)}
         </div>
       </div>
@@ -128,7 +128,7 @@ export default function CooperativeSettingsPage() {
     <div className="min-h-screen bg-background pb-20 lg:pb-0">
       <Header title={t('cooperative.settings.title')} subtitle={t('cooperative.settings.subtitle')} />
 
-      <div className="p-6 space-y-6 max-w-3xl">
+      <div className="p-3 sm:p-6 space-y-6 max-w-3xl">
 
         {/* ── Cooperative Profile ────────────────────────────────────────── */}
         <Card className="border border-border bg-card shadow-none">

@@ -5,7 +5,7 @@ export default function AgronomistLayout() {
   return (
     <div className="min-h-screen bg-background flex">
       <AgronomistSidebar />
-      <main className="lg:pl-72 min-h-screen flex-1 overflow-hidden">
+      <main className="min-h-screen min-w-0 flex-1 overflow-x-hidden pb-20 lg:pl-72 lg:pb-0">
         <Outlet />
       </main>
     </div>

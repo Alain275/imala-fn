@@ -198,7 +198,7 @@ export default function CooperativeCropAdvisoryPage() {
     <div className="min-h-screen bg-background pb-20 lg:pb-0">
       <Header title={t('cooperative.cropAdvisory.title')} subtitle={t('cooperative.cropAdvisory.subtitle')} />
 
-      <div className="p-6 space-y-5">
+      <div className="p-3 sm:p-6 space-y-5">
 
         {/* ── Crop selector tabs ─────────────────────────────────────────── */}
         <div className="flex gap-2 flex-wrap">

@@ -37,6 +37,7 @@ export default defineConfig(({ mode }) => {
           ]
         },
         workbox: {
+          importScripts: ['push-sw.js'],
           globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
           globIgnores: ['**/vecteezy_3d-weather-icon-day-with-rain_24825195 (1).png'],
           runtimeCaching: [

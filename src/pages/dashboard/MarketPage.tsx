@@ -116,7 +116,7 @@ function MarketPageLegacy() {
         subtitle={t("dashboard.market.pageSubtitle")}
       />
 
-      <div className="p-6 space-y-6">
+      <div className="p-3 sm:p-6 space-y-6">
         {/* Market Summary */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card className="border-0 shadow-md bg-gradient-to-br from-emerald-500 to-green-600 text-white">

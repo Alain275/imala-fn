@@ -55,6 +55,7 @@
     },
     "notificationType": {
       "weather": "Météo",
+      "farm": "Ferme",
       "market": "Marché",
       "disease": "Maladie",
       "soil": "Sol",
@@ -92,6 +93,31 @@
       "location": "Conditions des champs a Kigali",
       "title": "Diagnostiquez les cultures, planifiez la journee et cultivez mieux.",
       "subtitle": "Les agriculteurs peuvent utiliser les outils essentiels d'IMARA directement depuis cette page. Aucun compte agriculteur n'est requis pour les conseils IA, la detection des maladies ou la meteo agricole."
+    },
+    "overview": {
+      "pageTitle": "Bienvenue sur IMARA",
+      "pageSubtitle": "Des outils agricoles simples, accessibles sans compte",
+      "eyebrow": "Votre assistant agricole numerique",
+      "toolsTitle": "De quelle aide avez-vous besoin ?",
+      "toolsDescription": "Choisissez un outil gratuit ci-dessous pour obtenir des informations pratiques pour votre ferme.",
+      "openTool": "Ouvrir l'outil",
+      "howTitle": "Comment ca marche",
+      "steps": {
+        "choose": {
+          "title": "Choisissez un outil",
+          "description": "Selectionnez les conseils agricoles, la detection des maladies ou la meteo."
+        },
+        "provide": {
+          "title": "Indiquez votre besoin",
+          "description": "Saisissez les details de la culture, importez une photo ou partagez votre position."
+        },
+        "guidance": {
+          "title": "Recevez des conseils clairs",
+          "description": "Obtenez des recommandations simples pour savoir quoi faire ensuite."
+        }
+      },
+      "accountTitle": "Vous voulez l'experience complete ?",
+      "accountDescription": "Connectez-vous pour enregistrer votre ferme et vos resultats, recevoir des alertes et utiliser toutes les fonctionnalites d'IMARA."
     },
     "fieldActions": {
       "diseaseDetection": {
@@ -173,6 +199,12 @@
       "weather": "Meteo",
       "account": "Compte"
     }
+  },
+  "farmWorkspace": {
+    "title": "Planification et gestion agricole",
+    "subtitle": "Planifiez la saison, enregistrez le travail quotidien et comprenez votre benefice.",
+    "newPlan": "Nouveau plan",
+    "tabs": { "plan": "Plan", "today": "Aujourd'hui", "records": "Registres", "results": "Resultats" }
   },
   "farmerProfile": {
     "title": "Completer le profil agriculteur",

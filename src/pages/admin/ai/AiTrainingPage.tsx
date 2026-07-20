@@ -119,7 +119,7 @@ export default function AiTrainingPage() {
     <div className="min-h-screen bg-background">
       <Header title={t('admin.ai.training.title')} subtitle={t('admin.ai.training.subtitle')} />
 
-      <div className="p-6 space-y-6">
+      <div className="p-3 sm:p-6 space-y-6">
         {/* Header action */}
         <div className="flex items-center justify-between">
           <div>

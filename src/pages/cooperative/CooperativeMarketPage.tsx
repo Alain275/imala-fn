@@ -118,7 +118,7 @@ export default function CooperativeMarketPage() {
     <div className="min-h-screen bg-background pb-20 lg:pb-0">
       <Header title={t('cooperative.market.title')} subtitle={t('cooperative.market.subtitle')} />
 
-      <div className="p-6 space-y-6">
+      <div className="p-3 sm:p-6 space-y-6">
 
         {/* ── KPI row ────────────────────────────────────────────────────── */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

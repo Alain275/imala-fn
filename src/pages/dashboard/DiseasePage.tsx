@@ -123,6 +123,16 @@ export default function DiseasePage() {
       setUploadNotice(null)
       await detect(file, (detection) => {
         setSelectedDetection(detection)
+        if (String(detection.id).startsWith("public-")) {
+          window.dispatchEvent(new CustomEvent("imara-public-notification", { detail: {
+            id: `public:disease:${detection.id}`, type: "disease", priority: detection.aiConfidence < 50 ? "high" : "medium",
+            title: `Crop scan result: ${detection.aiDisease}`,
+            message: `${detection.aiCrop} was identified with ${Math.round(detection.aiConfidence)}% confidence. Open the disease page to review guidance.`,
+            data: { actionUrl: "/dashboard/disease" },
+          } }))
+        } else {
+          window.dispatchEvent(new Event("imara-notifications-refresh"))
+        }
         refetch()
       })
     },
@@ -171,7 +181,7 @@ export default function DiseasePage() {
         }}
       />
 
-      <div className="p-6 space-y-6">
+      <div className="p-3 sm:p-6 space-y-6">
         {/* Upload Section */}
         <Card className="border-0 shadow-md">
           <CardHeader>

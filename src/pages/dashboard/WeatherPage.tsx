@@ -162,6 +162,10 @@ export default function WeatherPage() {
     setLocationStatus("Requesting your current location...")
     navigator.geolocation.getCurrentPosition(
       (position) => {
+        localStorage.setItem("imara_weather_location", LOCATION_LABEL)
+        localStorage.setItem("imara_weather_lat", String(position.coords.latitude))
+        localStorage.setItem("imara_weather_lon", String(position.coords.longitude))
+        window.dispatchEvent(new Event("imara-location-updated"))
         setCoords({
           lat: position.coords.latitude,
           lon: position.coords.longitude,
@@ -195,7 +199,11 @@ export default function WeatherPage() {
     const nextLocation = locationInput.trim()
     if (!nextLocation) return
     setCoords(null)
+    localStorage.removeItem("imara_weather_lat")
+    localStorage.removeItem("imara_weather_lon")
     setActiveLocation(nextLocation)
+    localStorage.setItem("imara_weather_location", nextLocation)
+    window.dispatchEvent(new Event("imara-location-updated"))
     setLocationStatus(`Using forecast for ${nextLocation}`)
   }
 
@@ -212,7 +220,7 @@ export default function WeatherPage() {
         subtitle={t("dashboard.weather.pageSubtitle")}
       />
 
-      <div className="p-6 space-y-6">
+      <div className="space-y-6 p-3 sm:p-6">
         <Card className="border-0 shadow-md">
           <CardContent className="grid gap-4 p-4 lg:grid-cols-[1fr_auto] lg:items-center">
             <div className="flex items-start gap-3">
@@ -253,7 +261,7 @@ export default function WeatherPage() {
                 <div className="space-y-4">
                   <Skeleton className="h-6 w-32 bg-white/20" />
                   <Skeleton className="h-20 w-48 bg-white/20" />
-                  <div className="grid grid-cols-4 gap-4 mt-8 pt-6 border-t border-white/20">
+                  <div className="mt-8 grid grid-cols-2 gap-4 border-t border-white/20 pt-6 sm:grid-cols-4">
                     {Array.from({ length: 4 }).map((_, i) => (
                       <Skeleton key={i} className="h-16 bg-white/20 rounded-xl" />
                     ))}

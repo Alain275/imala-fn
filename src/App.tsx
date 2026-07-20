@@ -1,7 +1,7 @@
 import { Navigate, Routes, Route } from 'react-router-dom'
-import HomePage from './pages/HomePage'
 import DashboardLayout from './pages/dashboard/DashboardLayout'
 import DashboardPage from './pages/dashboard/DashboardPage'
+import PublicOverviewPage from './pages/dashboard/PublicOverviewPage'
 import DiseasePage from './pages/dashboard/DiseasePage'
 import WeatherPage from './pages/dashboard/WeatherPage'
 import SoilPage from './pages/dashboard/SoilPage'
@@ -64,20 +64,28 @@ import RegisterPage from './pages/auth/RegisterPage'
 import { NotificationsProvider } from './context/NotificationsContext'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { PublicLayout } from './components/PublicLayout'
+import { authService } from './services/auth'
 
 function App() {
   return (
     <NotificationsProvider>
       <Routes>
         <Route element={<PublicLayout />}>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/sign-in" element={<SignInPage />} />
           <Route path="/register" element={<RegisterPage />} />
         </Route>
 
         {/* Public farmer dashboard routes - no farmer account required */}
         <Route path="/dashboard" element={<DashboardLayout />}>
-          <Route index element={<DashboardPage />} />
+          <Route
+            index
+            element={
+              authService.isAuthenticated()
+                ? <DashboardPage />
+                : <PublicOverviewPage />
+            }
+          />
           <Route path="crops" element={<AIPage />} />
           <Route path="ai" element={<AIPage />} />
           <Route path="disease" element={<DiseasePage />} />

@@ -9,6 +9,8 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Link } from 'react-router-dom'
 import type { Notification } from '@/services/notifications'
 import { TYPE_ICONS, PRIORITY_RING, PRIORITY_ICON_COLOR, PRIORITY_BADGE, useNotificationLabels } from '@/lib/notificationLabels'
 import { getDateFnsLocale } from '@/lib/dateLocale'
@@ -78,6 +80,7 @@ export function NotificationDetailDialog({
           <p className="text-xs text-muted-foreground">{relativeTs}</p>
           <p className="text-xs text-muted-foreground/60">{absoluteTs}</p>
         </div>
+        {n.data?.actionUrl && <Button asChild className="w-full"><Link to={n.data.actionUrl} onClick={onClose}>Open related page</Link></Button>}
       </DialogContent>
     </Dialog>
   )

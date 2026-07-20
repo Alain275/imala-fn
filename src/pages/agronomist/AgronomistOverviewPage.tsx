@@ -96,7 +96,7 @@ export default function AgronomistOverviewPage() {
         subtitle="Rwanda Agricultural System · Overview & Regional Operations"
       />
 
-      <div className="p-6 space-y-6">
+      <div className="p-3 sm:p-6 space-y-6">
         {/* KPI Strip */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           {[

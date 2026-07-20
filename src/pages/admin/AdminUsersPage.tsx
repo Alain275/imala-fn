@@ -153,7 +153,7 @@ export default function AdminUsersPage() {
     <div className="min-h-screen bg-background">
       <Header title={t('admin.users.title')} subtitle={t('admin.users.subtitle')} />
 
-      <div className="p-6 space-y-6">
+      <div className="p-3 sm:p-6 space-y-6">
         {/* Filters */}
         <Card className="border-0 shadow-md">
           <CardContent className="p-4 flex flex-wrap items-center gap-3">

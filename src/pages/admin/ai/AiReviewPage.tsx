@@ -96,7 +96,7 @@ export default function AiReviewPage() {
     <div className="min-h-screen bg-background">
       <Header title={t('admin.ai.review.title')} subtitle={t('admin.ai.review.subtitle')} />
 
-      <div className="p-6 space-y-6">
+      <div className="p-3 sm:p-6 space-y-6">
         {/* Stats strip */}
         <div className="grid grid-cols-3 gap-4">
           {[

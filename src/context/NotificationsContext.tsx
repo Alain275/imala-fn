@@ -1,178 +1,201 @@
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
-  ReactNode,
-} from 'react'
-import { toast } from 'sonner'
-import { useTranslation } from 'react-i18next'
-import { useLocation } from 'react-router-dom'
-import {
-  notificationsService,
-  Notification,
-} from '@/services/notifications'
-import { authService } from '@/services/auth'
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react"
+import { toast } from "sonner"
+
+import { authService } from "@/services/auth"
+import { notificationsService, type Notification } from "@/services/notifications"
+import { weatherService } from "@/services/weather"
+import { pushService } from "@/services/push"
 
 interface NotificationsContextValue {
   notifications: Notification[]
   unreadCount: number
   loading: boolean
+  browserPermission: NotificationPermission | "unsupported"
+  pushSupported: boolean
+  pushSubscribed: boolean
   refetch: () => void
+  requestBrowserPermission: () => Promise<void>
+  disablePushNotifications: () => Promise<void>
   markAsRead: (id: string) => Promise<void>
   markAllRead: () => Promise<void>
   remove: (id: string) => Promise<void>
 }
 
 const NotificationsContext = createContext<NotificationsContextValue | null>(null)
+const PUBLIC_STORAGE_KEY = "imara_public_notifications"
+const REFRESH_MS = 5 * 60 * 1000
 
-const POLL_INTERVAL_MS = 60_000
-const PUBLIC_NOTIFICATION_FREE_PATHS = new Set([
-  '/',
-  '/sign-in',
-  '/register',
-  '/dashboard',
-  '/dashboard/crops',
-  '/dashboard/ai',
-  '/dashboard/disease',
-  '/dashboard/weather',
-])
+function readPublic(): Notification[] {
+  try { return JSON.parse(localStorage.getItem(PUBLIC_STORAGE_KEY) || "[]") as Notification[] }
+  catch { return [] }
+}
+
+function writePublic(items: Notification[]) {
+  localStorage.setItem(PUBLIC_STORAGE_KEY, JSON.stringify(items.slice(0, 30)))
+}
+
+function publicWelcome(): Notification {
+  const now = new Date().toISOString()
+  return {
+    id: "public:welcome", userId: "public", type: "system", priority: "low", isRead: false,
+    title: "Welcome to IMARA alerts", message: "You can receive public weather and farming reminders without creating an account.",
+    createdAt: now, updatedAt: now, data: { actionUrl: "/dashboard" },
+  }
+}
 
 export function NotificationsProvider({ children }: { children: ReactNode }) {
-  const { t } = useTranslation()
-  const location = useLocation()
   const [notifications, setNotifications] = useState<Notification[]>([])
-  const [unreadCount, setUnreadCount] = useState(0)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [version, setVersion] = useState(0)
   const [isAuthed, setIsAuthed] = useState(() => authService.isAuthenticated())
-  const notificationsEnabled = isAuthed && !PUBLIC_NOTIFICATION_FREE_PATHS.has(location.pathname)
-
-  // Always-current snapshot used in mutation callbacks to avoid stale closures
+  const [browserPermission, setBrowserPermission] = useState<NotificationPermission | "unsupported">(
+    typeof window !== "undefined" && "Notification" in window ? window.Notification.permission : "unsupported"
+  )
+  const [pushSubscribed, setPushSubscribed] = useState(false)
+  const pushSupported = typeof window !== "undefined" && pushService.isSupported()
+  const initialized = useRef(false)
+  const previousIds = useRef(new Set<string>())
   const notificationsRef = useRef<Notification[]>([])
   notificationsRef.current = notifications
+  const unreadCount = notifications.filter((item) => !item.isRead).length
 
-  const refetch = useCallback(() => setVersion(v => v + 1), [])
+  const refetch = useCallback(() => setVersion((value) => value + 1), [])
 
-  // Track auth state changes (login / logout / profile refresh)
-  useEffect(() => {
-    const onAuthChange = () => {
-      const authed = authService.isAuthenticated()
-      setIsAuthed(authed)
-      if (!authed) {
-        setNotifications([])
-        setUnreadCount(0)
-      } else {
-        setVersion(v => v + 1)
+  const showBrowserAlerts = useCallback((items: Notification[]) => {
+    if (!initialized.current || browserPermission !== "granted") return
+    for (const item of items) {
+      if (!previousIds.current.has(item.id) && !item.isRead && item.priority !== "low") {
+        const alert = new window.Notification(item.title, { body: item.message, icon: "/icons/icon-192x192.png", tag: item.id })
+        alert.onclick = () => { window.focus(); window.location.assign(item.data?.actionUrl || "/dashboard") }
       }
     }
-    window.addEventListener('user-updated', onAuthChange)
-    // Also catch logout (token removed from localStorage by another tab or direct call)
-    window.addEventListener('storage', onAuthChange)
-    return () => {
-      window.removeEventListener('user-updated', onAuthChange)
-      window.removeEventListener('storage', onAuthChange)
-    }
-  }, [])
+  }, [browserPermission])
 
-  // Fetch recent 20 notifications for the bell panel
-  useEffect(() => {
-    if (!notificationsEnabled) {
-      setNotifications([])
-      setUnreadCount(0)
-      setLoading(false)
-      return
-    }
-    let cancelled = false
+  const load = useCallback(async () => {
     setLoading(true)
-    notificationsService.getNotifications({ limit: 20 })
-      .then(data => {
-        if (!cancelled) {
-          setNotifications(data.notifications)
-          setLoading(false)
+    try {
+      let items: Notification[]
+      if (authService.isAuthenticated()) {
+        const location = localStorage.getItem("imara_weather_location") || authService.getCurrentUser()?.location || "Musanze"
+        const weatherAlerts = await weatherService.getFarmingAlerts(location).catch(() => [])
+        await notificationsService.syncReminders(weatherAlerts).catch(() => 0)
+        const response = await notificationsService.getNotifications({ limit: 30 })
+        items = response.notifications
+      } else {
+        const stored = readPublic()
+        const firstVisit = localStorage.getItem(PUBLIC_STORAGE_KEY) === null
+        const base = (firstVisit ? [publicWelcome(), ...stored] : stored).filter((item) =>
+          item.type !== "weather" || !item.data?.validTo || new Date(String(item.data.validTo)).getTime() >= Date.now()
+        )
+        const location = localStorage.getItem("imara_weather_location") || "Musanze"
+        const weatherAlerts = await weatherService.getFarmingAlerts(location).catch(() => [])
+        const byId = new Map(base.map((item) => [item.id, item]))
+        for (const alert of weatherAlerts) {
+          const id = `public:weather:${alert.id}:${alert.validFrom.slice(0, 10)}`
+          if (!byId.has(id)) byId.set(id, {
+            id, userId: "public", type: "weather", priority: alert.priority, title: alert.title, message: alert.message,
+            isRead: false, createdAt: new Date().toISOString(), data: { actionUrl: "/dashboard/weather", validFrom: alert.validFrom, validTo: alert.validTo },
+          })
         }
-      })
-      .catch((err: unknown) => {
-        if (cancelled) return
-        const message = err instanceof Error ? err.message : t('common.toast.notificationsLoadFailed')
-        toast.error(message)
-        setLoading(false)
-      })
-    return () => { cancelled = true }
-  }, [version, notificationsEnabled])
+        items = Array.from(byId.values()).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        writePublic(items)
+      }
+      showBrowserAlerts(items)
+      setNotifications(items)
+      previousIds.current = new Set(items.map((item) => item.id))
+      initialized.current = true
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Notifications could not be loaded")
+    } finally { setLoading(false) }
+  }, [showBrowserAlerts])
 
-  // Fetch + poll unread count
-  const fetchUnreadCount = useCallback(() => {
-    if (!authService.isAuthenticated() || PUBLIC_NOTIFICATION_FREE_PATHS.has(window.location.pathname)) return
-    notificationsService.getUnreadCount()
-      .then(count => setUnreadCount(count))
-      .catch(() => { /* silent — don't disrupt the UI on a background poll failure */ })
+  useEffect(() => { void load() }, [load, version, isAuthed])
+  useEffect(() => {
+    if (!pushSupported) return
+    void pushService.getSubscription().then((subscription) => setPushSubscribed(Boolean(subscription)))
+    if (window.Notification.permission === "granted") {
+      // Re-registering is safe and links an anonymous device after the user signs in.
+      void pushService.subscribeCurrentDevice().then(setPushSubscribed).catch(() => setPushSubscribed(false))
+    }
+  }, [isAuthed, pushSupported])
+  useEffect(() => {
+    const timer = window.setInterval(refetch, REFRESH_MS)
+    const authChanged = () => { setIsAuthed(authService.isAuthenticated()); setVersion((value) => value + 1) }
+    const refreshWhenVisible = () => { if (document.visibilityState === "visible") refetch() }
+    const refreshPushLocation = () => {
+      if (window.Notification?.permission === "granted") void pushService.subscribeCurrentDevice().then(setPushSubscribed).catch(() => undefined)
+    }
+    const addPublicNotification = (event: Event) => {
+      if (authService.isAuthenticated()) { refetch(); return }
+      const detail = (event as CustomEvent<Partial<Notification>>).detail
+      if (!detail?.title || !detail.message) return
+      const now = new Date().toISOString()
+      updatePublic((items) => [{
+        id: detail.id || `public:event:${Date.now()}`, userId: "public", type: detail.type || "system",
+        priority: detail.priority || "medium", title: detail.title!, message: detail.message!, isRead: false,
+        createdAt: now, data: detail.data,
+      }, ...items])
+    }
+    window.addEventListener("user-updated", authChanged)
+    window.addEventListener("storage", authChanged)
+    window.addEventListener("imara-notifications-refresh", refetch)
+    window.addEventListener("imara-public-notification", addPublicNotification)
+    window.addEventListener("imara-location-updated", refreshPushLocation)
+    document.addEventListener("visibilitychange", refreshWhenVisible)
+    return () => { window.clearInterval(timer); window.removeEventListener("user-updated", authChanged); window.removeEventListener("storage", authChanged); window.removeEventListener("imara-notifications-refresh", refetch); window.removeEventListener("imara-public-notification", addPublicNotification); window.removeEventListener("imara-location-updated", refreshPushLocation); document.removeEventListener("visibilitychange", refreshWhenVisible) }
+  }, [refetch])
+
+  const requestBrowserPermission = useCallback(async () => {
+    if (!pushService.isSupported()) { setBrowserPermission("unsupported"); return }
+    const permission = await window.Notification.requestPermission()
+    setBrowserPermission(permission)
+    if (permission === "granted") {
+      try {
+        const subscribed = await pushService.subscribeCurrentDevice()
+        setPushSubscribed(subscribed)
+        toast.success("Alerts enabled on this device")
+      } catch (error) {
+        setPushSubscribed(false)
+        toast.error(error instanceof Error ? error.message : "This device could not be subscribed")
+      }
+    }
   }, [])
 
-  useEffect(() => {
-    if (!notificationsEnabled) return
-    fetchUnreadCount()
-    const id = setInterval(fetchUnreadCount, POLL_INTERVAL_MS)
-    return () => clearInterval(id)
-  }, [fetchUnreadCount, notificationsEnabled])
+  const disablePushNotifications = useCallback(async () => {
+    await pushService.unsubscribeCurrentDevice()
+    setPushSubscribed(false)
+    toast.success("Push alerts disabled on this device")
+  }, [])
+
+  const updatePublic = (updater: (items: Notification[]) => Notification[]) => {
+    const next = updater(notificationsRef.current)
+    setNotifications(next)
+    writePublic(next)
+  }
 
   const markAsRead = useCallback(async (id: string) => {
-    // Optimistic
-    setNotifications(prev => prev.map(n => n.id === id ? { ...n, isRead: true } : n))
-    setUnreadCount(prev => Math.max(0, prev - 1))
-    try {
-      await notificationsService.markAsRead(id)
-    } catch (err: unknown) {
-      // Revert
-      setNotifications(prev => prev.map(n => n.id === id ? { ...n, isRead: false } : n))
-      setUnreadCount(prev => prev + 1)
-      const message = err instanceof Error ? err.message : t('common.toast.markAsReadFailed')
-      toast.error(message)
-    }
-  }, [])
+    if (!authService.isAuthenticated()) { updatePublic((items) => items.map((item) => item.id === id ? { ...item, isRead: true } : item)); return }
+    setNotifications((items) => items.map((item) => item.id === id ? { ...item, isRead: true } : item))
+    try { await notificationsService.markAsRead(id) } catch { refetch() }
+  }, [refetch])
 
   const markAllRead = useCallback(async () => {
-    const snapshot = notificationsRef.current
-    setNotifications(prev => prev.map(n => ({ ...n, isRead: true })))
-    setUnreadCount(0)
-    try {
-      await notificationsService.markAllRead()
-    } catch (err: unknown) {
-      setNotifications(snapshot)
-      fetchUnreadCount()
-      const message = err instanceof Error ? err.message : t('common.toast.markAllReadFailed')
-      toast.error(message)
-    }
-  }, [fetchUnreadCount])
+    if (!authService.isAuthenticated()) { updatePublic((items) => items.map((item) => ({ ...item, isRead: true }))); return }
+    setNotifications((items) => items.map((item) => ({ ...item, isRead: true })))
+    try { await notificationsService.markAllRead() } catch { refetch() }
+  }, [refetch])
 
   const remove = useCallback(async (id: string) => {
-    const snapshot = notificationsRef.current
-    const target = snapshot.find(n => n.id === id)
-    setNotifications(prev => prev.filter(n => n.id !== id))
-    if (target && !target.isRead) setUnreadCount(prev => Math.max(0, prev - 1))
-    try {
-      await notificationsService.deleteNotification(id)
-    } catch (err: unknown) {
-      setNotifications(snapshot)
-      if (target && !target.isRead) setUnreadCount(prev => prev + 1)
-      const message = err instanceof Error ? err.message : t('common.toast.deleteNotificationFailed')
-      toast.error(message)
-    }
-  }, [])
+    if (!authService.isAuthenticated()) { updatePublic((items) => items.filter((item) => item.id !== id)); return }
+    setNotifications((items) => items.filter((item) => item.id !== id))
+    try { await notificationsService.deleteNotification(id) } catch { refetch() }
+  }, [refetch])
 
-  return (
-    <NotificationsContext.Provider
-      value={{ notifications, unreadCount, loading, refetch, markAsRead, markAllRead, remove }}
-    >
-      {children}
-    </NotificationsContext.Provider>
-  )
+  return <NotificationsContext.Provider value={{ notifications, unreadCount, loading, browserPermission, pushSupported, pushSubscribed, refetch, requestBrowserPermission, disablePushNotifications, markAsRead, markAllRead, remove }}>{children}</NotificationsContext.Provider>
 }
 
 export function useNotifications() {
-  const ctx = useContext(NotificationsContext)
-  if (!ctx) throw new Error('useNotifications must be used within NotificationsProvider')
-  return ctx
+  const context = useContext(NotificationsContext)
+  if (!context) throw new Error("useNotifications must be used within NotificationsProvider")
+  return context
 }

@@ -39,7 +39,7 @@ export default function AiDatasetsPage() {
     <div className="min-h-screen bg-background">
       <Header title={t('admin.ai.datasets.title')} subtitle={t('admin.ai.datasets.subtitle')} />
 
-      <div className="p-6 space-y-6">
+      <div className="p-3 sm:p-6 space-y-6">
         {/* KPIs */}
         <div className="grid grid-cols-3 gap-4">
           {[

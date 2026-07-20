@@ -88,7 +88,7 @@ export default function CropsPage() {
         subtitle={t("dashboard.crops.pageSubtitle")}
       />
 
-      <div className="p-6 space-y-6">
+      <div className="p-3 sm:p-6 space-y-6">
         {/* Current Conditions Banner */}
         <Card className="border-0 shadow-md bg-gradient-to-r from-emerald-500 to-green-600 text-white">
           <CardContent className="p-6">

@@ -7,6 +7,7 @@ import { useLocation } from "react-router-dom"
 import { useTheme } from "next-themes"
 import { authService } from "@/services/auth"
 import { NotificationsBell } from "@/components/NotificationsBell"
+import type { ReactNode } from "react"
 
 function getInitials(name: string): string {
   return name.split(' ').map(w => w[0]).filter(Boolean).join('').slice(0, 2).toUpperCase()
@@ -15,6 +16,7 @@ function getInitials(name: string): string {
 interface HeaderProps {
   title: string
   subtitle?: string
+  actions?: ReactNode
 }
 
 const PUBLIC_NOTIFICATION_FREE_PATHS = new Set([
@@ -28,7 +30,7 @@ const PUBLIC_NOTIFICATION_FREE_PATHS = new Set([
   '/dashboard/weather',
 ])
 
-export function Header({ title, subtitle }: HeaderProps) {
+export function Header({ title, subtitle, actions }: HeaderProps) {
   const { t } = useTranslation()
   const location = useLocation()
   const { resolvedTheme, setTheme } = useTheme()
@@ -53,17 +55,19 @@ export function Header({ title, subtitle }: HeaderProps) {
 
   return (
     <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-md border-b border-border">
-      <div className="flex items-center justify-between px-6 py-4">
-        <div className="lg:pl-0 pl-12">
-          <h1 className="text-2xl font-bold text-foreground">{title}</h1>
+      <div className="flex min-w-0 items-center justify-between gap-2 px-3 py-3 sm:px-6 sm:py-4">
+        <div className="min-w-0 pl-11 lg:pl-0">
+          <h1 className="truncate text-lg font-bold text-foreground sm:text-2xl">{title}</h1>
           {subtitle && (
             <p className="text-sm text-muted-foreground mt-0.5">{subtitle}</p>
           )}
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex shrink-0 items-center gap-1 sm:gap-3">
+          {actions}
+
           {/* Search */}
-          <div className="hidden md:flex items-center relative">
+          <div className="relative hidden xl:flex items-center">
             <Search className="absolute left-3 w-4 h-4 text-muted-foreground" />
             <Input
               placeholder={t('dashboard.header.searchPlaceholder')}
@@ -82,7 +86,7 @@ export function Header({ title, subtitle }: HeaderProps) {
           </Button>
 
           {/* Notifications */}
-          {showAccountControls && <NotificationsBell />}
+          <NotificationsBell />
 
           {/* User avatar - mobile */}
           {showAccountControls && (

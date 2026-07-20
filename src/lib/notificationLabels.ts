@@ -1,9 +1,10 @@
-import { Bell, CloudSun, TrendingUp, Bug, Mountain, BookOpen } from "lucide-react"
+import { Bell, CloudSun, TrendingUp, Bug, Mountain, BookOpen, Sprout } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import type { NotificationType, NotificationPriority } from "@/services/notifications"
 
 export const TYPE_ICONS: Record<NotificationType, React.ElementType> = {
   weather: CloudSun,
+  farm: Sprout,
   market: TrendingUp,
   disease: Bug,
   soil: Mountain,

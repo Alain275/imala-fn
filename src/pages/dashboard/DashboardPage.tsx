@@ -112,7 +112,7 @@ export default function DashboardPage() {
         subtitle={t("dashboard.overview.subtitle", { name: overview?.farmer.name || "Farmer" })}
       />
 
-      <div className="p-6 space-y-6">
+      <div className="p-3 sm:p-6 space-y-6">
         {error && (
           <Card className="border-destructive/30 bg-destructive/5 shadow-sm">
             <CardContent className="p-4 text-sm text-destructive">{error}</CardContent>

@@ -209,7 +209,7 @@ export default function AiOptimizationPage() {
     <div className="min-h-screen bg-background">
       <Header title={t('admin.ai.optimization.title')} subtitle={t('admin.ai.optimization.subtitle')} />
 
-      <div className="p-6 space-y-6">
+      <div className="p-3 sm:p-6 space-y-6">
         {/* KPI strip */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {loading

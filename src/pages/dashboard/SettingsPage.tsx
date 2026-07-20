@@ -45,7 +45,7 @@ export default function SettingsPage() {
         subtitle={t("dashboard.settings.subtitle")}
       />
 
-      <div className="p-6 space-y-6 max-w-4xl">
+      <div className="p-3 sm:p-6 space-y-6 max-w-4xl">
 
         {/* Profile Settings */}
         {loading ? (

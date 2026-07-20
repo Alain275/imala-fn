@@ -73,7 +73,7 @@ export default function AiModelsPage() {
     <div className="min-h-screen bg-background">
       <Header title={t('admin.ai.models.title')} subtitle={t('admin.ai.models.subtitle')} />
 
-      <div className="p-6 space-y-6">
+      <div className="p-3 sm:p-6 space-y-6">
         {/* Currently deployed banner */}
         {!loading && deployedModel && (
           <Card className="border-0 shadow-md bg-emerald-500/5 border border-emerald-500/20">

@@ -93,6 +93,31 @@
       "title": "Suzuma ibihingwa, tegura uyu munsi, uhinge neza.",
       "subtitle": "Abahinzi bashobora gukoresha ibikoresho by'ingenzi bya IMARA kuri uru rupapuro. Nta konti y'umuhinzi ikenewe ku nama za AI, gusuzuma indwara cyangwa amakuru y'ikirere."
     },
+    "overview": {
+      "pageTitle": "Murakaza neza kuri IMARA",
+      "pageSubtitle": "Ibikoresho by'ubuhinzi byoroshye wakoresha udafite konti",
+      "eyebrow": "Umufasha wawe w'ubuhinzi ukoresha ikoranabuhanga",
+      "toolsTitle": "Ni iki ushaka ko tugufashamo?",
+      "toolsDescription": "Hitamo kimwe mu bikoresho by'ubuntu biri hasi ubone amakuru afasha umurima wawe.",
+      "openTool": "Fungura igikoresho",
+      "howTitle": "Uko bikora",
+      "steps": {
+        "choose": {
+          "title": "Hitamo igikoresho",
+          "description": "Hitamo inama ku bihingwa, gusuzuma indwara cyangwa amakuru y'ikirere."
+        },
+        "provide": {
+          "title": "Tubwire icyo ukeneye",
+          "description": "Andika amakuru y'igihingwa, ohereza ifoto cyangwa utwereke aho uri."
+        },
+        "guidance": {
+          "title": "Bona inama zisobanutse",
+          "description": "Bona inama zoroshye zigufasha kumenya icyo wakora gikurikira."
+        }
+      },
+      "accountTitle": "Urashaka gukoresha IMARA yose?",
+      "accountDescription": "Injira ubike amakuru y'umurima n'ibisubizo, ubone amatangazo kandi ukoreshe serivisi zose za IMARA."
+    },
     "fieldActions": {
       "diseaseDetection": {
         "title": "Gusuzuma indwara",
@@ -171,8 +196,15 @@
       "advisory": "Inama",
       "scan": "Suzuma",
       "weather": "Ikirere",
+      "farm": "Umurima",
       "account": "Konti"
     }
+  },
+  "farmWorkspace": {
+    "title": "Igenamigambi n'imicungire y'umurima",
+    "subtitle": "Tegura igihembwe, wandike imirimo ya buri munsi kandi umenye inyungu yawe.",
+    "newPlan": "Gahunda nshya",
+    "tabs": { "plan": "Gahunda", "today": "Uyu munsi", "records": "Inyandiko", "results": "Ibisubizo" }
   },
   "farmerProfile": {
     "title": "Uzuza umwirondoro w'umuhinzi",

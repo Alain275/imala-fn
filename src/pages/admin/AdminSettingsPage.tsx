@@ -32,7 +32,7 @@ export default function AdminSettingsPage() {
     <div className="min-h-screen bg-background">
       <Header title={t('admin.settings.title')} subtitle={t('admin.settings.subtitle')} />
 
-      <div className="p-6 space-y-6 max-w-3xl">
+      <div className="p-3 sm:p-6 space-y-6 max-w-3xl">
         {/* General */}
         <Card className="border-0 shadow-md">
           <CardHeader className="border-b border-border">
@@ -42,7 +42,7 @@ export default function AdminSettingsPage() {
             </CardTitle>
             <CardDescription>{t('admin.settings.generalCard.description')}</CardDescription>
           </CardHeader>
-          <CardContent className="p-6 space-y-4">
+          <CardContent className="p-3 sm:p-6 space-y-4">
             <div className="space-y-1.5">
               <Label>{t('admin.settings.platformNameLabel')}</Label>
               <Input value={platformName} onChange={e => setPlatformName(e.target.value)} />
@@ -63,7 +63,7 @@ export default function AdminSettingsPage() {
             </CardTitle>
             <CardDescription>{t('admin.settings.aiPolicyCard.description')}</CardDescription>
           </CardHeader>
-          <CardContent className="p-6 space-y-4">
+          <CardContent className="p-3 sm:p-6 space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-foreground">{t('admin.settings.aiPolicyCard.requireReviewTitle')}</p>
@@ -90,7 +90,7 @@ export default function AdminSettingsPage() {
             </CardTitle>
             <CardDescription>{t('admin.settings.notificationsCard.description')}</CardDescription>
           </CardHeader>
-          <CardContent className="p-6 space-y-4">
+          <CardContent className="p-3 sm:p-6 space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-foreground">{t('admin.settings.notificationsCard.notifyNewUsersTitle')}</p>
@@ -110,7 +110,7 @@ export default function AdminSettingsPage() {
             </CardTitle>
             <CardDescription>{t('admin.settings.languageCard.description')}</CardDescription>
           </CardHeader>
-          <CardContent className="p-6 space-y-4">
+          <CardContent className="p-3 sm:p-6 space-y-4">
             <div className="space-y-1.5 max-w-xs">
               <Label>{t('common.language')}</Label>
               <LanguageSwitcher

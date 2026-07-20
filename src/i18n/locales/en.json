@@ -93,6 +93,31 @@
       "title": "Diagnose crops, plan today, and farm smarter.",
       "subtitle": "Farmers can use the core IMARA tools directly from this homepage. No farmer account is required for AI crop advice, disease detection, or weather intelligence."
     },
+    "overview": {
+      "pageTitle": "Welcome to IMARA",
+      "pageSubtitle": "Simple farming tools you can use without an account",
+      "eyebrow": "Your digital farming assistant",
+      "toolsTitle": "What would you like help with?",
+      "toolsDescription": "Choose one of the free tools below to get practical information for your farm.",
+      "openTool": "Open tool",
+      "howTitle": "How it works",
+      "steps": {
+        "choose": {
+          "title": "Choose a tool",
+          "description": "Select crop advice, disease detection, or weather information."
+        },
+        "provide": {
+          "title": "Tell us what you need",
+          "description": "Enter crop details, upload a plant photo, or share your location."
+        },
+        "guidance": {
+          "title": "Get clear guidance",
+          "description": "Receive simple recommendations that help you decide what to do next."
+        }
+      },
+      "accountTitle": "Want the complete experience?",
+      "accountDescription": "Log in to save your farm information, keep your results, receive alerts, and use all IMARA features."
+    },
     "fieldActions": {
       "diseaseDetection": {
         "title": "Disease detection",
@@ -171,8 +196,15 @@
       "advisory": "Advisory",
       "scan": "Scan",
       "weather": "Weather",
+      "farm": "Farm",
       "account": "Account"
     }
+  },
+  "farmWorkspace": {
+    "title": "Farm Plan & Management",
+    "subtitle": "Plan the season, record daily work, and understand your profit.",
+    "newPlan": "New plan",
+    "tabs": { "plan": "Plan", "today": "Today", "records": "Records", "results": "Results" }
   },
   "farmerProfile": {
     "title": "Complete farmer profile",

@@ -1,6 +1,6 @@
 import api from './api'
 
-export type NotificationType = 'weather' | 'market' | 'disease' | 'soil' | 'training' | 'system'
+export type NotificationType = 'weather' | 'farm' | 'market' | 'disease' | 'soil' | 'training' | 'system'
 export type NotificationPriority = 'low' | 'medium' | 'high'
 
 export interface Notification {
@@ -13,6 +13,7 @@ export interface Notification {
   isRead: boolean
   createdAt: string
   updatedAt?: string
+  data?: { actionUrl?: string; reminderKey?: string; [key: string]: unknown }
 }
 
 export interface Pagination {
@@ -50,6 +51,12 @@ async function notifRequest<T>(endpoint: string, options?: RequestInit): Promise
 }
 
 export const notificationsService = {
+  async syncReminders(weatherAlerts: Array<{ id: string; title: string; message: string; priority: string; validFrom: string; validTo: string }> = []): Promise<number> {
+    const raw = await notifRequest<{ created: number }>('/notifications/sync', {
+      method: 'POST', body: JSON.stringify({ weatherAlerts }), headers: { 'Content-Type': 'application/json' },
+    })
+    return raw.created ?? 0
+  },
   getNotifications(params: GetNotificationsParams = {}): Promise<NotificationsResponse> {
     const qs = new URLSearchParams()
     if (params.type) qs.set('type', params.type)
