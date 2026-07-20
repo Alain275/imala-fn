@@ -116,7 +116,6 @@ export function Sidebar() {
           { key: "signIn", href: "/sign-in", icon: Settings, label: "Account" },
         ]
   ).filter(Boolean)
-
   return (
     <>
       {/* Mobile menu button */}

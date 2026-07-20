@@ -42,6 +42,7 @@ import {
   useRainfallHistory,
 } from "@/hooks/useWeather"
 import type { HourlyForecast, DailyForecast, FarmingAlert } from "@/services/weather"
+import { authService } from "@/services/auth"
 
 const LOCATION = "Musanze"
 const LOCATION_LABEL = "Current location"
@@ -146,6 +147,7 @@ function DailyRow({ day, index, todayLabel, conditionLabel }: { day: DailyForeca
 }
 
 export default function WeatherPage() {
+  const isPublic = !authService.isAuthenticated()
   const { t, i18n } = useTranslation()
   const intlLocale = getIntlLocale(i18n.language)
   const [coords, setCoords] = useState<{ lat: number; lon: number } | null>(null)
@@ -214,13 +216,13 @@ export default function WeatherPage() {
   const { data: rainfall, loading: rainfallLoading } = useRainfallHistory(weatherQuery, 12)
 
   return (
-    <div className="min-h-screen">
+    <div className={isPublic ? "flex h-full min-h-0 flex-col overflow-hidden" : "min-h-screen"}>
       <Header
         title={t("dashboard.weather.pageTitle")}
         subtitle={t("dashboard.weather.pageSubtitle")}
       />
 
-      <div className="space-y-6 p-3 sm:p-6">
+      <div className={isPublic ? "grid min-h-0 flex-1 grid-rows-[auto_1fr] gap-3 overflow-hidden p-3 [&>*:nth-child(n+3)]:hidden" : "space-y-6 p-3 sm:p-6"}>
         <Card className="border-0 shadow-md">
           <CardContent className="grid gap-4 p-4 lg:grid-cols-[1fr_auto] lg:items-center">
             <div className="flex items-start gap-3">
@@ -254,9 +256,9 @@ export default function WeatherPage() {
         </Card>
 
         {/* Current Weather */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className={isPublic ? "grid min-h-0 grid-cols-1" : "grid grid-cols-1 lg:grid-cols-3 gap-6"}>
           <Card className="lg:col-span-2 border-0 shadow-md bg-gradient-to-br from-sky-500 to-blue-600 text-white overflow-hidden">
-            <CardContent className="p-6">
+            <CardContent className={isPublic ? "p-4 sm:p-6" : "p-6"}>
               {currentLoading ? (
                 <div className="space-y-4">
                   <Skeleton className="h-6 w-32 bg-white/20" />
@@ -298,7 +300,7 @@ export default function WeatherPage() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 pt-6 border-t border-white/20">
+                  <div className={`grid grid-cols-2 md:grid-cols-4 border-t border-white/20 ${isPublic ? "mt-4 gap-2 pt-4" : "gap-4 mt-8 pt-6"}`}>
                     <div className="text-center">
                       <Droplets className="w-6 h-6 mx-auto mb-2 text-white/80" />
                       <p className="text-2xl font-semibold">{current.humidity}%</p>
@@ -328,7 +330,7 @@ export default function WeatherPage() {
           </Card>
 
           {/* Farming Alerts */}
-          <Card className="border-0 shadow-md">
+          <Card className={`${isPublic ? "hidden" : ""} border-0 shadow-md`}>
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center gap-3">
                 <Icon3D gradient="gold" size="sm">

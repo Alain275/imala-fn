@@ -1,149 +1,144 @@
-import { Link } from "react-router-dom"
+import { type FormEvent, useMemo, useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import {
   ArrowRight,
   Camera,
-  CheckCircle2,
+  Cloud,
+  CloudRain,
   CloudSun,
-  Leaf,
-  LogIn,
+  Droplets,
+  Search,
   Sprout,
-  UserPlus,
+  Sun,
+  Wind,
 } from "lucide-react"
 
 import { Header } from "@/components/header"
 import { LanguageSwitcher } from "@/components/LanguageSwitcher"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Skeleton } from "@/components/ui/skeleton"
+import { useCurrentWeather } from "@/hooks/useWeather"
+import { getIntlLocale } from "@/lib/dateLocale"
 
-const tools = [
-  {
-    key: "cropAdvisory",
-    href: "/dashboard/crops",
-    icon: Sprout,
-    iconClass: "bg-lime-100 text-lime-700 dark:bg-lime-950 dark:text-lime-300",
-  },
-  {
-    key: "diseaseDetection",
-    href: "/dashboard/disease",
-    icon: Camera,
-    iconClass: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300",
-  },
-  {
-    key: "weatherIntelligence",
-    href: "/dashboard/weather",
-    icon: CloudSun,
-    iconClass: "bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-300",
-  },
+const services = [
+  { key: "cropAdvisory", href: "/dashboard/crops", icon: Sprout, color: "bg-lime-100 text-lime-700 dark:bg-lime-950 dark:text-lime-300", search: "crop plant seed advisory" },
+  { key: "diseaseDetection", href: "/dashboard/disease", icon: Camera, color: "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300", search: "disease photo camera detect pest" },
+  { key: "weatherIntelligence", href: "/dashboard/weather", icon: CloudSun, color: "bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-300", search: "weather rain forecast temperature" },
 ] as const
 
-const steps = ["choose", "provide", "guidance"] as const
+function WeatherIcon({ condition }: { condition?: string }) {
+  if (condition === "sunny") return <Sun className="h-12 w-12 text-amber-300 sm:h-14 sm:w-14" />
+  if (condition === "rainy") return <CloudRain className="h-12 w-12 text-sky-100 sm:h-14 sm:w-14" />
+  if (condition === "cloudy") return <Cloud className="h-12 w-12 text-slate-100 sm:h-14 sm:w-14" />
+  return <CloudSun className="h-12 w-12 text-amber-200 sm:h-14 sm:w-14" />
+}
 
 export default function PublicOverviewPage() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const navigate = useNavigate()
+  const location = localStorage.getItem("imara_weather_location") || "Musanze"
+  const latitude = localStorage.getItem("imara_weather_lat")
+  const longitude = localStorage.getItem("imara_weather_lon")
+  const weatherQuery = latitude && longitude
+    ? { location, lat: Number(latitude), lon: Number(longitude) }
+    : location
+  const { data: weather, loading } = useCurrentWeather(weatherQuery)
+  const [query, setQuery] = useState("")
+
+  const visibleServices = useMemo(() => {
+    const term = query.trim().toLowerCase()
+    if (!term) return services
+    return services.filter((service) => {
+      const title = t(`home.fieldActions.${service.key}.title`).toLowerCase()
+      return `${title} ${service.search}`.includes(term)
+    })
+  }, [query, t])
+
+  const submitSearch = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    if (visibleServices[0]) navigate(visibleServices[0].href)
+  }
+
+  const today = new Intl.DateTimeFormat(getIntlLocale(i18n.language), {
+    weekday: "long",
+    day: "numeric",
+    month: "short",
+  }).format(new Date())
 
   return (
-    <div className="min-h-screen">
+    <div className="flex h-full min-h-0 flex-col overflow-hidden">
       <Header
-        title={t("home.overview.pageTitle")}
+        title="IMARA"
         subtitle={t("home.overview.pageSubtitle")}
         actions={<LanguageSwitcher />}
       />
 
-      <div className="space-y-8 p-4 sm:p-6 lg:p-8">
-        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-800 via-emerald-700 to-green-600 px-6 py-10 text-white shadow-xl sm:px-10 lg:py-14">
-          <div className="absolute -right-20 -top-24 h-64 w-64 rounded-full bg-white/10" />
-          <div className="absolute -bottom-28 right-32 h-56 w-56 rounded-full bg-lime-300/10" />
-          <div className="relative max-w-3xl">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-sm font-medium">
-              <Leaf className="h-4 w-4" />
-              {t("home.overview.eyebrow")}
+      <main className="mx-auto flex min-h-0 w-full max-w-5xl flex-1 flex-col gap-3 overflow-hidden p-3 sm:gap-4 sm:p-5">
+        <Link
+          to="/dashboard/weather"
+          className="relative flex min-h-0 flex-1 items-center justify-between overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-800 via-emerald-700 to-green-600 p-5 text-white shadow-lg sm:p-7"
+        >
+          <div className="absolute -right-10 -top-16 h-40 w-40 rounded-full bg-white/10" />
+          <div className="relative min-w-0">
+            <p className="text-xs font-medium uppercase tracking-wider text-emerald-100">Today · {today}</p>
+            <p className="mt-1 truncate text-sm text-emerald-50">{weather?.location || location}</p>
+            {loading ? (
+              <Skeleton className="mt-3 h-10 w-28 bg-white/20" />
+            ) : (
+              <div className="mt-2 flex items-end gap-3">
+                <span className="text-4xl font-bold sm:text-5xl">{Math.round(weather?.temperature ?? 0)}°</span>
+                <span className="pb-1 text-sm capitalize text-emerald-50">{weather?.condition || "Weather available"}</span>
+              </div>
+            )}
+            <div className="mt-3 flex gap-4 text-xs text-emerald-50 sm:text-sm">
+              <span className="flex items-center gap-1"><Droplets className="h-3.5 w-3.5" />{weather?.rainChance ?? 0}% rain</span>
+              <span className="flex items-center gap-1"><Wind className="h-3.5 w-3.5" />{weather?.windSpeed ?? 0} km/h</span>
             </div>
-            <h2 className="text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl">
-              {t("home.hero.title")}
-            </h2>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-emerald-50 sm:text-lg">
-              {t("home.hero.subtitle")}
-            </p>
+          </div>
+          <div className="relative shrink-0 pl-3"><WeatherIcon condition={weather?.conditionCode} /></div>
+        </Link>
+
+        <form onSubmit={submitSearch} className="relative shrink-0">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="What service do you need?"
+            className="h-11 rounded-2xl bg-card pl-10 pr-24 shadow-sm"
+          />
+          <Button type="submit" size="sm" className="absolute right-1.5 top-1.5 h-8 rounded-xl" disabled={!visibleServices.length}>
+            Open <ArrowRight className="ml-1 h-3.5 w-3.5" />
+          </Button>
+        </form>
+
+        <section className="shrink-0">
+          <div className="mb-2 flex items-center justify-between">
+            <h2 className="text-sm font-semibold text-foreground">Choose a service</h2>
+            <Link to="/sign-in" className="text-xs font-medium text-primary hover:underline">Sign in for the full app</Link>
+          </div>
+          <div className="grid grid-cols-3 gap-2 sm:gap-3">
+            {services.map((service) => {
+              const isMatch = visibleServices.includes(service)
+              return (
+                <Link
+                  key={service.key}
+                  to={service.href}
+                  className={`flex min-w-0 flex-col items-center rounded-2xl border bg-card p-2.5 text-center shadow-sm transition hover:-translate-y-0.5 hover:shadow-md sm:flex-row sm:p-4 sm:text-left ${isMatch ? "opacity-100" : "opacity-35"}`}
+                >
+                  <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl sm:h-10 sm:w-10 ${service.color}`}>
+                    <service.icon className="h-5 w-5" />
+                  </span>
+                  <span className="mt-1.5 line-clamp-2 text-[11px] font-semibold leading-tight text-foreground sm:ml-3 sm:mt-0 sm:text-sm">
+                    {t(`home.fieldActions.${service.key}.title`)}
+                  </span>
+                </Link>
+              )
+            })}
           </div>
         </section>
-
-        <section aria-labelledby="public-tools-title">
-          <div className="mb-5">
-            <h2 id="public-tools-title" className="text-2xl font-bold text-foreground">
-              {t("home.overview.toolsTitle")}
-            </h2>
-            <p className="mt-1 text-muted-foreground">{t("home.overview.toolsDescription")}</p>
-          </div>
-
-          <div className="grid gap-5 md:grid-cols-3">
-            {tools.map((tool) => (
-              <Card key={tool.key} className="group border-border/70 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
-                <CardContent className="flex h-full flex-col p-6">
-                  <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${tool.iconClass}`}>
-                    <tool.icon className="h-6 w-6" />
-                  </div>
-                  <h3 className="mt-5 text-xl font-bold text-foreground">
-                    {t(`home.fieldActions.${tool.key}.title`)}
-                  </h3>
-                  <p className="mt-2 flex-1 text-sm leading-6 text-muted-foreground">
-                    {t(`home.fieldActions.${tool.key}.description`)}
-                  </p>
-                  <Button className="mt-6 w-full justify-between" asChild>
-                    <Link to={tool.href}>
-                      {t("home.overview.openTool")}
-                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </Link>
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
-
-        <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-          <Card className="border-border/70 shadow-sm">
-            <CardContent className="p-6 sm:p-8">
-              <h2 className="text-2xl font-bold text-foreground">{t("home.overview.howTitle")}</h2>
-              <div className="mt-6 grid gap-5 sm:grid-cols-3">
-                {steps.map((step, index) => (
-                  <div key={step} className="flex gap-3 sm:block">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-100 font-bold text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
-                      {index + 1}
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-foreground sm:mt-3">
-                        {t(`home.overview.steps.${step}.title`)}
-                      </h3>
-                      <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                        {t(`home.overview.steps.${step}.description`)}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-emerald-200 bg-emerald-50/70 shadow-sm dark:border-emerald-900 dark:bg-emerald-950/30">
-            <CardContent className="p-6 sm:p-8">
-              <CheckCircle2 className="h-9 w-9 text-emerald-600" />
-              <h2 className="mt-4 text-2xl font-bold text-foreground">{t("home.overview.accountTitle")}</h2>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                {t("home.overview.accountDescription")}
-              </p>
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">
-                <Button asChild>
-                  <Link to="/sign-in"><LogIn className="mr-2 h-4 w-4" />{t("common.signIn")}</Link>
-                </Button>
-                <Button variant="outline" asChild>
-                  <Link to="/register"><UserPlus className="mr-2 h-4 w-4" />{t("auth.register.title")}</Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </section>
-      </div>
+      </main>
     </div>
   )
 }

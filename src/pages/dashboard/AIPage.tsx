@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Icon3D } from "@/components/icon-3d"
 import { sendChatMessage } from "@/services/chat"
 import type { ChatMessage } from "@/types/chat"
+import { authService } from "@/services/auth"
 import {
   Bot,
   Send,
@@ -25,6 +26,7 @@ const suggestedQuestions = [
 ]
 
 export default function AIPage() {
+  const isPublic = !authService.isAuthenticated()
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -90,16 +92,16 @@ export default function AIPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className={isPublic ? "flex h-full min-h-0 flex-col overflow-hidden" : "min-h-screen flex flex-col"}>
       <Header
         title="AI Crop Advisory"
         subtitle="Ask IMARA AI what to plant, when to plant, how to fertilize, and how to respond to field conditions"
       />
 
-      <div className="flex-1 flex flex-col p-4 sm:p-6 max-w-5xl mx-auto w-full">
+      <div className={`mx-auto flex min-h-0 w-full max-w-5xl flex-1 flex-col p-3 sm:p-6 ${isPublic ? "overflow-hidden" : ""}`}>
         {messages.length === 0 ? (
           <div className="flex-1 flex items-center justify-center">
-            <div className="text-center space-y-6 max-w-2xl">
+            <div className={`max-w-2xl text-center ${isPublic ? "space-y-3" : "space-y-6"}`}>
               <div className="flex justify-center">
                 <div className="relative">
                   <Icon3D gradient="leaf" size="xl">
@@ -118,7 +120,7 @@ export default function AIPage() {
                 </p>
               </div>
 
-              <Card className="border-0 shadow-md bg-gradient-to-br from-emerald-50 to-green-50 dark:from-emerald-950 dark:to-green-950">
+              <Card className={`${isPublic ? "hidden" : ""} border-0 shadow-md bg-gradient-to-br from-emerald-50 to-green-50 dark:from-emerald-950 dark:to-green-950`}>
                 <CardContent className="p-6">
                   <h3 className="font-semibold text-foreground mb-3 flex items-center justify-center gap-2 sm:justify-start">
                     <Sparkles className="w-5 h-5 text-emerald-600" />
@@ -155,7 +157,7 @@ export default function AIPage() {
 
               <div>
                 <p className="text-sm text-muted-foreground mb-3">Try asking for advice:</p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <div className={`grid grid-cols-1 gap-2 ${isPublic ? "sm:grid-cols-2" : "md:grid-cols-2"}`}>
                   {suggestedQuestions.map((question) => (
                     <Button
                       key={question.text}
@@ -173,13 +175,13 @@ export default function AIPage() {
                 </div>
               </div>
 
-              <p className="text-xs text-muted-foreground">
+              <p className={`${isPublic ? "hidden" : ""} text-xs text-muted-foreground`}>
                 You can ask in English or Kinyarwanda.
               </p>
             </div>
           </div>
         ) : (
-          <div className="flex-1 overflow-y-auto space-y-4 mb-4">
+          <div className="mb-2 flex-1 space-y-4 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {messages.map((msg, idx) => (
               <div
                 key={idx}
@@ -235,7 +237,7 @@ export default function AIPage() {
           </div>
         )}
 
-        <div className="sticky bottom-0 bg-background pt-4 border-t">
+        <div className={`shrink-0 border-t bg-background ${isPublic ? "pt-2" : "sticky bottom-0 pt-4"}`}>
           <div className="flex gap-2">
             <Input
               ref={inputRef}
@@ -255,7 +257,7 @@ export default function AIPage() {
               {isLoading ? "..." : "Send"}
             </Button>
           </div>
-          <p className="text-xs text-muted-foreground mt-2 text-center">
+          <p className={`${isPublic ? "hidden" : ""} text-xs text-muted-foreground mt-2 text-center`}>
             IMARA AI gives crop advisory guidance. Confirm high-risk decisions with a local agronomist.
           </p>
         </div>

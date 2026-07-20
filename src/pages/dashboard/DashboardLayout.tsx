@@ -37,6 +37,8 @@ export default function DashboardLayout() {
     isFarmer &&
     profileComplete === false &&
     location.pathname !== '/dashboard/farmer-profile'
+  const compactPublicPaths = new Set(['/dashboard', '/dashboard/crops', '/dashboard/ai', '/dashboard/disease', '/dashboard/weather'])
+  const isCompactPublicHome = !authService.isAuthenticated() && compactPublicPaths.has(location.pathname)
 
   if (isFarmer && profileComplete === null && location.pathname !== '/dashboard/farmer-profile') {
     return <div className="min-h-screen bg-background" />
@@ -47,9 +49,9 @@ export default function DashboardLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className={isCompactPublicHome ? "h-dvh overflow-hidden bg-background" : "min-h-screen bg-background"}>
       <Sidebar />
-      <main className="min-h-screen pb-24 lg:pl-72 lg:pb-0">
+      <main className={isCompactPublicHome ? "h-dvh overflow-hidden pb-20 lg:pl-72 lg:pb-0" : "min-h-screen pb-24 lg:pl-72 lg:pb-0"}>
         <Outlet />
       </main>
     </div>

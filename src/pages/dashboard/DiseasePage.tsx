@@ -27,6 +27,7 @@ import { useState, useRef, useCallback, useEffect } from "react"
 import { formatDistanceToNow } from "date-fns"
 import { useMyDetections, useDetectDisease } from "@/hooks/useDisease"
 import type { Detection } from "@/services/disease"
+import { authService } from "@/services/auth"
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024
 
@@ -78,6 +79,7 @@ function DetailSection({ title, content }: { title: string; content: string }) {
 }
 
 export default function DiseasePage() {
+  const isPublic = !authService.isAuthenticated()
   const { t } = useTranslation()
   const [dragActive, setDragActive] = useState(false)
   const [selectedDetection, setSelectedDetection] = useState<Detection | null>(null)
@@ -150,7 +152,7 @@ export default function DiseasePage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className={isPublic ? "flex h-full min-h-0 flex-col overflow-hidden" : "min-h-screen"}>
       <Header
         title={t("dashboard.disease.pageTitle")}
         subtitle={t("dashboard.disease.pageSubtitle")}
@@ -181,9 +183,9 @@ export default function DiseasePage() {
         }}
       />
 
-      <div className="p-3 sm:p-6 space-y-6">
+      <div className={isPublic ? "min-h-0 flex-1 overflow-hidden p-3 [&>*:not(:first-child)]:hidden" : "p-3 sm:p-6 space-y-6"}>
         {/* Upload Section */}
-        <Card className="border-0 shadow-md">
+        <Card className={isPublic ? "h-full overflow-hidden border-0 shadow-md" : "border-0 shadow-md"}>
           <CardHeader>
             <CardTitle className="flex items-center gap-3">
               <Icon3D gradient="earth" size="sm">
@@ -201,7 +203,7 @@ export default function DiseasePage() {
               </div>
             )}
             <div
-              className={`relative border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-300 ${
+              className={`relative border-2 border-dashed rounded-2xl text-center transition-all duration-300 ${isPublic ? "p-5 sm:p-8" : "p-12"} ${
                 dragActive
                   ? "border-primary bg-primary/5"
                   : "border-muted-foreground/25 hover:border-primary/50"
