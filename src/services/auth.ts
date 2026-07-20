@@ -13,7 +13,7 @@ export interface LoginData {
   password: string;
 }
 
-export interface AuthResponse {
+export interface LoginResponse {
   success: boolean;
   message: string;
   data: {
@@ -27,6 +27,19 @@ export interface AuthResponse {
       role: string;
     };
     token: string;
+    refreshToken?: string;
+  };
+}
+
+export interface RegisterResponse {
+  success: boolean;
+  message: string;
+  data: {
+    userId: string;
+    email: string;
+    name: string;
+    role: string;
+    isEmailVerified: boolean;
   };
 }
 
@@ -43,7 +56,7 @@ export interface UserProfile {
 const API_BASE_URL = buildApiUrl('');
 
 export const authService = {
-  async register(data: RegisterData): Promise<AuthResponse> {
+  async register(data: RegisterData): Promise<RegisterResponse> {
     const response = await fetch(`${API_BASE_URL}/auth/register`, {
       method: 'POST',
       headers: {
@@ -63,15 +76,24 @@ export const authService = {
       };
     }
 
-    if (result.success && result.data.token) {
-      localStorage.setItem('token', result.data.token);
-      localStorage.setItem('user', JSON.stringify(result.data.user));
-    }
-
     return result;
   },
 
-  async login(data: LoginData): Promise<AuthResponse> {
+  async resendVerification(email: string): Promise<{ success: boolean; message: string }> {
+    const response = await fetch(`${API_BASE_URL}/auth/resend-verification`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+
+    const result = await response.json();
+    if (!response.ok) {
+      throw { response: { data: result, status: response.status } };
+    }
+    return result;
+  },
+
+  async login(data: LoginData): Promise<LoginResponse> {
     const response = await fetch(`${API_BASE_URL}/auth/login`, {
       method: 'POST',
       headers: {
@@ -93,6 +115,9 @@ export const authService = {
 
     if (result.success && result.data.token) {
       localStorage.setItem('token', result.data.token);
+      if (result.data.refreshToken) {
+        localStorage.setItem('refreshToken', result.data.refreshToken);
+      }
       localStorage.setItem('user', JSON.stringify(result.data.user));
       window.dispatchEvent(new Event('user-updated'));
     }
@@ -153,6 +178,7 @@ export const authService = {
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    localStorage.removeItem('refreshToken');
   },
 
   getCurrentUser(): UserProfile | null {

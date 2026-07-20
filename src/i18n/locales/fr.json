@@ -426,7 +426,13 @@
       "panelText": "Vous avez déjà un compte ?",
       "panelLink": "Se connecter",
       "successToast": "Compte créé avec succès !",
-      "errorToast": "Une erreur s'est produite. Veuillez réessayer."
+      "errorToast": "Une erreur s'est produite. Veuillez réessayer.",
+      "checkEmailTitle": "Vérifiez votre e-mail",
+      "checkEmailText": "Nous avons envoyé un lien de vérification à",
+      "checkSpamText": "Ouvrez le lien pour activer votre compte. Vérifiez aussi vos courriers indésirables.",
+      "continueToLogin": "Continuer vers la connexion",
+      "resend": "Renvoyer l'e-mail de vérification",
+      "resending": "Envoi en cours..."
     }
   },
   "dashboard": {

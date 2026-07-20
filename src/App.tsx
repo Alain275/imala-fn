@@ -60,6 +60,8 @@ import CooperativeSettingsPage from './pages/cooperative/CooperativeSettingsPage
 // Auth Pages
 import SignInPage from './pages/auth/SignInPage'
 import RegisterPage from './pages/auth/RegisterPage'
+import VerifyEmailPage from './pages/auth/VerifyEmailPage'
+import EmailVerifiedPage from './pages/auth/EmailVerifiedPage'
 
 import { NotificationsProvider } from './context/NotificationsContext'
 import { ProtectedRoute } from './components/ProtectedRoute'
@@ -74,6 +76,8 @@ function App() {
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/sign-in" element={<SignInPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
+          <Route path="/email-verified" element={<EmailVerifiedPage />} />
         </Route>
 
         {/* Public farmer dashboard routes - no farmer account required */}

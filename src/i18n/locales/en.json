@@ -426,7 +426,13 @@
       "panelText": "Already have an account?",
       "panelLink": "Log in",
       "successToast": "Account created successfully!",
-      "errorToast": "An error occurred. Please try again."
+      "errorToast": "An error occurred. Please try again.",
+      "checkEmailTitle": "Check your email",
+      "checkEmailText": "We sent an account verification link to",
+      "checkSpamText": "Open the link to activate your account. Check your spam folder if you cannot find it.",
+      "continueToLogin": "Continue to login",
+      "resend": "Resend verification email",
+      "resending": "Sending email..."
     }
   },
   "dashboard": {

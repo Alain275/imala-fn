@@ -426,7 +426,13 @@
       "panelText": "Ufite konti?",
       "panelLink": "Injira",
       "successToast": "Konti yawe yaremwe neza!",
-      "errorToast": "Habayeho ikibazo. Ongera ugerageze."
+      "errorToast": "Habayeho ikibazo. Ongera ugerageze.",
+      "checkEmailTitle": "Reba imeyili yawe",
+      "checkEmailText": "Twohereje umurongo wo kwemeza konti kuri",
+      "checkSpamText": "Fungura uwo murongo kugira ngo konti ikore. Reba no muri spam niba utawubonye.",
+      "continueToLogin": "Komeza ujye kwinjira",
+      "resend": "Ongera wohereze imeyili yo kwemeza",
+      "resending": "Kohereza imeyili..."
     }
   },
   "dashboard": {

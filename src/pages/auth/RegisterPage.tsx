@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -48,10 +48,11 @@ const registerRoleOptions = ["farmer", "agro-dealer"] as const;
 
 export default function RegisterPage() {
   const { t, i18n } = useTranslation();
-  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState("");
+  const [resending, setResending] = useState(false);
 
   const registerSchema = useMemo(() => buildRegisterSchema(t), [t, i18n.language]);
 
@@ -82,25 +83,70 @@ export default function RegisterPage() {
     setSubmitting(true);
     try {
       const response = await authService.register({
-        name: data.name,
-        email: data.email,
+        name: data.name.trim(),
+        email: data.email.trim().toLowerCase(),
         password: data.password,
-        phone: data.phone,
-        location: data.location,
+        phone: data.phone.replace(/\s+/g, ""),
+        location: data.location?.trim() || undefined,
         farmSize: data.farmSize ? parseFloat(data.farmSize) : undefined,
         role: data.role
       });
 
       toast.success(response.message || t("auth.register.successToast"));
-
-      navigate(data.role === "farmer" ? "/dashboard/farmer-profile" : "/sign-in", { replace: true });
+      setRegisteredEmail(response.data.email);
     } catch (error: any) {
-      const message = error.response?.data?.message || t("auth.register.errorToast");
+      const message = error.response?.data?.message
+        || error.response?.data?.errors?.[0]
+        || t("auth.register.errorToast");
       toast.error(message);
     } finally {
       setSubmitting(false);
     }
   };
+
+  const resendVerification = async () => {
+    if (!registeredEmail) return;
+    setResending(true);
+    try {
+      const response = await authService.resendVerification(registeredEmail);
+      toast.success(response.message);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || t("auth.register.errorToast"));
+    } finally {
+      setResending(false);
+    }
+  };
+
+  if (registeredEmail) {
+    return (
+      <main className="min-h-screen bg-[#faf6ee] px-4 py-8 flex items-center justify-center">
+        <section className="w-full max-w-md rounded-3xl border border-emerald-100 bg-white p-6 text-center shadow-xl sm:p-9">
+          <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
+            <Mail className="h-8 w-8 text-emerald-700" aria-hidden="true" />
+          </div>
+          <h1 className="text-2xl font-bold text-emerald-950">{t("auth.register.checkEmailTitle")}</h1>
+          <p className="mt-3 text-sm leading-6 text-emerald-950/70">
+            {t("auth.register.checkEmailText")} <strong className="break-all text-emerald-900">{registeredEmail}</strong>
+          </p>
+          <p className="mt-2 text-xs text-emerald-900/60">{t("auth.register.checkSpamText")}</p>
+          <Link
+            to="/sign-in"
+            className="mt-6 flex w-full items-center justify-center rounded-xl bg-emerald-700 px-4 py-3 text-sm font-bold text-white hover:bg-emerald-800"
+          >
+            {t("auth.register.continueToLogin")}
+          </Link>
+          <button
+            type="button"
+            onClick={resendVerification}
+            disabled={resending}
+            className="mt-3 w-full rounded-xl border border-emerald-200 px-4 py-3 text-sm font-semibold text-emerald-800 hover:bg-emerald-50 disabled:opacity-50"
+          >
+            {resending ? t("auth.register.resending") : t("auth.register.resend")}
+          </button>
+        </section>
+      </main>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#faf6ee] relative overflow-hidden flex items-stretch">
