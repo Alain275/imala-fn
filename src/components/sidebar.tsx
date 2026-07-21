@@ -108,13 +108,7 @@ export function Sidebar() {
           farmerMarketplaceNavigation[0],
           { key: "settings", href: "/dashboard/settings", icon: Settings },
         ]
-      : [
-          navigation[0],
-          navigation[1],
-          navigation[2],
-          navigation[3],
-          { key: "signIn", href: "/sign-in", icon: Settings, label: "Account" },
-        ]
+      : navigation
   ).filter(Boolean)
   return (
     <>
@@ -217,16 +211,7 @@ export function Sidebar() {
               <span className="font-medium">{t('dashboard.sidebar.signOut')}</span>
             </button>
               </>
-            ) : (
-              <div className="grid grid-cols-2 gap-2 px-2">
-                <Button variant="secondary" size="sm" asChild>
-                  <Link to="/sign-in">Login</Link>
-                </Button>
-                <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700" asChild>
-                  <Link to="/register">Register</Link>
-                </Button>
-              </div>
-            )}
+            ) : null}
           </div>
 
           {/* User info */}
@@ -254,7 +239,7 @@ export function Sidebar() {
       </aside>
 
       <nav className="fixed inset-x-3 bottom-3 z-40 rounded-2xl border border-border/80 bg-background/95 shadow-lg shadow-black/15 backdrop-blur lg:hidden">
-        <div className="grid h-16 grid-cols-5 px-1">
+        <div className={cn("grid h-16 px-1", mobileNavigation.length === 4 ? "grid-cols-4" : "grid-cols-5")}>
           {mobileNavigation.map((item) => {
             const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href))
             const label = item.key === 'settings'

@@ -22,6 +22,7 @@ import {
   MapPin,
   LocateFixed,
   Search,
+  Sprout,
 } from "lucide-react"
 import {
   AreaChart,
@@ -214,6 +215,94 @@ export default function WeatherPage() {
   const { data: daily, loading: dailyLoading } = useDailyForecast(weatherQuery, 7)
   const { data: alerts, loading: alertsLoading } = useFarmingAlerts(weatherQuery)
   const { data: rainfall, loading: rainfallLoading } = useRainfallHistory(weatherQuery, 12)
+
+  if (isPublic) {
+    const weatherStats = [
+      { label: t("dashboard.weather.humidityLabel"), value: `${current?.humidity ?? 0}%`, icon: Droplets },
+      { label: t("dashboard.weather.windLabel"), value: `${current?.windSpeed ?? 0} km/h`, icon: Wind },
+      { label: t("dashboard.weather.uvIndexLabel"), value: String(current?.uvIndex ?? 0), icon: Sun },
+      { label: t("dashboard.weather.rainChanceLabel"), value: `${current?.rainChance ?? 0}%`, icon: CloudRain },
+    ]
+
+    return (
+      <div className="flex h-full min-h-0 flex-col overflow-hidden">
+        <Header
+          title={t("dashboard.weather.pageTitle")}
+          subtitle="Live conditions and farming weather for your location"
+        />
+
+        <main className="mx-auto flex min-h-0 w-full max-w-6xl flex-1 flex-col justify-center gap-4 overflow-hidden p-3 sm:p-6">
+          <Card className="border-0 shadow-sm">
+            <CardContent className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center gap-3">
+                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 dark:bg-emerald-950">
+                  <MapPin className="h-4 w-4" />
+                </span>
+                <div>
+                  <p className="text-sm font-medium text-foreground">{current?.location || activeLocation}</p>
+                  <p className="text-xs text-muted-foreground">{locationStatus}</p>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <form onSubmit={submitLocation} className="flex min-w-0 gap-2">
+                  <Input
+                    value={locationInput}
+                    onChange={(event) => setLocationInput(event.target.value)}
+                    placeholder="Search location"
+                    className="h-9 min-w-0 sm:w-48"
+                  />
+                  <Button type="submit" size="sm" variant="outline"><Search className="h-4 w-4" /></Button>
+                </form>
+                <Button size="sm" variant="outline" onClick={requestLocation} className="gap-2">
+                  <LocateFixed className="h-4 w-4" />
+                  <span className="hidden md:inline">Use my location</span>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="min-h-0 overflow-hidden border-0 shadow-md">
+            <CardContent className="p-0">
+              {currentLoading ? (
+                <div className="space-y-6 p-6 sm:p-8">
+                  <Skeleton className="h-20 w-48" />
+                  <Skeleton className="h-24 w-full" />
+                </div>
+              ) : (
+                <>
+                  <div className="flex items-center justify-between p-6 sm:p-8">
+                    <div>
+                      <p className="text-sm font-medium text-emerald-700 dark:text-emerald-400">Current conditions</p>
+                      <div className="mt-2 flex items-end gap-4">
+                        <span className="text-6xl font-semibold tracking-tight text-emerald-600 sm:text-7xl">{current?.temperature ?? 22}°</span>
+                        <div className="pb-2">
+                          <p className="font-medium text-foreground">{current?.condition || "Partly cloudy"}</p>
+                          <p className="text-sm text-muted-foreground">Feels like {current?.feelsLike ?? current?.temperature ?? 22}°</p>
+                        </div>
+                      </div>
+                    </div>
+                    <Sprout className="hidden h-20 w-20 text-emerald-500 sm:block" />
+                  </div>
+
+                  <div className="grid grid-cols-2 border-t sm:grid-cols-4">
+                    {weatherStats.map((stat) => (
+                      <div key={stat.label} className="flex items-center gap-3 border-b p-4 last:border-b-0 sm:border-b-0 sm:border-r sm:last:border-r-0">
+                        <stat.icon className="h-5 w-5 shrink-0 text-emerald-600" />
+                        <div className="min-w-0">
+                          <p className="truncate text-lg font-semibold text-foreground">{stat.value}</p>
+                          <p className="truncate text-xs text-muted-foreground">{stat.label}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+            </CardContent>
+          </Card>
+        </main>
+      </div>
+    )
+  }
 
   return (
     <div className={isPublic ? "flex h-full min-h-0 flex-col overflow-hidden" : "min-h-screen"}>

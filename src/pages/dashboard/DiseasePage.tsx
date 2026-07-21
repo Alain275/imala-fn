@@ -194,9 +194,9 @@ export default function DiseasePage() {
         }}
       />
 
-      <div className={isPublic ? "min-h-0 flex-1 overflow-hidden p-3 [&>*:not(:first-child)]:hidden" : "p-3 sm:p-6 space-y-6"}>
+      <div className={isPublic ? "mx-auto flex min-h-0 w-full max-w-6xl flex-1 items-center overflow-hidden p-3 sm:p-6 [&>*:not(:first-child)]:hidden" : "p-3 sm:p-6 space-y-6"}>
         {/* Upload Section */}
-        <Card className={isPublic ? "h-full overflow-hidden border-0 shadow-md" : "border-0 shadow-md"}>
+        <Card className={isPublic ? "w-full overflow-hidden border-0 shadow-md" : "border-0 shadow-md"}>
           <CardHeader>
             <CardTitle className="flex items-center gap-3">
               <Icon3D gradient="earth" size="sm">

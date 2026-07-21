@@ -14,6 +14,7 @@ import {
   CloudRain,
   Bug,
   Droplets,
+  Sprout,
   User,
 } from "lucide-react"
 
@@ -96,6 +97,62 @@ export default function AIPage() {
       e.preventDefault()
       handleSend()
     }
+  }
+
+  if (isPublic) {
+    return (
+      <div className="flex h-full min-h-0 flex-col overflow-hidden">
+        <Header
+          title="AI Crop Advisory"
+          subtitle="Get practical guidance for Irish potatoes, maize, and beans"
+        />
+
+        <main className="mx-auto flex min-h-0 w-full max-w-5xl flex-1 flex-col p-3 sm:p-6">
+          <section className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border bg-card shadow-sm">
+            {messages.length === 0 ? (
+              <div className="flex flex-1 flex-col items-center justify-center px-6 text-center">
+                <span className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-sm">
+                  <Sprout className="h-7 w-7" />
+                </span>
+                <h2 className="text-xl font-semibold text-foreground">Ask IMARA about your crops</h2>
+                <p className="mt-2 max-w-md text-sm text-muted-foreground">
+                  Ask a farming question and receive clear, location-aware crop advice.
+                </p>
+              </div>
+            ) : (
+              <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-4 sm:p-6">
+                {messages.map((message, index) => (
+                  <div key={index} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
+                    <div className={`max-w-[82%] rounded-2xl px-4 py-3 text-sm ${message.role === "user" ? "bg-emerald-600 text-white" : "bg-muted text-foreground"}`}>
+                      {message.content || "Thinking…"}
+                    </div>
+                  </div>
+                ))}
+                <div ref={messagesEndRef} />
+              </div>
+            )}
+
+            <div className="border-t bg-background/70 p-3 sm:p-4">
+              <div className="flex gap-2">
+                <Input
+                  ref={inputRef}
+                  value={input}
+                  onChange={(event) => setInput(event.target.value)}
+                  onKeyDown={handleKeyPress}
+                  placeholder="Ask a question about your crop..."
+                  className="h-11 flex-1"
+                  disabled={isLoading}
+                />
+                <Button onClick={handleSend} disabled={!input.trim() || isLoading} className="h-11 gap-2 bg-emerald-600 hover:bg-emerald-700">
+                  <Send className="h-4 w-4" />
+                  <span className="hidden sm:inline">{isLoading ? "Sending" : "Send"}</span>
+                </Button>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    )
   }
 
   return (
