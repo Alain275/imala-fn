@@ -74,7 +74,12 @@ export async function sendChatMessage(
   // In development the Vite dev proxy forwards /api/* to the configured backend target.
   const res = await fetch(CHAT_API_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      ...(localStorage.getItem("token")
+        ? { Authorization: `Bearer ${localStorage.getItem("token")}` }
+        : {}),
+    },
     body: JSON.stringify({ messages, context }),
     signal,
   });

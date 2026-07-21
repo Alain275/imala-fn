@@ -44,10 +44,11 @@ interface ApiResponse<T> {
   message?: string
 }
 
-async function detectDisease(file: File): Promise<Detection> {
+async function detectDisease(file: File, cropType: string): Promise<Detection> {
   const token = localStorage.getItem('token')
   const formData = new FormData()
   formData.append('file', file)
+  formData.append('cropType', cropType)
 
   const headers: Record<string, string> = {}
   if (token) headers.Authorization = `Bearer ${token}`

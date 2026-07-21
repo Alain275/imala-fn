@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next"
+import { useSearchParams } from "react-router-dom"
 import { Header } from "@/components/header"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -28,6 +29,7 @@ import { formatDistanceToNow } from "date-fns"
 import { useMyDetections, useDetectDisease } from "@/hooks/useDisease"
 import type { Detection } from "@/services/disease"
 import { authService } from "@/services/auth"
+import { SUPPORTED_CROPS } from "@/constants/supportedCrops"
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024
 
@@ -81,9 +83,14 @@ function DetailSection({ title, content }: { title: string; content: string }) {
 export default function DiseasePage() {
   const isPublic = !authService.isAuthenticated()
   const { t } = useTranslation()
+  const [searchParams] = useSearchParams()
   const [dragActive, setDragActive] = useState(false)
   const [selectedDetection, setSelectedDetection] = useState<Detection | null>(null)
   const [uploadNotice, setUploadNotice] = useState<string | null>(null)
+  const [selectedCrop, setSelectedCrop] = useState(() => {
+    const requestedCrop = searchParams.get("crop") ?? ""
+    return SUPPORTED_CROPS.find((crop) => crop.toLowerCase() === requestedCrop.toLowerCase()) ?? ""
+  })
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const cameraInputRef = useRef<HTMLInputElement>(null)
@@ -114,6 +121,10 @@ export default function DiseasePage() {
 
   const handleFile = useCallback(
     async (file: File) => {
+      if (!selectedCrop) {
+        setUploadNotice(t("dashboard.disease.selectCropMessage"))
+        return
+      }
       if (!file.type.startsWith("image/")) {
         setUploadNotice(t("dashboard.disease.invalidImageMessage"))
         return
@@ -123,7 +134,7 @@ export default function DiseasePage() {
         return
       }
       setUploadNotice(null)
-      await detect(file, (detection) => {
+      await detect(file, selectedCrop, (detection) => {
         setSelectedDetection(detection)
         if (String(detection.id).startsWith("public-")) {
           window.dispatchEvent(new CustomEvent("imara-public-notification", { detail: {
@@ -138,7 +149,7 @@ export default function DiseasePage() {
         refetch()
       })
     },
-    [detect, refetch, t]
+    [detect, refetch, selectedCrop, t]
   )
 
   const handleDrag = (e: React.DragEvent) => {
@@ -196,6 +207,24 @@ export default function DiseasePage() {
             <CardDescription>{t("dashboard.disease.scanCardDescription")}</CardDescription>
           </CardHeader>
           <CardContent>
+            <div className="mb-5 space-y-2">
+              <label htmlFor="disease-crop" className="text-sm font-medium text-foreground">
+                {t("dashboard.disease.cropSelectLabel")}
+              </label>
+              <select
+                id="disease-crop"
+                value={selectedCrop}
+                onChange={(event) => {
+                  setSelectedCrop(event.target.value)
+                  setUploadNotice(null)
+                }}
+                className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm sm:max-w-sm"
+              >
+                <option value="">{t("dashboard.disease.selectCropPlaceholder")}</option>
+                {SUPPORTED_CROPS.map((crop) => <option key={crop} value={crop}>{crop}</option>)}
+              </select>
+              <p className="text-xs text-muted-foreground">{t("dashboard.disease.supportedCropHint")}</p>
+            </div>
             {uploadNotice && (
               <div className="mb-5 flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
                 <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0" />
@@ -247,6 +276,7 @@ export default function DiseasePage() {
                     <div className="flex gap-3">
                       <Button
                         className="gap-2"
+                        disabled={!selectedCrop}
                         onClick={() => fileInputRef.current?.click()}
                       >
                         <Upload className="w-4 h-4" />
@@ -255,6 +285,7 @@ export default function DiseasePage() {
                       <Button
                         variant="outline"
                         className="gap-2"
+                        disabled={!selectedCrop}
                         onClick={() => cameraInputRef.current?.click()}
                       >
                         <Camera className="w-4 h-4" />

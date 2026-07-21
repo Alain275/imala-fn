@@ -361,11 +361,12 @@ export default function RegisterPage() {
                       {t("auth.register.farmSizeLabel")}
                     </span>
                     <div className="flex items-center rounded-xl border border-[#e0d6bc] bg-[#faf6ee]/20 px-3.5 py-3.5 focus-within:border-emerald-600 focus-within:ring-1 focus-within:ring-emerald-600/20 transition-all">
-                      <span className="text-emerald-700/50 text-sm mr-2.5 flex-shrink-0">ha</span>
+                      <span className="text-emerald-700/50 text-sm mr-2.5 flex-shrink-0">m²</span>
                       <input
                         {...register("farmSize")}
                         type="number"
-                        step="0.1"
+                        min="1"
+                        step="1"
                         placeholder={t("auth.register.farmSizePlaceholder")}
                         className="w-full bg-transparent text-sm text-emerald-950 placeholder-emerald-950/30 outline-none"
                       />

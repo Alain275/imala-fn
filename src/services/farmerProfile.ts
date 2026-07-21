@@ -9,6 +9,7 @@ export interface FarmerProfileData {
     nationalId?: string
     gender: FarmerGender
     age: number
+    province: string
     district: string
     sector: string
     cell: string
@@ -26,7 +27,6 @@ export interface FarmerProfileData {
     farmLocation: string
     cropType: string
     plantingDate: string
-    seedType: string
   }>
   completedAt: string
 }
@@ -37,6 +37,7 @@ interface FarmerProfileApiResponse {
     nationalId?: string
     gender: FarmerGender
     age: number
+    province: string
     district: string
     sector: string
     cell: string
@@ -53,7 +54,6 @@ interface FarmerProfileApiResponse {
     location: string
     currentCrop?: string
     plantingDate?: string
-    seedVariety?: string
   }>
 }
 
@@ -75,6 +75,7 @@ function mapFromApi(data: FarmerProfileApiResponse, fallback?: { name?: string; 
       nationalId: data.profile.nationalId ?? '',
       gender: data.profile.gender,
       age: Number(data.profile.age),
+      province: data.profile.province ?? '',
       district: data.profile.district,
       sector: data.profile.sector,
       cell: data.profile.cell,
@@ -93,7 +94,6 @@ function mapFromApi(data: FarmerProfileApiResponse, fallback?: { name?: string; 
           farmLocation: firstFarm.location,
           cropType: firstFarm.currentCrop ?? '',
           plantingDate: firstFarm.plantingDate ? firstFarm.plantingDate.slice(0, 10) : '',
-          seedType: firstFarm.seedVariety ?? '',
         }]
       : [],
     completedAt: data.profile.completedAt ?? '',

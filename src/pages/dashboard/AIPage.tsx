@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react"
 import { Header } from "@/components/header"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent } from "@/components/ui/card"
 import { Icon3D } from "@/components/icon-3d"
 import { sendChatMessage } from "@/services/chat"
 import type { ChatMessage } from "@/types/chat"
@@ -18,15 +17,23 @@ import {
   User,
 } from "lucide-react"
 
-const suggestedQuestions = [
+const publicQuestions = [
   { icon: Leaf, text: "What crops grow well in Musanze this season?", hint: "Location-based crop choice" },
   { icon: CloudRain, text: "When should I plant maize if rain starts this week?", hint: "Planting timing" },
   { icon: Droplets, text: "How much fertilizer should I use for beans?", hint: "Input planning" },
   { icon: Bug, text: "How do I prevent disease before planting potatoes?", hint: "Crop health" },
 ]
 
+const farmerQuestions = [
+  { icon: Leaf, text: "What should I do next on my farm?", hint: "Next farm action" },
+  { icon: CloudRain, text: "Am I on schedule with my farm plan?", hint: "Plan progress" },
+  { icon: Droplets, text: "What should I prepare before my next activity?", hint: "Inputs and preparation" },
+  { icon: Bug, text: "What risks should I watch for in my crop?", hint: "Crop protection" },
+]
+
 export default function AIPage() {
   const isPublic = !authService.isAuthenticated()
+  const suggestedQuestions = isPublic ? publicQuestions : farmerQuestions
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -95,7 +102,9 @@ export default function AIPage() {
     <div className={isPublic ? "flex h-full min-h-0 flex-col overflow-hidden" : "min-h-screen flex flex-col"}>
       <Header
         title="AI Crop Advisory"
-        subtitle="Ask IMARA AI what to plant, when to plant, how to fertilize, and how to respond to field conditions"
+        subtitle={isPublic
+          ? "Ask about Irish potatoes, maize, or beans"
+          : "Ask about your crops, farmer profile, and saved farm plans"}
       />
 
       <div className={`mx-auto flex min-h-0 w-full max-w-5xl flex-1 flex-col p-3 sm:p-6 ${isPublic ? "overflow-hidden" : ""}`}>
@@ -113,47 +122,14 @@ export default function AIPage() {
 
               <div>
                 <h2 className="text-2xl font-bold text-foreground mb-2">
-                  Ask IMARA AI for crop advice
+                  {isPublic ? "Ask IMARA AI for crop advice" : "Ask about your farm"}
                 </h2>
                 <p className="text-muted-foreground">
-                  Farmers can use this public crop advisory without creating an account.
+                  {isPublic
+                    ? "Get simple guidance for Irish potatoes, maize, and beans."
+                    : "IMARA uses your farmer profile and farm plans to give you relevant answers."}
                 </p>
               </div>
-
-              <Card className={`${isPublic ? "hidden" : ""} border-0 shadow-md bg-gradient-to-br from-emerald-50 to-green-50 dark:from-emerald-950 dark:to-green-950`}>
-                <CardContent className="p-6">
-                  <h3 className="font-semibold text-foreground mb-3 flex items-center justify-center gap-2 sm:justify-start">
-                    <Sparkles className="w-5 h-5 text-emerald-600" />
-                    I can help you decide:
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-left">
-                    <div className="flex items-start gap-2">
-                      <Leaf className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0" />
-                      <span className="text-muted-foreground">
-                        <strong className="text-foreground">Crop choice:</strong> what fits your district, soil, and season
-                      </span>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <CloudRain className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
-                      <span className="text-muted-foreground">
-                        <strong className="text-foreground">Planting timing:</strong> when to plant, spray, irrigate, or harvest
-                      </span>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <Bug className="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" />
-                      <span className="text-muted-foreground">
-                        <strong className="text-foreground">Crop health:</strong> how to prevent pests, fungi, and nutrient stress
-                      </span>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <Droplets className="w-4 h-4 text-sky-600 mt-0.5 flex-shrink-0" />
-                      <span className="text-muted-foreground">
-                        <strong className="text-foreground">Input planning:</strong> fertilizer, water, spacing, and field tasks
-                      </span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
 
               <div>
                 <p className="text-sm text-muted-foreground mb-3">Try asking for advice:</p>
@@ -244,7 +220,9 @@ export default function AIPage() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Ask for crop advice... e.g. What should I plant in Musanze this week?"
+              placeholder={isPublic
+                ? "Ask about Irish potatoes, maize, or beans..."
+                : "Ask a question about your farm..."}
               className="flex-1"
               disabled={isLoading}
             />

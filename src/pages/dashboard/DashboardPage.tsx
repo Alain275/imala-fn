@@ -238,7 +238,7 @@ export default function DashboardPage() {
                         dataKey={series.key}
                         fill={series.color}
                         radius={[4, 4, 0, 0]}
-                        name={`${series.name} (ha)`}
+                        name={`${series.name} (m²)`}
                       />
                     ))}
                   </BarChart>

@@ -191,8 +191,8 @@ export function ProfileFormCard({
               <Input
                 id="pfcard-farmsize"
                 type="number"
-                min="0"
-                step="0.1"
+                min="1"
+                step="1"
                 value={farmSize}
                 onChange={e => setFarmSize(e.target.value)}
               />

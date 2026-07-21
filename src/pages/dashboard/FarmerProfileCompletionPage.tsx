@@ -3,8 +3,7 @@ import type { ReactNode } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { CalendarDays, CheckCircle2, Droplets, MapPin, Sprout, UserRound } from 'lucide-react'
-
+import { CalendarDays, CheckCircle2, MapPin, UserRound } from 'lucide-react'
 import { Header } from '@/components/header'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -12,14 +11,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { authService } from '@/services/auth'
 import { FarmerGender, farmerProfileService } from '@/services/farmerProfile'
-
-const farmingTypeOptions = [
-  { key: 'irishPotatoes', value: 'Irish potatoes' },
-  { key: 'maize', value: 'Maize' },
-  { key: 'beans', value: 'Beans' },
-  { key: 'vegetables', value: 'Vegetables' },
-  { key: 'fruits', value: 'Fruits' },
-]
+import rwandaLocations from '@/data/rwandaLocations.json'
+import { SUPPORTED_CROPS } from '@/constants/supportedCrops'
 
 const genderOptions: Array<{ value: FarmerGender; key: string }> = [
   { value: 'female', key: 'female' },
@@ -28,6 +21,22 @@ const genderOptions: Array<{ value: FarmerGender; key: string }> = [
   { value: 'prefer-not-to-say', key: 'preferNotToSay' },
 ]
 
+type RwandaLocations = Record<string, Record<string, Record<string, string[]>>>
+
+const locations = rwandaLocations as RwandaLocations
+const provinceDistricts: Record<string, string[]> = {
+  'Kigali City': ['Gasabo', 'Kicukiro', 'Nyarugenge'],
+  'Eastern Province': ['Bugesera', 'Gatsibo', 'Kayonza', 'Kirehe', 'Ngoma', 'Nyagatare', 'Rwamagana'],
+  'Northern Province': ['Burera', 'Gakenke', 'Gicumbi', 'Musanze', 'Rulindo'],
+  'Southern Province': ['Gisagara', 'Huye', 'Kamonyi', 'Muhanga', 'Nyamagabe', 'Nyanza', 'Nyaruguru', 'Ruhango'],
+  'Western Province': ['Karongi', 'Ngororero', 'Nyabihu', 'Nyamasheke', 'Rubavu', 'Rusizi', 'Rutsiro'],
+}
+const provinceOptions = Object.keys(provinceDistricts)
+
+function canonicalName(options: string[], name: string) {
+  return options.find((option) => option.toLocaleLowerCase() === name.toLocaleLowerCase())
+}
+
 export default function FarmerProfileCompletionPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -35,10 +44,17 @@ export default function FarmerProfileCompletionPage() {
   const [savedProfile, setSavedProfile] = useState<Awaited<ReturnType<typeof farmerProfileService.get>>['profile']>(null)
   const [loadingProfile, setLoadingProfile] = useState(true)
 
-  const [farmingTypes, setFarmingTypes] = useState<string[]>(
-    ['Maize']
-  )
-  const [usesIrrigation, setUsesIrrigation] = useState(false)
+  const [province, setProvince] = useState('')
+  const [district, setDistrict] = useState('')
+  const [sector, setSector] = useState('')
+  const [cell, setCell] = useState('')
+  const [village, setVillage] = useState('')
+  const [farmCropType, setFarmCropType] = useState('')
+
+  const districtOptions = provinceDistricts[province] ?? []
+  const sectorOptions = district ? Object.keys(locations[district] ?? {}) : []
+  const cellOptions = district && sector ? Object.keys(locations[district]?.[sector] ?? {}) : []
+  const villageOptions = district && sector && cell ? locations[district]?.[sector]?.[cell] ?? [] : []
 
   useEffect(() => {
     let cancelled = false
@@ -46,8 +62,27 @@ export default function FarmerProfileCompletionPage() {
       .then(({ profile }) => {
         if (cancelled) return
         setSavedProfile(profile)
-        if (profile?.farming.farmingTypes.length) setFarmingTypes(profile.farming.farmingTypes)
-        if (profile) setUsesIrrigation(profile.farming.usesIrrigation)
+        setFarmCropType(canonicalName([...SUPPORTED_CROPS], profile?.farms[0]?.cropType ?? '') ?? '')
+
+        const savedDistrict = profile?.personal.district ?? currentUser?.location ?? ''
+        const savedProvince = canonicalName(provinceOptions, profile?.personal.province ?? '')
+          ?? provinceOptions.find((option) => provinceDistricts[option].includes(savedDistrict))
+          ?? ''
+        const savedDistricts = provinceDistricts[savedProvince] ?? []
+        const validDistrict = canonicalName(savedDistricts, savedDistrict) ?? ''
+        const savedSectors = validDistrict ? Object.keys(locations[validDistrict] ?? {}) : []
+        const validSector = canonicalName(savedSectors, profile?.personal.sector ?? '') ?? ''
+        const savedCells = validDistrict && validSector ? Object.keys(locations[validDistrict]?.[validSector] ?? {}) : []
+        const validCell = canonicalName(savedCells, profile?.personal.cell ?? '') ?? ''
+        const savedVillages = validDistrict && validSector && validCell
+          ? locations[validDistrict]?.[validSector]?.[validCell] ?? []
+          : []
+
+        setProvince(savedProvince)
+        setDistrict(validDistrict)
+        setSector(validSector)
+        setCell(validCell)
+        setVillage(canonicalName(savedVillages, profile?.personal.village ?? '') ?? '')
       })
       .catch(() => undefined)
       .finally(() => {
@@ -61,14 +96,6 @@ export default function FarmerProfileCompletionPage() {
     return <Navigate to="/dashboard" replace />
   }
 
-  const toggleFarmingType = (type: string) => {
-    setFarmingTypes((current) =>
-      current.includes(type)
-        ? current.filter((item) => item !== type)
-        : [...current, type]
-    )
-  }
-
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
@@ -78,12 +105,9 @@ export default function FarmerProfileCompletionPage() {
       return
     }
 
-    if (farmingTypes.length === 0) {
-      toast.error(t('farmerProfile.toast.selectFarmingType'))
-      return
-    }
-
     const form = new FormData(event.currentTarget)
+    const selectedFarmCrop = String(form.get('cropType') || '')
+    const farmSize = Number(form.get('farmSize') || 0)
     try {
       await farmerProfileService.save(currentUser.id, {
         personal: {
@@ -92,25 +116,25 @@ export default function FarmerProfileCompletionPage() {
           nationalId: String(form.get('nationalId') || ''),
           gender: String(form.get('gender') || 'prefer-not-to-say') as FarmerGender,
           age: Number(form.get('age') || 0),
+          province: String(form.get('province') || ''),
           district: String(form.get('district') || ''),
           sector: String(form.get('sector') || ''),
           cell: String(form.get('cell') || ''),
           village: String(form.get('village') || ''),
         },
         farming: {
-          farmingTypes,
-          landSize: Number(form.get('landSize') || 0),
-          yearsFarming: Number(form.get('yearsFarming') || 0),
-          usesIrrigation,
+          farmingTypes: [selectedFarmCrop],
+          landSize: farmSize,
+          yearsFarming: savedProfile?.farming.yearsFarming ?? 0,
+          usesIrrigation: savedProfile?.farming.usesIrrigation ?? false,
         },
         farms: [
           {
             farmName: String(form.get('farmName') || ''),
-            farmSize: Number(form.get('farmSize') || 0),
+            farmSize,
             farmLocation: String(form.get('farmLocation') || ''),
             cropType: String(form.get('cropType') || ''),
             plantingDate: String(form.get('plantingDate') || ''),
-            seedType: String(form.get('seedType') || ''),
           },
         ],
       })
@@ -165,64 +189,68 @@ export default function FarmerProfileCompletionPage() {
               </select>
             </div>
             <Field label={t('farmerProfile.personal.age')} name="age" type="number" min="1" defaultValue={savedProfile?.personal.age} required />
-            <Field label={t('farmerProfile.personal.district')} name="district" defaultValue={savedProfile?.personal.district ?? currentUser?.location} required />
-            <Field label={t('farmerProfile.personal.sector')} name="sector" defaultValue={savedProfile?.personal.sector} required />
-            <Field label={t('farmerProfile.personal.cell')} name="cell" defaultValue={savedProfile?.personal.cell} required />
-            <Field label={t('farmerProfile.personal.village')} name="village" defaultValue={savedProfile?.personal.village} required />
-          </CardContent>
-        </Card>
-
-        <Card className="border-0 shadow-md">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Sprout className="h-5 w-5 text-emerald-600" />
-              {t('farmerProfile.farming.title')}
-            </CardTitle>
-            <CardDescription>{t('farmerProfile.farming.description')}</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-5">
-            <div className="space-y-2">
-              <Label>{t('farmerProfile.farming.type')}</Label>
-              <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
-                {farmingTypeOptions.map((type) => {
-                  const selected = farmingTypes.includes(type.value)
-                  return (
-                    <button
-                      key={type.value}
-                      type="button"
-                      onClick={() => toggleFarmingType(type.value)}
-                      className={`flex items-center justify-center rounded-md border px-3 py-2 text-sm font-medium transition-colors ${
-                        selected
-                          ? 'border-emerald-600 bg-emerald-50 text-emerald-700'
-                          : 'border-input bg-background text-muted-foreground hover:text-foreground'
-                      }`}
-                    >
-                      {t(`farmerProfile.farming.types.${type.key}`)}
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
-
-            <div className="grid gap-4 md:grid-cols-3">
-              <Field label={t('farmerProfile.farming.landSize')} name="landSize" type="number" step="0.1" min="0.1" defaultValue={savedProfile?.farming.landSize ?? currentUser?.farmSize} required />
-              <Field label={t('farmerProfile.farming.yearsFarming')} name="yearsFarming" type="number" min="0" defaultValue={savedProfile?.farming.yearsFarming} required />
-              <div className="space-y-2">
-                <Label>{t('farmerProfile.farming.irrigation')}</Label>
-                <button
-                  type="button"
-                  onClick={() => setUsesIrrigation((value) => !value)}
-                  className={`flex h-10 w-full items-center justify-center gap-2 rounded-md border px-3 text-sm font-medium transition-colors ${
-                    usesIrrigation
-                      ? 'border-sky-500 bg-sky-50 text-sky-700'
-                      : 'border-input bg-background text-muted-foreground'
-                  }`}
-                >
-                  <Droplets className="h-4 w-4" />
-                  {usesIrrigation ? t('farmerProfile.farming.usesIrrigation') : t('farmerProfile.farming.noIrrigation')}
-                </button>
-              </div>
-            </div>
+            <LocationSelect
+              label={t('farmerProfile.personal.province')}
+              name="province"
+              value={province}
+              options={provinceOptions}
+              placeholder={t('farmerProfile.personal.selectProvince')}
+              onChange={(value) => {
+                setProvince(value)
+                setDistrict('')
+                setSector('')
+                setCell('')
+                setVillage('')
+              }}
+            />
+            <LocationSelect
+              label={t('farmerProfile.personal.district')}
+              name="district"
+              value={district}
+              options={districtOptions}
+              placeholder={t('farmerProfile.personal.selectDistrict')}
+              disabled={!province}
+              onChange={(value) => {
+                setDistrict(value)
+                setSector('')
+                setCell('')
+                setVillage('')
+              }}
+            />
+            <LocationSelect
+              label={t('farmerProfile.personal.sector')}
+              name="sector"
+              value={sector}
+              options={sectorOptions}
+              placeholder={t('farmerProfile.personal.selectSector')}
+              disabled={!district}
+              onChange={(value) => {
+                setSector(value)
+                setCell('')
+                setVillage('')
+              }}
+            />
+            <LocationSelect
+              label={t('farmerProfile.personal.cell')}
+              name="cell"
+              value={cell}
+              options={cellOptions}
+              placeholder={t('farmerProfile.personal.selectCell')}
+              disabled={!sector}
+              onChange={(value) => {
+                setCell(value)
+                setVillage('')
+              }}
+            />
+            <LocationSelect
+              label={t('farmerProfile.personal.village')}
+              name="village"
+              value={village}
+              options={villageOptions}
+              placeholder={t('farmerProfile.personal.selectVillage')}
+              disabled={!cell}
+              onChange={setVillage}
+            />
           </CardContent>
         </Card>
 
@@ -236,11 +264,17 @@ export default function FarmerProfileCompletionPage() {
           </CardHeader>
           <CardContent className="grid gap-4 md:grid-cols-2">
             <Field label={t('farmerProfile.farm.name')} name="farmName" defaultValue={savedProfile?.farms[0]?.farmName} required />
-            <Field label={t('farmerProfile.farm.size')} name="farmSize" type="number" step="0.1" min="0.1" defaultValue={savedProfile?.farms[0]?.farmSize} required />
+            <Field label={t('farmerProfile.farm.size')} name="farmSize" type="number" step="1" min="1" defaultValue={savedProfile?.farms[0]?.farmSize} required />
             <Field label={t('farmerProfile.farm.location')} name="farmLocation" defaultValue={savedProfile?.farms[0]?.farmLocation} required />
-            <Field label={t('farmerProfile.farm.cropType')} name="cropType" defaultValue={savedProfile?.farms[0]?.cropType} required />
+            <LocationSelect
+              label={t('farmerProfile.farm.cropType')}
+              name="cropType"
+              value={farmCropType}
+              options={SUPPORTED_CROPS}
+              placeholder={t('farmerProfile.farm.selectCrop')}
+              onChange={setFarmCropType}
+            />
             <Field label={t('farmerProfile.farm.plantingDate')} name="plantingDate" type="date" defaultValue={savedProfile?.farms[0]?.plantingDate} required icon={<CalendarDays className="h-4 w-4 text-muted-foreground" />} />
-            <Field label={t('farmerProfile.farm.seedType')} name="seedType" defaultValue={savedProfile?.farms[0]?.seedType} required />
           </CardContent>
         </Card>
 
@@ -283,6 +317,38 @@ function Field({ label, name, type = 'text', required, defaultValue, min, step, 
           className={icon ? 'pl-9' : undefined}
         />
       </div>
+    </div>
+  )
+}
+
+interface LocationSelectProps {
+  label: string
+  name: string
+  value: string
+  options: readonly string[]
+  placeholder: string
+  disabled?: boolean
+  onChange: (value: string) => void
+}
+
+function LocationSelect({ label, name, value, options, placeholder, disabled, onChange }: LocationSelectProps) {
+  return (
+    <div className="space-y-2">
+      <Label htmlFor={name}>{label}</Label>
+      <select
+        id={name}
+        name={name}
+        value={value}
+        required
+        disabled={disabled}
+        onChange={(event) => onChange(event.target.value)}
+        className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        <option value="">{placeholder}</option>
+        {options.map((option) => (
+          <option key={option} value={option}>{option}</option>
+        ))}
+      </select>
     </div>
   )
 }
