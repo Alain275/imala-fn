@@ -39,6 +39,13 @@ export default function DashboardLayout() {
     location.pathname !== '/dashboard/farmer-profile'
   const compactPublicPaths = new Set(['/dashboard', '/dashboard/crops', '/dashboard/ai', '/dashboard/disease', '/dashboard/weather'])
   const isCompactPublicHome = !authService.isAuthenticated() && compactPublicPaths.has(location.pathname)
+  const isPublicHomepage = !authService.isAuthenticated() && location.pathname === '/dashboard'
+  const usesCommandCenterChrome =
+    isPublicHomepage ||
+    location.pathname === '/dashboard/disease' ||
+    location.pathname === '/dashboard/crops' ||
+    location.pathname === '/dashboard/ai' ||
+    location.pathname === '/dashboard/weather'
 
   if (isFarmer && profileComplete === null && location.pathname !== '/dashboard/farmer-profile') {
     return <div className="min-h-screen bg-background" />
@@ -50,8 +57,14 @@ export default function DashboardLayout() {
 
   return (
     <div className={isCompactPublicHome ? "h-dvh overflow-hidden bg-background" : "min-h-screen bg-background"}>
-      <Sidebar />
-      <main className={isCompactPublicHome ? "h-dvh overflow-hidden pb-20 lg:pl-72 lg:pb-0" : "min-h-screen pb-24 lg:pl-72 lg:pb-0"}>
+      {!usesCommandCenterChrome && <Sidebar />}
+      <main className={
+        usesCommandCenterChrome
+          ? "h-dvh overflow-hidden"
+          : isCompactPublicHome
+            ? "h-dvh overflow-hidden pb-20 lg:pl-72 lg:pb-0"
+            : "min-h-screen pb-24 lg:pl-72 lg:pb-0"
+      }>
         <Outlet />
       </main>
     </div>
