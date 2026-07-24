@@ -375,6 +375,21 @@
     }
   },
   "auth": {
+    "ui": {
+      "fieldIntelligence": "Amakuru y'ubuhinzi",
+      "loginStatus": "Umurima wawe, uwubone neza",
+      "registerStatus": "Hinga ukoresheje amakuru meza",
+      "secureTitle": "Kwinjira mu mutekano",
+      "secureText": "Amakuru y'umurima wawe ararinzwe.",
+      "growersTitle": "Byubakiwe abahinzi",
+      "growersText": "Inama z'ingirakamaro kuri buri murima.",
+      "loginEyebrow": "Kwinjira kuri konti mu mutekano",
+      "registerEyebrow": "Fungura urubuga rwawe",
+      "oneLastStep": "Hasigaye intambwe imwe",
+      "securityNote": "Konti irinzwe na IMARA. Ntuzigere uha undi ijambo ry'ibanga.",
+      "showPassword": "Erekana ijambo ry'ibanga",
+      "hidePassword": "Hisha ijambo ry'ibanga"
+    },
     "login": {
       "title": "Ikaze Ugaruka",
       "emailLabel": "Aderesi Imeyili",
@@ -446,6 +461,11 @@
       "tagline": "Ubuhinzi bw'Ikoranabuhanga",
       "portalLabel": "Urubuga rw'Umuhinzi",
       "portalLabelAgroDealer": "Urubuga rw'Umucuruzi w'Inyongeramusaruro",
+      "sections": {
+        "overview": "Incamake",
+        "workspace": "Aho nkorera",
+        "intelligence": "Amakuru"
+      },
       "nav": {
         "dashboard": "Imbonerahamwe",
         "cropAdvisory": "Inama ku Bihingwa",
@@ -460,6 +480,7 @@
         "dealerMarketplace": "Isoko",
         "agronomists": "Abajyanama",
         "farmerProfile": "Umwirondoro w'umuhinzi",
+        "farmPlan": "Gahunda y'umurima",
         "signIn": "Konti"
       },
       "settings": "Igenamiterere",

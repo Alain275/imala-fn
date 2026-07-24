@@ -1052,7 +1052,7 @@ export default function SoilPage() {
   const { t } = useTranslation()
 
   return (
-    <div className="min-h-screen">
+    <div className="farmer-workspace-page">
       <Header
         title={t("dashboard.soil.pageTitle")}
         subtitle={t("dashboard.soil.pageSubtitle")}

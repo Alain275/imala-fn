@@ -205,3 +205,104 @@ html {
 ::-webkit-scrollbar-thumb:hover {
   background: oklch(var(--imara-green-light));
 }
+
+/* Authenticated farmer workspace — compact field-command design language */
+.farmer-workspace-page {
+  min-height: 100vh;
+  background: #edf8f1;
+  color: #17231b;
+}
+
+.farmer-workspace-page [data-slot="card"] {
+  gap: 1.25rem;
+  border: 1px solid #d7e5da !important;
+  border-radius: 6px !important;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 8px 30px rgba(35, 72, 50, 0.045) !important;
+}
+
+.farmer-workspace-page [data-slot="card-header"] {
+  padding-inline: 1.25rem;
+}
+
+.farmer-workspace-page [data-slot="card-title"] {
+  color: #21392b;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.farmer-workspace-page [data-slot="card-description"] {
+  color: #6a7e70;
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.farmer-workspace-page [data-slot="card-content"] {
+  padding-inline: 1.25rem;
+}
+
+.farmer-workspace-page [data-slot="input"],
+.farmer-workspace-page textarea,
+.farmer-workspace-page select {
+  min-height: 42px;
+  border-color: #cbdccf;
+  border-radius: 5px !important;
+  background: #fff;
+  box-shadow: none;
+}
+
+.farmer-workspace-page [data-slot="input"]:focus,
+.farmer-workspace-page textarea:focus,
+.farmer-workspace-page select:focus {
+  border-color: #477326;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(155, 245, 46, 0.13);
+}
+
+.farmer-workspace-page [data-slot="button"] {
+  border-radius: 5px !important;
+}
+
+.farmer-workspace-page [data-slot="button"]:not([class*="bg-"]):not([class*="variant"]) {
+  font-weight: 700;
+}
+
+.farmer-workspace-page label {
+  color: #365541;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.dark .farmer-workspace-page {
+  background: #101a14;
+  color: #edf5ef;
+}
+
+.dark .farmer-workspace-page [data-slot="card"] {
+  border-color: #2b4235 !important;
+  background: #17271e;
+}
+
+.dark .farmer-workspace-page [data-slot="card-title"] {
+  color: #edf5ef;
+}
+
+.dark .farmer-workspace-page [data-slot="input"],
+.dark .farmer-workspace-page textarea,
+.dark .farmer-workspace-page select {
+  border-color: #30473a;
+  background: #132219;
+  color: #edf5ef;
+}
+
+@media (max-width: 640px) {
+  .farmer-workspace-page [data-slot="card"] {
+    gap: 1rem;
+  }
+
+  .farmer-workspace-page [data-slot="card-header"],
+  .farmer-workspace-page [data-slot="card-content"] {
+    padding-inline: 1rem;
+  }
+}

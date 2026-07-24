@@ -308,7 +308,7 @@ export default function FarmPlanPage() {
   if (user?.role !== "farmer") return <div className="p-6">Farm planning is available for farmer accounts.</div>
 
   return (
-    <div className="min-h-screen bg-muted/20">
+    <div className="farmer-workspace-page">
       <Header
         title={t("farmWorkspace.title")}
         subtitle={tab === "today" && selectedPlan
@@ -316,20 +316,20 @@ export default function FarmPlanPage() {
           : t("farmWorkspace.subtitle")}
       />
 
-      <div className="mx-auto max-w-6xl space-y-5 p-3 pb-28 sm:p-6 lg:p-8 lg:pb-8">
+      <div className="mx-auto max-w-7xl space-y-5 p-3 pb-28 sm:p-6 lg:p-8 lg:pb-8">
         {plans.length > 0 && (
-          <div className="flex gap-2 overflow-x-auto pb-1">
+          <div className="flex gap-2 overflow-x-auto border-b border-[#d7e5da] pb-3">
             {plans.map((plan) => (
-              <button key={plan.id} onClick={() => setSelectedId(plan.id)} className={`shrink-0 rounded-full border px-4 py-2 text-sm font-semibold ${selectedPlan?.id === plan.id ? "border-emerald-600 bg-emerald-600 text-white" : "bg-card text-foreground"}`}>
+              <button key={plan.id} onClick={() => setSelectedId(plan.id)} className={`shrink-0 rounded-[5px] border px-4 py-2 text-xs font-bold ${selectedPlan?.id === plan.id ? "border-[#315900] bg-[#315900] text-[#b5ff62]" : "border-[#cbdccf] bg-white text-[#365541]"}`}>
               {plan.cropName} · {plan.farmSize} ha
               </button>
             ))}
-            <Button variant="outline" className="shrink-0 rounded-full" onClick={startNewPlan}><Plus className="mr-1 h-4 w-4" /> {t("farmWorkspace.newPlan")}</Button>
+            <Button variant="outline" className="shrink-0 border-[#b9ccbd] bg-white" onClick={startNewPlan}><Plus className="mr-1 h-4 w-4" /> {t("farmWorkspace.newPlan")}</Button>
           </div>
         )}
 
-        <nav className="grid grid-cols-4 gap-1 rounded-2xl border bg-card p-1 shadow-sm">
-          {tabItems.map((item) => <button key={item.id} onClick={() => setTab(item.id)} className={`flex min-w-0 flex-col items-center gap-1 rounded-xl px-1 py-2 text-[11px] font-semibold sm:flex-row sm:justify-center sm:text-sm ${tab === item.id ? "bg-emerald-600 text-white" : "text-muted-foreground hover:bg-muted"}`}><item.icon className="h-4 w-4" /><span className="truncate">{t(`farmWorkspace.tabs.${item.id}`)}</span></button>)}
+        <nav className="grid grid-cols-4 border border-[#d7e5da] bg-white p-1 shadow-[0_5px_18px_rgba(35,72,50,.04)] dark:border-[#2b4235] dark:bg-[#17271e]">
+          {tabItems.map((item) => <button key={item.id} onClick={() => setTab(item.id)} className={`flex min-w-0 flex-col items-center gap-1 border-b-2 px-1 py-2.5 text-[10px] font-bold transition sm:flex-row sm:justify-center sm:text-xs ${tab === item.id ? "border-[#8fe82e] bg-[#f1f9ea] text-[#315900] dark:bg-[#24382c] dark:text-[#b5ff62]" : "border-transparent text-muted-foreground hover:bg-muted"}`}><item.icon className="h-4 w-4" /><span className="truncate">{t(`farmWorkspace.tabs.${item.id}`)}</span></button>)}
         </nav>
 
         {selectedPlan && tab === "plan" && !wizardOpen && <div className="flex flex-col gap-2 sm:flex-row sm:justify-end"><Button variant="outline" onClick={editPlan} disabled={saving}><Pencil className="mr-2 h-4 w-4" />Edit farm plan</Button><Button variant="outline" className="text-red-600 hover:text-red-700" onClick={deletePlan} disabled={saving}><Trash2 className="mr-2 h-4 w-4" />Delete farm plan</Button></div>}

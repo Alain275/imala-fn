@@ -375,6 +375,21 @@
     }
   },
   "auth": {
+    "ui": {
+      "fieldIntelligence": "Field intelligence",
+      "loginStatus": "Your farm, in focus",
+      "registerStatus": "Grow with better signals",
+      "secureTitle": "Secure access",
+      "secureText": "Your farm data stays protected.",
+      "growersTitle": "Built for growers",
+      "growersText": "Practical insights for every field.",
+      "loginEyebrow": "Secure account access",
+      "registerEyebrow": "Create your workspace",
+      "oneLastStep": "One last step",
+      "securityNote": "Protected by IMARA secure access. Never share your password with anyone.",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password"
+    },
     "login": {
       "title": "Welcome Back",
       "emailLabel": "Email Address",
@@ -446,6 +461,11 @@
       "tagline": "Smart Agriculture",
       "portalLabel": "Farmer Portal",
       "portalLabelAgroDealer": "Agro-Dealer Portal",
+      "sections": {
+        "overview": "Overview",
+        "workspace": "My Workspace",
+        "intelligence": "Intelligence"
+      },
       "nav": {
         "dashboard": "Dashboard",
         "cropAdvisory": "Crop Advisory",

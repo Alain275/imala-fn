@@ -375,6 +375,21 @@
     }
   },
   "auth": {
+    "ui": {
+      "fieldIntelligence": "Intelligence agricole",
+      "loginStatus": "Votre ferme en perspective",
+      "registerStatus": "Cultivez avec de meilleurs signaux",
+      "secureTitle": "Accès sécurisé",
+      "secureText": "Les données de votre ferme restent protégées.",
+      "growersTitle": "Conçu pour les agriculteurs",
+      "growersText": "Des conseils pratiques pour chaque parcelle.",
+      "loginEyebrow": "Accès sécurisé au compte",
+      "registerEyebrow": "Créez votre espace",
+      "oneLastStep": "Une dernière étape",
+      "securityNote": "Accès protégé par IMARA. Ne partagez jamais votre mot de passe.",
+      "showPassword": "Afficher le mot de passe",
+      "hidePassword": "Masquer le mot de passe"
+    },
     "login": {
       "title": "Bon Retour",
       "emailLabel": "Adresse E-mail",
@@ -446,6 +461,11 @@
       "tagline": "Agriculture Intelligente",
       "portalLabel": "Portail Agriculteur",
       "portalLabelAgroDealer": "Portail Agro-distributeur",
+      "sections": {
+        "overview": "Aperçu",
+        "workspace": "Mon espace",
+        "intelligence": "Intelligence"
+      },
       "nav": {
         "dashboard": "Tableau de Bord",
         "cropAdvisory": "Conseil Agricole",
@@ -460,6 +480,7 @@
         "dealerMarketplace": "Marche",
         "agronomists": "Agronomes",
         "farmerProfile": "Profil agriculteur",
+        "farmPlan": "Plan agricole",
         "signIn": "Compte"
       },
       "settings": "Paramètres",

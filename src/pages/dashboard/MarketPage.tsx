@@ -412,7 +412,7 @@ export default function MarketPage() {
   const { t } = useTranslation()
 
   return (
-    <div className="min-h-screen">
+    <div className="farmer-workspace-page">
       <Header
         title={t("dashboard.market.pageTitle")}
         subtitle={t("dashboard.market.pageSubtitle")}

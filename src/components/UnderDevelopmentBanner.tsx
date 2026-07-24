@@ -17,48 +17,47 @@ export function UnderDevelopmentBanner({
   statusText = "New tools are on the way",
 }: UnderDevelopmentBannerProps) {
   return (
-    <main className="flex min-h-[calc(100vh-89px)] items-center justify-center bg-background p-4 sm:p-6 lg:p-10">
-      <section className="relative w-full max-w-5xl overflow-hidden rounded-[2rem] border-2 border-border bg-card text-card-foreground shadow-[0_30px_90px_-35px_rgba(5,150,105,0.45)] dark:border-emerald-500/50 dark:shadow-[0_30px_90px_-35px_rgba(52,211,153,0.35)]">
-        <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-emerald-300/30 blur-3xl dark:bg-emerald-500/20" />
-        <div className="absolute -bottom-32 -right-20 h-80 w-80 rounded-full bg-amber-300/25 blur-3xl dark:bg-amber-400/15" />
+    <main className="flex min-h-[calc(100vh-69px)] items-center justify-center p-4 pb-24 sm:p-6 lg:p-10">
+      <section className="relative w-full max-w-5xl overflow-hidden border border-[#d7e5da] bg-white text-[#17231b] shadow-[0_12px_40px_rgba(35,72,50,.06)] dark:border-[#2b4235] dark:bg-[#17271e] dark:text-[#edf5ef]">
+        <div className="absolute inset-y-0 left-0 w-1 bg-[#9bf52e]" />
+        <div className="absolute right-0 top-0 h-48 w-48 opacity-[0.06]" style={{ backgroundImage: "linear-gradient(#315900 1px, transparent 1px), linear-gradient(90deg, #315900 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
 
-        <div className="relative grid min-h-[520px] items-center gap-10 px-6 py-12 sm:px-12 lg:grid-cols-[1.2fr_0.8fr] lg:px-16 lg:py-16">
+        <div className="relative grid min-h-[420px] items-center gap-8 px-7 py-10 sm:px-12 lg:grid-cols-[1.25fr_0.75fr] lg:px-16 lg:py-14">
           <div className="text-center lg:text-left">
-            <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-amber-300/70 bg-amber-50 px-4 py-2 text-sm font-semibold uppercase tracking-[0.18em] text-amber-800 shadow-sm dark:border-amber-400/70 dark:bg-amber-400/15 dark:text-amber-200">
+            <div className="mb-6 inline-flex items-center gap-2 border border-[#d2e1d5] bg-[#f2f8f4] px-3 py-2 text-[9px] font-black uppercase tracking-[0.18em] text-[#477326] dark:border-[#355141] dark:bg-[#203329] dark:text-[#b5f66f]">
               <Construction className="h-4 w-4" />
               Under Development
             </div>
 
-            <h2 className="text-balance text-4xl font-bold tracking-tight text-card-foreground sm:text-5xl lg:text-6xl">
+            <h2 className="text-balance text-3xl font-black tracking-[-0.04em] sm:text-4xl lg:text-5xl">
               {headline}
-              <span className="block text-emerald-700 dark:text-emerald-300">
+              <span className="block text-[#477326] dark:text-[#b5f66f]">
                 {accent}
               </span>
             </h2>
 
-            <p className="mx-auto mt-6 max-w-xl text-base leading-7 text-card-foreground/80 sm:text-lg lg:mx-0">
+            <p className="mx-auto mt-5 max-w-xl text-sm leading-7 text-[#647b6b] sm:text-base lg:mx-0 dark:text-[#a4b4aa]">
               {description}
             </p>
 
-            <div className="mt-8 flex items-center justify-center gap-3 text-sm font-bold text-emerald-700 lg:justify-start dark:text-emerald-300">
-              <Sparkles className="h-5 w-5" />
+            <div className="mt-7 flex items-center justify-center gap-3 text-xs font-bold text-[#315900] lg:justify-start dark:text-[#b5f66f]">
+              <span className="grid h-7 w-7 place-items-center bg-[#eaf7de] dark:bg-[#29402f]"><Sparkles className="h-3.5 w-3.5" /></span>
               {statusText}
             </div>
           </div>
 
-          <div className="relative mx-auto flex h-64 w-64 items-center justify-center sm:h-72 sm:w-72">
-            <div className="absolute inset-0 animate-[spin_24s_linear_infinite] rounded-full border border-dashed border-emerald-400/60 dark:border-emerald-300/70" />
-            <div className="absolute inset-7 rounded-full bg-gradient-to-br from-emerald-400 to-green-700 opacity-20 blur-2xl dark:opacity-40" />
-            <div className="relative flex h-40 w-40 rotate-3 items-center justify-center rounded-[2rem] bg-gradient-to-br from-emerald-500 via-green-600 to-emerald-800 text-white shadow-2xl shadow-emerald-700/30 sm:h-44 sm:w-44 dark:from-emerald-400 dark:via-emerald-600 dark:to-green-800 dark:shadow-emerald-400/25">
-              <Icon className="h-20 w-20" strokeWidth={1.5} />
-              <span className="absolute -right-3 -top-3 flex h-12 w-12 items-center justify-center rounded-2xl border-4 border-white bg-amber-400 shadow-lg dark:border-card dark:bg-amber-300">
-                <Sparkles className="h-6 w-6 text-amber-950" />
+          <div className="relative mx-auto flex h-52 w-52 items-center justify-center sm:h-60 sm:w-60">
+            <div className="absolute inset-0 rounded-full border border-dashed border-[#86a88e]" />
+            <div className="absolute inset-6 rounded-full border border-[#d2e1d5] dark:border-[#355141]" />
+            <div className="relative flex h-32 w-32 items-center justify-center rounded-full bg-[#153923] text-[#b5ff62] shadow-[0_15px_40px_rgba(21,57,35,.2)] sm:h-36 sm:w-36">
+              <Icon className="h-14 w-14" strokeWidth={1.5} />
+              <span className="absolute -right-1 top-1 grid h-9 w-9 place-items-center rounded-full border-4 border-white bg-[#9bf52e] dark:border-[#17271e]">
+                <Sparkles className="h-4 w-4 text-[#173b24]" />
               </span>
             </div>
           </div>
         </div>
 
-        <div className="relative h-2 w-full bg-gradient-to-r from-emerald-500 via-amber-400 to-green-600" />
       </section>
     </main>
   )

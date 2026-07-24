@@ -148,13 +148,13 @@ export default function FarmerProfileCompletionPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="farmer-workspace-page">
       <Header
         title={savedProfile ? t('farmerProfile.reviewTitle') : t('farmerProfile.title')}
         subtitle={savedProfile ? t('farmerProfile.reviewSubtitle') : t('farmerProfile.subtitle')}
       />
 
-      <form onSubmit={handleSubmit} className="mx-auto max-w-5xl space-y-6 p-4 sm:p-6">
+      <form onSubmit={handleSubmit} className="mx-auto max-w-6xl space-y-5 p-4 pb-28 sm:p-6 lg:p-8 lg:pb-8">
         {loadingProfile && (
           <Card className="border-0 shadow-md">
             <CardContent className="p-6 text-sm text-muted-foreground">
@@ -162,7 +162,7 @@ export default function FarmerProfileCompletionPage() {
             </CardContent>
           </Card>
         )}
-        <Card className="border-0 shadow-md">
+        <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <UserRound className="h-5 w-5 text-emerald-600" />
@@ -254,7 +254,7 @@ export default function FarmerProfileCompletionPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-0 shadow-md">
+        <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <MapPin className="h-5 w-5 text-emerald-600" />
@@ -278,8 +278,9 @@ export default function FarmerProfileCompletionPage() {
           </CardContent>
         </Card>
 
-        <div className="sticky bottom-20 z-20 flex justify-end rounded-lg border bg-background/95 p-3 shadow-md backdrop-blur lg:bottom-4">
-          <Button type="submit" size="lg" className="bg-emerald-600 hover:bg-emerald-700">
+        <div className="sticky bottom-20 z-20 flex items-center justify-between gap-3 border border-[#d7e5da] bg-white/95 p-3 shadow-[0_8px_28px_rgba(35,72,50,.12)] backdrop-blur lg:bottom-4 dark:border-[#2b4235] dark:bg-[#17271e]/95">
+          <p className="hidden text-xs text-[#6a7e70] sm:block">{t('farmerProfile.personal.description')}</p>
+          <Button type="submit" size="lg" className="w-full bg-[#315900] font-bold text-[#b5ff62] hover:bg-[#254500] sm:w-auto">
             <CheckCircle2 className="mr-2 h-5 w-5" />
             {savedProfile ? t('farmerProfile.update') : t('farmerProfile.save')}
           </Button>

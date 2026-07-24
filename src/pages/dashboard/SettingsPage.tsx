@@ -39,19 +39,19 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="farmer-workspace-page">
       <Header
         title={t("dashboard.settings.title")}
         subtitle={t("dashboard.settings.subtitle")}
       />
 
-      <div className="p-3 sm:p-6 space-y-6 max-w-4xl">
+      <div className="mx-auto max-w-6xl space-y-5 p-3 pb-28 sm:p-6 lg:p-8 lg:pb-8">
 
         {/* Profile Settings */}
         {loading ? (
           <ProfileSkeleton />
         ) : error ? (
-          <Card className="border-0 shadow-md">
+          <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-3">
                 <Icon3D gradient="green" size="sm">
@@ -79,7 +79,7 @@ export default function SettingsPage() {
         ) : null}
 
         {/* Notification Settings — Local-only until backend is implemented */}
-        <Card className="border-0 shadow-md">
+        <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-3">
               <Icon3D gradient="gold" size="sm">
@@ -98,7 +98,7 @@ export default function SettingsPage() {
                 { key: "plantingReminders", enabled: false },
                 { key: "trainingRecommendations", enabled: false },
               ].map((setting, i) => (
-                <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-muted/50">
+                <div key={i} className="flex items-center justify-between gap-4 border-b border-[#e3ece5] px-1 py-4 last:border-0 dark:border-[#2b4235]">
                   <div>
                     <p className="font-medium text-foreground">{t(`dashboard.settings.notificationToggles.${setting.key}.title`)}</p>
                     <p className="text-sm text-muted-foreground">{t(`dashboard.settings.notificationToggles.${setting.key}.description`)}</p>
@@ -111,7 +111,7 @@ export default function SettingsPage() {
         </Card>
 
         {/* Language & Region — Local-only until backend is implemented */}
-        <Card className="border-0 shadow-md">
+        <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-3">
               <Icon3D gradient="sky" size="sm">
@@ -144,7 +144,7 @@ export default function SettingsPage() {
         </Card>
 
         {/* Security */}
-        <Card className="border-0 shadow-md">
+        <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-3">
               <Icon3D gradient="earth" size="sm">

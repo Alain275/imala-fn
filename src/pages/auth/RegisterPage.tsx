@@ -5,46 +5,48 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useTranslation } from "react-i18next";
 import {
-  User,
-  Phone,
-  Mail,
-  Lock,
+  ArrowRight,
+  Building2,
+  Check,
   Eye,
   EyeOff,
-  ArrowLeft,
-  Check,
-  MapPin
+  Lock,
+  Mail,
+  MapPin,
+  Phone,
+  Sprout,
+  User,
 } from "lucide-react";
 import { toast } from "sonner";
 import { authService } from "../../services/auth";
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { AuthShell } from "@/components/auth/AuthShell";
 
-// Rwandan phone regex: starting with 078/079/072/073 or +25078/etc followed by 7 digits
 const phoneRegex = /^(?:\+250|0)?7[8923]\d{7}$/;
-
 type TFunction = (key: string) => string;
 
 const buildRegisterSchema = (t: TFunction) =>
-  z.object({
-    name: z.string().min(2, t("auth.register.fullNameError")),
-    email: z.string().email(t("auth.register.emailError")),
-    phone: z.string().regex(phoneRegex, t("auth.register.phoneError")),
-    password: z.string().min(6, t("auth.register.passwordError")),
-    confirmPassword: z.string().min(6, t("auth.register.confirmPasswordError")),
-    role: z.enum(["farmer", "agro-dealer"]),
-    location: z.string().optional(),
-    farmSize: z.string().optional(),
-    agree: z.boolean().refine(val => val === true, {
-      message: t("auth.register.agreeError")
+  z
+    .object({
+      name: z.string().min(2, t("auth.register.fullNameError")),
+      email: z.string().email(t("auth.register.emailError")),
+      phone: z.string().regex(phoneRegex, t("auth.register.phoneError")),
+      password: z.string().min(6, t("auth.register.passwordError")),
+      confirmPassword: z.string().min(6, t("auth.register.confirmPasswordError")),
+      role: z.enum(["farmer", "agro-dealer"]),
+      location: z.string().optional(),
+      farmSize: z.string().optional(),
+      agree: z.boolean().refine((value) => value, { message: t("auth.register.agreeError") }),
     })
-  }).refine(data => data.password === data.confirmPassword, {
-    message: t("auth.register.passwordsMismatchError"),
-    path: ["confirmPassword"]
-  });
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t("auth.register.passwordsMismatchError"),
+      path: ["confirmPassword"],
+    });
 
 type RegisterFormValues = z.infer<ReturnType<typeof buildRegisterSchema>>;
-
 const registerRoleOptions = ["farmer", "agro-dealer"] as const;
+
+const fieldClass =
+  "h-12 w-full rounded-[6px] border border-[#cbdccf] bg-white pl-11 pr-4 text-sm text-[#17231b] outline-none transition placeholder:text-[#789082] focus:border-[#477326] focus:ring-4 focus:ring-[#9bf52e]/15";
 
 export default function RegisterPage() {
   const { t, i18n } = useTranslation();
@@ -55,12 +57,11 @@ export default function RegisterPage() {
   const [resending, setResending] = useState(false);
 
   const registerSchema = useMemo(() => buildRegisterSchema(t), [t, i18n.language]);
-
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors }
+    formState: { errors },
   } = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -72,8 +73,8 @@ export default function RegisterPage() {
       role: "farmer",
       location: "",
       farmSize: "",
-      agree: false
-    }
+      agree: false,
+    },
   });
 
   const isAgreeChecked = watch("agree");
@@ -89,15 +90,15 @@ export default function RegisterPage() {
         phone: data.phone.replace(/\s+/g, ""),
         location: data.location?.trim() || undefined,
         farmSize: data.farmSize ? parseFloat(data.farmSize) : undefined,
-        role: data.role
+        role: data.role,
       });
-
       toast.success(response.message || t("auth.register.successToast"));
       setRegisteredEmail(response.data.email);
     } catch (error: any) {
-      const message = error.response?.data?.message
-        || error.response?.data?.errors?.[0]
-        || t("auth.register.errorToast");
+      const message =
+        error.response?.data?.message ||
+        error.response?.data?.errors?.[0] ||
+        t("auth.register.errorToast");
       toast.error(message);
     } finally {
       setSubmitting(false);
@@ -119,19 +120,25 @@ export default function RegisterPage() {
 
   if (registeredEmail) {
     return (
-      <main className="min-h-screen bg-[#faf6ee] px-4 py-8 flex items-center justify-center">
-        <section className="w-full max-w-md rounded-3xl border border-emerald-100 bg-white p-6 text-center shadow-xl sm:p-9">
-          <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
-            <Mail className="h-8 w-8 text-emerald-700" aria-hidden="true" />
+      <main className="grid min-h-screen place-items-center bg-[#edf8f1] px-5 py-10">
+        <section className="w-full max-w-md border border-[#d2e1d5] bg-white p-7 text-center shadow-[0_18px_50px_rgba(35,72,50,.08)] sm:p-10">
+          <div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-[#e8f8da] ring-8 ring-[#f4faef]">
+            <Mail className="h-7 w-7 text-[#477326]" aria-hidden="true" />
           </div>
-          <h1 className="text-2xl font-bold text-emerald-950">{t("auth.register.checkEmailTitle")}</h1>
-          <p className="mt-3 text-sm leading-6 text-emerald-950/70">
-            {t("auth.register.checkEmailText")} <strong className="break-all text-emerald-900">{registeredEmail}</strong>
+          <p className="mt-7 text-[10px] font-black uppercase tracking-[0.2em] text-[#477326]">
+            {t("auth.ui.oneLastStep")}
           </p>
-          <p className="mt-2 text-xs text-emerald-900/60">{t("auth.register.checkSpamText")}</p>
+          <h1 className="mt-2 text-2xl font-black tracking-[-0.025em] text-[#17231b]">
+            {t("auth.register.checkEmailTitle")}
+          </h1>
+          <p className="mt-3 text-sm leading-6 text-[#647b6b]">
+            {t("auth.register.checkEmailText")}{" "}
+            <strong className="break-all text-[#294535]">{registeredEmail}</strong>
+          </p>
+          <p className="mt-2 text-xs text-[#789082]">{t("auth.register.checkSpamText")}</p>
           <Link
             to="/sign-in"
-            className="mt-6 flex w-full items-center justify-center rounded-xl bg-emerald-700 px-4 py-3 text-sm font-bold text-white hover:bg-emerald-800"
+            className="mt-7 flex h-12 w-full items-center justify-center rounded-[6px] bg-[#315900] px-4 text-xs font-black uppercase tracking-[0.12em] text-[#b5ff62] hover:bg-[#254500]"
           >
             {t("auth.register.continueToLogin")}
           </Link>
@@ -139,7 +146,7 @@ export default function RegisterPage() {
             type="button"
             onClick={resendVerification}
             disabled={resending}
-            className="mt-3 w-full rounded-xl border border-emerald-200 px-4 py-3 text-sm font-semibold text-emerald-800 hover:bg-emerald-50 disabled:opacity-50"
+            className="mt-3 h-12 w-full rounded-[6px] border border-[#bdd0c1] text-xs font-bold text-[#31553f] hover:bg-[#f2f8f4] disabled:opacity-50"
           >
             {resending ? t("auth.register.resending") : t("auth.register.resend")}
           </button>
@@ -148,325 +155,198 @@ export default function RegisterPage() {
     );
   }
 
+  const renderError = (message?: string) =>
+    message ? <p className="mt-1.5 text-xs text-[#b4131e]">{message}</p> : null;
+
   return (
-    <div className="min-h-screen bg-[#faf6ee] relative overflow-hidden flex items-stretch">
-      {/* Dynamic background shapes */}
-      <div className="absolute top-[-10%] left-[-10%] w-[35vw] h-[35vw] rounded-full bg-[#f6ebd5]/60 blur-3xl -z-10" />
-      <div className="absolute bottom-[-10%] right-[30%] w-[45vw] h-[45vw] rounded-full bg-[#f6ebd5]/40 blur-3xl -z-10" />
-      <div className="absolute top-[40%] left-[20%] w-80 h-80 rounded-full bg-[#f6ebd5]/50 blur-2xl -z-10" />
-
-      {/* Main Container */}
-      <div className="w-full grid lg:grid-cols-12 min-h-screen z-10 items-stretch">
-
-        {/* Left Side: Register Form */}
-        <div className="lg:col-span-7 px-6 py-12 sm:px-12 lg:px-20 flex flex-col justify-center items-center relative bg-transparent">
-
-          {/* Back button */}
-          <div className="mb-6 flex justify-between items-center w-full max-w-lg">
-            <Link to="/" className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-800 hover:text-emerald-600 transition-colors">
-              <ArrowLeft className="w-4 h-4" /> {t("common.home")}
+    <AuthShell
+      mode="register"
+      panelTitle={t("auth.register.panelTitle")}
+      panelText={t("auth.register.panelText")}
+      panelLink={t("auth.register.panelLink")}
+      panelLinkTo="/sign-in"
+      homeLabel={t("common.home")}
+    >
+      <div className="w-full max-w-[720px]">
+        <div className="mb-8">
+          <p className="mb-3 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-[#477326]">
+            <span className="h-1.5 w-1.5 bg-[#8fe82e]" />
+            {t("auth.ui.registerEyebrow")}
+          </p>
+          <h1 className="text-3xl font-black tracking-[-0.035em] text-[#17231b] sm:text-4xl">
+            {t("auth.register.title")}
+          </h1>
+          <p className="mt-3 text-sm text-[#647b6b]">
+            {t("auth.register.haveAccount")}{" "}
+            <Link to="/sign-in" className="font-bold text-[#315900] underline decoration-[#9bdc50] underline-offset-4">
+              {t("auth.register.logIn")}
             </Link>
+          </p>
+        </div>
 
-            <div className="flex items-center gap-3">
-              {/* Logo */}
-              <div className="flex items-center gap-2 lg:hidden">
-                <span className="text-xl font-bold text-emerald-800 tracking-wider">IMARA</span>
-              </div>
-
-              <LanguageSwitcher
-                triggerClassName="border-emerald-200 bg-white/60 text-emerald-800 hover:bg-emerald-50"
-                contentClassName="light"
-              />
-            </div>
-          </div>
-
-          <div className="w-full max-w-lg">
-            <h1 className="text-3xl font-bold text-emerald-950 mb-6">{t("auth.register.title")}</h1>
-
-
-
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-
-              {/* Form Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-
-                {/* Full Name */}
-                <div className="relative md:col-span-2">
-                  <span className="absolute left-3 -top-2 bg-[#faf6ee] px-1.5 text-[11px] font-semibold text-emerald-800 tracking-wide z-10">
-                    {t("auth.register.fullNameLabel")}
-                  </span>
-                  <div className="flex items-center rounded-xl border border-[#e0d6bc] bg-[#faf6ee]/20 px-3.5 py-3.5 focus-within:border-emerald-600 focus-within:ring-1 focus-within:ring-emerald-600/20 transition-all">
-                    <User className="w-4 h-4 text-emerald-700/50 mr-2.5 flex-shrink-0" />
-                    <input
-                      {...register("name")}
-                      type="text"
-                      placeholder={t("auth.register.fullNamePlaceholder")}
-                      className="w-full bg-transparent text-sm text-emerald-950 placeholder-emerald-950/30 outline-none"
-                    />
-                  </div>
-                  {errors.name && (
-                    <p className="text-[11px] text-rose-600 mt-1 pl-1">{errors.name.message}</p>
-                  )}
-                </div>
-
-                {/* Email */}
-                <div className="relative">
-                  <span className="absolute left-3 -top-2 bg-[#faf6ee] px-1.5 text-[11px] font-semibold text-emerald-800 tracking-wide z-10">
-                    {t("auth.register.emailLabel")}
-                  </span>
-                  <div className="flex items-center rounded-xl border border-[#e0d6bc] bg-[#faf6ee]/20 px-3.5 py-3.5 focus-within:border-emerald-600 focus-within:ring-1 focus-within:ring-emerald-600/20 transition-all">
-                    <Mail className="w-4 h-4 text-emerald-700/50 mr-2.5 flex-shrink-0" />
-                    <input
-                      {...register("email")}
-                      type="email"
-                      placeholder={t("auth.register.emailPlaceholder")}
-                      className="w-full bg-transparent text-sm text-emerald-950 placeholder-emerald-950/30 outline-none"
-                    />
-                  </div>
-                  {errors.email && (
-                    <p className="text-[11px] text-rose-600 mt-1 pl-1">{errors.email.message}</p>
-                  )}
-                </div>
-
-                {/* Account Type */}
-                <div className="relative md:col-span-2">
-                  <span className="absolute left-3 -top-2 bg-[#faf6ee] px-1.5 text-[11px] font-semibold text-emerald-800 tracking-wide z-10">
-                    {t("auth.register.accountTypeLabel")}
-                  </span>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 rounded-2xl border border-[#e0d6bc] bg-[#faf6ee]/20 p-3">
-                    {registerRoleOptions.map((roleOption) => (
-                      <label
-                        key={roleOption}
-                        className={`flex cursor-pointer items-start gap-3 rounded-xl border px-4 py-3 transition-all ${
-                          selectedRole === roleOption
-                            ? "border-emerald-600 bg-emerald-50 shadow-sm"
-                            : "border-[#e0d6bc] bg-white/60 hover:border-emerald-300"
-                        }`}
-                      >
-                        <input
-                          type="radio"
-                          value={roleOption}
-                          {...register("role")}
-                          className="mt-1"
-                        />
-                        <div>
-                          <p className="text-sm font-semibold text-emerald-950">
-                            {t(`common.role.${roleOption}`)}
-                          </p>
-                          <p className="text-xs text-emerald-900/70">
-                            {t(`auth.register.accountTypeHelp.${roleOption}`)}
-                          </p>
-                        </div>
-                      </label>
-                    ))}
-                  </div>
-                  {errors.role && (
-                    <p className="text-[11px] text-rose-600 mt-1 pl-1">{errors.role.message}</p>
-                  )}
-                </div>
-
-                {/* Telephone Number */}
-                <div className="relative">
-                  <span className="absolute left-3 -top-2 bg-[#faf6ee] px-1.5 text-[11px] font-semibold text-emerald-800 tracking-wide z-10">
-                    {t("auth.register.phoneLabel")}
-                  </span>
-                  <div className="flex items-center rounded-xl border border-[#e0d6bc] bg-[#faf6ee]/20 px-3.5 py-3.5 focus-within:border-emerald-600 focus-within:ring-1 focus-within:ring-emerald-600/20 transition-all">
-                    <Phone className="w-4 h-4 text-emerald-700/50 mr-2.5 flex-shrink-0" />
-                    <input
-                      {...register("phone")}
-                      type="tel"
-                      placeholder={t("auth.register.phonePlaceholder")}
-                      className="w-full bg-transparent text-sm text-emerald-950 placeholder-emerald-950/30 outline-none"
-                    />
-                  </div>
-                  {errors.phone && (
-                    <p className="text-[11px] text-rose-600 mt-1 pl-1">{errors.phone.message}</p>
-                  )}
-                </div>
-
-                {/* Password */}
-                <div className="relative">
-                  <span className="absolute left-3 -top-2 bg-[#faf6ee] px-1.5 text-[11px] font-semibold text-emerald-800 tracking-wide z-10">
-                    {t("auth.register.passwordLabel")}
-                  </span>
-                  <div className="flex items-center rounded-xl border border-[#e0d6bc] bg-[#faf6ee]/20 px-3.5 py-3.5 focus-within:border-emerald-600 focus-within:ring-1 focus-within:ring-emerald-600/20 transition-all">
-                    <Lock className="w-4 h-4 text-emerald-700/50 mr-2.5 flex-shrink-0" />
-                    <input
-                      {...register("password")}
-                      type={showPassword ? "text" : "password"}
-                      placeholder={t("auth.register.passwordPlaceholder")}
-                      className="w-full bg-transparent text-sm text-emerald-950 placeholder-emerald-950/30 outline-none"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="text-emerald-700/50 hover:text-emerald-800 transition-colors ml-2"
-                    >
-                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                    </button>
-                  </div>
-                  {errors.password && (
-                    <p className="text-[11px] text-rose-600 mt-1 pl-1">{errors.password.message}</p>
-                  )}
-                </div>
-
-                {/* Confirm Password */}
-                <div className="relative">
-                  <span className="absolute left-3 -top-2 bg-[#faf6ee] px-1.5 text-[11px] font-semibold text-emerald-800 tracking-wide z-10">
-                    {t("auth.register.confirmPasswordLabel")}
-                  </span>
-                  <div className="flex items-center rounded-xl border border-[#e0d6bc] bg-[#faf6ee]/20 px-3.5 py-3.5 focus-within:border-emerald-600 focus-within:ring-1 focus-within:ring-emerald-600/20 transition-all">
-                    <Lock className="w-4 h-4 text-emerald-700/50 mr-2.5 flex-shrink-0" />
-                    <input
-                      {...register("confirmPassword")}
-                      type={showConfirmPassword ? "text" : "password"}
-                      placeholder={t("auth.register.confirmPasswordPlaceholder")}
-                      className="w-full bg-transparent text-sm text-emerald-950 placeholder-emerald-950/30 outline-none"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="text-emerald-700/50 hover:text-emerald-800 transition-colors ml-2"
-                    >
-                      {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                    </button>
-                  </div>
-                  {errors.confirmPassword && (
-                    <p className="text-[11px] text-rose-600 mt-1 pl-1">{errors.confirmPassword.message}</p>
-                  )}
-                </div>
-
-                {/* Location */}
-                <div className="relative">
-                  <span className="absolute left-3 -top-2 bg-[#faf6ee] px-1.5 text-[11px] font-semibold text-emerald-800 tracking-wide z-10">
-                    {t("auth.register.locationLabel")}
-                  </span>
-                  <div className="flex items-center rounded-xl border border-[#e0d6bc] bg-[#faf6ee]/20 px-3.5 py-3.5 focus-within:border-emerald-600 focus-within:ring-1 focus-within:ring-emerald-600/20 transition-all">
-                    <MapPin className="w-4 h-4 text-emerald-700/50 mr-2.5 flex-shrink-0" />
-                    <input
-                      {...register("location")}
-                      type="text"
-                      placeholder={t("auth.register.locationPlaceholder")}
-                      className="w-full bg-transparent text-sm text-emerald-950 placeholder-emerald-950/30 outline-none"
-                    />
-                  </div>
-                  {errors.location && (
-                    <p className="text-[11px] text-rose-600 mt-1 pl-1">{errors.location.message}</p>
-                  )}
-                </div>
-
-                {selectedRole === "farmer" && (
-                  <div className="relative">
-                    <span className="absolute left-3 -top-2 bg-[#faf6ee] px-1.5 text-[11px] font-semibold text-emerald-800 tracking-wide z-10">
-                      {t("auth.register.farmSizeLabel")}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-7" noValidate>
+          <fieldset>
+            <legend className="mb-3 text-xs font-bold text-[#294535]">
+              {t("auth.register.accountTypeLabel")}
+            </legend>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {registerRoleOptions.map((roleOption) => {
+                const selected = selectedRole === roleOption;
+                const RoleIcon = roleOption === "farmer" ? Sprout : Building2;
+                return (
+                  <label
+                    key={roleOption}
+                    className={`relative flex cursor-pointer gap-3 rounded-[6px] border p-4 transition ${
+                      selected
+                        ? "border-[#477326] bg-[#f1f9ea] shadow-[inset_3px_0_0_#8fe82e]"
+                        : "border-[#cbdccf] bg-white hover:border-[#86a88e]"
+                    }`}
+                  >
+                    <input type="radio" value={roleOption} {...register("role")} className="sr-only" />
+                    <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-[5px] ${selected ? "bg-[#315900] text-[#b5ff62]" : "bg-[#edf5ef] text-[#557160]"}`}>
+                      <RoleIcon className="h-4 w-4" />
                     </span>
-                    <div className="flex items-center rounded-xl border border-[#e0d6bc] bg-[#faf6ee]/20 px-3.5 py-3.5 focus-within:border-emerald-600 focus-within:ring-1 focus-within:ring-emerald-600/20 transition-all">
-                      <span className="text-emerald-700/50 text-sm mr-2.5 flex-shrink-0">m²</span>
-                      <input
-                        {...register("farmSize")}
-                        type="number"
-                        min="1"
-                        step="1"
-                        placeholder={t("auth.register.farmSizePlaceholder")}
-                        className="w-full bg-transparent text-sm text-emerald-950 placeholder-emerald-950/30 outline-none"
-                      />
-                    </div>
-                    {errors.farmSize && (
-                      <p className="text-[11px] text-rose-600 mt-1 pl-1">{errors.farmSize.message}</p>
+                    <span>
+                      <span className="block text-xs font-black text-[#294535]">
+                        {t(`common.role.${roleOption}`)}
+                      </span>
+                      <span className="mt-1 block text-[10px] leading-4 text-[#647b6b]">
+                        {t(`auth.register.accountTypeHelp.${roleOption}`)}
+                      </span>
+                    </span>
+                    {selected && (
+                      <span className="absolute right-3 top-3 grid h-5 w-5 place-items-center rounded-full bg-[#8fe82e] text-[#173b24]">
+                        <Check className="h-3 w-3 stroke-[3]" />
+                      </span>
                     )}
-                  </div>
-                )}
+                  </label>
+                );
+              })}
+            </div>
+          </fieldset>
+
+          <div className="grid gap-x-4 gap-y-5 sm:grid-cols-2">
+            <div className="sm:col-span-2">
+              <label htmlFor="register-name" className="mb-2 block text-xs font-bold text-[#294535]">
+                {t("auth.register.fullNameLabel")}
+              </label>
+              <div className="relative">
+                <User className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#64806e]" />
+                <input {...register("name")} id="register-name" type="text" autoComplete="name" placeholder={t("auth.register.fullNamePlaceholder")} className={fieldClass} />
               </div>
-
-              {/* Agreement checkbox */}
-              <div className="mt-4">
-                <label className="flex items-start gap-3 cursor-pointer group">
-                  <div className="relative flex items-center mt-0.5">
-                    <input
-                      type="checkbox"
-                      {...register("agree")}
-                      className="sr-only"
-                    />
-                    <div className={`w-5 h-5 rounded-md border-2 transition-all flex items-center justify-center ${
-                      isAgreeChecked
-                        ? "bg-gradient-to-r from-emerald-600 to-green-600 border-emerald-600"
-                        : "border-[#e0d6bc] bg-white group-hover:border-emerald-600"
-                    }`}>
-                      {isAgreeChecked && <Check className="w-3.5 h-3.5 text-white stroke-[3px]" />}
-                    </div>
-                  </div>
-                  <span className="text-xs text-emerald-900/80 select-none">
-                    {t("auth.register.agreeText")}<a href="#" className="underline font-semibold text-emerald-800 hover:text-emerald-600">{t("auth.register.agreeLink")}</a>
-                  </span>
-                </label>
-                {errors.agree && (
-                  <p className="text-[11px] text-rose-600 mt-1.5 pl-1">{errors.agree.message}</p>
-                )}
-              </div>
-
-              {/* Submit Button */}
-              <button
-                type="submit"
-                disabled={submitting}
-                className="w-full mt-6 py-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white font-bold text-sm shadow-[0_8px_20px_-6px_rgba(16,185,129,0.3)] hover:shadow-[0_12px_24px_-4px_rgba(16,185,129,0.4)] active:scale-[0.99] transition-all disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center gap-2"
-              >
-                {submitting ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    {t("auth.register.submitting")}
-                  </>
-                ) : (
-                  t("auth.register.submit")
-                )}
-              </button>
-            </form>
-          </div>
-
-          {/* Switch link for Mobile View */}
-          <div className="mt-8 text-center lg:hidden">
-            <p className="text-xs text-emerald-900/60">
-              {t("auth.register.haveAccount")}{" "}
-              <Link to="/sign-in" className="font-bold text-emerald-800 hover:text-emerald-600 underline">
-                {t("auth.register.logIn")}
-              </Link>
-            </p>
-          </div>
-        </div>
-
-        {/* Right Side: Giant circle overlay stretching full-screen height */}
-        <div className="hidden lg:col-span-4 lg:flex relative overflow-hidden items-center justify-center h-full min-h-screen">
-
-          {/* Giant circle element extending leftwards */}
-          <div className="">
-
-            {/* Content inside the giant circle */}
-            <div className="max-w-sm text-center space-y-6 relative z-10 px-10">
-              <div className="flex justify-center mb-1">
-                <img
-                  src="/crop advisory.png"
-                  alt="Crop Advisory"
-                  className="w-50 h-50 object-contain drop-shadow-[0_8px_16px_rgba(0,0,0,0.15)]"
-                />
-              </div>
-
-              <h2 className="text-4xl font-extrabold tracking-tight text-emerald-700 drop-shadow-sm">{t("auth.register.panelTitle")}</h2>
-
-              <p className="text-emerald-900/80 text-sm font-light leading-relaxed">
-                {t("auth.register.panelText")}
-              </p>
-
-              <Link
-                to="/sign-in"
-                className="inline-block px-10 py-3 rounded-xl border-2 border-emerald-600 hover:border-emerald-700 text-emerald-700 hover:text-emerald-800 font-bold text-xs uppercase tracking-wider bg-transparent hover:bg-emerald-50/30 transition-all duration-300 active:scale-95 shadow-[0_4px_12px_rgba(5,150,105,0.15)]"
-              >
-                {t("auth.register.panelLink")}
-              </Link>
+              {renderError(errors.name?.message)}
             </div>
 
-          </div>
-        </div>
+            <div>
+              <label htmlFor="register-email" className="mb-2 block text-xs font-bold text-[#294535]">
+                {t("auth.register.emailLabel")}
+              </label>
+              <div className="relative">
+                <Mail className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#64806e]" />
+                <input {...register("email")} id="register-email" type="email" autoComplete="email" placeholder={t("auth.register.emailPlaceholder")} className={fieldClass} />
+              </div>
+              {renderError(errors.email?.message)}
+            </div>
 
+            <div>
+              <label htmlFor="register-phone" className="mb-2 block text-xs font-bold text-[#294535]">
+                {t("auth.register.phoneLabel")}
+              </label>
+              <div className="relative">
+                <Phone className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#64806e]" />
+                <input {...register("phone")} id="register-phone" type="tel" autoComplete="tel" placeholder={t("auth.register.phonePlaceholder")} className={fieldClass} />
+              </div>
+              {renderError(errors.phone?.message)}
+            </div>
+
+            <div>
+              <label htmlFor="register-location" className="mb-2 block text-xs font-bold text-[#294535]">
+                {t("auth.register.locationLabel")}
+              </label>
+              <div className="relative">
+                <MapPin className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#64806e]" />
+                <input {...register("location")} id="register-location" type="text" autoComplete="address-level2" placeholder={t("auth.register.locationPlaceholder")} className={fieldClass} />
+              </div>
+              {renderError(errors.location?.message)}
+            </div>
+
+            {selectedRole === "farmer" && (
+              <div>
+                <label htmlFor="register-farm-size" className="mb-2 block text-xs font-bold text-[#294535]">
+                  {t("auth.register.farmSizeLabel")}
+                </label>
+                <div className="relative">
+                  <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-xs font-black text-[#64806e]">m²</span>
+                  <input {...register("farmSize")} id="register-farm-size" type="number" min="1" step="1" inputMode="numeric" placeholder={t("auth.register.farmSizePlaceholder")} className={fieldClass} />
+                </div>
+                {renderError(errors.farmSize?.message)}
+              </div>
+            )}
+
+            <div>
+              <label htmlFor="register-password" className="mb-2 block text-xs font-bold text-[#294535]">
+                {t("auth.register.passwordLabel")}
+              </label>
+              <div className="relative">
+                <Lock className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#64806e]" />
+                <input {...register("password")} id="register-password" type={showPassword ? "text" : "password"} autoComplete="new-password" placeholder={t("auth.register.passwordPlaceholder")} className={`${fieldClass} pr-12`} />
+                <button type="button" onClick={() => setShowPassword((value) => !value)} aria-label={t(showPassword ? "auth.ui.hidePassword" : "auth.ui.showPassword")} className="absolute right-1 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center text-[#64806e] hover:text-[#315900]">
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+              {renderError(errors.password?.message)}
+            </div>
+
+            <div>
+              <label htmlFor="register-confirm-password" className="mb-2 block text-xs font-bold text-[#294535]">
+                {t("auth.register.confirmPasswordLabel")}
+              </label>
+              <div className="relative">
+                <Lock className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#64806e]" />
+                <input {...register("confirmPassword")} id="register-confirm-password" type={showConfirmPassword ? "text" : "password"} autoComplete="new-password" placeholder={t("auth.register.confirmPasswordPlaceholder")} className={`${fieldClass} pr-12`} />
+                <button type="button" onClick={() => setShowConfirmPassword((value) => !value)} aria-label={t(showConfirmPassword ? "auth.ui.hidePassword" : "auth.ui.showPassword")} className="absolute right-1 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center text-[#64806e] hover:text-[#315900]">
+                  {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+              {renderError(errors.confirmPassword?.message)}
+            </div>
+          </div>
+
+          <div>
+            <label className="group flex cursor-pointer items-start gap-3">
+              <input type="checkbox" {...register("agree")} className="sr-only" />
+              <span className={`mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-[4px] border transition ${isAgreeChecked ? "border-[#315900] bg-[#315900] text-[#b5ff62]" : "border-[#aebfb2] bg-white group-hover:border-[#477326]"}`}>
+                {isAgreeChecked && <Check className="h-3 w-3 stroke-[3]" />}
+              </span>
+              <span className="text-xs leading-5 text-[#647b6b]">
+                {t("auth.register.agreeText")}
+                <a href="#" className="font-bold text-[#315900] underline underline-offset-4">
+                  {t("auth.register.agreeLink")}
+                </a>
+              </span>
+            </label>
+            {renderError(errors.agree?.message)}
+          </div>
+
+          <button
+            type="submit"
+            disabled={submitting}
+            className="group flex h-12 w-full items-center justify-center gap-2 rounded-[6px] bg-[#315900] px-5 text-xs font-black uppercase tracking-[0.14em] text-[#b5ff62] shadow-[0_8px_24px_rgba(35,73,18,.16)] transition hover:bg-[#254500] disabled:cursor-not-allowed disabled:opacity-55"
+          >
+            {submitting ? (
+              <>
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#b5ff62]/30 border-t-[#b5ff62]" />
+                {t("auth.register.submitting")}
+              </>
+            ) : (
+              <>
+                {t("auth.register.submit")}
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </>
+            )}
+          </button>
+        </form>
       </div>
-    </div>
+    </AuthShell>
   );
 }
