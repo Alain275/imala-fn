@@ -57,8 +57,14 @@ export async function sendChatMessage(
   signal?: AbortSignal,
   context?: ChatContext
 ): Promise<void> {
+  // The UI adds an empty assistant placeholder while a response streams.
+  // Never send a stale placeholder back to the API after an interrupted request.
+  const requestMessages = messages.filter(
+    (message) => message.role !== "assistant" || message.content.trim().length > 0
+  );
+
   if (USE_MOCK_CHAT) {
-    const reply = getMockReply(messages);
+    const reply = getMockReply(requestMessages);
     await new Promise<void>((res) => setTimeout(res, MOCK_DELAY_MS));
     if (signal?.aborted) return;
 
@@ -80,7 +86,7 @@ export async function sendChatMessage(
         ? { Authorization: `Bearer ${localStorage.getItem("token")}` }
         : {}),
     },
-    body: JSON.stringify({ messages, context }),
+    body: JSON.stringify({ messages: requestMessages, context }),
     signal,
   });
 

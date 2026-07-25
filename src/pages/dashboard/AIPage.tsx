@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { useTheme } from "next-themes"
+import { useTranslation } from "react-i18next"
 import {
   Bot,
   Bug,
@@ -16,6 +17,8 @@ import {
   Sun,
   Thermometer,
   User,
+  Volume2,
+  VolumeX,
   Wind,
   X,
 } from "lucide-react"
@@ -29,6 +32,13 @@ import { sendChatMessage } from "@/services/chat"
 import type { ChatMessage } from "@/types/chat"
 import { authService } from "@/services/auth"
 import { useCurrentWeather } from "@/hooks/useWeather"
+import { useBrowserVoice } from "@/hooks/useBrowserVoice"
+
+const voiceLanguageCodes: Record<string, string> = {
+  en: "en-US",
+  fr: "fr-FR",
+  rw: "rw-RW",
+}
 
 const publicQuestions = [
   { icon: Leaf, text: "What crops grow well in Musanze this season?", hint: "Location-based crop choice" },
@@ -46,6 +56,10 @@ const farmerQuestions = [
 
 export default function AIPage() {
   const { resolvedTheme, setTheme } = useTheme()
+  const { i18n } = useTranslation()
+  const selectedLanguage = (i18n.resolvedLanguage || i18n.language || "en")
+    .toLowerCase()
+    .split("-")[0]
   const isPublic = !authService.isAuthenticated()
   const suggestions = isPublic ? publicQuestions : farmerQuestions
   const location = localStorage.getItem("imara_weather_location") || authService.getCurrentUser()?.location || "Musanze"
@@ -64,6 +78,7 @@ export default function AIPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const abortControllerRef = useRef<AbortController | null>(null)
+  const voice = useBrowserVoice(voiceLanguageCodes[selectedLanguage] || "en-US")
 
   useEffect(() => setThemeMounted(true), [])
   useEffect(() => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }), [messages])
@@ -77,11 +92,14 @@ export default function AIPage() {
     setInput("")
     setIsLoading(true)
     abortControllerRef.current = new AbortController()
+    voice.stopSpeaking()
+    let assistantReply = ""
 
     try {
       await sendChatMessage(
         [...messages, userMessage],
         (character) => {
+          assistantReply += character
           setMessages((previous) => {
             const updated = [...previous]
             const last = updated[updated.length - 1]
@@ -91,6 +109,7 @@ export default function AIPage() {
         },
         abortControllerRef.current.signal
       )
+      voice.speak(assistantReply)
     } catch (error) {
       if (error instanceof Error && error.name !== "AbortError") {
         setMessages((previous) => {
@@ -110,6 +129,26 @@ export default function AIPage() {
       abortControllerRef.current = null
     }
   }
+
+  const handleVoiceButton = () => {
+    if (voice.isTranscribing) return
+    if (voice.isListening) {
+      voice.stopListening()
+      return
+    }
+
+    voice.startListening({
+      onInterim: setInput,
+      onFinal: (transcript) => {
+        setInput("")
+        void handleSend(transcript)
+      },
+    })
+  }
+
+  const latestAssistantReply = [...messages].reverse().find(
+    (message) => message.role === "assistant" && message.content.trim()
+  )?.content
 
   return (
     <div className="advisory-shell h-screen overflow-hidden bg-[#eef8f1] text-[#17231b] dark:bg-[#101a14] dark:text-[#edf5ef]">
@@ -260,7 +299,42 @@ export default function AIPage() {
                     className="h-8 min-w-0 flex-1 bg-transparent text-xs outline-none"
                     disabled={isLoading}
                   />
-                  <Mic className="h-4 w-4 text-muted-foreground" />
+                  <button
+                    type="button"
+                    onClick={handleVoiceButton}
+                    disabled={isLoading || voice.isTranscribing}
+                    className={`grid h-8 w-8 shrink-0 place-items-center rounded-full transition ${
+                      voice.isListening
+                        ? "animate-pulse bg-red-100 text-red-600 dark:bg-red-950/60 dark:text-red-300"
+                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    }`}
+                    aria-label={voice.isListening ? "Stop listening" : voice.isTranscribing ? "Transcribing speech" : "Speak to IMARA"}
+                    title={voice.recognitionSupported ? "Speak to IMARA" : "Voice input is not supported in this browser"}
+                  >
+                    <Mic className="h-4 w-4" />
+                  </button>
+                  {voice.isSpeaking && (
+                    <button
+                      type="button"
+                      onClick={voice.stopSpeaking}
+                      className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-[#47734f] hover:bg-muted"
+                      aria-label="Stop voice response"
+                      title="Stop voice response"
+                    >
+                      <VolumeX className="h-4 w-4" />
+                    </button>
+                  )}
+                  {!voice.isSpeaking && latestAssistantReply && (
+                    <button
+                      type="button"
+                      onClick={() => voice.speak(latestAssistantReply)}
+                      className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-[#47734f] hover:bg-muted"
+                      aria-label="Replay voice response"
+                      title="Replay voice response"
+                    >
+                      <Volume2 className="h-4 w-4" />
+                    </button>
+                  )}
                   <Button
                     onClick={() => void handleSend()}
                     disabled={!input.trim() || isLoading}
@@ -270,6 +344,39 @@ export default function AIPage() {
                     <Send className="h-4 w-4" />
                   </Button>
                 </div>
+                {(voice.isListening || voice.isTranscribing || voice.isSpeaking || voice.error) && (
+                  <div
+                    className={`mt-2 flex items-center justify-center gap-1.5 text-[9px] ${
+                      voice.error ? "text-red-600 dark:text-red-300" : "text-[#47734f] dark:text-[#aee8bd]"
+                    }`}
+                    role="status"
+                  >
+                    {!voice.error && (voice.isListening || voice.isTranscribing ? <Mic className="h-3 w-3" /> : <Volume2 className="h-3 w-3" />)}
+                    {voice.error || (
+                      voice.isListening
+                        ? "Listening… Tap the microphone when you finish."
+                        : voice.isTranscribing
+                          ? "Understanding your Kinyarwanda question…"
+                          : "IMARA is speaking…"
+                    )}
+                  </div>
+                )}
+                {voice.lastAudioUrl && selectedLanguage === "rw" && (
+                  <div className="mt-2 rounded border border-[#dce8df] bg-[#f8fcf9] p-2 dark:border-[#30473a] dark:bg-[#132018]">
+                    <p className="mb-1.5 text-center text-[9px] font-medium text-[#47734f] dark:text-[#aee8bd]">
+                      Kinyarwanda voice response
+                    </p>
+                    <audio
+                      key={voice.lastAudioUrl}
+                      src={voice.lastAudioUrl}
+                      controls
+                      preload="auto"
+                      className="h-9 w-full"
+                    >
+                      Your browser cannot play this Kinyarwanda audio response.
+                    </audio>
+                  </div>
+                )}
                 <p className="mt-2 text-center text-[8px] text-muted-foreground">IMARA can make mistakes. Verify critical actions against raw telemetry.</p>
               </div>
             </section>
