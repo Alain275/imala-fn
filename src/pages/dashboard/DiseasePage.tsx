@@ -72,6 +72,9 @@ export default function DiseasePage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [mobileOpen, setMobileOpen] = useState(false)
   const [themeMounted, setThemeMounted] = useState(false)
+  const isAuthenticated = Boolean(localStorage.getItem("token"))
+  const [storeImage, setStoreImage] = useState(false)
+  const [trainingConsent, setTrainingConsent] = useState(false)
 
   const fileInputRef = useRef<HTMLInputElement>(null)
   const cameraInputRef = useRef<HTMLInputElement>(null)
@@ -120,7 +123,14 @@ export default function DiseasePage() {
     setScanPreview(preview)
     setUploadNotice(null)
 
-    await detect(file, selectedCrop, (detection) => {
+    await detect(
+      file,
+      selectedCrop,
+      {
+        storeImage: isAuthenticated && storeImage,
+        useForTraining: isAuthenticated && storeImage && trainingConsent,
+      },
+      (detection) => {
       setLastDetection(detection)
       if (String(detection.id).startsWith("public-")) {
         window.dispatchEvent(new CustomEvent("imara-public-notification", {
@@ -137,8 +147,9 @@ export default function DiseasePage() {
         window.dispatchEvent(new Event("imara-notifications-refresh"))
       }
       refetch()
-    })
-  }, [detect, refetch, selectedCrop, t])
+      }
+    )
+  }, [detect, isAuthenticated, refetch, selectedCrop, storeImage, t, trainingConsent])
 
   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault()
@@ -328,6 +339,36 @@ export default function DiseasePage() {
               >
                 <Upload className="mr-2 h-3.5 w-3.5" /> Upload image
               </Button>
+              <div className="space-y-2 border-t border-[#e2ebe4] pt-3 text-[10px] text-muted-foreground dark:border-[#2b4235] sm:col-span-3">
+                {isAuthenticated ? (
+                  <>
+                    <label className="flex cursor-pointer items-start gap-2">
+                      <input
+                        type="checkbox"
+                        checked={storeImage}
+                        onChange={(event) => {
+                          setStoreImage(event.target.checked)
+                          if (!event.target.checked) setTrainingConsent(false)
+                        }}
+                        className="mt-0.5"
+                      />
+                      <span>Save this private photo with my diagnosis history.</span>
+                    </label>
+                    <label className="flex cursor-pointer items-start gap-2">
+                      <input
+                        type="checkbox"
+                        checked={trainingConsent}
+                        disabled={!storeImage}
+                        onChange={(event) => setTrainingConsent(event.target.checked)}
+                        className="mt-0.5"
+                      />
+                      <span>Allow agronomist-approved use of this photo to improve the disease model.</span>
+                    </label>
+                  </>
+                ) : (
+                  <p>Public scans are processed temporarily and are not saved. Sign in to save a private scan.</p>
+                )}
+              </div>
             </div>
             {uploadNotice && (
               <div className="flex items-start gap-2 border-t border-amber-200 bg-amber-50 px-4 py-3 text-xs text-amber-800 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-300">
@@ -364,6 +405,17 @@ export default function DiseasePage() {
                       <div className="h-full bg-[#d51f2c]" style={{ width: `${activeDetection.aiConfidence}%` }} />
                     </div>
                   </div>
+                  {activeDetection.aiConfidenceReliable === false && (
+                    <div className="mt-4 flex items-start gap-2 border border-amber-200 bg-amber-50 p-3 text-[10px] leading-4 text-amber-800 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-300">
+                      <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                      <span>
+                        This prediction is uncertain and requires agronomist review.
+                        {activeDetection.aiConfidenceReason === "calibration_not_fitted"
+                          ? " Confidence calibration is waiting for verified validation images."
+                          : ""}
+                      </span>
+                    </div>
+                  )}
                   <p className="mt-4 line-clamp-3 text-[10px] leading-4 text-muted-foreground">{activeDetection.treatment}</p>
                   <Button
                     variant="outline"

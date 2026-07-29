@@ -9,6 +9,11 @@ export interface Detection {
   aiDisease: string
   aiCrop: string
   aiConfidence: number
+  aiRawConfidence?: number
+  aiConfidenceReliable?: boolean
+  aiConfidenceReason?: string | null
+  aiCalibrationFitted?: boolean
+  aiCalibrationTemperature?: number | null
   aiModel: string
   aiMode: string
   demoMode: boolean
@@ -24,6 +29,13 @@ export interface Detection {
   createdAt: string
   updatedAt: string
   crop: unknown | null
+  consentToStore?: boolean
+  consentToTraining?: boolean
+}
+
+export interface DiseaseImageConsent {
+  storeImage: boolean
+  useForTraining: boolean
 }
 
 export interface Pagination {
@@ -44,11 +56,17 @@ interface ApiResponse<T> {
   message?: string
 }
 
-async function detectDisease(file: File, cropType: string): Promise<Detection> {
+async function detectDisease(
+  file: File,
+  cropType: string,
+  consent: DiseaseImageConsent
+): Promise<Detection> {
   const token = localStorage.getItem('token')
   const formData = new FormData()
   formData.append('file', file)
   formData.append('cropType', cropType)
+  formData.append('consentToStore', String(consent.storeImage))
+  formData.append('consentToTraining', String(consent.useForTraining))
 
   const headers: Record<string, string> = {}
   if (token) headers.Authorization = `Bearer ${token}`
