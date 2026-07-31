@@ -1,20 +1,20 @@
-// import React from 'react'
-// import ReactDOM from 'react-dom/client'
-// import { BrowserRouter } from 'react-router-dom'
-// import { registerSW } from 'virtual:pwa-register'
-// import App from './App'
-// import { ThemeProvider } from './components/theme-provider'
-// import './index.css'
-// import './i18n'
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
+import { registerSW } from 'virtual:pwa-register'
+import App from './App'
+import { ThemeProvider } from './components/theme-provider'
+import './index.css'
+import './i18n'
 
-// registerSW({ immediate: true })
+registerSW({ immediate: true })
 
-// ReactDOM.createRoot(document.getElementById('root')!).render(
-//   <React.StrictMode>
-//     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-//       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-//         <App />
-//       </ThemeProvider>
-//     </BrowserRouter>
-//   </React.StrictMode>,
-// )
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <App />
+      </ThemeProvider>
+    </BrowserRouter>
+  </React.StrictMode>,
+)
