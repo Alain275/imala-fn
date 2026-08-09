@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { CalendarDays, CheckCircle2, MapPin, UserRound } from 'lucide-react'
+import { CalendarDays, CheckCircle2, MapPin, Plus, Trash2, UserRound } from 'lucide-react'
 import { Header } from '@/components/header'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -33,6 +33,30 @@ const provinceDistricts: Record<string, string[]> = {
 }
 const provinceOptions = Object.keys(provinceDistricts)
 
+type FarmFields = {
+  farmName: string
+  farmSize: string
+  sizeUnit: 'ha' | 'acre' | 'sqm'
+  cropType: string
+  farmProvince: string
+  farmDistrict: string
+  farmSector: string
+  farmCell: string
+  farmVillage: string
+}
+
+const emptyFarm: FarmFields = {
+  farmName: '',
+  farmSize: '1',
+  sizeUnit: 'ha',
+  cropType: '',
+  farmProvince: '',
+  farmDistrict: '',
+  farmSector: '',
+  farmCell: '',
+  farmVillage: '',
+}
+
 function canonicalName(options: string[], name: string) {
   return options.find((option) => option.toLocaleLowerCase() === name.toLocaleLowerCase())
 }
@@ -44,26 +68,30 @@ export default function FarmerProfileCompletionPage() {
   const [savedProfile, setSavedProfile] = useState<Awaited<ReturnType<typeof farmerProfileService.get>>['profile']>(null)
   const [loadingProfile, setLoadingProfile] = useState(true)
 
+  // Personal location state
   const [province, setProvince] = useState('')
   const [district, setDistrict] = useState('')
   const [sector, setSector] = useState('')
   const [cell, setCell] = useState('')
   const [village, setVillage] = useState('')
-  const [farmCropType, setFarmCropType] = useState('')
+
+  // Dynamic farm array
+  const [farms, setFarms] = useState<FarmFields[]>([{ ...emptyFarm }])
 
   const districtOptions = provinceDistricts[province] ?? []
   const sectorOptions = district ? Object.keys(locations[district] ?? {}) : []
   const cellOptions = district && sector ? Object.keys(locations[district]?.[sector] ?? {}) : []
   const villageOptions = district && sector && cell ? locations[district]?.[sector]?.[cell] ?? [] : []
 
+  // Populate saved values on mount
   useEffect(() => {
     let cancelled = false
     farmerProfileService.get({ name: currentUser?.name, phone: currentUser?.phone })
       .then(({ profile }) => {
         if (cancelled) return
         setSavedProfile(profile)
-        setFarmCropType(canonicalName([...SUPPORTED_CROPS], profile?.farms[0]?.cropType ?? '') ?? '')
 
+        // Personal location
         const savedDistrict = profile?.personal.district ?? currentUser?.location ?? ''
         const savedProvince = canonicalName(provinceOptions, profile?.personal.province ?? '')
           ?? provinceOptions.find((option) => provinceDistricts[option].includes(savedDistrict))
@@ -83,6 +111,22 @@ export default function FarmerProfileCompletionPage() {
         setSector(validSector)
         setCell(validCell)
         setVillage(canonicalName(savedVillages, profile?.personal.village ?? '') ?? '')
+
+        // Farms – load saved farms (if any)
+        if (profile?.farms?.length) {
+          const loadedFarms = profile.farms.map((f: any) => ({
+            farmName: f.farmName ?? '',
+            farmSize: String(f.farmSize ?? '1'),
+            sizeUnit: f.sizeUnit ?? 'ha',
+            cropType: f.cropType ?? '',
+            farmProvince: f.farmProvince ?? '',
+            farmDistrict: f.farmDistrict ?? '',
+            farmSector: f.farmSector ?? '',
+            farmCell: f.farmCell ?? '',
+            farmVillage: f.farmVillage ?? '',
+          }))
+          setFarms(loadedFarms.length ? loadedFarms : [emptyFarm])
+        }
       })
       .catch(() => undefined)
       .finally(() => {
@@ -96,6 +140,21 @@ export default function FarmerProfileCompletionPage() {
     return <Navigate to="/dashboard" replace />
   }
 
+  // Helpers for farm location dropdowns
+  const farmDistrictOptions = (province: string) => provinceDistricts[province] ?? []
+  const farmSectorOptions = (district: string) => (district ? Object.keys(locations[district] ?? {}) : [])
+  const farmCellOptions = (district: string, sector: string) =>
+    district && sector ? Object.keys(locations[district]?.[sector] ?? {}) : []
+  const farmVillageOptions = (district: string, sector: string, cell: string) =>
+    district && sector && cell ? locations[district]?.[sector]?.[cell] ?? [] : []
+
+  const updateFarm = (index: number, field: keyof FarmFields, value: string) => {
+    setFarms((prev) => prev.map((f, i) => (i === index ? { ...f, [field]: value } : f)))
+  }
+
+  const addFarm = () => setFarms((prev) => [...prev, { ...emptyFarm }])
+  const removeFarm = (index: number) => setFarms((prev) => prev.filter((_, i) => i !== index))
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
@@ -106,9 +165,16 @@ export default function FarmerProfileCompletionPage() {
     }
 
     const form = new FormData(event.currentTarget)
-    const selectedFarmCrop = String(form.get('cropType') || '')
-    const farmSize = Number(form.get('farmSize') || 0)
     try {
+      const farmPayloads = farms.map((farm) => ({
+        farmName: farm.farmName,
+        farmSize: Number(farm.farmSize),
+        sizeUnit: farm.sizeUnit,
+        farmLocation: `${farm.farmProvince}, ${farm.farmDistrict}, ${farm.farmSector}, ${farm.farmCell}, ${farm.farmVillage}`,
+        cropType: farm.cropType,
+        plantingDate: '',
+      }))
+
       await farmerProfileService.save(currentUser.id, {
         personal: {
           fullName: String(form.get('fullName') || ''),
@@ -123,20 +189,12 @@ export default function FarmerProfileCompletionPage() {
           village: String(form.get('village') || ''),
         },
         farming: {
-          farmingTypes: [selectedFarmCrop],
-          landSize: farmSize,
+          farmingTypes: [farms[0]?.cropType ?? ''],
+          landSize: Number(farms[0]?.farmSize ?? 0),
           yearsFarming: savedProfile?.farming.yearsFarming ?? 0,
           usesIrrigation: savedProfile?.farming.usesIrrigation ?? false,
         },
-        farms: [
-          {
-            farmName: String(form.get('farmName') || ''),
-            farmSize,
-            farmLocation: String(form.get('farmLocation') || ''),
-            cropType: String(form.get('cropType') || ''),
-            plantingDate: String(form.get('plantingDate') || ''),
-          },
-        ],
+        farms: farmPayloads,
       })
 
       authService.refreshUser()
@@ -162,6 +220,8 @@ export default function FarmerProfileCompletionPage() {
             </CardContent>
           </Card>
         )}
+
+        {/* Personal Info Card – unchanged except location dropdowns already exist */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -254,29 +314,141 @@ export default function FarmerProfileCompletionPage() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <MapPin className="h-5 w-5 text-emerald-600" />
-              {t('farmerProfile.farm.title')}
-            </CardTitle>
-            <CardDescription>{t('farmerProfile.farm.description')}</CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-4 md:grid-cols-2">
-            <Field label={t('farmerProfile.farm.name')} name="farmName" defaultValue={savedProfile?.farms[0]?.farmName} required />
-            <Field label={t('farmerProfile.farm.size')} name="farmSize" type="number" step="1" min="1" defaultValue={savedProfile?.farms[0]?.farmSize} required />
-            <Field label={t('farmerProfile.farm.location')} name="farmLocation" defaultValue={savedProfile?.farms[0]?.farmLocation} required />
-            <LocationSelect
-              label={t('farmerProfile.farm.cropType')}
-              name="cropType"
-              value={farmCropType}
-              options={SUPPORTED_CROPS}
-              placeholder={t('farmerProfile.farm.selectCrop')}
-              onChange={setFarmCropType}
-            />
-            <Field label={t('farmerProfile.farm.plantingDate')} name="plantingDate" type="date" defaultValue={savedProfile?.farms[0]?.plantingDate} required icon={<CalendarDays className="h-4 w-4 text-muted-foreground" />} />
-          </CardContent>
-        </Card>
+        {/* Farms Card – dynamic list */}
+        {farms.map((farm, index) => (
+          <Card key={index}>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <MapPin className="h-5 w-5 text-emerald-600" />
+                  {t('farmerProfile.farm.title')} {farms.length > 1 ? `#${index + 1}` : ''}
+                </CardTitle>
+                <CardDescription>{t('farmerProfile.farm.description')}</CardDescription>
+              </div>
+              {farms.length > 1 && (
+                <Button type="button" variant="ghost" size="icon" onClick={() => removeFarm(index)}>
+                  <Trash2 className="h-4 w-4 text-red-500" />
+                </Button>
+              )}
+            </CardHeader>
+            <CardContent className="grid gap-4 md:grid-cols-2">
+              <Field
+                label={t('farmerProfile.farm.name')}
+                name={`farmName-${index}`}
+                value={farm.farmName}
+                onChange={(e) => updateFarm(index, 'farmName', e.target.value)}
+                required
+              />
+              {/* Size + unit selector */}
+              <div className="space-y-2">
+                <Label htmlFor={`farmSize-${index}`}>{t('farmerProfile.farm.size')}</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id={`farmSize-${index}`}
+                    name={`farmSize-${index}`}
+                    type="number"
+                    min="0.01"
+                    step="0.01"
+                    value={farm.farmSize}
+                    onChange={(e) => updateFarm(index, 'farmSize', e.target.value)}
+                    required
+                  />
+                  <select
+                    name={`sizeUnit-${index}`}
+                    value={farm.sizeUnit}
+                    onChange={(e) => updateFarm(index, 'sizeUnit', e.target.value)}
+                    className="h-10 w-24 rounded-md border border-input bg-background px-2 text-sm"
+                  >
+                    <option value="ha">ha</option>
+                    <option value="acre">acre</option>
+                    <option value="sqm">sqm</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Farm location – nested dropdowns */}
+              <LocationSelect
+                label={t('farmerProfile.farm.province')}
+                name={`farmProvince-${index}`}
+                value={farm.farmProvince}
+                options={provinceOptions}
+                placeholder={t('farmerProfile.personal.selectProvince')}
+                onChange={(value) => {
+                  updateFarm(index, 'farmProvince', value)
+                  updateFarm(index, 'farmDistrict', '')
+                  updateFarm(index, 'farmSector', '')
+                  updateFarm(index, 'farmCell', '')
+                  updateFarm(index, 'farmVillage', '')
+                }}
+              />
+              <LocationSelect
+                label={t('farmerProfile.farm.district')}
+                name={`farmDistrict-${index}`}
+                value={farm.farmDistrict}
+                options={farmDistrictOptions(farm.farmProvince)}
+                placeholder={t('farmerProfile.personal.selectDistrict')}
+                disabled={!farm.farmProvince}
+                onChange={(value) => {
+                  updateFarm(index, 'farmDistrict', value)
+                  updateFarm(index, 'farmSector', '')
+                  updateFarm(index, 'farmCell', '')
+                  updateFarm(index, 'farmVillage', '')
+                }}
+              />
+              <LocationSelect
+                label={t('farmerProfile.farm.sector')}
+                name={`farmSector-${index}`}
+                value={farm.farmSector}
+                options={farmSectorOptions(farm.farmDistrict)}
+                placeholder={t('farmerProfile.personal.selectSector')}
+                disabled={!farm.farmDistrict}
+                onChange={(value) => {
+                  updateFarm(index, 'farmSector', value)
+                  updateFarm(index, 'farmCell', '')
+                  updateFarm(index, 'farmVillage', '')
+                }}
+              />
+              <LocationSelect
+                label={t('farmerProfile.farm.cell')}
+                name={`farmCell-${index}`}
+                value={farm.farmCell}
+                options={farmCellOptions(farm.farmDistrict, farm.farmSector)}
+                placeholder={t('farmerProfile.personal.selectCell')}
+                disabled={!farm.farmSector}
+                onChange={(value) => {
+                  updateFarm(index, 'farmCell', value)
+                  updateFarm(index, 'farmVillage', '')
+                }}
+              />
+              <LocationSelect
+                label={t('farmerProfile.farm.village')}
+                name={`farmVillage-${index}`}
+                value={farm.farmVillage}
+                options={farmVillageOptions(farm.farmDistrict, farm.farmSector, farm.farmCell)}
+                placeholder={t('farmerProfile.personal.selectVillage')}
+                disabled={!farm.farmCell}
+                onChange={(value) => updateFarm(index, 'farmVillage', value)}
+              />
+
+              {/* Crop type */}
+              <LocationSelect
+                label={t('farmerProfile.farm.cropType')}
+                name={`cropType-${index}`}
+                value={farm.cropType}
+                options={SUPPORTED_CROPS}
+                placeholder={t('farmerProfile.farm.selectCrop')}
+                onChange={(value) => updateFarm(index, 'cropType', value)}
+              />
+
+              {/* Planting date removed completely */}
+            </CardContent>
+          </Card>
+        ))}
+
+        <Button type="button" variant="outline" onClick={addFarm} className="w-full">
+          <Plus className="mr-2 h-4 w-4" />
+          {t('farmerProfile.farm.addAnother')}
+        </Button>
 
         <div className="sticky bottom-20 z-20 flex items-center justify-between gap-3 border border-[#d7e5da] bg-white/95 p-3 shadow-[0_8px_28px_rgba(35,72,50,.12)] backdrop-blur lg:bottom-4 dark:border-[#2b4235] dark:bg-[#17271e]/95">
           <p className="hidden text-xs text-[#6a7e70] sm:block">{t('farmerProfile.personal.description')}</p>
@@ -290,18 +462,27 @@ export default function FarmerProfileCompletionPage() {
   )
 }
 
+// --- Helper components (unchanged except Field now accepts value/onChange for controlled inputs) ---
+
 interface FieldProps {
   label: string
   name: string
   type?: string
   required?: boolean
   defaultValue?: string | number
+  value?: string
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
   min?: string
   step?: string
   icon?: ReactNode
 }
 
-function Field({ label, name, type = 'text', required, defaultValue, min, step, icon }: FieldProps) {
+function Field({ label, name, type = 'text', required, defaultValue, value, onChange, min, step, icon }: FieldProps) {
+  // If controlled (value + onChange provided), use them; otherwise uncontrolled defaultValue
+  const inputProps = value !== undefined && onChange
+    ? { value, onChange }
+    : { defaultValue: defaultValue ?? '' }
+
   return (
     <div className="space-y-2">
       <Label htmlFor={name}>{label}</Label>
@@ -312,10 +493,10 @@ function Field({ label, name, type = 'text', required, defaultValue, min, step, 
           name={name}
           type={type}
           required={required}
-          defaultValue={defaultValue ?? ''}
           min={min}
           step={step}
           className={icon ? 'pl-9' : undefined}
+          {...inputProps}
         />
       </div>
     </div>
