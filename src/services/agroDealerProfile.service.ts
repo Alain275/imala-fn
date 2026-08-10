@@ -124,7 +124,7 @@ const agroDealerProfileService = {
     return parseEnvelope<AgroDealerProfileData>(response);
   },
 
-  async uploadLogo(file: File) {
+  async uploadLogo(file: File) { 
     const formData = new FormData();
     formData.append('logo', file);
 
