@@ -1,22 +1,9 @@
+// FarmPlanPage.tsx
 import { useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import {
-  CalendarDays,
-  Check,
-  ChevronRight,
-  ClipboardCheck,
-  Coins,
-  History,
-  Leaf,
-  Loader2,
-  Plus,
-  Sprout,
-  TrendingUp,
-  Users,
-  WalletCards,
-  Wheat,
-  Pencil,
-  Trash2,
+  CalendarDays, Check, ChevronRight, ClipboardCheck, Coins, History, Leaf, Loader2, Plus,
+  Sprout, TrendingUp, Users, WalletCards, Wheat, Pencil, Trash2,
 } from "lucide-react"
 import { toast } from "sonner"
 
@@ -120,7 +107,6 @@ export default function FarmPlanPage() {
   const [seasonYear, setSeasonYear] = useState(currentYear)
   const [recommendation, setRecommendation] = useState<FarmPlanRecommendation | null>(null)
 
-  // State for activity & harvest recording
   const [activity, setActivity] = useState({
     category: "planting", date: todayIso(), workers: "0", workerRate: "0", area: "0",
     seed: "0", fertilizer: "0", manure: "0", materialCost: "0", otherCost: "0", notes: "",
@@ -172,11 +158,11 @@ export default function FarmPlanPage() {
         setUserFarms(profile.farms.map((f: any) => ({
           farmName: f.farmName,
           farmSize: Number(f.farmSize),
-          sizeUnit: f.sizeUnit || 'ha',
-          farmLocation: f.farmLocation,
-          cropType: f.cropType,
-          province: f.farmProvince,
-          district: f.farmDistrict,
+          sizeUnit: (f as any).sizeUnit || 'ha',
+          farmLocation: f.location || (f as any).farmLocation || '',
+          cropType: f.cropType || (f as any).currentCrop || '',
+          province: (f as any).province || '',
+          district: (f as any).district || '',
         })))
       }
     } catch {
