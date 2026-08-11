@@ -19,6 +19,7 @@ import {
   Store,
   TrendingUp,
   UserRound,
+   ShoppingBag,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -49,6 +50,7 @@ const farmerItems: NavItem[] = [
 
 const dealerItems: NavItem[] = [
   { key: "dealerProfile", href: "/dashboard/dealer-profile", icon: BadgeCheck, fallback: "Dealer profile" },
+  { key: "dealerOrders", href: "/dashboard/dealer-orders", icon: ShoppingBag, fallback: "Orders" },
   { key: "dealerProducts", href: "/dashboard/dealer-products", icon: Package, fallback: "My products" },
   { key: "dealerMessages", href: "/dashboard/dealer-messages", icon: MessageSquare, fallback: "Messages" },
 ]

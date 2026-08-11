@@ -26,6 +26,7 @@ export default function DealerMarketplacePage() {
         setStatus(error instanceof Error ? error.message : "Failed to load marketplace")
       }
     }
+   
     void loadProducts()
   }, [])
 

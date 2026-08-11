@@ -1,4 +1,6 @@
+import { Product } from './Agrodealercatalog.service';
 import { buildApiUrl, buildAssetUrl } from './api';
+import { parseEnvelope } from './Agrodealercatalog.service';
 
 const API_BASE_URL = buildApiUrl('/agro-dealer-marketplace');
 
@@ -107,17 +109,36 @@ export const agroDealerMarketplaceService = {
   },
 
   async getMarketplaceProducts(): Promise<AgroDealerProduct[]> {
-    const response = await fetch(`${API_BASE_URL}/catalog/products`);
+    const response = await fetch(`${API_BASE_URL}/catalog/products`,
+     
+    );
+   
     return parseResponse<AgroDealerProduct[]>(response);
   },
+
 
   async getMyProducts(): Promise<AgroDealerProduct[]> {
     const response = await fetch(`${API_BASE_URL}/catalog/my-products`, {
       headers: getAuthHeaders(),
+      
     });
+    // console.log('getMyProducts response:', parseResponse<AgroDealerProduct[]>(response));
     return parseResponse<AgroDealerProduct[]>(response);
   },
 
+  async deleteProduct(productId: string): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/catalog/products/${productId}`, {
+    method: 'DELETE',
+    headers: getAuthHeaders(),
+  });
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result?.message || 'Failed to delete product');
+  }
+  },
+  
+
+  // CREATE, UPDATE, DELETE, and other methods can be added here as needed
   async createProduct(input: CreateProductInput): Promise<AgroDealerProduct> {
     const formData = new FormData();
     formData.append('name', input.name);
@@ -140,7 +161,9 @@ export const agroDealerMarketplaceService = {
     return parseResponse<AgroDealerProduct>(response);
   },
 
-  async updateProduct(productId: string, payload: Partial<Pick<AgroDealerProduct, 'isAvailable' | 'price' | 'quantity' | 'location'>>) {
+async updateProduct(productId: string, payload: Partial<Pick<AgroDealerProduct,
+  'name' | 'category' | 'description' | 'price' | 'quantity' | 'unit' | 'location' | 'district' | 'isAvailable'
+>>) {
     const response = await fetch(`${API_BASE_URL}/catalog/products/${productId}`, {
       method: 'PATCH',
       headers: getAuthHeaders(),

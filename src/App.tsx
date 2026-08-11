@@ -68,6 +68,9 @@ import { ProtectedRoute } from './components/ProtectedRoute'
 import { PublicLayout } from './components/PublicLayout'
 import { authService } from './services/auth'
 
+import DealerOverviewPage from './pages/dashboard/agrodealer/DealerOverViewPage'
+import DealerOrdersPage from './pages/dashboard/agrodealer/DealerOrdersPage'
+
 function App() {
   return (
     <NotificationsProvider>
@@ -82,14 +85,19 @@ function App() {
 
         {/* Public farmer dashboard routes - no farmer account required */}
         <Route path="/dashboard" element={<DashboardLayout />}>
+          
+
+          // PUBLIC ROUTES 
           <Route
-            index
-            element={
-              authService.isAuthenticated()
-                ? <DashboardPage />
-                : <PublicOverviewPage />
-            }
-          />
+              index
+              element={
+                !authService.isAuthenticated()
+                  ? <PublicOverviewPage />
+                  : authService.getCurrentUser()?.role === 'agro-dealer'
+                    ? <DealerOverviewPage />
+                    : <DashboardPage />
+              }
+            />
           <Route path="crops" element={<AIPage />} />
           <Route path="ai" element={<AIPage />} />
           <Route path="disease" element={<DiseasePage />} />
@@ -102,6 +110,7 @@ function App() {
             <Route path="soil" element={<SoilPage />} />
             <Route path="market" element={<MarketPage />} />
             <Route path="dealer-profile" element={<DealerProfilePage />} />
+            <Route path="dealer-orders" element={<DealerOrdersPage />} />
             <Route path="dealer-products" element={<DealerProductsPage />} />
             <Route path="farm-plan" element={<FarmPlanPage />} />
             <Route path="dealer-marketplace" element={<DealerMarketplacePage />} />
