@@ -109,8 +109,10 @@ export const agroDealerMarketplaceService = {
   },
 
   async getMarketplaceProducts(): Promise<AgroDealerProduct[]> {
-    const response = await fetch(`${API_BASE_URL}/catalog/products`);
-    const result = await response.json();
+    const response = await fetch(`${API_BASE_URL}/catalog/products`,
+     
+    );
+   
     return parseResponse<AgroDealerProduct[]>(response);
   },
 

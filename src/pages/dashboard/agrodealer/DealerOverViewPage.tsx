@@ -39,12 +39,12 @@ const statusColors: Record<OrderStatus, string> = {
 }
 
 const quickActions = [
-  { key: "addProduct", icon: PlusCircle, gradient: "green" as const, href: "/dashboard/dealer-products" },
-  { key: "viewOrders", icon: ShoppingBag, gradient: "gold" as const, href: "/dashboard/dealer-orders" },
-  { key: "lowStock", icon: AlertTriangle, gradient: "earth" as const, href: "/dashboard/dealer-products" },
-  { key: "messages", icon: MessageSquare, gradient: "sky" as const, href: "/dashboard/dealer-messages" },
-  { key: "editProfile", icon: BadgeCheck, gradient: "leaf" as const, href: "/dashboard/dealer-profile" },
-  { key: "marketplace", icon: Store, gradient: "green" as const, href: "/dashboard/dealer-marketplace" },
+  { key: "Add Product", icon: PlusCircle, gradient: "green" as const, href: "/dashboard/dealer-products" },
+  { key: "View Orders", icon: ShoppingBag, gradient: "gold" as const, href: "/dashboard/dealer-orders" },
+  { key: "Low Stock", icon: AlertTriangle, gradient: "earth" as const, href: "/dashboard/dealer-products" },
+  { key: "Messages", icon: MessageSquare, gradient: "sky" as const, href: "/dashboard/dealer-messages" },
+  { key: "Edit Profile", icon: BadgeCheck, gradient: "leaf" as const, href: "/dashboard/dealer-profile" },
+  { key: "Marketplace", icon: Store, gradient: "green" as const, href: "/dashboard/dealer-marketplace" },
 ]
 
 export default function DealerOverviewPage() {
@@ -92,10 +92,10 @@ export default function DealerOverviewPage() {
     .reduce((sum, o) => sum + o.totalAmount, 0)
 
   const statCards = [
-    { key: "totalOrders", icon: ShoppingBag, gradient: "gold" as const, value: orders.length },
-    { key: "pendingOrders", icon: Clock, gradient: "earth" as const, value: pendingCount },
-    { key: "myProducts", icon: Package, gradient: "green" as const, value: products.length },
-    { key: "lowStockAlerts", icon: AlertTriangle, gradient: "leaf" as const, value: lowStock.length },
+    { key: "Total Orders", icon: ShoppingBag, gradient: "gold" as const, value: orders.length },
+    { key: "Pending Orders", icon: Clock, gradient: "earth" as const, value: pendingCount },
+    { key: "My Products", icon: Package, gradient: "green" as const, value: products.length },
+    { key: "Low Stock Alerts", icon: AlertTriangle, gradient: "leaf" as const, value: lowStock.length },
   ]
 
   const statusBreakdown = (["pending", "confirmed", "shipped", "delivered", "cancelled"] as OrderStatus[]).map(
