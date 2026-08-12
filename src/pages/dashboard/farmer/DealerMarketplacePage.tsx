@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { ImageOff, MapPin, MessageSquare, PackageSearch, Search, Store } from "lucide-react"
+import { ImageOff, MapPin, MessageSquare, PackageSearch, Search, ShoppingCart, Store } from "lucide-react"
+import { toast } from "sonner"
 
 import { Header } from "@/components/header"
 import { Badge } from "@/components/ui/badge"
@@ -51,6 +52,14 @@ export default function DealerMarketplacePage() {
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Failed to start chat")
     }
+  }
+
+  // Placeholder — ordering isn't wired to the backend yet. Once the farmer-side
+  // create-order endpoint exists, replace this with an actual order flow
+  // (e.g. a quantity picker + call to an orders service, then navigate to
+  // an order confirmation or /dashboard/orders).
+  function placeOrder(product: AgroDealerProduct) {
+    toast.info(`Ordering isn't available yet — message ${product.agroDealer?.name || "the dealer"} directly to arrange your purchase.`)
   }
 
   if (currentUser?.role !== "farmer") {
@@ -126,9 +135,14 @@ export default function DealerMarketplacePage() {
                     <span>{product.quantity ? `${product.quantity} ${product.unit || "units"}` : "Quantity on request"}</span>
                     <span className="flex items-center gap-1"><MapPin className="h-3 w-3" /> {location}</span>
                   </div>
-                  <Button className="mt-4 w-full bg-[#315900] text-[#b5ff62] hover:bg-[#254500]" onClick={() => startChat(product)}>
-                    <MessageSquare className="h-4 w-4" /> Contact dealer
-                  </Button>
+                  <div className="mt-4 grid grid-cols-2 gap-2">
+                    <Button variant="outline" className="border-[#315900] text-[#315900] hover:bg-[#315900]/5 dark:border-[#b5ff62] dark:text-[#b5ff62]" onClick={() => placeOrder(product)}>
+                      <ShoppingCart className="h-4 w-4" /> Order
+                    </Button>
+                    <Button className="bg-[#315900] text-[#b5ff62] hover:bg-[#254500]" onClick={() => startChat(product)}>
+                      <MessageSquare className="h-4 w-4" /> Contact
+                    </Button>
+                  </div>
                 </div>
               </article>
             )
@@ -159,9 +173,14 @@ export default function DealerMarketplacePage() {
               ))}
             </div>
             {selectedProduct && (
-              <Button className="w-full bg-[#315900] text-[#b5ff62]" onClick={() => startChat(selectedProduct)}>
-                <MessageSquare className="h-4 w-4" /> Contact dealer
-              </Button>
+              <div className="grid grid-cols-2 gap-2">
+                <Button variant="outline" className="border-[#315900] text-[#315900] hover:bg-[#315900]/5 dark:border-[#b5ff62] dark:text-[#b5ff62]" onClick={() => placeOrder(selectedProduct)}>
+                  <ShoppingCart className="h-4 w-4" /> Order
+                </Button>
+                <Button className="bg-[#315900] text-[#b5ff62] hover:bg-[#254500]" onClick={() => startChat(selectedProduct)}>
+                  <MessageSquare className="h-4 w-4" /> Contact dealer
+                </Button>
+              </div>
             )}
           </div>
         </DialogContent>
