@@ -13,9 +13,6 @@ import { FarmerGender, farmerProfileService } from '@/services/farmerProfile'
 import rwandaLocations from '@/data/rwandaLocations.json'
 import { SUPPORTED_CROPS } from '@/constants/supportedCrops'
 
-// ============================================================
-// Constants & Types
-// ============================================================
 
 const genderOptions: Array<{ value: FarmerGender; key: string }> = [
   { value: 'female', key: 'female' },
@@ -40,9 +37,6 @@ function canonicalName(options: string[], name: string) {
   return options.find((option) => option.toLocaleLowerCase() === name.toLocaleLowerCase())
 }
 
-// ============================================================
-// Crop Recommendation Engine (placeholder)
-// ============================================================
 
 function getRecommendedCrops(province: string, district: string, plantingDate: string): string[] {
   if (!province) return []
@@ -68,9 +62,6 @@ function getRecommendedCrops(province: string, district: string, plantingDate: s
   return [...new Set(recommended)]
 }
 
-// ============================================================
-// Main Component
-// ============================================================
 
 export default function FarmerProfileCompletionPage() {
   const { t } = useTranslation()
@@ -371,7 +362,7 @@ export default function FarmerProfileCompletionPage() {
                 {t('farmerProfile.farmLocation.title', { defaultValue: 'Farm Location' })}
               </CardTitle>
               <CardDescription className="text-emerald-700/80">
-                {t('farmerProfile.farmLocation.hint', { defaultValue: 'Your farm will be registered at your personal address' })}
+                {t('farmerProfile.farmLocation.hint', { defaultValue: '' })}
               </CardDescription>
             </div>
           </CardHeader>
@@ -383,7 +374,7 @@ export default function FarmerProfileCompletionPage() {
                   {farmLocation || '—'}
                 </p>
                 <p className="text-xs text-emerald-700/70">
-                  {t('farmerProfile.farmLocation.sameAsPersonal', { defaultValue: 'Same as your personal address' })}
+                  {t('farmerProfile.farmLocation.sameAsPersonal', { defaultValue: '' })}
                 </p>
               </div>
             </div>
@@ -431,11 +422,11 @@ export default function FarmerProfileCompletionPage() {
               <div className="md:col-span-2 space-y-3">
                 <div className="flex items-center gap-2">
                   <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">
-                    <span>✨</span> {t('farmerProfile.farm.recommendedHint', { count: recommendedCrops.length })}
+                    <span>✨</span> {t('', { count: recommendedCrops.length })}
                   </span>
                   <p className="text-xs text-emerald-700/80">
                     {t('farmerProfile.farm.recommendedMessage', {
-                      defaultValue: 'Tap a crop to select it – best for your area & season!',
+                      defaultValue: 'This crops are the best for your area & season!',
                     })}
                   </p>
                 </div>
@@ -460,11 +451,6 @@ export default function FarmerProfileCompletionPage() {
                     </button>
                   ))}
                 </div>
-                <p className="text-xs italic text-emerald-600/80">
-                  {t('farmerProfile.farm.recommendedWhy', {
-                    defaultValue: 'These crops thrive in your province during this planting window.',
-                  })}
-                </p>
               </div>
             )}
 
@@ -505,10 +491,6 @@ export default function FarmerProfileCompletionPage() {
     </div>
   )
 }
-
-// ============================================================
-// Helper Components (unchanged except minor note)
-// ============================================================
 
 interface FieldProps {
   label: string

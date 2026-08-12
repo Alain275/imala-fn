@@ -478,9 +478,11 @@ export default function FarmPlanPage() {
                   <CardContent className="p-6 sm:p-8">
                     <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
                       <div>
-                        <Badge className="bg-white/15 text-white hover:bg-white/20">{selectedPlan.status}</Badge>
-                        <h2 className="mt-3 text-3xl font-bold">{selectedPlan.cropName}</h2>
-                        <p className="mt-1 text-emerald-50">{selectedPlan.season} · {selectedPlan.locationName} · {selectedPlan.farmSize} ha</p>
+                        <Badge className="bg-white/15 text-green-900 font-bold hover:bg-white/20">{selectedPlan.status.toUpperCase()}</Badge>
+                        <h2 className="mt-3  text-green-900  text-3xl font-bold">Farm of {selectedPlan.cropName} </h2>
+                        <p className="mt-1 text-green-900 ">{selectedPlan.season} </p>
+                        <p className="mt-1 text-green-900 ">{selectedPlan.farmSize} hectare at {selectedPlan.locationName}</p>
+
                       </div>
                       <Button className="bg-white text-emerald-900 hover:bg-emerald-50" onClick={startNewPlan}><Plus className="mr-2 h-4 w-4" />Plan another farm</Button>
                     </div>
