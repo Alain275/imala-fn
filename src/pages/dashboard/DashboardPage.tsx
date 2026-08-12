@@ -129,7 +129,7 @@ export default function DashboardPage() {
                     <p className="text-sm text-muted-foreground font-medium">{t(`dashboard.overview.stats.${stat.key}`)}</p>
                     {loading ? (
                       <Skeleton className="h-9 w-20" />
-                    ) : ( 
+                    ) : (
                       <p className="text-3xl font-bold text-foreground">{stat.value.toLocaleString()}</p>
                     )}
                     <div className={`flex items-center text-sm font-medium ${stat.up ? 'text-emerald-600' : 'text-red-500'}`}>

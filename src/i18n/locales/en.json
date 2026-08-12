@@ -263,9 +263,9 @@
     },
     "farm": {
       "title": "Farm registration",
-      "description": "",
+      "description": "Register your first farm. More farms can be added later.",
       "name": "Farm name",
-      "size": "Farm size (hectares)",
+      "size": "Farm size (m²)",
       "location": "Farm location",
       "cropType": "Type of crop",
       "selectCrop": "Select a crop",

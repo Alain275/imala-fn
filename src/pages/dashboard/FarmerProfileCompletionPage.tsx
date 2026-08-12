@@ -1,4 +1,5 @@
-import { FormEvent, useEffect, useState, useMemo } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
+import type { ReactNode } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
@@ -13,7 +14,6 @@ import { FarmerGender, farmerProfileService } from '@/services/farmerProfile'
 import rwandaLocations from '@/data/rwandaLocations.json'
 import { SUPPORTED_CROPS } from '@/constants/supportedCrops'
 
-
 const genderOptions: Array<{ value: FarmerGender; key: string }> = [
   { value: 'female', key: 'female' },
   { value: 'male', key: 'male' },
@@ -22,8 +22,8 @@ const genderOptions: Array<{ value: FarmerGender; key: string }> = [
 ]
 
 type RwandaLocations = Record<string, Record<string, Record<string, string[]>>>
-const locations = rwandaLocations as RwandaLocations
 
+const locations = rwandaLocations as RwandaLocations
 const provinceDistricts: Record<string, string[]> = {
   'Kigali City': ['Gasabo', 'Kicukiro', 'Nyarugenge'],
   'Eastern Province': ['Bugesera', 'Gatsibo', 'Kayonza', 'Kirehe', 'Ngoma', 'Nyagatare', 'Rwamagana'],
@@ -37,32 +37,6 @@ function canonicalName(options: string[], name: string) {
   return options.find((option) => option.toLocaleLowerCase() === name.toLocaleLowerCase())
 }
 
-
-function getRecommendedCrops(province: string, district: string, plantingDate: string): string[] {
-  if (!province) return []
-
-  const month = plantingDate ? new Date(plantingDate).getMonth() : -1
-
-  const cropMap: Record<string, string[]> = {
-    'Kigali City': ['Vegetables', 'Tomatoes', 'Onions'],
-    'Eastern Province': ['Maize', 'Beans', 'Cassava', 'Soybeans'],
-    'Northern Province': ['Potatoes', 'Wheat', 'Peas', 'Barley'],
-    'Southern Province': ['Maize', 'Beans', 'Sweet Potatoes', 'Coffee'],
-    'Western Province': ['Coffee', 'Tea', 'Bananas', 'Beans'],
-  }
-
-  let recommended = cropMap[province] || []
-
-  if (month >= 8 && month <= 11) {
-    recommended = recommended.concat(['Maize', 'Beans'])
-  } else if (month >= 2 && month <= 5) {
-    recommended = recommended.concat(['Potatoes', 'Peas'])
-  }
-
-  return [...new Set(recommended)]
-}
-
-
 export default function FarmerProfileCompletionPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -70,90 +44,52 @@ export default function FarmerProfileCompletionPage() {
   const [savedProfile, setSavedProfile] = useState<Awaited<ReturnType<typeof farmerProfileService.get>>['profile']>(null)
   const [loadingProfile, setLoadingProfile] = useState(true)
 
-  // Personal location state
   const [province, setProvince] = useState('')
   const [district, setDistrict] = useState('')
   const [sector, setSector] = useState('')
   const [cell, setCell] = useState('')
   const [village, setVillage] = useState('')
+  const [farmCropType, setFarmCropType] = useState('')
 
-  // Single farm state
-  const [farm, setFarm] = useState({
-    farmName: '',
-    farmSize: '1',
-    cropType: '',
-    plantingDate: '',
-  })
-
-  // Derived location options for personal info
   const districtOptions = provinceDistricts[province] ?? []
   const sectorOptions = district ? Object.keys(locations[district] ?? {}) : []
   const cellOptions = district && sector ? Object.keys(locations[district]?.[sector] ?? {}) : []
   const villageOptions = district && sector && cell ? locations[district]?.[sector]?.[cell] ?? [] : []
 
-  // Farm location (derived from personal location)
-  const farmLocation = useMemo(() => {
-    const parts = [province, district, sector, cell, village].filter(Boolean)
-    return parts.length ? parts.join(', ') : ''
-  }, [province, district, sector, cell, village])
-
-  // Recommended crops (based on province and planting date)
-  const recommendedCrops = useMemo(() => {
-    return getRecommendedCrops(province, district, farm.plantingDate)
-  }, [province, district, farm.plantingDate])
-
-  // Crop chip click handler
-  const handleCropChipClick = (crop: string) => {
-    setFarm((prev) => ({ ...prev, cropType: crop }))
-  }
-
-  // Populate saved values on mount
   useEffect(() => {
     let cancelled = false
-    farmerProfileService
-      .get({ name: currentUser?.name, phone: currentUser?.phone })
+    farmerProfileService.get({ name: currentUser?.name, phone: currentUser?.phone })
       .then(({ profile }) => {
         if (cancelled) return
         setSavedProfile(profile)
+        setFarmCropType(canonicalName([...SUPPORTED_CROPS], profile?.farms[0]?.cropType ?? '') ?? '')
 
         const savedDistrict = profile?.personal.district ?? currentUser?.location ?? ''
-        const savedProvince =
-          canonicalName(provinceOptions, profile?.personal.province ?? '') ??
-          provinceOptions.find((option) => provinceDistricts[option].includes(savedDistrict)) ??
-          ''
+        const savedProvince = canonicalName(provinceOptions, profile?.personal.province ?? '')
+          ?? provinceOptions.find((option) => provinceDistricts[option].includes(savedDistrict))
+          ?? ''
         const savedDistricts = provinceDistricts[savedProvince] ?? []
         const validDistrict = canonicalName(savedDistricts, savedDistrict) ?? ''
         const savedSectors = validDistrict ? Object.keys(locations[validDistrict] ?? {}) : []
         const validSector = canonicalName(savedSectors, profile?.personal.sector ?? '') ?? ''
         const savedCells = validDistrict && validSector ? Object.keys(locations[validDistrict]?.[validSector] ?? {}) : []
         const validCell = canonicalName(savedCells, profile?.personal.cell ?? '') ?? ''
-        const savedVillages =
-          validDistrict && validSector && validCell ? locations[validDistrict]?.[validSector]?.[validCell] ?? [] : []
+        const savedVillages = validDistrict && validSector && validCell
+          ? locations[validDistrict]?.[validSector]?.[validCell] ?? []
+          : []
 
         setProvince(savedProvince)
         setDistrict(validDistrict)
         setSector(validSector)
         setCell(validCell)
         setVillage(canonicalName(savedVillages, profile?.personal.village ?? '') ?? '')
-
-        if (profile?.farms?.length) {
-          const first = profile.farms[0]
-          setFarm({
-            farmName: first.farmName ?? '',
-            farmSize: String(first.farmSize ?? '1'),
-            cropType: first.cropType ?? '',
-            plantingDate: first.plantingDate ? first.plantingDate.slice(0, 10) : '',
-          })
-        }
       })
       .catch(() => undefined)
       .finally(() => {
         if (!cancelled) setLoadingProfile(false)
       })
 
-    return () => {
-      cancelled = true
-    }
+    return () => { cancelled = true }
   }, [currentUser?.name, currentUser?.phone])
 
   if (currentUser && currentUser.role !== 'farmer') {
@@ -170,49 +106,41 @@ export default function FarmerProfileCompletionPage() {
     }
 
     const form = new FormData(event.currentTarget)
-
+    const selectedFarmCrop = String(form.get('cropType') || '')
+    const farmSize = Number(form.get('farmSize') || 0)
     try {
-      const farmPayload = {
-        farmName: farm.farmName,
-        farmSize: Number(farm.farmSize),
-        farmLocation: farmLocation || 'Unknown location',
-        cropType: farm.cropType,
-        plantingDate: farm.plantingDate,
-      }
-
-      const payload = {
+      await farmerProfileService.save(currentUser.id, {
         personal: {
           fullName: String(form.get('fullName') || ''),
           phone: String(form.get('phone') || ''),
           nationalId: String(form.get('nationalId') || ''),
           gender: String(form.get('gender') || 'prefer-not-to-say') as FarmerGender,
           age: Number(form.get('age') || 0),
-          province: province,
-          district: district,
-          sector: sector,
-          cell: cell,
-          village: village,
+          province: String(form.get('province') || ''),
+          district: String(form.get('district') || ''),
+          sector: String(form.get('sector') || ''),
+          cell: String(form.get('cell') || ''),
+          village: String(form.get('village') || ''),
         },
         farming: {
-          farmingTypes: [farm.cropType],
-          landSize: Number(farm.farmSize),
+          farmingTypes: [selectedFarmCrop],
+          landSize: farmSize,
           yearsFarming: savedProfile?.farming.yearsFarming ?? 0,
           usesIrrigation: savedProfile?.farming.usesIrrigation ?? false,
         },
-        farms: [farmPayload],
-      }
-
-      await farmerProfileService.save(currentUser.id, payload)
+        farms: [
+          {
+            farmName: String(form.get('farmName') || ''),
+            farmSize,
+            farmLocation: String(form.get('farmLocation') || ''),
+            cropType: String(form.get('cropType') || ''),
+            plantingDate: String(form.get('plantingDate') || ''),
+          },
+        ],
+      })
 
       authService.refreshUser()
-      toast.success(t('farmerProfile.toast.completed'), {
-  style: {
-    background: '#22c55e',
-    color: '#ffffff',
-    border: '1px solid #16a34a',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-  },
-})
+      toast.success(t('farmerProfile.toast.completed'))
       navigate('/dashboard', { replace: true })
     } catch (error: any) {
       toast.error(error?.response?.data?.message || t('farmerProfile.toast.saveFailed'))
@@ -234,8 +162,6 @@ export default function FarmerProfileCompletionPage() {
             </CardContent>
           </Card>
         )}
-
-        {/* Personal Info Card */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -245,23 +171,9 @@ export default function FarmerProfileCompletionPage() {
             <CardDescription>{t('farmerProfile.personal.description')}</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4 md:grid-cols-2">
-            <Field
-              label={t('farmerProfile.personal.fullName')}
-              name="fullName"
-              defaultValue={savedProfile?.personal.fullName ?? currentUser?.name}
-              required
-            />
-            <Field
-              label={t('farmerProfile.personal.phone')}
-              name="phone"
-              defaultValue={savedProfile?.personal.phone ?? currentUser?.phone}
-              required
-            />
-            <Field
-              label={t('farmerProfile.personal.nationalId')}
-              name="nationalId"
-              defaultValue={savedProfile?.personal.nationalId}
-            />
+            <Field label={t('farmerProfile.personal.fullName')} name="fullName" defaultValue={savedProfile?.personal.fullName ?? currentUser?.name} required />
+            <Field label={t('farmerProfile.personal.phone')} name="phone" defaultValue={savedProfile?.personal.phone ?? currentUser?.phone} required />
+            <Field label={t('farmerProfile.personal.nationalId')} name="nationalId" defaultValue={savedProfile?.personal.nationalId} />
             <div className="space-y-2">
               <Label htmlFor="gender">{t('farmerProfile.personal.gender')}</Label>
               <select
@@ -272,20 +184,11 @@ export default function FarmerProfileCompletionPage() {
                 className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
               >
                 {genderOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {t(`farmerProfile.gender.${option.key}`)}
-                  </option>
+                  <option key={option.value} value={option.value}>{t(`farmerProfile.gender.${option.key}`)}</option>
                 ))}
               </select>
             </div>
-            <Field
-              label={t('farmerProfile.personal.age')}
-              name="age"
-              type="number"
-              min="1"
-              defaultValue={savedProfile?.personal.age}
-              required
-            />
+            <Field label={t('farmerProfile.personal.age')} name="age" type="number" min="1" defaultValue={savedProfile?.personal.age} required />
             <LocationSelect
               label={t('farmerProfile.personal.province')}
               name="province"
@@ -351,135 +254,30 @@ export default function FarmerProfileCompletionPage() {
           </CardContent>
         </Card>
 
-        {/* Farm Location Card (separated, same style as personal) */}
-        <Card className="overflow-hidden border-emerald-100 bg-gradient-to-br from-white to-emerald-50/30 shadow-md">
-          <CardHeader className="flex flex-row items-center gap-3 border-b border-emerald-100 bg-emerald-50/40 pb-4">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
-              <MapPin className="h-5 w-5" />
-            </div>
-            <div>
-              <CardTitle className="text-lg text-emerald-900">
-                {t('farmerProfile.farmLocation.title', { defaultValue: 'Farm Location' })}
-              </CardTitle>
-              <CardDescription className="text-emerald-700/80">
-                {t('farmerProfile.farmLocation.hint', { defaultValue: '' })}
-              </CardDescription>
-            </div>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-3 rounded-xl border border-dashed border-emerald-200 bg-emerald-50/30 p-4">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
               <MapPin className="h-5 w-5 text-emerald-600" />
-              <div>
-                <p className="text-sm font-medium text-emerald-900">
-                  {farmLocation || '—'}
-                </p>
-                <p className="text-xs text-emerald-700/70">
-                  {t('farmerProfile.farmLocation.sameAsPersonal', { defaultValue: '' })}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Farm Details Card (beautified with recommended crop chips) */}
-        <Card className="overflow-hidden border-emerald-100 shadow-md">
-          <CardHeader className="border-b border-emerald-100 bg-gradient-to-r from-emerald-50 to-green-50 pb-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
-                <CalendarDays className="h-5 w-5" />
-              </div>
-              <div>
-                <CardTitle className="text-lg text-emerald-900">
-                  {t('farmerProfile.farm.title')}
-                </CardTitle>
-                <CardDescription className="text-emerald-700/80">
-                  {t('farmerProfile.farm.description')}
-                </CardDescription>
-              </div>
-            </div>
+              {t('farmerProfile.farm.title')}
+            </CardTitle>
+            <CardDescription>{t('farmerProfile.farm.description')}</CardDescription>
           </CardHeader>
-          <CardContent className="grid gap-6 pt-6 md:grid-cols-2">
-            <Field
-              label={t('farmerProfile.farm.name')}
-              name="farmName"
-              value={farm.farmName}
-              onChange={(e) => setFarm((prev) => ({ ...prev, farmName: e.target.value }))}
-              required
-            />
-            <Field
-              label={t('farmerProfile.farm.size')}
-              name="farmSize"
-              type="number"
-              min="0.01"
-              step="0.01"
-              value={farm.farmSize}
-              onChange={(e) => setFarm((prev) => ({ ...prev, farmSize: e.target.value }))}
-              required
-            />
-
-            {/* Recommended crops chips */}
-            {recommendedCrops.length > 0 && (
-              <div className="md:col-span-2 space-y-3">
-                <div className="flex items-center gap-2">
-                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">
-                    <span>✨</span> {t('', { count: recommendedCrops.length })}
-                  </span>
-                  <p className="text-xs text-emerald-700/80">
-                    {t('farmerProfile.farm.recommendedMessage', {
-                      defaultValue: 'This crops are the best for your area & season!',
-                    })}
-                  </p>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {recommendedCrops.map((crop) => (
-                    <button
-                      key={crop}
-                      type="button"
-                      onClick={() => handleCropChipClick(crop)}
-                      className={`group relative flex items-center gap-1.5 rounded-xl border-2 px-3 py-2 text-sm font-medium transition-all ${
-                        farm.cropType === crop
-                          ? 'border-emerald-600 bg-emerald-100 text-emerald-900 shadow-sm'
-                          : 'border-emerald-200 bg-white text-emerald-800 hover:border-emerald-400 hover:bg-emerald-50/80 hover:shadow-md'
-                      }`}
-                    >
-                      <span className="text-base">🌱</span>
-                      {crop}
-                      <span className="ml-1 text-amber-500">⭐</span>
-                      <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-[10px] font-bold text-white opacity-0 transition-opacity group-hover:opacity-100">
-                        ✓
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Crop dropdown (with recommended highlights inside the list) */}
+          <CardContent className="grid gap-4 md:grid-cols-2">
+            <Field label={t('farmerProfile.farm.name')} name="farmName" defaultValue={savedProfile?.farms[0]?.farmName} required />
+            <Field label={t('farmerProfile.farm.size')} name="farmSize" type="number" step="1" min="1" defaultValue={savedProfile?.farms[0]?.farmSize} required />
+            <Field label={t('farmerProfile.farm.location')} name="farmLocation" defaultValue={savedProfile?.farms[0]?.farmLocation} required />
             <LocationSelect
               label={t('farmerProfile.farm.cropType')}
               name="cropType"
-              value={farm.cropType}
+              value={farmCropType}
               options={SUPPORTED_CROPS}
               placeholder={t('farmerProfile.farm.selectCrop')}
-              onChange={(value) => setFarm((prev) => ({ ...prev, cropType: value }))}
-              recommended={recommendedCrops}
+              onChange={setFarmCropType}
             />
-
-            <div className="space-y-2">
-              <Label htmlFor="plantingDate">{t('farmerProfile.farm.plantingDate')}</Label>
-              <Input
-                id="plantingDate"
-                name="plantingDate"
-                type="date"
-                value={farm.plantingDate}
-                onChange={(e) => setFarm((prev) => ({ ...prev, plantingDate: e.target.value }))}
-                required
-              />
-            </div>
+            <Field label={t('farmerProfile.farm.plantingDate')} name="plantingDate" type="date" defaultValue={savedProfile?.farms[0]?.plantingDate} required icon={<CalendarDays className="h-4 w-4 text-muted-foreground" />} />
           </CardContent>
         </Card>
 
-        {/* Submit button */}
         <div className="sticky bottom-20 z-20 flex items-center justify-between gap-3 border border-[#d7e5da] bg-white/95 p-3 shadow-[0_8px_28px_rgba(35,72,50,.12)] backdrop-blur lg:bottom-4 dark:border-[#2b4235] dark:bg-[#17271e]/95">
           <p className="hidden text-xs text-[#6a7e70] sm:block">{t('farmerProfile.personal.description')}</p>
           <Button type="submit" size="lg" className="w-full bg-[#315900] font-bold text-[#b5ff62] hover:bg-[#254500] sm:w-auto">
@@ -498,22 +296,28 @@ interface FieldProps {
   type?: string
   required?: boolean
   defaultValue?: string | number
-  value?: string
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
   min?: string
   step?: string
+  icon?: ReactNode
 }
 
-function Field({ label, name, type = 'text', required, defaultValue, value, onChange, min, step }: FieldProps) {
-  const inputProps =
-    value !== undefined && onChange
-      ? { value, onChange }
-      : { defaultValue: defaultValue ?? '' }
-
+function Field({ label, name, type = 'text', required, defaultValue, min, step, icon }: FieldProps) {
   return (
     <div className="space-y-2">
       <Label htmlFor={name}>{label}</Label>
-      <Input id={name} name={name} type={type} required={required} min={min} step={step} {...inputProps} />
+      <div className="relative">
+        {icon && <span className="absolute left-3 top-1/2 -translate-y-1/2">{icon}</span>}
+        <Input
+          id={name}
+          name={name}
+          type={type}
+          required={required}
+          defaultValue={defaultValue ?? ''}
+          min={min}
+          step={step}
+          className={icon ? 'pl-9' : undefined}
+        />
+      </div>
     </div>
   )
 }
@@ -526,10 +330,9 @@ interface LocationSelectProps {
   placeholder: string
   disabled?: boolean
   onChange: (value: string) => void
-  recommended?: string[]
 }
 
-function LocationSelect({ label, name, value, options, placeholder, disabled, onChange, recommended = [] }: LocationSelectProps) {
+function LocationSelect({ label, name, value, options, placeholder, disabled, onChange }: LocationSelectProps) {
   return (
     <div className="space-y-2">
       <Label htmlFor={name}>{label}</Label>
@@ -543,20 +346,10 @@ function LocationSelect({ label, name, value, options, placeholder, disabled, on
         className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm disabled:cursor-not-allowed disabled:opacity-50"
       >
         <option value="">{placeholder}</option>
-        {options.map((option) => {
-          const isRecommended = recommended.includes(option)
-          return (
-            <option key={option} value={option} className={isRecommended ? 'text-green-600 font-bold' : ''}>
-              {option} {isRecommended && '⭐'}
-            </option>
-          )
-        })}
+        {options.map((option) => (
+          <option key={option} value={option}>{option}</option>
+        ))}
       </select>
-      {recommended.length > 0 && (
-        <p className="text-xs text-green-600">
-          {`${recommended.length} recommended`}
-        </p>
-      )}
     </div>
   )
 }
