@@ -67,10 +67,8 @@ function sanitizeAdvice(item: Advice): Advice {
   return { ...item, farmer: stripSensitiveFields(item.farmer) };
 }
 
-// The list endpoint's exact wrapper key isn't documented (only the single-item
-// shape was captured). Assume { advice: [...] } to match the resource name,
-// with a defensive fallback in case the backend actually returns a bare array
-// or an { items: [...] } wrapper — flagged for verification against the real API.
+// Confirmed via live response: { success, data: { advice: [...], pagination } }.
+// Fallback branches kept as harmless defense in depth, not because of remaining uncertainty.
 function normalizeAdviceList(raw: unknown): Advice[] {
   if (Array.isArray(raw)) return raw as Advice[];
   const obj = raw as { advice?: Advice[]; items?: Advice[] };

@@ -17,8 +17,7 @@ import {
   agronomistFarmVisitsService, type FarmVisit, type FarmVisitStatus, type FarmVisitType,
   type FarmVisitSeverity, type CreateFarmVisitPayload,
 } from "@/services/agronomistFarmVisits.service"
-import { agronomistFarmersService, type FarmerListEntry } from "@/services/agronomistFarmers.service"
-import type { Farm } from "@/services/farm"
+import { useAgronomistFarmerFarmPicker } from "@/hooks/useAgronomistFarmerFarmPicker"
 
 const STATUS_FILTERS: Array<FarmVisitStatus | 'all'> = ['all', 'scheduled', 'completed', 'cancelled']
 const TYPE_OPTIONS: FarmVisitType[] = ['farm', 'office', 'meeting', 'break']
@@ -70,9 +69,10 @@ export default function AgronomistFarmVisitsPage() {
   const [page, setPage] = useState(1)
   const limit = 10
 
-  const [farmers, setFarmers] = useState<FarmerListEntry[]>([])
-  const [selectedFarmerFarms, setSelectedFarmerFarms] = useState<Farm[]>([])
-  const [farmsLoading, setFarmsLoading] = useState(false)
+  const {
+    farmers, ensureFarmers, selectedFarmerFarms, setSelectedFarmerFarms,
+    farmsLoading, loadFarmsForFarmer, extractFarmChoicesFromError,
+  } = useAgronomistFarmerFarmPicker()
 
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editTarget, setEditTarget] = useState<FarmVisit | null>(null)
@@ -95,11 +95,7 @@ export default function AgronomistFarmVisitsPage() {
     setForm(EMPTY_FORM)
     setSelectedFarmerFarms([])
     setDialogOpen(true)
-    if (farmers.length === 0) {
-      agronomistFarmersService.getFarmers({ limit: 200 })
-        .then(({ farmers }) => setFarmers(farmers))
-        .catch(() => toast.error("Failed to load farmers list"))
-    }
+    ensureFarmers()
   }
 
   const openEdit = (visit: FarmVisit) => {
@@ -118,21 +114,12 @@ export default function AgronomistFarmVisitsPage() {
     })
     setSelectedFarmerFarms(visit.farm ? [visit.farm] : [])
     setDialogOpen(true)
-    if (farmers.length === 0) {
-      agronomistFarmersService.getFarmers({ limit: 200 })
-        .then(({ farmers }) => setFarmers(farmers))
-        .catch(() => toast.error("Failed to load farmers list"))
-    }
+    ensureFarmers()
   }
 
   const handleFarmerChange = (farmerId: string) => {
     setForm(prev => ({ ...prev, farmerId, farmId: "" }))
-    if (!farmerId) { setSelectedFarmerFarms([]); return }
-    setFarmsLoading(true)
-    agronomistFarmersService.getFarmerDetail(farmerId)
-      .then(detail => setSelectedFarmerFarms(detail.farms))
-      .catch(() => toast.error("Failed to load this farmer's farms"))
-      .finally(() => setFarmsLoading(false))
+    loadFarmsForFarmer(farmerId)
   }
 
   const handleSave = async () => {
@@ -167,9 +154,9 @@ export default function AgronomistFarmVisitsPage() {
       setDialogOpen(false)
       load()
     } catch (err) {
-      const data = (err as { data?: { farms?: Array<{ id: string; farmName: string }> } })?.data
-      if (data?.farms?.length) {
-        setSelectedFarmerFarms(data.farms as Farm[])
+      const farms = extractFarmChoicesFromError(err)
+      if (farms) {
+        setSelectedFarmerFarms(farms)
         toast.error("This farmer has multiple farms — please choose one")
       } else {
         toast.error(err instanceof Error ? err.message : "Failed to save farm visit")
