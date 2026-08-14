@@ -30,6 +30,7 @@ export default function PathologyPage() {
   const [prescriptionDistrict, setPrescriptionDistrict] = useState("")
   const [prescriptionDiagnosis, setPrescriptionDiagnosis] = useState("")
   const [prescriptionPathogen, setPrescriptionPathogen] = useState("")
+  const [prescriptionDosageOverride, setPrescriptionDosageOverride] = useState("")
   const [prescriptionNotes, setPrescriptionNotes] = useState("")
   const [sending, setSending] = useState(false)
   const [sentResult, setSentResult] = useState<{ smsText: string; sentAt: string; deliveredVia: string } | null>(null)
@@ -83,9 +84,13 @@ export default function PathologyPage() {
         farmerId: prescriptionFarmerId,
         cropType: prescriptionCrop,
         district: prescriptionDistrict || undefined,
-        diagnosis: prescriptionDiagnosis,
-        pathogen: prescriptionPathogen || undefined,
+        diagnosisName: prescriptionDiagnosis,
+        pathogenName: prescriptionPathogen || undefined,
+        // diseaseDetectionId is intentionally omitted — there's no UI to browse
+        // real disease-detection records yet (the AI matching panel above is
+        // still a placeholder), so there's nothing valid to send here.
         treatmentId: selectedTreatment.id,
+        dosageOverride: prescriptionDosageOverride || undefined,
         notes: prescriptionNotes || undefined,
       })
       setSentResult({ smsText: result.smsText, sentAt: result.sentAt, deliveredVia: result.deliveredVia })
@@ -327,6 +332,13 @@ export default function PathologyPage() {
                 <p className="text-[10px] text-muted-foreground mb-0.5">Treatment</p>
                 <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">{selectedTreatment?.product ?? "— Not selected —"}</p>
                 <p className="text-[10px] text-muted-foreground">{selectedTreatment?.dosage ?? "Select a treatment from the Treatment Ledger tab"}</p>
+              </div>
+
+              <div>
+                <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest block mb-1">Dosage override (optional)</label>
+                <input value={prescriptionDosageOverride} onChange={e => setPrescriptionDosageOverride(e.target.value)}
+                  placeholder={selectedTreatment?.dosage || "Uses the treatment's default dosage if left blank"}
+                  className="w-full bg-muted border border-border text-foreground text-xs px-2.5 py-2 rounded-lg focus:outline-none" />
               </div>
 
               <div>

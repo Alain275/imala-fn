@@ -42,17 +42,16 @@ export interface TreatmentsListResponse {
   pagination: Pagination;
 }
 
-// The request body for POST /prescriptions was not captured in the endpoint
-// reference (only the response was) — this shape is inferred from the response's
-// smsText content (diagnosis, crop, treatment, notes) and is NOT independently
-// verified. Field names may need adjusting once tested against the real API.
+// Confirmed request shape.
 export interface CreatePrescriptionPayload {
   farmerId: string;
   cropType: string;
   district?: string;
-  diagnosis: string;
-  pathogen?: string;
+  diagnosisName: string;
+  pathogenName?: string;
+  diseaseDetectionId?: string;
   treatmentId: string;
+  dosageOverride?: string;
   notes?: string;
 }
 
