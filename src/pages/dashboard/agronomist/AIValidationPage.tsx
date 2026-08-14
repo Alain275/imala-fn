@@ -1,48 +1,22 @@
-import { useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { Header } from "@/components/header"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Icon3D } from "@/components/icon-3d"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
+import { Skeleton } from "@/components/ui/skeleton"
 import {
   BrainCircuit, AlertTriangle, CheckCircle2, XCircle,
   ChevronDown, Filter, Sliders, ThumbsUp,
   Edit3, Info, Leaf,
-  Clock, ArrowUpDown, Database
+  Clock, ArrowUpDown, Database,
 } from "lucide-react"
+import { toast } from "sonner"
+import {
+  agronomistAiValidationService, type AiValidationItem, type AiValidationErrorCode,
+} from "@/services/agronomistAiValidation.service"
 
-type QueueStatus = "pending" | "approved" | "rejected" | "modified"
-type ErrorCode = "" | "mismatched_soil" | "outdated_window" | "sensor_error" | "region_mismatch" | "crop_stage_error" | "weather_conflict"
-
-interface RecommendationItem {
-  id: number
-  farmer: string
-  district: string
-  cropType: string
-  recommendation: string
-  confidence: number
-  soilPH: number
-  nitrogenPPM: number
-  phosphorusPPM: number
-  potassiumPPM: number
-  moisturePct: number
-  soilType: string
-  telemetryAge: string
-  status: QueueStatus
-  errorCode: ErrorCode
-  notes: string
-}
-
-const initialQueue: RecommendationItem[] = [
-  { id: 1, farmer: "Uwimana E.", district: "Bugesera", cropType: "Maize", recommendation: "Apply 120kg/ha NPK 17-17-17 + 40kg Urea supplement at V6 stage", confidence: 71, soilPH: 5.2, nitrogenPPM: 48, phosphorusPPM: 22, potassiumPPM: 180, moisturePct: 58, soilType: "Sandy Loam", telemetryAge: "3h ago", status: "pending", errorCode: "", notes: "" },
-  { id: 2, farmer: "Habimana P.", district: "Gasabo", cropType: "Irish Potato", recommendation: "Reduce nitrogen by 30% due to elevated leaf NDRE index; switch to K-dominant 10-5-25 blend", confidence: 62, soilPH: 6.1, nitrogenPPM: 92, phosphorusPPM: 31, potassiumPPM: 95, moisturePct: 72, soilType: "Clay Loam", telemetryAge: "1h ago", status: "pending", errorCode: "", notes: "" },
-  { id: 3, farmer: "Niyonzima J.", district: "Gatsibo", cropType: "Sorghum", recommendation: "Emergency fungicide application (Mancozeb 80WP @ 2.5g/L) — Fusarium risk level HIGH", confidence: 78, soilPH: 5.9, nitrogenPPM: 36, phosphorusPPM: 18, potassiumPPM: 142, moisturePct: 83, soilType: "Silty Clay", telemetryAge: "45m ago", status: "pending", errorCode: "", notes: "" },
-  { id: 4, farmer: "Mukamana F.", district: "Kicukiro", cropType: "Beans", recommendation: "Inoculate with Rhizobium leguminosarum at planting; skip synthetic N application this cycle", confidence: 67, soilPH: 6.4, nitrogenPPM: 28, phosphorusPPM: 44, potassiumPPM: 210, moisturePct: 65, soilType: "Sandy Clay", telemetryAge: "6h ago", status: "pending", errorCode: "", notes: "" },
-  { id: 5, farmer: "Bizimana C.", district: "Kirehe", cropType: "Rice", recommendation: "Increase irrigation frequency to every 3 days; apply iron chelate to correct Fe-deficiency chlorosis", confidence: 73, soilPH: 5.5, nitrogenPPM: 54, phosphorusPPM: 29, potassiumPPM: 160, moisturePct: 91, soilType: "Heavy Clay", telemetryAge: "2h ago", status: "pending", errorCode: "", notes: "" },
-  { id: 6, farmer: "Kagabo R.", district: "Ngoma", cropType: "Maize", recommendation: "Delay planting by 14 days pending rainfall normalization per RMA seasonal model", confidence: 59, soilPH: 6.8, nitrogenPPM: 62, phosphorusPPM: 38, potassiumPPM: 195, moisturePct: 42, soilType: "Loam", telemetryAge: "8h ago", status: "pending", errorCode: "", notes: "" },
-]
-
-const errorOptions: { value: ErrorCode; label: string }[] = [
+const errorOptions: { value: AiValidationErrorCode; label: string }[] = [
   { value: "", label: "— Select Error Classification —" },
   { value: "mismatched_soil", label: "Mismatched Soil Type" },
   { value: "outdated_window", label: "Outdated Planting Window" },
@@ -59,44 +33,54 @@ const confidenceBand = (c: number) => {
 }
 
 export default function AIValidationPage() {
-  const [queue, setQueue] = useState<RecommendationItem[]>(initialQueue)
-  const [selected, setSelected] = useState<RecommendationItem | null>(null)
+  const [queue, setQueue] = useState<AiValidationItem[]>([])
+  const [loading, setLoading] = useState(true)
+  const [selected, setSelected] = useState<AiValidationItem | null>(null)
   const [filterMin, setFilterMin] = useState(0)
   const [sortBy, setSortBy] = useState<"confidence" | "farmer">("confidence")
   const [actionNote, setActionNote] = useState("")
-  const [selectedError, setSelectedError] = useState<ErrorCode>("")
-  const [toast, setToast] = useState<{ msg: string; type: "ok" | "error" | "warn" } | null>(null)
+  const [selectedError, setSelectedError] = useState<AiValidationErrorCode>("")
+  const [submitting, setSubmitting] = useState(false)
+
+  const load = useCallback(() => {
+    setLoading(true)
+    agronomistAiValidationService.getQueue({ limit: 100 })
+      .then(({ items }) => setQueue(items))
+      .catch(() => toast.error("Failed to load AI validation queue"))
+      .finally(() => setLoading(false))
+  }, [])
+
+  useEffect(() => { load() }, [load])
 
   const pendingQueue = queue
     .filter(item => item.status === "pending" && item.confidence >= filterMin)
-    .sort((a, b) => sortBy === "confidence" ? a.confidence - b.confidence : a.farmer.localeCompare(b.farmer))
+    .sort((a, b) => sortBy === "confidence" ? a.confidence - b.confidence : a.farmerName.localeCompare(b.farmerName))
 
   const processedCount = queue.filter(q => q.status !== "pending").length
 
-  const showToast = (msg: string, type: "ok" | "error" | "warn") => {
-    setToast({ msg, type })
-    setTimeout(() => setToast(null), 3000)
-  }
-
-  const handleAction = (action: "approve" | "reject" | "modify") => {
+  const handleAction = async (action: "approve" | "reject" | "modify") => {
     if (!selected) return
     if ((action === "reject" || action === "modify") && !selectedError) {
-      showToast("Please select an error classification before proceeding.", "warn")
+      toast.warning("Please select an error classification before proceeding.")
       return
     }
-    const newStatus: QueueStatus = action === "approve" ? "approved" : action === "reject" ? "rejected" : "modified"
-    setQueue(q => q.map(item =>
-      item.id === selected.id ? { ...item, status: newStatus, errorCode: selectedError, notes: actionNote } : item
-    ))
-    showToast(
-      action === "approve" ? `✓ Recommendation approved for ${selected.farmer}` :
-      action === "reject" ? `✗ Recommendation rejected — retrain flag logged` :
-      `⟳ Modified successfully for re-evaluation`,
-      action === "approve" ? "ok" : action === "reject" ? "error" : "warn"
-    )
-    setSelected(null)
-    setActionNote("")
-    setSelectedError("")
+    setSubmitting(true)
+    try {
+      await agronomistAiValidationService.reviewItem(selected.id, action, selectedError || undefined, actionNote || undefined)
+      toast.success(
+        action === "approve" ? `Recommendation approved for ${selected.farmerName}` :
+        action === "reject" ? "Recommendation rejected — retrain flag logged" :
+        "Modified successfully for re-evaluation"
+      )
+      setSelected(null)
+      setActionNote("")
+      setSelectedError("")
+      load()
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to submit review")
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -106,22 +90,11 @@ export default function AIValidationPage() {
         subtitle="70/30 Hybrid Loop · Expert review & model validation dispatch desk"
       />
 
-      {/* Toast */}
-      {toast && (
-        <div className={`fixed top-20 right-6 z-50 px-4 py-3 rounded-xl border text-sm font-semibold shadow-lg transition-all ${
-          toast.type === "ok" ? "bg-emerald-50 border-emerald-200 text-emerald-800 dark:bg-emerald-950/80 dark:border-emerald-800 dark:text-emerald-300" :
-          toast.type === "error" ? "bg-rose-50 border-rose-200 text-rose-800 dark:bg-rose-950/80 dark:border-rose-800 dark:text-rose-300" :
-          "bg-amber-50 border-amber-200 text-amber-800 dark:bg-amber-950/80 dark:border-amber-800 dark:text-amber-300"
-        }`}>
-          {toast.msg}
-        </div>
-      )}
-
       {/* Stats strip */}
       <div className="grid grid-cols-3 gap-4 px-6 pt-6 pb-0">
         {[
-          { label: "Pending Review", val: pendingQueue.length, gradient: "gold" as const, icon: BrainCircuit },
-          { label: "Processed Today", val: processedCount, gradient: "green" as const, icon: CheckCircle2 },
+          { label: "Pending Review", val: loading ? "…" : pendingQueue.length, gradient: "gold" as const, icon: BrainCircuit },
+          { label: "Processed Today", val: loading ? "…" : processedCount, gradient: "green" as const, icon: CheckCircle2 },
           { label: "Confidence Threshold", val: `>${filterMin}%`, gradient: "sky" as const, icon: Sliders },
         ].map(s => (
           <Card key={s.label} className="border-0 shadow-sm">
@@ -165,12 +138,14 @@ export default function AIValidationPage() {
           <div className="px-4 py-2 bg-amber-500/10 border-b border-border flex items-center gap-2">
             <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />
             <p className="text-[11px] text-amber-700 dark:text-amber-300 font-semibold">
-              {pendingQueue.length} recommendations under 85% confidence — review required
+              {loading ? "Loading queue…" : `${pendingQueue.length} recommendations under 85% confidence — review required`}
             </p>
           </div>
 
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
-            {pendingQueue.length === 0 ? (
+            {loading ? (
+              Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-28 w-full rounded-xl" />)
+            ) : pendingQueue.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 text-center">
                 <div className="w-12 h-12 rounded-full bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 flex items-center justify-center mb-3">
                   <CheckCircle2 className="w-6 h-6 text-emerald-500" />
@@ -193,7 +168,7 @@ export default function AIValidationPage() {
                         <Leaf className="w-4 h-4 text-emerald-500" />
                       </div>
                       <div>
-                        <p className="text-xs font-bold text-foreground">{item.farmer}</p>
+                        <p className="text-xs font-bold text-foreground">{item.farmerName}</p>
                         <p className="text-[10px] text-muted-foreground">{item.district} · {item.cropType}</p>
                       </div>
                     </div>
@@ -225,7 +200,7 @@ export default function AIValidationPage() {
               </div>
               <p className="text-foreground font-bold text-base mb-1">Select Recommendation to Validate</p>
               <p className="text-xs text-muted-foreground max-w-xs leading-relaxed">
-                Click any crop prescription from the queue. Approved decisions are sent directly to farmers via SMS.
+                Click any crop prescription from the queue. Approved decisions are sent directly to farmers.
               </p>
             </div>
           ) : (
@@ -234,7 +209,7 @@ export default function AIValidationPage() {
               <Card className="border-border/60 shadow-sm">
                 <CardHeader className="p-4 flex flex-row items-center justify-between border-b border-border/50">
                   <div>
-                    <CardTitle className="text-sm font-bold text-foreground">{selected.farmer}</CardTitle>
+                    <CardTitle className="text-sm font-bold text-foreground">{selected.farmerName}</CardTitle>
                     <CardDescription className="text-[11px]">{selected.district} · {selected.cropType} · {selected.soilType}</CardDescription>
                   </div>
                   <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${confidenceBand(selected.confidence).badge}`}>
@@ -281,7 +256,7 @@ export default function AIValidationPage() {
                     <span className="text-xs font-bold text-foreground">Retraining Classification (Required for reject/modify)</span>
                   </div>
                   <div className="relative">
-                    <select value={selectedError} onChange={e => setSelectedError(e.target.value as ErrorCode)}
+                    <select value={selectedError} onChange={e => setSelectedError(e.target.value as AiValidationErrorCode)}
                       className="w-full bg-background border border-input text-foreground text-xs rounded-lg px-3 py-2 appearance-none cursor-pointer focus:outline-none">
                       {errorOptions.map(opt => (
                         <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -300,17 +275,17 @@ export default function AIValidationPage() {
               <Card className="border-border/60 shadow-sm">
                 <CardContent className="p-4">
                   <div className="grid grid-cols-3 gap-3">
-                    <Button onClick={() => handleAction("approve")} variant="outline"
+                    <Button onClick={() => handleAction("approve")} variant="outline" disabled={submitting}
                       className="h-16 flex flex-col gap-1 border-emerald-200 hover:bg-emerald-50 dark:border-emerald-900/30 dark:hover:bg-emerald-950/20">
                       <ThumbsUp className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                       <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">Approve</span>
                     </Button>
-                    <Button onClick={() => handleAction("modify")} variant="outline"
+                    <Button onClick={() => handleAction("modify")} variant="outline" disabled={submitting}
                       className="h-16 flex flex-col gap-1 border-sky-200 hover:bg-sky-50 dark:border-sky-900/30 dark:hover:bg-sky-950/20">
                       <Edit3 className="w-4 h-4 text-sky-600 dark:text-sky-400" />
                       <span className="text-xs font-bold text-sky-600 dark:text-sky-400">Modify</span>
                     </Button>
-                    <Button onClick={() => handleAction("reject")} variant="outline"
+                    <Button onClick={() => handleAction("reject")} variant="outline" disabled={submitting}
                       className="h-16 flex flex-col gap-1 border-rose-200 hover:bg-rose-50 dark:border-rose-900/30 dark:hover:bg-rose-950/20">
                       <XCircle className="w-4 h-4 text-rose-600 dark:text-rose-400" />
                       <span className="text-xs font-bold text-rose-600 dark:text-rose-400">Reject</span>
