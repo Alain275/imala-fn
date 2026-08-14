@@ -76,7 +76,7 @@ export default function AgronomistOverviewPage() {
       href: "/agronomist/training-materials",
       icon: BookOpen,
       description: "Publish and manage farmer training content",
-      gradient: "violet",
+      gradient: "leaf",
     },
     {
       name: "AI Validation Engine",
@@ -91,7 +91,7 @@ export default function AgronomistOverviewPage() {
       href: "/agronomist/pathology",
       icon: FlaskConical,
       description: "Diagnose crop diseases and build treatment prescriptions",
-      gradient: "violet",
+      gradient: "leaf",
     },
     {
       name: "Comms Studio",
