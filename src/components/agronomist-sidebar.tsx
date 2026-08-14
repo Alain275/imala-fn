@@ -7,7 +7,6 @@ import {
   MessageSquare,
   FlaskConical,
   BarChart3,
-  Users2,
   Settings,
   LogOut,
   Menu,
@@ -40,8 +39,7 @@ const navigation = [
   { name: "AI Validation Engine", href: "/agronomist/ai-validation", icon: BrainCircuit },
   { name: "Comms Studio", href: "/agronomist/comms", icon: MessageSquare },
   { name: "Pathology Lab", href: "/agronomist/pathology", icon: FlaskConical },
-  { name: "Advisory Hub", href: "/agronomist/advisory", icon: BarChart3 },
-  { name: "Workforce Desk", href: "/agronomist/workforce", icon: Users2 },
+  { name: "Analytics", href: "/agronomist/analytics", icon: BarChart3 },
 ]
 
 export function AgronomistSidebar() {

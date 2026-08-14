@@ -33,8 +33,10 @@ import GISPage from './pages/dashboard/agronomist/GISPage'
 import AIValidationPage from './pages/dashboard/agronomist/AIValidationPage'
 import CommsPage from './pages/dashboard/agronomist/CommsPage'
 import PathologyPage from './pages/dashboard/agronomist/PathologyPage'
-import AdvisoryPage from './pages/dashboard/agronomist/AdvisoryPage'
-import WorkforcePage from './pages/dashboard/agronomist/WorkforcePage'
+import AgronomistAnalyticsPage from './pages/agronomist/AgronomistAnalyticsPage'
+// AdvisoryPage and WorkforcePage are retired from routing — Section 2's nav plan
+// replaces both with Analytics (ticket resolution + yield trend, now backed by
+// real endpoints). Files are left in place, unregistered, not deleted.
 
 // Admin Portal
 import AdminLayout from './pages/admin/AdminLayout'
@@ -150,8 +152,7 @@ function App() {
             <Route path="ai-validation" element={<AIValidationPage />} />
             <Route path="comms" element={<CommsPage />} />
             <Route path="pathology" element={<PathologyPage />} />
-            <Route path="advisory" element={<AdvisoryPage />} />
-            <Route path="workforce" element={<WorkforcePage />} />
+            <Route path="analytics" element={<AgronomistAnalyticsPage />} />
             <Route path="settings" element={<SettingsPage />} />
             <Route path="notifications" element={<NotificationsPage />} />
           </Route>
