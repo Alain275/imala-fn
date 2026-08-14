@@ -908,6 +908,10 @@
         "confirmLabel": "Confirm New Password",
         "mismatchError": "Passwords do not match",
         "lengthError": "Password must be at least 8 characters",
+        "strengthLabel": "Password strength",
+        "strengthWeak": "Weak",
+        "strengthMedium": "Medium",
+        "strengthStrong": "Strong",
         "changing": "Changing…",
         "submit": "Change Password"
       },

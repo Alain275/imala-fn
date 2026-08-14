@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
@@ -14,6 +14,28 @@ interface Props {
   onOpenChange: (open: boolean) => void
 }
 
+type PasswordStrength = "weak" | "medium" | "strong"
+
+// Simple client-side heuristic: length + character-class variety. Not a
+// substitute for backend validation — just an at-a-glance signal for the user.
+function computePasswordStrength(pw: string): PasswordStrength {
+  let score = 0
+  if (pw.length >= 8) score++
+  if (pw.length >= 12) score++
+  if (/[a-z]/.test(pw) && /[A-Z]/.test(pw)) score++
+  if (/\d/.test(pw)) score++
+  if (/[^A-Za-z0-9]/.test(pw)) score++
+  if (score <= 2) return "weak"
+  if (score <= 3) return "medium"
+  return "strong"
+}
+
+const STRENGTH_STYLES: Record<PasswordStrength, { bar: string; text: string; segments: number }> = {
+  weak: { bar: "bg-rose-500", text: "text-rose-600 dark:text-rose-400", segments: 1 },
+  medium: { bar: "bg-amber-500", text: "text-amber-600 dark:text-amber-400", segments: 2 },
+  strong: { bar: "bg-emerald-500", text: "text-emerald-600 dark:text-emerald-400", segments: 3 },
+}
+
 export function ChangePasswordDialog({ open, onOpenChange }: Props) {
   const { t } = useTranslation()
   const { mutate: doChangePassword, loading: changingPw } = useChangePassword()
@@ -24,6 +46,7 @@ export function ChangePasswordDialog({ open, onOpenChange }: Props) {
   const [showCurrentPw, setShowCurrentPw] = useState(false)
   const [showNewPw, setShowNewPw] = useState(false)
   const [validationError, setValidationError] = useState<string | null>(null)
+  const strength = useMemo(() => computePasswordStrength(newPw), [newPw])
 
   const reset = () => {
     setCurrentPw(''); setNewPw(''); setConfirmPw('')
@@ -90,6 +113,24 @@ export function ChangePasswordDialog({ open, onOpenChange }: Props) {
                 {showNewPw ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
+            {newPw && (
+              <div className="space-y-1 pt-1">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-muted-foreground">{t("dashboard.account.changePassword.strengthLabel")}</span>
+                  <span className={`font-medium ${STRENGTH_STYLES[strength].text}`}>
+                    {t(`dashboard.account.changePassword.strength${strength.charAt(0).toUpperCase()}${strength.slice(1)}`)}
+                  </span>
+                </div>
+                <div className="grid grid-cols-3 gap-1">
+                  {[0, 1, 2].map(i => (
+                    <div
+                      key={i}
+                      className={`h-1.5 rounded-full ${i < STRENGTH_STYLES[strength].segments ? STRENGTH_STYLES[strength].bar : "bg-muted"}`}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
           <div className="space-y-2">
             <Label htmlFor="cpd-confirm">{t("dashboard.account.changePassword.confirmLabel")}</Label>

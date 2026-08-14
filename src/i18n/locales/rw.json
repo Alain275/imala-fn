@@ -908,6 +908,10 @@
         "confirmLabel": "Emeza Ijambo ry'Ibanga Rishya",
         "mismatchError": "Amagambo y'ibanga ntabwo ahuye",
         "lengthError": "Ijambo ry'ibanga rigomba kugira nibura inyuguti 8",
+        "strengthLabel": "Imbaraga z'ijambo ry'ibanga",
+        "strengthWeak": "Ridakomeye",
+        "strengthMedium": "Riringaniye",
+        "strengthStrong": "Rikomeye",
         "changing": "Kuhindura...",
         "submit": "Hindura Ijambo ry'Ibanga"
       },
