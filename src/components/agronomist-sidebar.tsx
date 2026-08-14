@@ -18,6 +18,7 @@ import {
   ClipboardList,
   Lightbulb,
   HelpCircle,
+  BookOpen,
 } from "lucide-react"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
@@ -34,6 +35,7 @@ const navigation = [
   { name: "Farm Visits", href: "/agronomist/farm-visits", icon: ClipboardList },
   { name: "Advice", href: "/agronomist/advice", icon: Lightbulb },
   { name: "Questions", href: "/agronomist/questions", icon: HelpCircle },
+  { name: "Training Materials", href: "/agronomist/training-materials", icon: BookOpen },
   { name: "GIS & Field Scouting", href: "/agronomist/gis", icon: Map },
   { name: "AI Validation Engine", href: "/agronomist/ai-validation", icon: BrainCircuit },
   { name: "Comms Studio", href: "/agronomist/comms", icon: MessageSquare },
