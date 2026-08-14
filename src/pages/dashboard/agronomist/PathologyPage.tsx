@@ -1,87 +1,107 @@
-import { useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { Header } from "@/components/header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Icon3D } from "@/components/icon-3d"
+import { Skeleton } from "@/components/ui/skeleton"
 import {
   FlaskConical, Camera, CheckCircle2,
   Search, Send,
   Pill, Shield, FileText, Microscope, Leaf,
-  AlertCircle, Printer
+  ImageOff, BrainCircuit,
 } from "lucide-react"
-
-interface DiseaseMatch {
-  id: number
-  name: string
-  pathogen: string
-  matchPct: number
-  symptoms: string[]
-  severity: "low" | "moderate" | "high" | "critical"
-}
-
-interface TreatmentEntry {
-  id: number
-  product: string
-  type: "organic" | "chemical"
-  activeIngredient: string
-  dosage: string
-  targetDisease: string
-  rwandaCompliant: boolean
-  organic: boolean
-  withdrawalDays: number
-  stock: "in_stock" | "low" | "out"
-}
-
-const diseaseMatches: DiseaseMatch[] = [
-  { id: 1, name: "Maize Leaf Blight", pathogen: "Exserohilum turcicum", matchPct: 94, symptoms: ["Cigar-shaped lesions", "Tan-gray necrotic spots", "Starts on lower leaves"], severity: "high" },
-  { id: 2, name: "Northern Corn Leaf Blight", pathogen: "Helminthosporium turcicum", matchPct: 87, symptoms: ["Long elliptical lesions", "Grayish-green color", "Spreads upward"], severity: "moderate" },
-  { id: 3, name: "Common Rust", pathogen: "Puccinia sorghi", matchPct: 72, symptoms: ["Brick-red pustules", "Both leaf surfaces", "Powdery spores"], severity: "low" },
-]
-
-const treatmentLedger: TreatmentEntry[] = [
-  { id: 1, product: "Mancozeb 80WP", type: "chemical", activeIngredient: "Mancozeb 80%", dosage: "2.5g/L water", targetDisease: "Leaf Blight, Rust", rwandaCompliant: true, organic: false, withdrawalDays: 7, stock: "in_stock" },
-  { id: 2, product: "Neem Extract Oil", type: "organic", activeIngredient: "Azadirachtin 3000ppm", dosage: "5ml/L water", targetDisease: "Aphids, Leaf Miners", rwandaCompliant: true, organic: true, withdrawalDays: 0, stock: "in_stock" },
-  { id: 3, product: "Ridomil Gold MZ", type: "chemical", activeIngredient: "Metalaxyl-M 4% + Mancozeb 64%", dosage: "2.5g/L water", targetDisease: "Downy Mildew, Blight", rwandaCompliant: true, organic: false, withdrawalDays: 14, stock: "low" },
-  { id: 4, product: "Copper Hydroxide WP", type: "organic", activeIngredient: "Copper Hydroxide 77%", dosage: "3g/L water", targetDisease: "Bacterial Leaf Spot", rwandaCompliant: true, organic: true, withdrawalDays: 0, stock: "in_stock" },
-  { id: 5, product: "Dithane M-45", type: "chemical", activeIngredient: "Mancozeb 80%", dosage: "2g/L water", targetDisease: "Powdery Mildew, Late Blight", rwandaCompliant: true, organic: false, withdrawalDays: 10, stock: "out" },
-  { id: 6, product: "Kaolin Clay Spray", type: "organic", activeIngredient: "Kaolin Clay 95%", dosage: "30g/L water", targetDisease: "Thrips, Leaf Burns", rwandaCompliant: true, organic: true, withdrawalDays: 0, stock: "in_stock" },
-]
+import { toast } from "sonner"
+import {
+  agronomistPathologyService, type Treatment,
+} from "@/services/agronomistPathology.service"
+import { agronomistFarmersService, type FarmerListEntry } from "@/services/agronomistFarmers.service"
 
 export default function PathologyPage() {
-  const [selectedMatch, setSelectedMatch] = useState<DiseaseMatch>(diseaseMatches[0])
-  const [selectedTreatment, setSelectedTreatment] = useState<TreatmentEntry | null>(null)
+  const [treatments, setTreatments] = useState<Treatment[]>([])
+  const [treatmentsTotal, setTreatmentsTotal] = useState(0)
+  const [treatmentsLoading, setTreatmentsLoading] = useState(true)
+  const [selectedTreatment, setSelectedTreatment] = useState<Treatment | null>(null)
   const [showOnlyOrganic, setShowOnlyOrganic] = useState(false)
   const [showOnlyCompliant, setShowOnlyCompliant] = useState(true)
   const [treatmentSearch, setTreatmentSearch] = useState("")
-  const [prescriptionFarmer, setPrescriptionFarmer] = useState("Uwimana Esperance")
-  const [prescriptionCrop, setPrescriptionCrop] = useState("Maize")
-  const [prescriptionDistrict, setPrescriptionDistrict] = useState("Bugesera")
+
+  const [farmers, setFarmers] = useState<FarmerListEntry[]>([])
+  const [prescriptionFarmerId, setPrescriptionFarmerId] = useState("")
+  const [prescriptionCrop, setPrescriptionCrop] = useState("")
+  const [prescriptionDistrict, setPrescriptionDistrict] = useState("")
+  const [prescriptionDiagnosis, setPrescriptionDiagnosis] = useState("")
+  const [prescriptionPathogen, setPrescriptionPathogen] = useState("")
   const [prescriptionNotes, setPrescriptionNotes] = useState("")
-  const [generated, setGenerated] = useState(false)
+  const [sending, setSending] = useState(false)
+  const [sentResult, setSentResult] = useState<{ smsText: string; sentAt: string; deliveredVia: string } | null>(null)
   const [activePanel, setActivePanel] = useState<"ledger" | "prescription">("ledger")
 
-  const filteredTreatments = treatmentLedger.filter(t => {
-    const matchSearch = t.product.toLowerCase().includes(treatmentSearch.toLowerCase()) || t.targetDisease.toLowerCase().includes(treatmentSearch.toLowerCase())
-    const matchOrganic = !showOnlyOrganic || t.organic
-    const matchCompliant = !showOnlyCompliant || t.rwandaCompliant
-    return matchSearch && matchOrganic && matchCompliant
-  })
+  const loadTreatments = useCallback(() => {
+    setTreatmentsLoading(true)
+    agronomistPathologyService.getTreatments({
+      search: treatmentSearch || undefined,
+      organicOnly: showOnlyOrganic || undefined,
+      rwandaCompliantOnly: showOnlyCompliant || undefined,
+      limit: 50,
+    })
+      .then(({ treatments, pagination }) => { setTreatments(treatments); setTreatmentsTotal(pagination.total) })
+      .catch(() => toast.error("Failed to load treatments"))
+      .finally(() => setTreatmentsLoading(false))
+  }, [showOnlyOrganic, showOnlyCompliant])
 
-  const severityStyle = (s: string) => {
-    if (s === "critical") return "bg-rose-500/10 border-rose-500/20 text-rose-600 dark:text-rose-400"
-    if (s === "high") return "bg-orange-500/10 border-orange-500/20 text-orange-600 dark:text-orange-400"
-    if (s === "moderate") return "bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400"
-    return "bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400"
-  }
+  useEffect(() => { loadTreatments() }, [loadTreatments])
 
-  const stockBadge = (s: string) => {
+  // Debounce the free-text search separately so we don't fire a request per keystroke.
+  useEffect(() => {
+    const t = setTimeout(() => loadTreatments(), 300)
+    return () => clearTimeout(t)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [treatmentSearch])
+
+  useEffect(() => {
+    if (activePanel === "prescription" && farmers.length === 0) {
+      agronomistFarmersService.getFarmers({ limit: 200 })
+        .then(({ farmers }) => setFarmers(farmers))
+        .catch(() => toast.error("Failed to load farmers list"))
+    }
+  }, [activePanel, farmers.length])
+
+  const stockBadge = (s: Treatment["stock"]) => {
     if (s === "in_stock") return "text-emerald-600 dark:text-emerald-400"
     if (s === "low") return "text-amber-600 dark:text-amber-400"
     return "text-rose-600 dark:text-rose-400"
   }
 
-  const smsTemplate = selectedTreatment
-    ? `Dear ${prescriptionFarmer}, our agronomist has diagnosed ${selectedMatch.name} (${selectedMatch.pathogen}) on your ${prescriptionCrop} crop in ${prescriptionDistrict}. TREATMENT: Apply ${selectedTreatment.product} (${selectedTreatment.dosage}) every 7 days for 3 applications. ${selectedTreatment.organic ? "This is an organic, safe solution." : `Observe ${selectedTreatment.withdrawalDays}-day pre-harvest withdrawal.`} ${prescriptionNotes ? `Notes: ${prescriptionNotes}` : ""} Contact *321# for support. — IMARA Agro`
-    : ""
+  const handleSendPrescription = async () => {
+    if (!prescriptionFarmerId || !prescriptionCrop || !prescriptionDiagnosis || !selectedTreatment) {
+      toast.error("Farmer, crop, diagnosis, and a selected treatment are required")
+      return
+    }
+    setSending(true)
+    setSentResult(null)
+    try {
+      const result = await agronomistPathologyService.createPrescription({
+        farmerId: prescriptionFarmerId,
+        cropType: prescriptionCrop,
+        district: prescriptionDistrict || undefined,
+        diagnosis: prescriptionDiagnosis,
+        pathogen: prescriptionPathogen || undefined,
+        treatmentId: selectedTreatment.id,
+        notes: prescriptionNotes || undefined,
+      })
+      setSentResult({ smsText: result.smsText, sentAt: result.sentAt, deliveredVia: result.deliveredVia })
+      toast.success("Prescription delivered to the farmer")
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to send prescription")
+    } finally {
+      setSending(false)
+    }
+  }
+
+  const deliveredViaLabel = (via: string) => {
+    if (via === "realtime") return "Delivered in real-time"
+    if (via === "notification-only") return "Delivered via notification"
+    return via
+  }
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -93,29 +113,34 @@ export default function PathologyPage() {
       <div className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-6">
 
         {/* Stats row */}
-        <div className="grid grid-cols-3 gap-4">
-          {[
-            { label: "Cases Today", val: "8", gradient: "earth" as const },
-            { label: "Avg Match Accuracy", val: "88%", gradient: "green" as const },
-            { label: "Treatments Available", val: `${treatmentLedger.length}`, gradient: "leaf" as const },
-          ].map(s => (
-            <Card key={s.label} className="border-0 shadow-md">
-              <CardContent className="p-4 flex items-center gap-4">
-                <Icon3D gradient={s.gradient} size="md">
-                  <FlaskConical className="w-5 h-5" />
-                </Icon3D>
-                <div>
-                  <p className="text-2xl font-black text-foreground">{s.val}</p>
-                  <p className="text-xs text-muted-foreground">{s.label}</p>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+        <div className="grid grid-cols-2 gap-4">
+          <Card className="border-0 shadow-md">
+            <CardContent className="p-4 flex items-center gap-4">
+              <Icon3D gradient="leaf" size="md">
+                <FlaskConical className="w-5 h-5" />
+              </Icon3D>
+              <div>
+                <p className="text-2xl font-black text-foreground">{treatmentsLoading ? "…" : treatmentsTotal}</p>
+                <p className="text-xs text-muted-foreground">Treatments Available</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="border-0 shadow-md border-dashed">
+            <CardContent className="p-4 flex items-center gap-4">
+              <div className="w-14 h-14 rounded-2xl bg-muted border border-border flex items-center justify-center flex-shrink-0">
+                <BrainCircuit className="w-5 h-5 text-muted-foreground" />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-muted-foreground">Coming Soon</p>
+                <p className="text-xs text-muted-foreground">AI Diagnostics</p>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Diagnostic split view */}
         <div className="grid grid-cols-2 gap-6">
-          {/* Farmer image */}
+          {/* Farmer image — not connected yet */}
           <Card className="border-0 shadow-md">
             <CardHeader className="pb-3 border-b border-border">
               <CardTitle className="flex items-center gap-3 text-sm">
@@ -123,35 +148,20 @@ export default function PathologyPage() {
                   <Camera className="w-4 h-4" />
                 </Icon3D>
                 Farmer Submitted Image
-                <span className="ml-auto text-xs text-muted-foreground font-normal">Uwimana E. · Bugesera · Maize</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="p-4">
-              <div className="relative flex items-center justify-center bg-muted/30 rounded-xl overflow-hidden h-52">
-                <div className="relative w-40 h-48 rounded-lg overflow-hidden border border-border shadow-lg">
-                  <div className="w-full h-full" style={{ background: "linear-gradient(135deg, #1a3a1a 0%, #2d5a2d 30%, #1f4a1f 60%, #2a5a2a 100%)" }}>
-                    <div className="absolute" style={{ top: "20%", left: "15%", width: "60px", height: "20px", borderRadius: "50%", background: "rgba(180, 120, 60, 0.8)", filter: "blur(2px)", transform: "rotate(-15deg)" }} />
-                    <div className="absolute" style={{ top: "35%", left: "40%", width: "45px", height: "15px", borderRadius: "50%", background: "rgba(160, 100, 40, 0.7)", filter: "blur(1.5px)", transform: "rotate(10deg)" }} />
-                    <div className="absolute" style={{ top: "55%", left: "20%", width: "70px", height: "18px", borderRadius: "50%", background: "rgba(140, 80, 30, 0.75)", filter: "blur(2px)", transform: "rotate(-5deg)" }} />
-                    <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 160 192">
-                      <line x1="80" y1="0" x2="80" y2="192" stroke="#4ade80" strokeWidth="1.5" />
-                      <line x1="80" y1="50" x2="20" y2="90" stroke="#4ade80" strokeWidth="0.8" />
-                      <line x1="80" y1="90" x2="140" y2="130" stroke="#4ade80" strokeWidth="0.8" />
-                    </svg>
-                  </div>
-                  <div className="absolute bottom-0 left-0 right-0 bg-black/60 px-2 py-1 text-center">
-                    <p className="text-[10px] text-white/70">Sample BUG-2026-047</p>
-                  </div>
-                </div>
-                <div className="absolute top-3 right-3 bg-rose-500/20 border border-rose-500/30 rounded-lg px-2 py-1.5">
-                  <p className="text-[10px] text-rose-600 dark:text-rose-400 font-bold">STRESS DETECTED</p>
-                  <p className="text-[10px] text-rose-500">3 lesion zones</p>
+              <div className="flex flex-col items-center justify-center gap-3 bg-muted/30 border-2 border-dashed border-border rounded-xl h-52 text-center px-6">
+                <ImageOff className="w-8 h-8 text-muted-foreground" />
+                <div>
+                  <p className="text-sm font-semibold text-foreground">Image capture not connected yet</p>
+                  <p className="text-xs text-muted-foreground mt-1">Farmer-submitted diagnostic photos will appear here once this feature is built on the backend.</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* AI matches */}
+          {/* AI matches — not connected yet */}
           <Card className="border-0 shadow-md">
             <CardHeader className="pb-3 border-b border-border">
               <CardTitle className="flex items-center gap-3 text-sm">
@@ -159,45 +169,17 @@ export default function PathologyPage() {
                   <Microscope className="w-4 h-4" />
                 </Icon3D>
                 AI Dataset Matches
-                <span className="ml-auto text-xs text-muted-foreground font-normal">Trained on 847k images</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-4 space-y-3">
-              {diseaseMatches.map(match => (
-                <button key={match.id} onClick={() => setSelectedMatch(match)}
-                  className={`w-full text-left p-3 rounded-xl border transition-all ${
-                    selectedMatch.id === match.id
-                      ? "bg-primary/5 border-primary"
-                      : "bg-muted/40 border-border hover:bg-muted hover:border-muted-foreground/30"
-                  }`}>
-                  <div className="flex items-start justify-between gap-2 mb-2">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <Leaf className="w-3.5 h-3.5 text-emerald-500" />
-                        <span className="text-sm font-bold text-foreground">{match.name}</span>
-                        {match.id === 1 && <span className="text-[10px] bg-primary/10 border border-primary/20 text-primary px-1.5 py-0.5 rounded font-bold">BEST MATCH</span>}
-                      </div>
-                      <p className="text-xs text-muted-foreground italic mt-0.5">{match.pathogen}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className={`text-xl font-black ${match.matchPct >= 90 ? "text-emerald-500" : match.matchPct >= 75 ? "text-amber-500" : "text-rose-500"}`}>{match.matchPct}%</p>
-                      <p className="text-[10px] text-muted-foreground">match</p>
-                    </div>
-                  </div>
-                  <div className="h-1.5 bg-muted rounded-full overflow-hidden mb-2">
-                    <div className={`h-full rounded-full ${match.matchPct >= 90 ? "bg-emerald-500" : match.matchPct >= 75 ? "bg-amber-500" : "bg-rose-500"}`}
-                      style={{ width: `${match.matchPct}%` }} />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex flex-wrap gap-1">
-                      {match.symptoms.slice(0, 2).map(s => (
-                        <span key={s} className="text-[10px] bg-muted border border-border text-muted-foreground px-1.5 py-0.5 rounded">{s}</span>
-                      ))}
-                    </div>
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded border font-medium ${severityStyle(match.severity)}`}>{match.severity}</span>
-                  </div>
-                </button>
-              ))}
+            <CardContent className="p-4">
+              <div className="flex flex-col items-center justify-center gap-3 h-52 text-center px-6">
+                <BrainCircuit className="w-8 h-8 text-muted-foreground" />
+                <span className="text-[10px] bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded-full font-bold uppercase tracking-wide">Coming Soon</span>
+                <div>
+                  <p className="text-sm font-semibold text-foreground">AI disease matching isn't available yet</p>
+                  <p className="text-xs text-muted-foreground mt-1">This will show ranked disease matches from farmer-submitted photos once the backend AI matching endpoint is built. You can enter a diagnosis manually below in the meantime.</p>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -223,7 +205,7 @@ export default function PathologyPage() {
           {activePanel === "ledger" && (
             <CardContent className="p-5">
               {/* Filters */}
-              <div className="flex items-center gap-4 mb-4">
+              <div className="flex items-center gap-4 mb-4 flex-wrap">
                 <div className="relative flex-1 max-w-xs">
                   <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
                   <input value={treatmentSearch} onChange={e => setTreatmentSearch(e.target.value)}
@@ -240,93 +222,111 @@ export default function PathologyPage() {
                 </label>
               </div>
 
-              <div className="bg-primary/5 border border-primary/20 rounded-xl p-3 flex items-start gap-2 mb-4">
-                <AlertCircle className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-xs font-semibold text-foreground">Treatments for: <span className="text-primary">{selectedMatch.name}</span></p>
-                  <p className="text-[10px] text-muted-foreground mt-0.5">Pathogen: {selectedMatch.pathogen} · Severity: {selectedMatch.severity}</p>
+              {treatmentsLoading ? (
+                <div className="grid grid-cols-2 gap-3">
+                  {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-28 w-full rounded-xl" />)}
                 </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                {filteredTreatments.map(t => (
-                  <button key={t.id} onClick={() => setSelectedTreatment(selectedTreatment?.id === t.id ? null : t)}
-                    disabled={t.stock === "out"}
-                    className={`text-left p-3.5 rounded-xl border transition-all ${
-                      t.stock === "out" ? "opacity-40 cursor-not-allowed bg-muted/30 border-border" :
-                      selectedTreatment?.id === t.id ? "bg-emerald-500/10 border-emerald-500/20" :
-                      "bg-muted/40 border-border hover:bg-muted hover:border-muted-foreground/30"
-                    }`}>
-                    <div className="flex items-start justify-between gap-2 mb-2">
-                      <div className="flex items-center gap-2">
-                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center border ${t.organic ? "bg-emerald-500/10 border-emerald-500/20" : "bg-muted border-border"}`}>
-                          {t.organic ? <Leaf className="w-4 h-4 text-emerald-500" /> : <Pill className="w-4 h-4 text-muted-foreground" />}
+              ) : treatments.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                  <Pill className="w-8 h-8 text-muted-foreground mb-2 opacity-40" />
+                  <p className="text-sm text-muted-foreground">No treatments match your filters.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-3">
+                  {treatments.map(t => (
+                    <button key={t.id} onClick={() => setSelectedTreatment(selectedTreatment?.id === t.id ? null : t)}
+                      disabled={t.stock === "out"}
+                      className={`text-left p-3.5 rounded-xl border transition-all ${
+                        t.stock === "out" ? "opacity-40 cursor-not-allowed bg-muted/30 border-border" :
+                        selectedTreatment?.id === t.id ? "bg-emerald-500/10 border-emerald-500/20" :
+                        "bg-muted/40 border-border hover:bg-muted hover:border-muted-foreground/30"
+                      }`}>
+                      <div className="flex items-start justify-between gap-2 mb-2">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center border ${t.organic ? "bg-emerald-500/10 border-emerald-500/20" : "bg-muted border-border"}`}>
+                            {t.organic ? <Leaf className="w-4 h-4 text-emerald-500" /> : <Pill className="w-4 h-4 text-muted-foreground" />}
+                          </div>
+                          <div>
+                            <p className="text-sm font-bold text-foreground">{t.product}</p>
+                            <p className="text-[10px] text-muted-foreground italic">{t.activeIngredient}</p>
+                          </div>
+                        </div>
+                        <div className="flex flex-col items-end gap-1">
+                          {t.organic && <span className="text-[10px] bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-1.5 py-0.5 rounded font-bold">ORGANIC</span>}
+                          {t.rwandaCompliant && <span className="flex items-center gap-0.5 text-[10px] text-emerald-600 dark:text-emerald-400"><Shield className="w-3 h-3" /> RW✓</span>}
+                        </div>
+                      </div>
+                      <p className="text-[10px] text-muted-foreground mb-2">Targets: {t.targetDisease}</p>
+                      <div className="grid grid-cols-3 gap-2 text-xs">
+                        <div>
+                          <p className="text-[10px] text-muted-foreground mb-0.5">Dosage</p>
+                          <p className="text-foreground font-medium text-xs">{t.dosage}</p>
                         </div>
                         <div>
-                          <p className="text-sm font-bold text-foreground">{t.product}</p>
-                          <p className="text-[10px] text-muted-foreground italic">{t.activeIngredient}</p>
+                          <p className="text-[10px] text-muted-foreground mb-0.5">Withdrawal</p>
+                          <p className={`font-medium text-xs ${t.withdrawalDays === 0 ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"}`}>
+                            {t.withdrawalDays === 0 ? "None" : `${t.withdrawalDays} days`}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] text-muted-foreground mb-0.5">Stock</p>
+                          <p className={`font-medium text-xs ${stockBadge(t.stock)}`}>{t.stock.replace("_", " ")}</p>
                         </div>
                       </div>
-                      <div className="flex flex-col items-end gap-1">
-                        {t.organic && <span className="text-[10px] bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-1.5 py-0.5 rounded font-bold">ORGANIC</span>}
-                        {t.rwandaCompliant && <span className="flex items-center gap-0.5 text-[10px] text-emerald-600 dark:text-emerald-400"><Shield className="w-3 h-3" /> RW✓</span>}
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-3 gap-2 text-xs">
-                      <div>
-                        <p className="text-[10px] text-muted-foreground mb-0.5">Dosage</p>
-                        <p className="text-foreground font-medium text-xs">{t.dosage}</p>
-                      </div>
-                      <div>
-                        <p className="text-[10px] text-muted-foreground mb-0.5">Withdrawal</p>
-                        <p className={`font-medium text-xs ${t.withdrawalDays === 0 ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"}`}>
-                          {t.withdrawalDays === 0 ? "None" : `${t.withdrawalDays} days`}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-[10px] text-muted-foreground mb-0.5">Stock</p>
-                        <p className={`font-medium text-xs ${stockBadge(t.stock)}`}>{t.stock.replace("_", " ")}</p>
-                      </div>
-                    </div>
-                    {selectedTreatment?.id === t.id && (
-                      <div className="mt-2 pt-2 border-t border-emerald-500/20 flex items-center gap-1.5">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                        <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">Selected for prescription</span>
-                      </div>
-                    )}
-                  </button>
-                ))}
-              </div>
+                      <p className="text-[9px] text-muted-foreground/70 mt-2">Added {new Date(t.createdAt).toLocaleDateString()}</p>
+                      {selectedTreatment?.id === t.id && (
+                        <div className="mt-2 pt-2 border-t border-emerald-500/20 flex items-center gap-1.5">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                          <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">Selected for prescription</span>
+                        </div>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
             </CardContent>
           )}
 
           {activePanel === "prescription" && (
             <CardContent className="p-5 space-y-4">
-              <div className="grid grid-cols-3 gap-3">
-                {[
-                  { label: "Farmer Name", val: prescriptionFarmer, setter: setPrescriptionFarmer },
-                  { label: "Crop Type", val: prescriptionCrop, setter: setPrescriptionCrop },
-                  { label: "District", val: prescriptionDistrict, setter: setPrescriptionDistrict },
-                ].map(f => (
-                  <div key={f.label}>
-                    <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest block mb-1">{f.label}</label>
-                    <input value={f.val} onChange={e => f.setter(e.target.value)}
-                      className="w-full bg-muted border border-border text-foreground text-xs px-2.5 py-2 rounded-lg focus:outline-none" />
-                  </div>
-                ))}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest block mb-1">Farmer</label>
+                  <select value={prescriptionFarmerId} onChange={e => setPrescriptionFarmerId(e.target.value)}
+                    className="w-full bg-muted border border-border text-foreground text-xs px-2.5 py-2 rounded-lg focus:outline-none">
+                    <option value="">Select a farmer…</option>
+                    {farmers.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest block mb-1">Crop Type</label>
+                  <input value={prescriptionCrop} onChange={e => setPrescriptionCrop(e.target.value)}
+                    placeholder="e.g. Maize"
+                    className="w-full bg-muted border border-border text-foreground text-xs px-2.5 py-2 rounded-lg focus:outline-none" />
+                </div>
+                <div>
+                  <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest block mb-1">District (optional)</label>
+                  <input value={prescriptionDistrict} onChange={e => setPrescriptionDistrict(e.target.value)}
+                    className="w-full bg-muted border border-border text-foreground text-xs px-2.5 py-2 rounded-lg focus:outline-none" />
+                </div>
+                <div>
+                  <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest block mb-1">Diagnosis</label>
+                  <input value={prescriptionDiagnosis} onChange={e => setPrescriptionDiagnosis(e.target.value)}
+                    placeholder="e.g. Late Blight"
+                    className="w-full bg-muted border border-border text-foreground text-xs px-2.5 py-2 rounded-lg focus:outline-none" />
+                </div>
+                <div className="col-span-2">
+                  <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest block mb-1">Pathogen (optional)</label>
+                  <input value={prescriptionPathogen} onChange={e => setPrescriptionPathogen(e.target.value)}
+                    placeholder="e.g. Uromyces appendiculatus"
+                    className="w-full bg-muted border border-border text-foreground text-xs px-2.5 py-2 rounded-lg focus:outline-none" />
+                </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div className="bg-muted/50 border border-border rounded-xl p-3">
-                  <p className="text-[10px] text-muted-foreground mb-0.5">Diagnosis</p>
-                  <p className="text-sm font-semibold text-primary">{selectedMatch.name}</p>
-                  <p className="text-[10px] text-muted-foreground italic">{selectedMatch.pathogen}</p>
-                </div>
-                <div className="bg-muted/50 border border-border rounded-xl p-3">
-                  <p className="text-[10px] text-muted-foreground mb-0.5">Treatment</p>
-                  <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">{selectedTreatment?.product ?? "— Not selected —"}</p>
-                  <p className="text-[10px] text-muted-foreground">{selectedTreatment?.dosage ?? "Select from ledger"}</p>
-                </div>
+              <div className="bg-muted/50 border border-border rounded-xl p-3">
+                <p className="text-[10px] text-muted-foreground mb-0.5">Treatment</p>
+                <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">{selectedTreatment?.product ?? "— Not selected —"}</p>
+                <p className="text-[10px] text-muted-foreground">{selectedTreatment?.dosage ?? "Select a treatment from the Treatment Ledger tab"}</p>
               </div>
 
               <div>
@@ -336,33 +336,25 @@ export default function PathologyPage() {
                   className="w-full bg-muted border border-border text-foreground text-xs px-2.5 py-2 rounded-lg resize-none focus:outline-none placeholder:text-muted-foreground/50" />
               </div>
 
-              <button onClick={() => setGenerated(true)} disabled={!selectedTreatment}
+              <button onClick={handleSendPrescription} disabled={sending || !selectedTreatment}
                 className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl font-semibold text-sm transition-all ${
                   selectedTreatment ? "bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20" : "bg-muted border border-border text-muted-foreground cursor-not-allowed"
                 }`}>
-                <FileText className="w-4 h-4" /> Generate SMS Prescription
+                <Send className="w-4 h-4" /> {sending ? "Sending…" : "Send Prescription to Farmer"}
               </button>
 
-              {generated && selectedTreatment && (
+              {sentResult && (
                 <div className="border border-emerald-500/20 rounded-xl p-4">
-                  <div className="flex items-center justify-between gap-2 mb-3">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                      <h4 className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">SMS Prescription Generated</h4>
-                    </div>
-                    <div className="flex gap-2">
-                      <button className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground bg-muted px-2.5 py-1.5 rounded-lg border border-border transition-colors">
-                        <Printer className="w-3.5 h-3.5" /> Print
-                      </button>
-                      <button className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1.5 rounded-lg transition-colors hover:bg-emerald-500/20">
-                        <Send className="w-3.5 h-3.5" /> Send via SMS
-                      </button>
-                    </div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                    <h4 className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">Message sent to farmer</h4>
                   </div>
-                  <div className="bg-muted/50 border border-border rounded-xl p-3 font-mono text-xs text-foreground leading-relaxed">
-                    {smsTemplate}
+                  <div className="bg-muted/50 border border-border rounded-xl p-3 font-mono text-xs text-foreground leading-relaxed whitespace-pre-wrap">
+                    {sentResult.smsText}
                   </div>
-                  <p className="text-[10px] text-muted-foreground mt-2">{smsTemplate.length} characters · {Math.ceil(smsTemplate.length / 160)} SMS segment(s) · Rwanda compliant</p>
+                  <p className="text-[10px] text-muted-foreground mt-2">
+                    {deliveredViaLabel(sentResult.deliveredVia)} · {new Date(sentResult.sentAt).toLocaleString()}
+                  </p>
                 </div>
               )}
             </CardContent>
