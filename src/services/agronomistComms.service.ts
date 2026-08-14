@@ -46,6 +46,7 @@ export type TicketStatus = 'open' | 'in_progress' | 'resolved';
 export interface SupportTicket {
   id: string;
   farmerId: string;
+  farmerName: string;
   agronomistId?: string | null;
   channel: TicketChannel;
   district: string;
@@ -73,10 +74,8 @@ export interface SupportTicketsListResponse {
   pagination: Pagination;
 }
 
-// The list endpoint's exact wrapper key wasn't included in the captured samples
-// (only POST's single-ticket response was shown). Assumed { tickets: [...] }
-// matching the naming convention confirmed for /advice and /farm-visits, with
-// the same defensive fallback pattern used there — flagged for verification.
+// Confirmed via live response: { success, data: { tickets: [...], pagination } }.
+// Fallback branches kept as harmless defense in depth, not because of remaining uncertainty.
 function normalizeTicketsList(raw: unknown): SupportTicket[] {
   if (Array.isArray(raw)) return raw as SupportTicket[];
   const obj = raw as { tickets?: SupportTicket[]; items?: SupportTicket[] };

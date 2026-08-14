@@ -97,8 +97,6 @@ export default function CommsPage() {
   const [ticketForm, setTicketForm] = useState<CreateTicketForm>(EMPTY_TICKET_FORM)
   const [creatingTicket, setCreatingTicket] = useState(false)
 
-  const farmerName = (farmerId: string) => farmers.find(f => f.id === farmerId)?.name || farmerId
-
   // Load filter options + farmers once
   useEffect(() => {
     agronomistCommsService.getFilterOptions()
@@ -137,7 +135,7 @@ export default function CommsPage() {
   const smsCount = message.length
   const smsSegments = Math.ceil(smsCount / 160) || 1
   const filteredTickets = tickets.filter(t =>
-    farmerName(t.farmerId).toLowerCase().includes(ticketSearch.toLowerCase()) ||
+    t.farmerName.toLowerCase().includes(ticketSearch.toLowerCase()) ||
     t.district.toLowerCase().includes(ticketSearch.toLowerCase()) ||
     t.issue.toLowerCase().includes(ticketSearch.toLowerCase())
   )
@@ -419,7 +417,7 @@ export default function CommsPage() {
                       <div className="flex items-start justify-between gap-2 mb-1.5">
                         <div className="flex items-center gap-1.5 text-muted-foreground">
                           {channelIcon(t.channel)}
-                          <span className="text-xs font-semibold text-foreground">{farmerName(t.farmerId)}</span>
+                          <span className="text-xs font-semibold text-foreground">{t.farmerName}</span>
                         </div>
                         <span className={`text-[10px] px-1.5 py-0.5 rounded border font-medium flex-shrink-0 ${priorityStyle(t.priority)}`}>{t.priority}</span>
                       </div>
@@ -449,10 +447,10 @@ export default function CommsPage() {
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-center gap-2.5">
                           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white font-bold text-sm">
-                            {farmerName(activeTicket.farmerId)[0]}
+                            {activeTicket.farmerName[0]}
                           </div>
                           <div>
-                            <p className="text-sm font-bold text-foreground">{farmerName(activeTicket.farmerId)}</p>
+                            <p className="text-sm font-bold text-foreground">{activeTicket.farmerName}</p>
                             <p className="text-xs text-muted-foreground">{activeTicket.district} · {activeTicket.crop} · via {activeTicket.channel}</p>
                           </div>
                         </div>
