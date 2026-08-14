@@ -16,6 +16,7 @@ import {
   MapPinned,
   Contact,
   ClipboardList,
+  Lightbulb,
 } from "lucide-react"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
@@ -30,6 +31,7 @@ const navigation = [
   { name: "Profile", href: "/agronomist/profile", icon: MapPinned },
   { name: "Farmers", href: "/agronomist/farmers", icon: Contact },
   { name: "Farm Visits", href: "/agronomist/farm-visits", icon: ClipboardList },
+  { name: "Advice", href: "/agronomist/advice", icon: Lightbulb },
   { name: "GIS & Field Scouting", href: "/agronomist/gis", icon: Map },
   { name: "AI Validation Engine", href: "/agronomist/ai-validation", icon: BrainCircuit },
   { name: "Comms Studio", href: "/agronomist/comms", icon: MessageSquare },

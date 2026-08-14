@@ -25,6 +25,7 @@ import AgronomistOverviewPage from './pages/agronomist/AgronomistOverviewPage'
 import AgronomistFarmersPage from './pages/agronomist/AgronomistFarmersPage'
 import AgronomistFarmerDetailPage from './pages/agronomist/AgronomistFarmerDetailPage'
 import AgronomistFarmVisitsPage from './pages/agronomist/AgronomistFarmVisitsPage'
+import AgronomistAdvicePage from './pages/agronomist/AgronomistAdvicePage'
 import GISPage from './pages/dashboard/agronomist/GISPage'
 import AIValidationPage from './pages/dashboard/agronomist/AIValidationPage'
 import CommsPage from './pages/dashboard/agronomist/CommsPage'
@@ -138,6 +139,7 @@ function App() {
             <Route path="farmers" element={<AgronomistFarmersPage />} />
             <Route path="farmers/:farmerId" element={<AgronomistFarmerDetailPage />} />
             <Route path="farm-visits" element={<AgronomistFarmVisitsPage />} />
+            <Route path="advice" element={<AgronomistAdvicePage />} />
             <Route path="gis" element={<GISPage />} />
             <Route path="ai-validation" element={<AIValidationPage />} />
             <Route path="comms" element={<CommsPage />} />
