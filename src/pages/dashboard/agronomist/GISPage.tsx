@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 import { Header } from "@/components/header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Icon3D } from "@/components/icon-3d"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Button } from "@/components/ui/button"
 import {
-  MapPin, Layers, Ruler, Sprout, MapPinned, Camera, Navigation,
+  MapPin, Layers, Ruler, Sprout, MapPinned, Camera, Navigation, ArrowRight,
 } from "lucide-react"
 import { toast } from "sonner"
 import { agronomistGisService, type GisDistrict } from "@/services/agronomistGis.service"
@@ -19,6 +21,29 @@ function ComingSoonCard({ icon: Icon, title, description }: { icon: typeof Camer
           <p className="text-sm font-semibold text-foreground">{title}</p>
           <p className="text-xs text-muted-foreground mt-1 max-w-xs">{description}</p>
         </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+// Not "unbuilt" — severity + coordinates already exist on the real FarmVisit
+// model (wired in the Farm Visits page). There's no GIS-specific map view of
+// that data yet, but the data itself is real, so this points there instead
+// of claiming the feature doesn't exist.
+function CrossLinkCard() {
+  return (
+    <Card className="border-0 shadow-md">
+      <CardContent className="p-6 flex flex-col items-center justify-center text-center gap-3 h-full min-h-52">
+        <MapPinned className="w-8 h-8 text-emerald-500" />
+        <div>
+          <p className="text-sm font-semibold text-foreground">Visit location data lives in Farm Visits</p>
+          <p className="text-xs text-muted-foreground mt-1 max-w-xs">Severity and GPS coordinates for each field visit are already tracked there — a dedicated map view here hasn't been built yet.</p>
+        </div>
+        <Button variant="outline" size="sm" className="gap-1.5" asChild>
+          <Link to="/agronomist/farm-visits">
+            View Farm Visits <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </Button>
       </CardContent>
     </Card>
   )
@@ -119,13 +144,9 @@ export default function GISPage() {
           </CardContent>
         </Card>
 
-        {/* Not-yet-connected features — no backend endpoint exists for any of these */}
+        {/* Geo-tagged data is real (see Farm Visits) — the other two genuinely have no backend yet */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <ComingSoonCard
-            icon={MapPinned}
-            title="Geo-Tagged Inspection Log isn't available yet"
-            description="Field inspection notes with GPS coordinates and severity will appear here once this feature is built on the backend."
-          />
+          <CrossLinkCard />
           <ComingSoonCard
             icon={Camera}
             title="Drone Scan Upload isn't available yet"
