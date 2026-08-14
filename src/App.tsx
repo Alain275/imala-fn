@@ -34,9 +34,6 @@ import AIValidationPage from './pages/dashboard/agronomist/AIValidationPage'
 import CommsPage from './pages/dashboard/agronomist/CommsPage'
 import PathologyPage from './pages/dashboard/agronomist/PathologyPage'
 import AgronomistAnalyticsPage from './pages/agronomist/AgronomistAnalyticsPage'
-// AdvisoryPage and WorkforcePage are retired from routing — Section 2's nav plan
-// replaces both with Analytics (ticket resolution + yield trend, now backed by
-// real endpoints). Files are left in place, unregistered, not deleted.
 
 // Admin Portal
 import AdminLayout from './pages/admin/AdminLayout'

@@ -34,9 +34,12 @@ export interface AnalyticsTicketsSummary {
 }
 
 // byProvince is always empty in the captured sample (no qualifying data yet),
-// so its per-item field names are unconfirmed — rendered generically rather
-// than assuming named fields. weeklyCurve points only ever showed { week }
-// with no metric fields in the sample, for the same reason.
+// so its per-item field names are entirely unconfirmed — rendered generically
+// rather than assuming named fields. weeklyCurve is only PARTIALLY unconfirmed:
+// `week` (a date string, e.g. "2026-06-22") is real and confirmed on every
+// point — only the per-region percentage fields are unconfirmed, since none
+// were present yet in the sample (no qualifying yield data). The `week` field
+// is typed explicitly below, not folded into the generic fallback.
 export type YieldByProvinceEntry = Record<string, unknown>;
 export type YieldWeeklyCurvePoint = { week: string } & Record<string, unknown>;
 
