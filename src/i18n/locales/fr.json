@@ -487,7 +487,15 @@
       "signOut": "Déconnexion"
     },
     "header": {
-      "searchPlaceholder": "Rechercher..."
+      "searchPlaceholder": "Rechercher...",
+      "workspaceLabel": {
+        "farmer": "Espace Agriculteur",
+        "agro-dealer": "Espace Distributeur",
+        "agronomist": "Console Agronome",
+        "admin": "Espace Administrateur",
+        "cooperative": "Espace Coopérative",
+        "default": "Espace IMARA"
+      }
     },
     "overview": {
       "title": "Tableau de Bord",

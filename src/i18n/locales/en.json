@@ -487,7 +487,15 @@
       "signOut": "Sign Out"
     },
     "header": {
-      "searchPlaceholder": "Search..."
+      "searchPlaceholder": "Search...",
+      "workspaceLabel": {
+        "farmer": "Farmer workspace",
+        "agro-dealer": "Agro-Dealer workspace",
+        "agronomist": "Agronomist Console",
+        "admin": "Admin workspace",
+        "cooperative": "Cooperative workspace",
+        "default": "IMARA workspace"
+      }
     },
     "overview": {
       "title": "Dashboard",

@@ -487,7 +487,15 @@
       "signOut": "Gusohoka"
     },
     "header": {
-      "searchPlaceholder": "Shakisha..."
+      "searchPlaceholder": "Shakisha...",
+      "workspaceLabel": {
+        "farmer": "Umwanya w'Umuhinzi",
+        "agro-dealer": "Umwanya w'Umucuruzi",
+        "agronomist": "Umwanya w'Umuhinga",
+        "admin": "Umwanya w'Umuyobozi",
+        "cooperative": "Umwanya wa Koperative",
+        "default": "Umwanya wa IMARA"
+      }
     },
     "overview": {
       "title": "Imbonerahamwe",

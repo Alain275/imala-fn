@@ -45,6 +45,9 @@ export function Header({ title, subtitle, actions }: HeaderProps) {
   }
 
   const isAuthenticated = !!currentUser && authService.isAuthenticated()
+  const workspaceLabel = currentUser?.role
+    ? t(`dashboard.header.workspaceLabel.${currentUser.role}`, { defaultValue: t('dashboard.header.workspaceLabel.default') })
+    : t('dashboard.header.workspaceLabel.default')
 
   return (
     <header className="sticky top-0 z-30 border-b border-[#d7e5da] bg-white/85 backdrop-blur-md dark:border-[#294033] dark:bg-[#101a14]/90">
@@ -52,7 +55,7 @@ export function Header({ title, subtitle, actions }: HeaderProps) {
         <div className="min-w-0 pl-11 lg:pl-0">
           <div className="mb-1 hidden items-center gap-2 sm:flex">
             <span className="h-1.5 w-1.5 rounded-full bg-[#8fe82e]" />
-            <span className="text-[8px] font-black uppercase tracking-[0.18em] text-[#64806e]">Farmer workspace</span>
+            <span className="text-[8px] font-black uppercase tracking-[0.18em] text-[#64806e]">{workspaceLabel}</span>
           </div>
           <h1 className="truncate text-base font-black tracking-[-0.02em] text-[#21392b] dark:text-[#edf5ef] sm:text-xl">{title}</h1>
           {subtitle && (
