@@ -18,6 +18,7 @@ import {
   Lightbulb,
   HelpCircle,
   BookOpen,
+  LifeBuoy,
 } from "lucide-react"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
@@ -49,6 +50,7 @@ const sections: { label: string; items: NavItem[] }[] = [
       { name: "Farm Visits", href: "/agronomist/farm-visits", icon: ClipboardList },
       { name: "Advice", href: "/agronomist/advice", icon: Lightbulb },
       { name: "Questions", href: "/agronomist/questions", icon: HelpCircle },
+      { name: "Support Tickets", href: "/agronomist/support-tickets", icon: LifeBuoy },
       { name: "Training Materials", href: "/agronomist/training-materials", icon: BookOpen },
     ],
   },

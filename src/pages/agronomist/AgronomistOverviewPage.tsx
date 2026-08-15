@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import {
   Map, BrainCircuit, MessageSquare, FlaskConical,
   BarChart3, Users2, CheckCircle2, HelpCircle, BookOpen, Send,
-  Clock, TrendingUp, Activity, ArrowRight, AlertCircle,
+  Clock, TrendingUp, Activity, ArrowRight, AlertCircle, LifeBuoy,
 } from "lucide-react"
 import {
   ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip
@@ -72,6 +72,13 @@ export default function AgronomistOverviewPage() {
       gradient: "gold",
     },
     {
+      name: "Support Tickets",
+      href: "/agronomist/support-tickets",
+      icon: LifeBuoy,
+      description: "Respond to farmer escalations across the whole team",
+      gradient: "earth",
+    },
+    {
       name: "Training Materials",
       href: "/agronomist/training-materials",
       icon: BookOpen,
@@ -97,7 +104,7 @@ export default function AgronomistOverviewPage() {
       name: "Comms Studio",
       href: "/agronomist/comms",
       icon: MessageSquare,
-      description: "Bulk messaging and farmer support tickets",
+      description: "Bulk messaging to farmer segments",
       stat: data ? `${data.messagesSent} messages sent this week` : undefined,
       gradient: "sky",
     },

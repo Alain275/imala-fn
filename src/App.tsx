@@ -27,6 +27,7 @@ import AgronomistFarmerDetailPage from './pages/agronomist/AgronomistFarmerDetai
 import AgronomistFarmVisitsPage from './pages/agronomist/AgronomistFarmVisitsPage'
 import AgronomistAdvicePage from './pages/agronomist/AgronomistAdvicePage'
 import AgronomistQuestionsPage from './pages/agronomist/AgronomistQuestionsPage'
+import AgronomistSupportTicketsPage from './pages/agronomist/AgronomistSupportTicketsPage'
 import AgronomistTrainingMaterialsPage from './pages/agronomist/AgronomistTrainingMaterialsPage'
 import AgronomistTrainingMaterialDetailPage from './pages/agronomist/AgronomistTrainingMaterialDetailPage'
 import GISPage from './pages/dashboard/agronomist/GISPage'
@@ -154,6 +155,7 @@ function App() {
             <Route path="farm-visits" element={<AgronomistFarmVisitsPage />} />
             <Route path="advice" element={<AgronomistAdvicePage />} />
             <Route path="questions" element={<AgronomistQuestionsPage />} />
+            <Route path="support-tickets" element={<AgronomistSupportTicketsPage />} />
             <Route path="training-materials" element={<AgronomistTrainingMaterialsPage />} />
             <Route path="training-materials/:materialId" element={<AgronomistTrainingMaterialDetailPage />} />
             <Route path="gis" element={<GISPage />} />
