@@ -8,7 +8,7 @@ import { authService } from '@/services/auth'
 
 export type AppRole = 'farmer' | 'agro-dealer' | 'agronomist' | 'admin' | 'cooperative'
 
-const roleHome: Record<AppRole, string> = {
+export const roleHome: Record<AppRole, string> = {
   farmer: '/dashboard',
   'agro-dealer': '/agro-dealer',
   agronomist: '/agronomist',
@@ -16,7 +16,7 @@ const roleHome: Record<AppRole, string> = {
   cooperative: '/cooperative',
 }
 
-function roleToHome(role: string): string {
+export function roleToHome(role: string): string {
   return roleHome[role as AppRole] ?? '/dashboard'
 }
 

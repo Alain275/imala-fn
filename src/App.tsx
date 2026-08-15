@@ -70,19 +70,39 @@ import VerifyEmailPage from './pages/auth/VerifyEmailPage'
 import EmailVerifiedPage from './pages/auth/EmailVerifiedPage'
 
 import { NotificationsProvider } from './context/NotificationsContext'
-import { ProtectedRoute } from './components/ProtectedRoute'
+import { ProtectedRoute, roleToHome } from './components/ProtectedRoute'
 import { PublicLayout } from './components/PublicLayout'
 import { authService } from './services/auth'
 
 import DealerOverviewPage from './pages/dashboard/agrodealer/DealerOverViewPage'
 import DealerOrdersPage from './pages/dashboard/agrodealer/DealerOrdersPage'
 
+// The /dashboard index route is intentionally public (see the route below) so
+// anonymous visitors can see the marketing overview. Its role handling only
+// ever special-cased agro-dealer; every other authenticated role (agronomist,
+// admin, cooperative) silently fell through to the farmer DashboardPage. This
+// sends every non-farmer, non-dealer role to its own portal home instead.
+function DashboardIndexRoute() {
+  if (!authService.isAuthenticated()) return <PublicOverviewPage />
+  const role = authService.getCurrentUser()?.role
+  if (role === 'agro-dealer') return <DealerOverviewPage />
+  if (role === 'farmer') return <DashboardPage />
+  return <Navigate to={roleToHome(role ?? '')} replace />
+}
+
 function App() {
   return (
     <NotificationsProvider>
       <Routes>
         <Route element={<PublicLayout />}>
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route
+            path="/"
+            element={
+              authService.isAuthenticated()
+                ? <Navigate to={roleToHome(authService.getCurrentUser()?.role ?? '')} replace />
+                : <Navigate to="/dashboard" replace />
+            }
+          />
           <Route path="/sign-in" element={<SignInPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
@@ -93,17 +113,8 @@ function App() {
         <Route path="/dashboard" element={<DashboardLayout />}>
           
 
-          // PUBLIC ROUTES 
-          <Route
-              index
-              element={
-                !authService.isAuthenticated()
-                  ? <PublicOverviewPage />
-                  : authService.getCurrentUser()?.role === 'agro-dealer'
-                    ? <DealerOverviewPage />
-                    : <DashboardPage />
-              }
-            />
+          // PUBLIC ROUTES
+          <Route index element={<DashboardIndexRoute />} />
           <Route path="crops" element={<AIPage />} />
           <Route path="ai" element={<AIPage />} />
           <Route path="disease" element={<DiseasePage />} />
