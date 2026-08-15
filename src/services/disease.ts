@@ -31,6 +31,19 @@ export interface Detection {
   crop: unknown | null
   consentToStore?: boolean
   consentToTraining?: boolean
+  captureGuidance?: CaptureGuidance
+}
+
+export interface CaptureGuidance {
+  status: 'ready' | 'more_images_required' | 'unsupported_crop' | 'unsupported_disease'
+  crop?: string
+  disease?: string
+  training_enabled?: boolean
+  required_views: string[]
+  provided_views?: string[]
+  missing_views: string[]
+  minimum_required_views?: number
+  instructions?: Record<string, string>
 }
 
 export interface DiseaseImageConsent {
@@ -54,6 +67,7 @@ interface ApiResponse<T> {
   success: boolean
   data: T
   message?: string
+  captureGuidance?: CaptureGuidance
 }
 
 async function detectDisease(
@@ -65,6 +79,8 @@ async function detectDisease(
   const formData = new FormData()
   formData.append('file', file)
   formData.append('cropType', cropType)
+  formData.append('imageView', 'leaf_closeup')
+  formData.append('providedViews', '')
   formData.append('consentToStore', String(consent.storeImage))
   formData.append('consentToTraining', String(consent.useForTraining))
 
@@ -79,7 +95,7 @@ async function detectDisease(
 
   const json: ApiResponse<Detection> = await response.json()
   if (!response.ok || !json.success) throw new Error(json.message || 'Detection failed')
-  return json.data
+  return { ...json.data, captureGuidance: json.captureGuidance }
 }
 
 async function getMyDetections(params?: { page?: number; limit?: number }): Promise<DetectionList> {

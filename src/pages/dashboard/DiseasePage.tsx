@@ -38,7 +38,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton"
 import { useDetectDisease, useMyDetections } from "@/hooks/useDisease"
 import type { Detection } from "@/services/disease"
-import { SUPPORTED_CROPS } from "@/constants/supportedCrops"
+import { DISEASE_DETECTION_CROPS } from "@/constants/supportedCrops"
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024
 
@@ -62,7 +62,7 @@ export default function DiseasePage() {
   const [searchParams] = useSearchParams()
   const requestedCrop = searchParams.get("crop") ?? ""
   const [selectedCrop, setSelectedCrop] = useState(
-    () => SUPPORTED_CROPS.find((crop) => crop.toLowerCase() === requestedCrop.toLowerCase()) ?? ""
+    () => DISEASE_DETECTION_CROPS.find((crop) => crop.toLowerCase() === requestedCrop.toLowerCase()) ?? ""
   )
   const [dragActive, setDragActive] = useState(false)
   const [uploadNotice, setUploadNotice] = useState<string | null>(null)
@@ -321,7 +321,7 @@ export default function DiseasePage() {
                   className="h-9 w-full border border-input bg-background px-3 text-xs outline-none focus:border-[#77ad35]"
                 >
                   <option value="">{t("dashboard.disease.selectCropPlaceholder")}</option>
-                  {SUPPORTED_CROPS.map((crop) => <option key={crop} value={crop}>{crop}</option>)}
+                  {DISEASE_DETECTION_CROPS.map((crop) => <option key={crop} value={crop}>{crop}</option>)}
                 </select>
               </label>
               <Button
@@ -414,6 +414,25 @@ export default function DiseasePage() {
                           ? " Confidence calibration is waiting for verified validation images."
                           : ""}
                       </span>
+                    </div>
+                  )}
+                  {activeDetection.captureGuidance && (
+                    <div className={`mt-4 border p-3 text-[10px] leading-4 ${
+                      activeDetection.captureGuidance.status === "more_images_required"
+                        ? "border-blue-200 bg-blue-50 text-blue-900 dark:border-blue-900 dark:bg-blue-950/40 dark:text-blue-200"
+                        : "border-emerald-200 bg-emerald-50 text-emerald-900 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-200"
+                    }`}>
+                      <p className="font-semibold">
+                        {activeDetection.captureGuidance.status === "more_images_required"
+                          ? "Additional photo needed"
+                          : "Leaf close-up is sufficient for this stage"}
+                      </p>
+                      {activeDetection.captureGuidance.missing_views.map((view) => (
+                        <div key={view} className="mt-2">
+                          <p className="font-semibold capitalize">{view.replaceAll("_", " ")}</p>
+                          <p>{activeDetection.captureGuidance?.instructions?.[view]}</p>
+                        </div>
+                      ))}
                     </div>
                   )}
                   <p className="mt-4 line-clamp-3 text-[10px] leading-4 text-muted-foreground">{activeDetection.treatment}</p>
