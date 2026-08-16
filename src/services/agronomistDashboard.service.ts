@@ -31,6 +31,13 @@ export interface DashboardRecentActivityItem {
   timestamp?: string;
 }
 
+export interface DashboardPreviousWeek {
+  ticketsResolved: number;
+  fieldVisits: number;
+  messagesSent: number;
+  avgConfidence: number;
+}
+
 export interface AgronomistDashboardSummary {
   ticketsResolved: number;
   fieldVisits: number;
@@ -38,6 +45,8 @@ export interface AgronomistDashboardSummary {
   avgConfidence: number;
   yieldImprovementPct: number;
   weeklyActivity: DashboardWeeklyActivityPoint[];
+  // No yieldImprovementPct equivalent here — that stays platform-wide/non-comparable.
+  previousWeek: DashboardPreviousWeek;
   recentActivity: DashboardRecentActivityItem[];
 }
 

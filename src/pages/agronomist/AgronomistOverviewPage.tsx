@@ -38,6 +38,18 @@ function activityText(item: DashboardRecentActivityItem) {
   return item.text
 }
 
+// Real week-over-week trend from previousWeek — never fabricated. previous===0
+// with current===0 means nothing to compare (no trend shown); previous===0 with
+// current>0 is a real "New" case, not a division-by-zero artifact.
+function computeTrend(current: number, previous: number): { text: string; up: boolean } | null {
+  if (previous === 0) {
+    if (current === 0) return null
+    return { text: "New", up: true }
+  }
+  const pct = Math.round(((current - previous) / previous) * 100)
+  return { text: `${pct >= 0 ? "+" : ""}${pct}%`, up: pct >= 0 }
+}
+
 export default function AgronomistOverviewPage() {
   const { data, loading, error, refetch } = useAgronomistDashboardSummary()
 
@@ -156,11 +168,11 @@ export default function AgronomistOverviewPage() {
                 ))
               ) : (
                 [
-                  { label: "Tickets Resolved", val: String(data.ticketsResolved), icon: CheckCircle2, gradient: "green" },
-                  { label: "Field Visits", val: String(data.fieldVisits), icon: Map, gradient: "sky" },
-                  { label: "Messages Sent", val: String(data.messagesSent), icon: MessageSquare, gradient: "sky" },
-                  { label: "Avg Confidence", val: `${data.avgConfidence}%`, icon: BrainCircuit, gradient: "gold" },
-                  { label: "Yield Improvement", val: `${data.yieldImprovementPct}%`, icon: TrendingUp, gradient: "green" },
+                  { label: "Tickets Resolved", val: String(data.ticketsResolved), icon: CheckCircle2, gradient: "green", trend: computeTrend(data.ticketsResolved, data.previousWeek.ticketsResolved) },
+                  { label: "Field Visits", val: String(data.fieldVisits), icon: Map, gradient: "sky", trend: computeTrend(data.fieldVisits, data.previousWeek.fieldVisits) },
+                  { label: "Messages Sent", val: String(data.messagesSent), icon: MessageSquare, gradient: "sky", trend: computeTrend(data.messagesSent, data.previousWeek.messagesSent) },
+                  { label: "Avg Confidence", val: `${data.avgConfidence}%`, icon: BrainCircuit, gradient: "gold", trend: computeTrend(data.avgConfidence, data.previousWeek.avgConfidence) },
+                  { label: "Yield Improvement", val: `${data.yieldImprovementPct}%`, icon: TrendingUp, gradient: "green", trend: null },
                 ].map((k) => (
                   <Card key={k.label} className="border-0 shadow-md">
                     <CardContent className="p-4 flex flex-col justify-between h-32">
@@ -172,6 +184,11 @@ export default function AgronomistOverviewPage() {
                       </div>
                       <div className="mt-2">
                         <p className="text-2xl font-bold text-foreground">{k.val}</p>
+                        {k.trend && (
+                          <p className={`text-xs font-semibold mt-0.5 ${k.trend.up ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"}`}>
+                            {k.trend.text} vs last week
+                          </p>
+                        )}
                       </div>
                     </CardContent>
                   </Card>
