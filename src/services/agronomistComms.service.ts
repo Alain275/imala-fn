@@ -99,11 +99,17 @@ export const agronomistCommsService = {
     return parseResponse<MessagingFilterOptions>(response);
   },
 
-  async sendBulkMessage(message: string, filters: MessagingAudienceFilters): Promise<BulkMessageResult> {
+  // farmerId bypasses filters entirely and targets exactly that farmer — mutually
+  // exclusive with filters (backend gives farmerId priority if both are sent, but
+  // the caller should only ever pass one).
+  async sendBulkMessage(message: string, target: MessagingAudienceFilters | { farmerId: string }): Promise<BulkMessageResult> {
+    const body = 'farmerId' in target
+      ? { message, farmerId: target.farmerId }
+      : { message, filters: target };
     const response = await fetch(`${API_URL}/messaging/bulk`, {
       method: 'POST',
       headers: authHeaders(),
-      body: JSON.stringify({ message, filters }),
+      body: JSON.stringify(body),
     });
     return parseResponse<BulkMessageResult>(response);
   },

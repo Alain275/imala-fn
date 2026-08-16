@@ -11,7 +11,7 @@ import {
 import {
   MessageSquare, Send, Users, ChevronDown, Filter,
   AlertCircle, Globe2, Search, FileText, Tag, X,
-  Radio, UserSearch, ArrowRight, Lock,
+  Radio, UserSearch, ArrowRight,
 } from "lucide-react"
 import { toast } from "sonner"
 import {
@@ -36,8 +36,7 @@ export default function CommsPage() {
   const [bulkResult, setBulkResult] = useState<BulkMessageResult | null>(null)
   const [confirmOpen, setConfirmOpen] = useState(false)
 
-  // Specific-farmer picker (search-only — sending to one farmer isn't supported by the
-  // backend yet, see the disabled Send button below)
+  // Specific-farmer picker — sends via farmerId, bypassing filters entirely
   const [farmerSearch, setFarmerSearch] = useState("")
   const [farmerResults, setFarmerResults] = useState<FarmerListEntry[]>([])
   const [farmerSearchLoading, setFarmerSearchLoading] = useState(false)
@@ -88,17 +87,25 @@ export default function CommsPage() {
   const smsCount = message.length
   const smsSegments = Math.ceil(smsCount / 160) || 1
 
-  const handleSendBulk = async () => {
+  const handleSend = async () => {
     setConfirmOpen(false)
     setSending(true)
     setBulkResult(null)
     try {
-      const result = await agronomistCommsService.sendBulkMessage(message, {
-        district: district || undefined, sector: sector || undefined, cropType: cropType || undefined,
-      })
+      const result = sendMode === "specific" && selectedFarmer
+        ? await agronomistCommsService.sendBulkMessage(message, { farmerId: selectedFarmer.id })
+        : await agronomistCommsService.sendBulkMessage(message, {
+            district: district || undefined, sector: sector || undefined, cropType: cropType || undefined,
+          })
       setBulkResult(result)
-      toast.success(`Delivered to ${result.recipientCount} of ${result.matchedCount} matched farmers`)
+      toast.success(
+        sendMode === "specific"
+          ? `Delivered to ${selectedFarmer?.name}`
+          : `Delivered to ${result.recipientCount} of ${result.matchedCount} matched farmers`
+      )
     } catch (err) {
+      // Surfaces the backend's real message, e.g. "farmerId does not resolve to
+      // a real, active farmer" — a clean 400, not a crash.
       toast.error(err instanceof Error ? err.message : "Failed to send message")
     } finally {
       setSending(false)
@@ -290,21 +297,19 @@ export default function CommsPage() {
                 <Send className="w-4 h-4" /> {sending ? "Sending…" : `Send to ${audienceCount ?? 0} Farmers`}
               </button>
             ) : (
-              <div className="space-y-2">
-                <button disabled
-                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-muted border border-border text-muted-foreground font-semibold text-sm cursor-not-allowed">
-                  <Lock className="w-4 h-4" /> Send to {selectedFarmer?.name ?? "farmer"}
-                </button>
-                <p className="text-xs text-muted-foreground text-center">Individual farmer messaging requires a backend update — coming soon.</p>
-              </div>
+              <button onClick={() => setConfirmOpen(true)} disabled={sending || !selectedFarmer || !message.trim()}
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-600 dark:text-sky-400 font-semibold hover:bg-sky-500/20 transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                <Send className="w-4 h-4" /> {sending ? "Sending…" : selectedFarmer ? `Send to ${selectedFarmer.name}` : "Select a farmer first"}
+              </button>
             )}
 
             {bulkResult && (
               <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3 flex items-center gap-2">
                 <Send className="w-4 h-4 text-emerald-500 flex-shrink-0" />
                 <p className="text-xs text-emerald-700 dark:text-emerald-300 font-semibold">
-                  Delivered to {bulkResult.recipientCount} of {bulkResult.matchedCount} matched farmers
-                  {bulkResult.failedCount > 0 && ` · ${bulkResult.failedCount} failed`}
+                  {sendMode === "specific"
+                    ? `Delivered to ${selectedFarmer?.name}`
+                    : <>Delivered to {bulkResult.recipientCount} of {bulkResult.matchedCount} matched farmers{bulkResult.failedCount > 0 && ` · ${bulkResult.failedCount} failed`}</>}
                 </p>
               </div>
             )}
@@ -316,14 +321,18 @@ export default function CommsPage() {
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Send to {audienceCount ?? 0} matched farmers?</AlertDialogTitle>
+            <AlertDialogTitle>
+              {sendMode === "specific" ? `Send to ${selectedFarmer?.name}?` : `Send to ${audienceCount ?? 0} matched farmers?`}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              This delivers the message immediately via in-app notification to every farmer matching the current audience filter. This cannot be undone.
+              {sendMode === "specific"
+                ? "This delivers the message immediately via in-app notification to this farmer only. This cannot be undone."
+                : "This delivers the message immediately via in-app notification to every farmer matching the current audience filter. This cannot be undone."}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleSendBulk}>Send</AlertDialogAction>
+            <AlertDialogAction onClick={handleSend}>Send</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
