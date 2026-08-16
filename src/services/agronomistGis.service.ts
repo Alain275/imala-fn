@@ -23,7 +23,7 @@ export interface GisDistrict {
   name: string;
   sector: string;
   fieldCount: number;
-  totalAreaHa: number;
+  totalAreaSqm: number;
   lastScoutedAt: string | null;
 }
 

@@ -61,7 +61,7 @@ export default function GISPage() {
   }, [])
 
   const totalFields = districts.reduce((sum, d) => sum + d.fieldCount, 0)
-  const totalArea = districts.reduce((sum, d) => sum + d.totalAreaHa, 0)
+  const totalArea = districts.reduce((sum, d) => sum + d.totalAreaSqm, 0)
   const scoutedCount = districts.filter(d => d.lastScoutedAt).length
 
   return (
@@ -76,7 +76,7 @@ export default function GISPage() {
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {[
             { label: "Districts Covered", val: loading ? "…" : districts.length, icon: MapPin, gradient: "sky" as const },
-            { label: "Total Field Area", val: loading ? "…" : `${totalArea.toFixed(2)} ha`, icon: Ruler, gradient: "green" as const },
+            { label: "Total Field Area", val: loading ? "…" : `${totalArea.toLocaleString()} m²`, icon: Ruler, gradient: "green" as const },
             { label: "Zones Scouted", val: loading ? "…" : `${scoutedCount}/${districts.length}`, icon: MapPinned, gradient: "gold" as const },
           ].map(s => (
             <Card key={s.label} className="border-0 shadow-md">
@@ -131,7 +131,7 @@ export default function GISPage() {
                         <Sprout className="w-3 h-3" /> {d.fieldCount} field{d.fieldCount === 1 ? "" : "s"}
                       </div>
                       <div className="flex items-center gap-1.5 text-muted-foreground">
-                        <Ruler className="w-3 h-3" /> {d.totalAreaHa.toFixed(2)} ha
+                        <Ruler className="w-3 h-3" /> {d.totalAreaSqm.toLocaleString()} m²
                       </div>
                     </div>
                     <p className="text-[10px] text-muted-foreground mt-2">
