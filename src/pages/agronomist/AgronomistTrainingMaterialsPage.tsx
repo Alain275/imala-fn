@@ -135,11 +135,11 @@ export default function AgronomistTrainingMaterialsPage() {
                       {m.createdBy === currentUserId && <Badge variant="secondary">Mine</Badge>}
                     </div>
                     <p className="text-sm text-muted-foreground line-clamp-1 mt-0.5">{m.description}</p>
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground mt-1.5">
-                      <span>{m.category}</span>
-                      <span className="uppercase">{m.language}</span>
-                      <span className="flex items-center gap-1"><Eye className="w-3 h-3" /> {m.viewCount}</span>
-                      <span className="flex items-center gap-1"><User className="w-3 h-3" /> {m.creator?.name || "Unknown"}</span>
+                    <div className="flex items-center gap-3 text-xs mt-1.5">
+                      <span className="font-medium text-sky-600 dark:text-sky-400">{m.category}</span>
+                      <span className="uppercase font-semibold bg-violet-500/10 text-violet-700 dark:text-violet-400 border border-violet-200 dark:border-violet-800/40 rounded-full px-2 py-0.5 text-[10px]">{m.language}</span>
+                      <span className="flex items-center gap-1 font-medium text-indigo-600 dark:text-indigo-400"><Eye className="w-3 h-3" /> {m.viewCount}</span>
+                      <span className="flex items-center gap-1 text-muted-foreground"><User className="w-3 h-3" /> {m.creator?.name || "Unknown"}</span>
                     </div>
                   </div>
                 </button>

@@ -158,12 +158,12 @@ export default function AgronomistTrainingMaterialDetailPage() {
                     </div>
                   )}
                 </div>
-                <div className="flex items-center gap-4 text-xs text-muted-foreground pt-2 flex-wrap">
-                  <span>{material.category}</span>
-                  <span className="uppercase">{material.language}</span>
-                  <span className="flex items-center gap-1"><Eye className="w-3 h-3" /> {material.viewCount} views</span>
-                  <span className="flex items-center gap-1"><User className="w-3 h-3" /> {material.creator?.name || "Unknown"}</span>
-                  <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> Updated {new Date(material.updatedAt).toLocaleDateString()}</span>
+                <div className="flex items-center gap-4 text-xs pt-2 flex-wrap">
+                  <span className="font-medium text-sky-600 dark:text-sky-400">{material.category}</span>
+                  <span className="uppercase font-semibold bg-violet-500/10 text-violet-700 dark:text-violet-400 border border-violet-200 dark:border-violet-800/40 rounded-full px-2 py-0.5 text-[10px]">{material.language}</span>
+                  <span className="flex items-center gap-1 font-medium text-indigo-600 dark:text-indigo-400"><Eye className="w-3 h-3" /> {material.viewCount} views</span>
+                  <span className="flex items-center gap-1 text-muted-foreground"><User className="w-3 h-3" /> {material.creator?.name || "Unknown"}</span>
+                  <span className="flex items-center gap-1 text-muted-foreground"><Calendar className="w-3 h-3" /> Updated {new Date(material.updatedAt).toLocaleDateString()}</span>
                 </div>
               </CardHeader>
               <CardContent className="p-6 space-y-4">
