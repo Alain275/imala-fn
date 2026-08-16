@@ -26,29 +26,30 @@ export interface QuestionFarmerSummary {
   id: string;
   name: string;
   email: string;
-  phone: string;
-  location?: string | null;
 }
 
-// NOT independently verified against a populated record — the dev DB has zero
-// question rows, so the backend spec could only confirm the empty-list envelope
-// ({ questions: [], pagination }). This item shape is inferred from the
-// PATCH /:id/answer contract (body: { answer }) and the "show who last answered
-// and when" requirement. Every field is read defensively (optional-chained with
-// fallbacks) so the UI degrades gracefully if real data doesn't match exactly —
-// revisit once a real question record exists.
+export interface QuestionAgronomistSummary {
+  id: string;
+  name: string;
+}
+
+// Confirmed against a real answered question (created + answered + re-fetched
+// fresh, not just the PATCH echo): farmer/agronomist are nested objects,
+// answeredByName is real and present in both the pending and answered states,
+// and there is no answeredAt field — status/updatedAt cover that.
 export interface Question {
   id: string;
   farmerId: string;
   question: string;
   status: QuestionStatus;
-  answer?: string | null;
-  answeredBy?: string | null;
-  answeredByName?: string | null;
-  answeredAt?: string | null;
+  category: string;
+  answer: string | null;
+  answeredBy: string | null;
+  answeredByName: string | null;
   createdAt: string;
   updatedAt: string;
   farmer: QuestionFarmerSummary;
+  agronomist: QuestionAgronomistSummary | null;
 }
 
 export interface QuestionsListResponse {
@@ -57,7 +58,11 @@ export interface QuestionsListResponse {
 }
 
 function sanitizeQuestion(item: Question): Question {
-  return { ...item, farmer: item.farmer ? stripSensitiveFields(item.farmer) : item.farmer };
+  return {
+    ...item,
+    farmer: item.farmer ? stripSensitiveFields(item.farmer) : item.farmer,
+    agronomist: item.agronomist ? stripSensitiveFields(item.agronomist) : item.agronomist,
+  };
 }
 
 export const agronomistQuestionsService = {

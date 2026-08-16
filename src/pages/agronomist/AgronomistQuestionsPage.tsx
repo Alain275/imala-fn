@@ -120,11 +120,11 @@ export default function AgronomistQuestionsPage() {
                   className="w-full text-left p-4 sm:px-6 hover:bg-muted/30 transition-colors flex items-start justify-between gap-4"
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-foreground">{q.farmer?.name || "Unknown farmer"}</p>
+                    <p className="text-sm font-medium text-foreground">{q.farmer.name}</p>
                     <p className="text-sm text-muted-foreground line-clamp-2 mt-0.5">{q.question}</p>
                     {q.answer && (
                       <p className="text-xs text-muted-foreground/70 mt-1">
-                        Last answered {q.answeredByName ? `by ${q.answeredByName} ` : ""}{q.answeredAt ? new Date(q.answeredAt).toLocaleString() : ""}
+                        Last answered by {q.answeredByName} · {new Date(q.updatedAt).toLocaleString()}
                       </p>
                     )}
                   </div>
@@ -150,8 +150,8 @@ export default function AgronomistQuestionsPage() {
       <Dialog open={!!selected} onOpenChange={open => !open && setSelected(null)}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>{selected?.farmer?.name || "Unknown farmer"}</DialogTitle>
-            <DialogDescription>{selected?.farmer?.location || ""}</DialogDescription>
+            <DialogTitle>{selected?.farmer.name}</DialogTitle>
+            <DialogDescription>{selected?.farmer.email}{selected?.category ? ` · ${selected.category}` : ""}</DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4 py-2">
@@ -164,7 +164,7 @@ export default function AgronomistQuestionsPage() {
               <div className="flex items-start gap-2 p-3 rounded-xl border border-amber-200 dark:border-amber-800/40 bg-amber-500/10 text-xs text-amber-700 dark:text-amber-400">
                 <Info className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
                 <span>
-                  This question already has an answer{selected.answeredByName ? ` from ${selected.answeredByName}` : ""}{selected.answeredAt ? ` (${new Date(selected.answeredAt).toLocaleString()})` : ""}.
+                  This question already has an answer from {selected.answeredByName} ({new Date(selected.updatedAt).toLocaleString()}).
                   Submitting a new answer replaces it — there is no answer history.
                 </span>
               </div>
