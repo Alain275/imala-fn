@@ -2,18 +2,20 @@ import { useEffect, useState, useCallback } from "react"
 import { Header } from "@/components/header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Icon3D } from "@/components/icon-3d"
+import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
   FlaskConical, Camera, CheckCircle2,
   Search, Send,
   Pill, Shield, FileText, Microscope, Leaf,
-  ImageOff, BrainCircuit,
+  ImageOff, BrainCircuit, AlertTriangle,
+  XCircle, User, MapPin, X, Sparkles,
 } from "lucide-react"
 import { toast } from "sonner"
 import {
-  agronomistPathologyService, type Treatment,
+  agronomistPathologyService, type Treatment, type DiseaseDetection,
 } from "@/services/agronomistPathology.service"
-import { agronomistFarmersService, type FarmerListEntry } from "@/services/agronomistFarmers.service"
+import { agronomistFarmersService, type FarmerListEntry, type FarmerDetail } from "@/services/agronomistFarmers.service"
 
 export default function PathologyPage() {
   const [treatments, setTreatments] = useState<Treatment[]>([])
@@ -32,9 +34,22 @@ export default function PathologyPage() {
   const [prescriptionPathogen, setPrescriptionPathogen] = useState("")
   const [prescriptionDosageOverride, setPrescriptionDosageOverride] = useState("")
   const [prescriptionNotes, setPrescriptionNotes] = useState("")
+  const [prescriptionDetectionId, setPrescriptionDetectionId] = useState("")
   const [sending, setSending] = useState(false)
   const [sentResult, setSentResult] = useState<{ smsText: string; sentAt: string; deliveredVia: string } | null>(null)
-  const [activePanel, setActivePanel] = useState<"ledger" | "prescription">("ledger")
+  const [activePanel, setActivePanel] = useState<"queue" | "ledger" | "prescription">("queue")
+
+  const [detections, setDetections] = useState<DiseaseDetection[]>([])
+  const [detectionsTotal, setDetectionsTotal] = useState(0)
+  const [detectionsLoading, setDetectionsLoading] = useState(true)
+  const [selectedDetection, setSelectedDetection] = useState<DiseaseDetection | null>(null)
+  const [selectedFarmer, setSelectedFarmer] = useState<FarmerDetail | null>(null)
+  const [farmerLoading, setFarmerLoading] = useState(false)
+  const [verifiedDisease, setVerifiedDisease] = useState("")
+  const [verifiedTreatment, setVerifiedTreatment] = useState("")
+  const [agronomistComment, setAgronomistComment] = useState("")
+  const [verifying, setVerifying] = useState(false)
+  const [imageFailed, setImageFailed] = useState(false)
 
   const loadTreatments = useCallback(() => {
     setTreatmentsLoading(true)
@@ -66,10 +81,86 @@ export default function PathologyPage() {
     }
   }, [activePanel, farmers.length])
 
+  const loadDetections = useCallback(() => {
+    setDetectionsLoading(true)
+    agronomistPathologyService.getPendingDetections({ limit: 50 })
+      .then(({ detections, pagination }) => { setDetections(detections); setDetectionsTotal(pagination.total) })
+      .catch(() => toast.error("Failed to load pending disease detections"))
+      .finally(() => setDetectionsLoading(false))
+  }, [])
+
+  useEffect(() => { loadDetections() }, [loadDetections])
+
+  // Reset the verify form + fetch the submitting farmer whenever selection changes.
+  useEffect(() => {
+    if (!selectedDetection) { setSelectedFarmer(null); return }
+    setVerifiedDisease(selectedDetection.aiDisease.trim())
+    setVerifiedTreatment(selectedDetection.treatment)
+    setAgronomistComment("")
+    setImageFailed(false)
+    setSelectedFarmer(null)
+    setFarmerLoading(true)
+    agronomistFarmersService.getFarmerDetail(selectedDetection.userId)
+      .then(setSelectedFarmer)
+      .catch(() => toast.error("Failed to load the submitting farmer's details"))
+      .finally(() => setFarmerLoading(false))
+  }, [selectedDetection])
+
   const stockBadge = (s: Treatment["stock"]) => {
     if (s === "in_stock") return "text-emerald-600 dark:text-emerald-400"
     if (s === "low") return "text-amber-600 dark:text-amber-400"
     return "text-rose-600 dark:text-rose-400"
+  }
+
+  const confidenceBadge = (c: number) => {
+    if (c >= 90) return "bg-emerald-50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/40"
+    if (c >= 65) return "bg-amber-50 dark:bg-amber-950/20 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800/40"
+    return "bg-rose-50 dark:bg-rose-950/20 text-rose-700 dark:text-rose-400 border-rose-200 dark:border-rose-800/40"
+  }
+
+  const handleVerify = async (status: "verified" | "rejected") => {
+    if (!selectedDetection) return
+    setVerifying(true)
+    try {
+      const result = await agronomistPathologyService.verifyDetection(selectedDetection.id, {
+        status,
+        verifiedDisease: verifiedDisease || undefined,
+        verifiedTreatment: verifiedTreatment || undefined,
+        agronomistComment: agronomistComment || undefined,
+      })
+      // The backend can return success:true without actually persisting the change
+      // (observed live: response/refetch both still show status "pending_review").
+      // Treat a response that doesn't reflect the requested status as a failure
+      // rather than showing a false-positive success toast.
+      if (result.status !== status) {
+        throw new Error("The server accepted the request but did not update the detection's status. Please try again or contact backend support.")
+      }
+      toast.success(status === "verified" ? "Detection verified" : "Detection rejected")
+      setSelectedDetection(null)
+      loadDetections()
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to submit verification")
+    } finally {
+      setVerifying(false)
+    }
+  }
+
+  const handleUseForPrescription = () => {
+    if (!selectedDetection) return
+    setPrescriptionDiagnosis(selectedDetection.aiDisease.trim())
+    setPrescriptionCrop(selectedDetection.aiCrop)
+    setPrescriptionDetectionId(selectedDetection.id)
+    if (selectedFarmer) {
+      setFarmers(prev => prev.some(f => f.id === selectedFarmer.id) ? prev : [...prev, {
+        id: selectedFarmer.id, name: selectedFarmer.name, email: selectedFarmer.email, phone: selectedFarmer.phone,
+        location: selectedFarmer.location, farmSize: selectedFarmer.farmSize, isEmailVerified: selectedFarmer.isEmailVerified,
+        isActive: selectedFarmer.isActive, lastLogin: selectedFarmer.lastLogin, createdAt: selectedFarmer.createdAt,
+      }])
+      setPrescriptionFarmerId(selectedFarmer.id)
+      setPrescriptionDistrict(selectedFarmer.location || "")
+    }
+    setActivePanel("prescription")
+    toast.info("Diagnosis pre-filled from the AI detection — review before sending.")
   }
 
   const handleSendPrescription = async () => {
@@ -86,15 +177,14 @@ export default function PathologyPage() {
         district: prescriptionDistrict || undefined,
         diagnosisName: prescriptionDiagnosis,
         pathogenName: prescriptionPathogen || undefined,
-        // diseaseDetectionId is intentionally omitted — there's no UI to browse
-        // real disease-detection records yet (the AI matching panel above is
-        // still a placeholder), so there's nothing valid to send here.
+        diseaseDetectionId: prescriptionDetectionId || undefined,
         treatmentId: selectedTreatment.id,
         dosageOverride: prescriptionDosageOverride || undefined,
         notes: prescriptionNotes || undefined,
       })
       setSentResult({ smsText: result.smsText, sentAt: result.sentAt, deliveredVia: result.deliveredVia })
       toast.success("Prescription delivered to the farmer")
+      setPrescriptionDetectionId("")
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Failed to send prescription")
     } finally {
@@ -130,69 +220,28 @@ export default function PathologyPage() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-0 shadow-md border-dashed">
+          <Card className="border-0 shadow-md">
             <CardContent className="p-4 flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-muted border border-border flex items-center justify-center flex-shrink-0">
-                <BrainCircuit className="w-5 h-5 text-muted-foreground" />
-              </div>
+              <Icon3D gradient="gold" size="md">
+                <BrainCircuit className="w-5 h-5" />
+              </Icon3D>
               <div>
-                <p className="text-sm font-bold text-muted-foreground">Coming Soon</p>
-                <p className="text-xs text-muted-foreground">AI Diagnostics</p>
+                <p className="text-2xl font-black text-foreground">{detectionsLoading ? "…" : detectionsTotal}</p>
+                <p className="text-xs text-muted-foreground">Pending AI Detections</p>
               </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Diagnostic split view */}
-        <div className="grid grid-cols-2 gap-6">
-          {/* Farmer image — not connected yet */}
-          <Card className="border-0 shadow-md">
-            <CardHeader className="pb-3 border-b border-border">
-              <CardTitle className="flex items-center gap-3 text-sm">
-                <Icon3D gradient="earth" size="sm">
-                  <Camera className="w-4 h-4" />
-                </Icon3D>
-                Farmer Submitted Image
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-4">
-              <div className="flex flex-col items-center justify-center gap-3 bg-muted/30 border-2 border-dashed border-border rounded-xl h-52 text-center px-6">
-                <ImageOff className="w-8 h-8 text-muted-foreground" />
-                <div>
-                  <p className="text-sm font-semibold text-foreground">Image capture not connected yet</p>
-                  <p className="text-xs text-muted-foreground mt-1">Farmer-submitted diagnostic photos will appear here once this feature is built on the backend.</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* AI matches — not connected yet */}
-          <Card className="border-0 shadow-md">
-            <CardHeader className="pb-3 border-b border-border">
-              <CardTitle className="flex items-center gap-3 text-sm">
-                <Icon3D gradient="leaf" size="sm">
-                  <Microscope className="w-4 h-4" />
-                </Icon3D>
-                AI Dataset Matches
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-4">
-              <div className="flex flex-col items-center justify-center gap-3 h-52 text-center px-6">
-                <BrainCircuit className="w-8 h-8 text-muted-foreground" />
-                <span className="text-[10px] bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded-full font-bold uppercase tracking-wide">Coming Soon</span>
-                <div>
-                  <p className="text-sm font-semibold text-foreground">AI disease matching isn't available yet</p>
-                  <p className="text-xs text-muted-foreground mt-1">This will show ranked disease matches from farmer-submitted photos once the backend AI matching endpoint is built. You can enter a diagnosis manually below in the meantime.</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Treatment Ledger + Prescription Builder */}
+        {/* Tabs */}
         <Card className="border-0 shadow-md">
-          {/* Tabs */}
           <div className="flex border-b border-border">
+            <button onClick={() => setActivePanel("queue")}
+              className={`flex items-center gap-2 px-5 py-3.5 text-sm font-medium border-b-2 transition-colors ${
+                activePanel === "queue" ? "border-amber-500 text-amber-600 dark:text-amber-400" : "border-transparent text-muted-foreground hover:text-foreground"
+              }`}>
+              <Microscope className="w-4 h-4" /> Detection Queue
+            </button>
             <button onClick={() => setActivePanel("ledger")}
               className={`flex items-center gap-2 px-5 py-3.5 text-sm font-medium border-b-2 transition-colors ${
                 activePanel === "ledger" ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"
@@ -206,6 +255,194 @@ export default function PathologyPage() {
               <FileText className="w-4 h-4" /> Prescription Builder
             </button>
           </div>
+
+          {activePanel === "queue" && (
+            <CardContent className="p-5">
+              <div className="flex flex-col lg:flex-row gap-4 h-auto lg:h-[560px]">
+                {/* Left: queue list */}
+                <Card className="w-full lg:w-[36%] border-border/60 shadow-sm flex flex-col overflow-hidden">
+                  <CardHeader className="p-3 border-b border-border/50">
+                    <CardTitle className="text-xs font-bold text-foreground">
+                      {detectionsLoading ? "Loading…" : `${detections.length} pending review`}
+                    </CardTitle>
+                  </CardHeader>
+                  <div className="flex-1 overflow-y-auto p-3 space-y-2 max-h-[420px] lg:max-h-none">
+                    {detectionsLoading ? (
+                      Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-20 w-full rounded-xl" />)
+                    ) : detections.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center py-12 text-center">
+                        <CheckCircle2 className="w-8 h-8 text-emerald-500 mb-2" />
+                        <p className="text-sm font-semibold text-foreground">Queue cleared</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">No pending AI disease detections need review.</p>
+                      </div>
+                    ) : detections.map(d => (
+                      <button key={d.id} onClick={() => setSelectedDetection(d)}
+                        className={`w-full text-left p-3 rounded-xl border transition-all ${
+                          selectedDetection?.id === d.id ? "bg-amber-500/10 border-amber-500/30" : "bg-muted/40 border-border hover:bg-muted hover:border-muted-foreground/20"
+                        }`}>
+                        <div className="flex items-start justify-between gap-2 mb-1">
+                          <p className="text-xs font-bold text-foreground">{d.aiDisease.trim()}</p>
+                          <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full border flex-shrink-0 ${confidenceBadge(d.aiConfidence)}`}>
+                            {d.aiConfidence}%
+                          </span>
+                        </div>
+                        <p className="text-[10px] text-muted-foreground">{d.aiCrop}</p>
+                        <p className="text-[9px] text-muted-foreground/70 mt-1">{new Date(d.createdAt).toLocaleDateString()}</p>
+                      </button>
+                    ))}
+                  </div>
+                </Card>
+
+                {/* Right: detail */}
+                <Card className="flex-1 border-border/60 shadow-sm flex flex-col overflow-hidden">
+                  {!selectedDetection ? (
+                    <div className="flex flex-col items-center justify-center h-full p-8 text-center">
+                      <div className="w-16 h-16 rounded-2xl bg-muted border border-border flex items-center justify-center mb-4">
+                        <Microscope className="w-8 h-8 text-muted-foreground" />
+                      </div>
+                      <p className="text-foreground font-bold text-base mb-1">Select a Detection to Review</p>
+                      <p className="text-xs text-muted-foreground max-w-xs leading-relaxed">
+                        Click any pending detection from the queue to see the submitted photo and AI prediction.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                      {/* Farmer identity */}
+                      <div className="flex items-center gap-3 p-3 bg-muted/40 border border-border rounded-xl">
+                        <div className="w-9 h-9 rounded-full bg-muted border border-border flex items-center justify-center flex-shrink-0">
+                          <User className="w-4 h-4 text-muted-foreground" />
+                        </div>
+                        {farmerLoading ? (
+                          <Skeleton className="h-8 w-40" />
+                        ) : selectedFarmer ? (
+                          <div>
+                            <p className="text-xs font-bold text-foreground">{selectedFarmer.name}</p>
+                            <p className="text-[10px] text-muted-foreground flex items-center gap-1">
+                              <MapPin className="w-2.5 h-2.5" /> {selectedFarmer.location || "Location not set"}
+                            </p>
+                          </div>
+                        ) : (
+                          <p className="text-xs text-muted-foreground">Farmer details unavailable</p>
+                        )}
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {/* Farmer image */}
+                        <Card className="border-border/60 shadow-sm">
+                          <CardHeader className="pb-2 p-3 border-b border-border/50">
+                            <CardTitle className="flex items-center gap-2 text-xs">
+                              <Camera className="w-3.5 h-3.5" /> Submitted Image
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="p-3">
+                            {selectedDetection.imageUrl && !imageFailed ? (
+                              <img
+                                src={selectedDetection.imageUrl}
+                                alt="Farmer-submitted diagnostic photo"
+                                onError={() => setImageFailed(true)}
+                                className="w-full h-44 object-cover rounded-lg border border-border"
+                              />
+                            ) : (
+                              <div className="flex flex-col items-center justify-center gap-2 bg-muted/30 border-2 border-dashed border-border rounded-lg h-44 text-center px-4">
+                                <ImageOff className="w-6 h-6 text-muted-foreground" />
+                                <p className="text-[10px] text-muted-foreground">
+                                  {imageFailed ? "Image failed to load" : "No photo was submitted with this detection"}
+                                </p>
+                              </div>
+                            )}
+                          </CardContent>
+                        </Card>
+
+                        {/* AI prediction — single result, not a ranked list */}
+                        <Card className="border-border/60 shadow-sm">
+                          <CardHeader className="pb-2 p-3 border-b border-border/50">
+                            <CardTitle className="flex items-center gap-2 text-xs">
+                              <Sparkles className="w-3.5 h-3.5" /> AI Prediction
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="p-3 space-y-2">
+                            <div className="flex items-center justify-between">
+                              <p className="text-sm font-bold text-foreground">{selectedDetection.aiDisease.trim()}</p>
+                              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${confidenceBadge(selectedDetection.aiConfidence)}`}>
+                                {selectedDetection.aiConfidence}% confidence
+                              </span>
+                            </div>
+                            <p className="text-[10px] text-muted-foreground">Crop: {selectedDetection.aiCrop}</p>
+                            {!selectedDetection.aiConfidenceReliable && (
+                              <div className="flex items-start gap-1.5 bg-amber-500/10 border border-amber-500/20 rounded-lg p-2">
+                                <AlertTriangle className="w-3 h-3 text-amber-500 flex-shrink-0 mt-0.5" />
+                                <p className="text-[9px] text-amber-700 dark:text-amber-400 leading-relaxed">
+                                  Model flagged this confidence estimate as unreliable — verify manually before confirming.
+                                </p>
+                              </div>
+                            )}
+                          </CardContent>
+                        </Card>
+                      </div>
+
+                      {/* Symptoms / treatment / prevention */}
+                      <Card className="border-border/60 shadow-sm">
+                        <CardContent className="p-3 grid grid-cols-1 md:grid-cols-3 gap-2 text-[10px]">
+                          <div>
+                            <p className="text-muted-foreground font-semibold uppercase tracking-wide mb-0.5">Symptoms</p>
+                            <p className="text-foreground">{selectedDetection.symptoms}</p>
+                          </div>
+                          <div>
+                            <p className="text-muted-foreground font-semibold uppercase tracking-wide mb-0.5">Treatment</p>
+                            <p className="text-foreground">{selectedDetection.treatment}</p>
+                          </div>
+                          <div>
+                            <p className="text-muted-foreground font-semibold uppercase tracking-wide mb-0.5">Prevention</p>
+                            <p className="text-foreground">{selectedDetection.prevention}</p>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      {/* Verify form */}
+                      <Card className="border-border/60 shadow-sm">
+                        <CardContent className="p-3 space-y-2">
+                          <div>
+                            <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest block mb-1">Verified Disease</label>
+                            <input value={verifiedDisease} onChange={e => setVerifiedDisease(e.target.value)}
+                              className="w-full bg-muted border border-border text-foreground text-xs px-2.5 py-2 rounded-lg focus:outline-none" />
+                          </div>
+                          <div>
+                            <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest block mb-1">Verified Treatment</label>
+                            <input value={verifiedTreatment} onChange={e => setVerifiedTreatment(e.target.value)}
+                              className="w-full bg-muted border border-border text-foreground text-xs px-2.5 py-2 rounded-lg focus:outline-none" />
+                          </div>
+                          <div>
+                            <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest block mb-1">Comment (optional)</label>
+                            <textarea value={agronomistComment} onChange={e => setAgronomistComment(e.target.value)} rows={2}
+                              className="w-full bg-muted border border-border text-foreground text-xs px-2.5 py-2 rounded-lg resize-none focus:outline-none" />
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      {/* Actions */}
+                      <div className="grid grid-cols-2 gap-3">
+                        <Button onClick={() => handleVerify("verified")} disabled={verifying} variant="outline"
+                          className="h-12 flex items-center justify-center gap-2 border-emerald-200 hover:bg-emerald-50 dark:border-emerald-900/30 dark:hover:bg-emerald-950/20">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                          <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">Verify</span>
+                        </Button>
+                        <Button onClick={() => handleVerify("rejected")} disabled={verifying} variant="outline"
+                          className="h-12 flex items-center justify-center gap-2 border-rose-200 hover:bg-rose-50 dark:border-rose-900/30 dark:hover:bg-rose-950/20">
+                          <XCircle className="w-4 h-4 text-rose-600 dark:text-rose-400" />
+                          <span className="text-xs font-bold text-rose-600 dark:text-rose-400">Reject</span>
+                        </Button>
+                      </div>
+
+                      <button onClick={handleUseForPrescription}
+                        className="w-full flex items-center justify-center gap-2 py-2 rounded-xl font-semibold text-xs border border-sky-200 dark:border-sky-900/30 text-sky-600 dark:text-sky-400 hover:bg-sky-50 dark:hover:bg-sky-950/20 transition-colors">
+                        <FileText className="w-3.5 h-3.5" /> Use This Diagnosis for a Prescription
+                      </button>
+                    </div>
+                  )}
+                </Card>
+              </div>
+            </CardContent>
+          )}
 
           {activePanel === "ledger" && (
             <CardContent className="p-5">
@@ -294,6 +531,16 @@ export default function PathologyPage() {
 
           {activePanel === "prescription" && (
             <CardContent className="p-5 space-y-4">
+              {prescriptionDetectionId && (
+                <div className="flex items-center justify-between gap-2 bg-sky-500/10 border border-sky-500/20 rounded-xl px-3 py-2">
+                  <p className="text-[11px] text-sky-700 dark:text-sky-400 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5" /> Linked to an AI detection — diagnosis and crop were pre-filled
+                  </p>
+                  <button onClick={() => setPrescriptionDetectionId("")} className="text-sky-600 dark:text-sky-400 hover:opacity-70">
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )}
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest block mb-1">Farmer</label>

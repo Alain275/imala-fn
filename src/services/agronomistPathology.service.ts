@@ -2,6 +2,7 @@ import { buildApiUrl } from './api';
 import type { Pagination } from './agronomistFarmers.service';
 
 const API_URL = buildApiUrl('/agronomists');
+const DISEASE_API_URL = buildApiUrl('/disease');
 
 function authHeaders(): HeadersInit {
   const token = localStorage.getItem('token');
@@ -64,6 +65,48 @@ export interface Prescription {
   deliveredVia: 'notification-only' | 'realtime' | string;
 }
 
+// Confirmed via live GET /api/disease/pending: the AI model returns exactly ONE
+// prediction per detection (aiDisease/aiConfidence), not a ranked list of matches.
+export type DiseaseDetectionStatus = 'pending_review' | 'verified' | 'rejected';
+
+export interface DiseaseDetection {
+  id: string;
+  userId: string;
+  farmId: string | null;
+  cropId: string | null;
+  imageUrl: string | null;
+  aiDisease: string;
+  aiCrop: string;
+  aiConfidence: number;
+  aiConfidenceReliable: boolean;
+  aiConfidenceReason: string | null;
+  symptoms: string;
+  treatment: string;
+  prevention: string;
+  status: DiseaseDetectionStatus;
+  verifiedDisease: string | null;
+  verifiedTreatment: string | null;
+  agronomistComment: string | null;
+  verifiedBy: string | null;
+  verifiedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PendingDetectionsResponse {
+  detections: DiseaseDetection[];
+  pagination: Pagination;
+}
+
+export type VerifyDiseaseStatus = 'verified' | 'rejected';
+
+export interface VerifyDetectionPayload {
+  status: VerifyDiseaseStatus;
+  verifiedDisease?: string;
+  verifiedTreatment?: string;
+  agronomistComment?: string;
+}
+
 export const agronomistPathologyService = {
   async getTreatments(params: { search?: string; organicOnly?: boolean; rwandaCompliantOnly?: boolean; targetDisease?: string; page?: number; limit?: number } = {}): Promise<TreatmentsListResponse> {
     const qs = new URLSearchParams();
@@ -85,5 +128,23 @@ export const agronomistPathologyService = {
       body: JSON.stringify(payload),
     });
     return parseResponse<Prescription>(response);
+  },
+
+  async getPendingDetections(params: { page?: number; limit?: number } = {}): Promise<PendingDetectionsResponse> {
+    const qs = new URLSearchParams();
+    if (params.page) qs.set('page', String(params.page));
+    if (params.limit) qs.set('limit', String(params.limit));
+    const query = qs.toString();
+    const response = await fetch(`${DISEASE_API_URL}/pending${query ? `?${query}` : ''}`, { headers: authHeaders() });
+    return parseResponse<PendingDetectionsResponse>(response);
+  },
+
+  async verifyDetection(id: string, payload: VerifyDetectionPayload): Promise<DiseaseDetection> {
+    const response = await fetch(`${DISEASE_API_URL}/${id}/verify`, {
+      method: 'PATCH',
+      headers: authHeaders(),
+      body: JSON.stringify(payload),
+    });
+    return parseResponse<DiseaseDetection>(response);
   },
 };
