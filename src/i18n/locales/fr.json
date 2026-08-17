@@ -204,7 +204,12 @@
     "title": "Planification et gestion agricole",
     "subtitle": "Planifiez la saison, enregistrez le travail quotidien et comprenez votre benefice.",
     "newPlan": "Nouveau plan",
-    "tabs": { "plan": "Plan", "today": "Aujourd'hui", "records": "Registres", "results": "Resultats" }
+    "tabs": {
+      "plan": "Plan",
+      "today": "Aujourd'hui",
+      "records": "Registres",
+      "results": "Resultats"
+    }
   },
   "farmerProfile": {
     "title": "Completer le profil agriculteur",
@@ -302,17 +307,32 @@
       "cropAdvisory": {
         "title": "Conseil Agricole",
         "description": "Associez la culture idéale à votre sol, climat et objectifs de rendement.",
-        "details": ["Correspondance selon le sol", "Analyse climatique", "Optimisation du rendement", "Calendriers de plantation"]
+        "details": [
+          "Correspondance selon le sol",
+          "Analyse climatique",
+          "Optimisation du rendement",
+          "Calendriers de plantation"
+        ]
       },
       "diseaseDetection": {
         "title": "Détection des Maladies",
         "description": "Détectez rapidement les problèmes des cultures grâce à un diagnostic photo guidé et des actions à suivre.",
-        "details": ["Diagnostic par photo", "Détection précoce", "Recommandations de traitement", "Suivi de l'historique"]
+        "details": [
+          "Diagnostic par photo",
+          "Détection précoce",
+          "Recommandations de traitement",
+          "Suivi de l'historique"
+        ]
       },
       "weatherIntelligence": {
         "title": "Intelligence Météo",
         "description": "Anticipez les changements climatiques grâce à des alertes agricoles localisées.",
-        "details": ["Prévisions hyperlocales", "Alertes en temps réel", "Planification des tâches", "Synchronisation de l'irrigation"]
+        "details": [
+          "Prévisions hyperlocales",
+          "Alertes en temps réel",
+          "Planification des tâches",
+          "Synchronisation de l'irrigation"
+        ]
       }
     },
     "howItWorks": {
@@ -430,7 +450,8 @@
       "accountTypeLabel": "Type de compte",
       "accountTypeHelp": {
         "farmer": "Inscrivez-vous comme agriculteur pour gÃ©rer les cultures, la dÃ©tection des maladies, la mÃ©tÃ©o et les conseils agricoles.",
-        "agro-dealer": "Inscrivez-vous comme agro-distributeur pour fournir des mÃ©dicaments, du fumier et d'autres intrants agricoles."
+        "agro-dealer": "Inscrivez-vous comme agro-distributeur pour fournir des mÃ©dicaments, du fumier et d'autres intrants agricoles.",
+        "cooperative": "Enregistrer une coopérative et gérer ses membres"
       },
       "locationLabel": "Localisation (Facultatif)",
       "locationPlaceholder": "ex. Kigali, Gasabo",
@@ -453,7 +474,35 @@
       "checkSpamText": "Ouvrez le lien pour activer votre compte. Vérifiez aussi vos courriers indésirables.",
       "continueToLogin": "Continuer vers la connexion",
       "resend": "Renvoyer l'e-mail de vérification",
-      "resending": "Envoi en cours..."
+      "resending": "Envoi en cours...",
+      "cooperativeNameLabel": "Nom de la coopérative",
+      "cooperativeNamePlaceholder": "ex. Coopérative Musanze Nord",
+      "cooperativeNameError": "Le nom doit contenir au moins 2 caractères",
+      "districtLabel": "District",
+      "districtPlaceholder": "ex. Musanze",
+      "districtError": "Le district est requis",
+      "registrationNumberLabel": "Numéro d'enregistrement (facultatif)",
+      "registrationNumberPlaceholder": "ex. RCA/2026/0417",
+      "contactEmailLabel": "E-mail de contact (facultatif)",
+      "contactEmailPlaceholder": "info@cooperative.rw",
+      "contactPhoneLabel": "Téléphone de contact (facultatif)",
+      "contactPhonePlaceholder": "+250 788 000 000",
+      "cooperativeSubmittedTitle": "Demande envoyée",
+      "cooperativeSubmittedText": "Vérifiez votre e-mail, puis attendez qu'un administrateur approuve votre coopérative. Vous pouvez vous connecter à tout moment pour suivre le statut."
+    },
+    "pending": {
+      "title": "En attente d'approbation",
+      "text": "Votre compte coopérative est en attente d'approbation par un administrateur. Vous serez notifié dès qu'une décision sera prise.",
+      "rejectedTitle": "Demande refusée",
+      "rejectedText": "L'enregistrement de votre coopérative n'a pas été approuvé.",
+      "reasonLabel": "Motif",
+      "registeredLabel": "Soumis le",
+      "statusLabel": "Statut",
+      "refresh": "Vérifier à nouveau",
+      "refreshing": "Vérification…",
+      "signOut": "Se déconnecter",
+      "stillPending": "Toujours en attente",
+      "approved": "Approuvé — ouverture de votre tableau de bord"
     }
   },
   "dashboard": {
@@ -517,15 +566,29 @@
         "beans": "Haricots",
         "rice": "Riz"
       },
-      "soilHealth": { "title": "Aperçu de la Santé du Sol" },
+      "soilHealth": {
+        "title": "Aperçu de la Santé du Sol"
+      },
       "recentAlerts": {
         "title": "Alertes Récentes",
         "viewAll": "Voir Tout",
         "items": [
-          { "message": "De fortes pluies sont attendues à Kigali demain", "time": "Il y a 2 heures" },
-          { "message": "Mildiou du maïs détecté dans la Province de l'Est", "time": "Il y a 5 heures" },
-          { "message": "Les prix des haricots ont augmenté de 15% cette semaine", "time": "Il y a 1 jour" },
-          { "message": "La période optimale de plantation des tomates commence la semaine prochaine", "time": "Il y a 1 jour" }
+          {
+            "message": "De fortes pluies sont attendues à Kigali demain",
+            "time": "Il y a 2 heures"
+          },
+          {
+            "message": "Mildiou du maïs détecté dans la Province de l'Est",
+            "time": "Il y a 5 heures"
+          },
+          {
+            "message": "Les prix des haricots ont augmenté de 15% cette semaine",
+            "time": "Il y a 1 jour"
+          },
+          {
+            "message": "La période optimale de plantation des tomates commence la semaine prochaine",
+            "time": "Il y a 1 jour"
+          }
         ]
       },
       "quickActions": {
@@ -665,10 +728,26 @@
       "potassiumHeader": "Potassium",
       "applicationTimingHeader": "Moment d'Application",
       "tips": {
-        "maize": ["Plantez dans un sol bien drainé après les premières pluies", "Espacez les rangs de 75 cm pour de meilleurs rendements", "Appliquez de l'engrais azoté 4 semaines après la plantation"],
-        "beans": ["Alternez avec des céréales pour fixer l'azote dans le sol", "Évitez les champs détrempés pour prévenir la pourriture des racines", "Récoltez lorsque les gousses jaunissent et sèchent"],
-        "irishPotatoes": ["Plantez dans un sol frais, meuble et bien drainé", "Buttez la terre autour des tiges au fur et à mesure de la croissance", "Conservez les tubercules récoltés dans un endroit sombre, frais et ventilé"],
-        "tomatoes": ["Tuteurez ou cagez les plants pour soutenir une croissance saine", "Arrosez régulièrement pour éviter la nécrose apicale", "Surveillez les feuilles basses pour détecter les premiers signes de mildiou"]
+        "maize": [
+          "Plantez dans un sol bien drainé après les premières pluies",
+          "Espacez les rangs de 75 cm pour de meilleurs rendements",
+          "Appliquez de l'engrais azoté 4 semaines après la plantation"
+        ],
+        "beans": [
+          "Alternez avec des céréales pour fixer l'azote dans le sol",
+          "Évitez les champs détrempés pour prévenir la pourriture des racines",
+          "Récoltez lorsque les gousses jaunissent et sèchent"
+        ],
+        "irishPotatoes": [
+          "Plantez dans un sol frais, meuble et bien drainé",
+          "Buttez la terre autour des tiges au fur et à mesure de la croissance",
+          "Conservez les tubercules récoltés dans un endroit sombre, frais et ventilé"
+        ],
+        "tomatoes": [
+          "Tuteurez ou cagez les plants pour soutenir une croissance saine",
+          "Arrosez régulièrement pour éviter la nécrose apicale",
+          "Surveillez les feuilles basses pour détecter les premiers signes de mildiou"
+        ]
       }
     },
     "disease": {
@@ -700,9 +779,18 @@
       "databaseDescription": "Parcourez les maladies courantes des cultures et leurs traitements",
       "symptomsLabel": "Symptômes :",
       "detections": {
-        "maizeLeafBlight": { "name": "Brûlure des Feuilles de Maïs", "treatment": "Appliquez un fongicide et retirez les feuilles affectées pour éviter la propagation." },
-        "beanRust": { "name": "Rouille du Haricot", "treatment": "Appliquez un fongicide à base de soufre et améliorez la circulation de l'air entre les plants." },
-        "tomatoEarlyBlight": { "name": "Mildiou Précoce de la Tomate", "treatment": "Retirez les feuilles infectées et appliquez un fongicide à base de cuivre chaque semaine." }
+        "maizeLeafBlight": {
+          "name": "Brûlure des Feuilles de Maïs",
+          "treatment": "Appliquez un fongicide et retirez les feuilles affectées pour éviter la propagation."
+        },
+        "beanRust": {
+          "name": "Rouille du Haricot",
+          "treatment": "Appliquez un fongicide à base de soufre et améliorez la circulation de l'air entre les plants."
+        },
+        "tomatoEarlyBlight": {
+          "name": "Mildiou Précoce de la Tomate",
+          "treatment": "Retirez les feuilles infectées et appliquez un fongicide à base de cuivre chaque semaine."
+        }
       },
       "relativeDates": {
         "twoDaysAgo": "Il y a 2 jours",
@@ -710,11 +798,31 @@
         "oneWeekAgo": "Il y a 1 semaine"
       },
       "commonDiseases": {
-        "maizeStreakVirus": { "name": "Virus de la Striure du Maïs", "symptoms": "Stries jaunes le long des nervures des feuilles et croissance retardée.", "prevention": "Utilisez des variétés résistantes et contrôlez les cicadelles vectrices." },
-        "cassavaMosaic": { "name": "Mosaïque du Manioc", "symptoms": "Motifs jaune-vert mouchetés sur les feuilles et déformation des feuilles.", "prevention": "Plantez des boutures saines et retirez rapidement les plants infectés." },
-        "bananaBacterialWilt": { "name": "Flétrissement Bactérien du Bananier", "symptoms": "Jaunissement et flétrissement des feuilles avec mûrissement prématuré des fruits.", "prevention": "Désinfectez les outils entre les plants et retirez les tiges infectées." },
-        "coffeeBerryDisease": { "name": "Maladie des Baies de Café", "symptoms": "Lésions sombres et enfoncées sur les baies avec chute prématurée des baies.", "prevention": "Élaguez pour favoriser l'aération et appliquez un fongicide à base de cuivre pendant la floraison." },
-        "riceBlast": { "name": "Pyriculariose du Riz", "symptoms": "Lésions en forme de diamant sur les feuilles avec des centres blancs à gris.", "prevention": "Utilisez des variétés résistantes et évitez l'excès d'engrais azoté." }
+        "maizeStreakVirus": {
+          "name": "Virus de la Striure du Maïs",
+          "symptoms": "Stries jaunes le long des nervures des feuilles et croissance retardée.",
+          "prevention": "Utilisez des variétés résistantes et contrôlez les cicadelles vectrices."
+        },
+        "cassavaMosaic": {
+          "name": "Mosaïque du Manioc",
+          "symptoms": "Motifs jaune-vert mouchetés sur les feuilles et déformation des feuilles.",
+          "prevention": "Plantez des boutures saines et retirez rapidement les plants infectés."
+        },
+        "bananaBacterialWilt": {
+          "name": "Flétrissement Bactérien du Bananier",
+          "symptoms": "Jaunissement et flétrissement des feuilles avec mûrissement prématuré des fruits.",
+          "prevention": "Désinfectez les outils entre les plants et retirez les tiges infectées."
+        },
+        "coffeeBerryDisease": {
+          "name": "Maladie des Baies de Café",
+          "symptoms": "Lésions sombres et enfoncées sur les baies avec chute prématurée des baies.",
+          "prevention": "Élaguez pour favoriser l'aération et appliquez un fongicide à base de cuivre pendant la floraison."
+        },
+        "riceBlast": {
+          "name": "Pyriculariose du Riz",
+          "symptoms": "Lésions en forme de diamant sur les feuilles avec des centres blancs à gris.",
+          "prevention": "Utilisez des variétés résistantes et évitez l'excès d'engrais azoté."
+        }
       }
     },
     "weather": {
@@ -774,9 +882,18 @@
         "exporter": "Exportateur"
       },
       "insights": {
-        "peakSellingSeason": { "title": "Haute Saison de Vente", "description": "Les prix du maïs et des haricots augmentent généralement de 15 à 20 % entre juin et août." },
-        "bestMarkets": { "title": "Meilleurs Marchés à Proximité", "description": "Les marchés de Kigali et de Rwamagana offrent actuellement les meilleurs prix pour vos cultures." },
-        "exportOpportunity": { "title": "Opportunité d'Exportation", "description": "Les exportateurs de café et de thé recherchent activement de nouveaux fournisseurs ce trimestre." }
+        "peakSellingSeason": {
+          "title": "Haute Saison de Vente",
+          "description": "Les prix du maïs et des haricots augmentent généralement de 15 à 20 % entre juin et août."
+        },
+        "bestMarkets": {
+          "title": "Meilleurs Marchés à Proximité",
+          "description": "Les marchés de Kigali et de Rwamagana offrent actuellement les meilleurs prix pour vos cultures."
+        },
+        "exportOpportunity": {
+          "title": "Opportunité d'Exportation",
+          "description": "Les exportateurs de café et de thé recherchent activement de nouveaux fournisseurs ce trimestre."
+        }
       }
     },
     "training": {
@@ -800,15 +917,42 @@
       "achievementsTitle": "Réussites",
       "achievementsSubtitle": "Suivez vos étapes d'apprentissage",
       "courses": {
-        "modernMaizeFarming": { "title": "Techniques Modernes de Culture du Maïs", "description": "Apprenez des techniques modernes pour maximiser votre rendement de maïs, de la plantation à la récolte." },
-        "integratedPestManagement": { "title": "Gestion Intégrée des Ravageurs", "description": "Identifiez et gérez les ravageurs courants avec des méthodes sûres, efficaces et durables." },
-        "soilHealthFertility": { "title": "Santé et Fertilité du Sol", "description": "Comprenez la composition du sol et apprenez à maintenir et améliorer sa fertilité." },
-        "waterManagement": { "title": "Gestion de l'Eau pour les Fermes", "description": "Techniques d'irrigation efficaces pour économiser l'eau et améliorer les rendements." },
-        "postHarvestHandling": { "title": "Manutention Post-Récolte", "description": "Meilleures pratiques pour stocker et manipuler les cultures après la récolte afin de réduire les pertes." },
-        "organicFarmingPractices": { "title": "Pratiques d'Agriculture Biologique", "description": "Passez à des méthodes biologiques qui améliorent la santé du sol et la qualité des produits." },
-        "climateSmartAgriculture": { "title": "Agriculture Intelligente face au Climat", "description": "Adaptez vos pratiques agricoles pour renforcer la résilience face au changement climatique." },
-        "livestockIntegration": { "title": "Intégration de l'Élevage", "description": "Combinez culture et élevage pour une ferme plus durable et plus rentable." },
-        "farmBusinessManagement": { "title": "Gestion d'Entreprise Agricole", "description": "Gérez votre ferme comme une entreprise — budgétisation, tenue de registres et planification de la croissance." }
+        "modernMaizeFarming": {
+          "title": "Techniques Modernes de Culture du Maïs",
+          "description": "Apprenez des techniques modernes pour maximiser votre rendement de maïs, de la plantation à la récolte."
+        },
+        "integratedPestManagement": {
+          "title": "Gestion Intégrée des Ravageurs",
+          "description": "Identifiez et gérez les ravageurs courants avec des méthodes sûres, efficaces et durables."
+        },
+        "soilHealthFertility": {
+          "title": "Santé et Fertilité du Sol",
+          "description": "Comprenez la composition du sol et apprenez à maintenir et améliorer sa fertilité."
+        },
+        "waterManagement": {
+          "title": "Gestion de l'Eau pour les Fermes",
+          "description": "Techniques d'irrigation efficaces pour économiser l'eau et améliorer les rendements."
+        },
+        "postHarvestHandling": {
+          "title": "Manutention Post-Récolte",
+          "description": "Meilleures pratiques pour stocker et manipuler les cultures après la récolte afin de réduire les pertes."
+        },
+        "organicFarmingPractices": {
+          "title": "Pratiques d'Agriculture Biologique",
+          "description": "Passez à des méthodes biologiques qui améliorent la santé du sol et la qualité des produits."
+        },
+        "climateSmartAgriculture": {
+          "title": "Agriculture Intelligente face au Climat",
+          "description": "Adaptez vos pratiques agricoles pour renforcer la résilience face au changement climatique."
+        },
+        "livestockIntegration": {
+          "title": "Intégration de l'Élevage",
+          "description": "Combinez culture et élevage pour une ferme plus durable et plus rentable."
+        },
+        "farmBusinessManagement": {
+          "title": "Gestion d'Entreprise Agricole",
+          "description": "Gérez votre ferme comme une entreprise — budgétisation, tenue de registres et planification de la croissance."
+        }
       },
       "category": {
         "all": "Tous les Cours",
@@ -828,10 +972,22 @@
         "advanced": "Avancé"
       },
       "achievementsList": {
-        "firstCourse": { "title": "Premier Cours Terminé", "description": "Vous avez terminé votre premier cours de formation" },
-        "quickLearner": { "title": "Apprenant Rapide", "description": "A terminé un cours en moins d'une semaine" },
-        "expertFarmer": { "title": "Agriculteur Expert", "description": "A terminé 10 cours ou plus" },
-        "communityHelper": { "title": "Soutien Communautaire", "description": "A aidé 5 autres agriculteurs sur le forum communautaire" }
+        "firstCourse": {
+          "title": "Premier Cours Terminé",
+          "description": "Vous avez terminé votre premier cours de formation"
+        },
+        "quickLearner": {
+          "title": "Apprenant Rapide",
+          "description": "A terminé un cours en moins d'une semaine"
+        },
+        "expertFarmer": {
+          "title": "Agriculteur Expert",
+          "description": "A terminé 10 cours ou plus"
+        },
+        "communityHelper": {
+          "title": "Soutien Communautaire",
+          "description": "A aidé 5 autres agriculteurs sur le forum communautaire"
+        }
       }
     },
     "notifications": {
@@ -860,7 +1016,9 @@
     "settings": {
       "title": "Paramètres",
       "subtitle": "Gérez vos préférences de compte et vos paramètres de notification",
-      "profileErrorCard": { "title": "Informations du Profil" },
+      "profileErrorCard": {
+        "title": "Informations du Profil"
+      },
       "farmLocationLabel": "Emplacement de la Ferme",
       "profileDescription": "Mettez à jour vos informations personnelles et les détails de votre ferme",
       "notificationsCard": {
@@ -868,11 +1026,26 @@
         "description": "Configurez la manière dont vous recevez les alertes et mises à jour"
       },
       "notificationToggles": {
-        "weatherAlerts": { "title": "Alertes Météo", "description": "Soyez informé des conditions météorologiques sévères" },
-        "diseaseAlerts": { "title": "Alertes Maladies", "description": "Recevez des alertes sur les épidémies de maladies dans votre région" },
-        "marketPriceUpdates": { "title": "Mises à Jour des Prix du Marché", "description": "Mises à jour quotidiennes sur les prix des cultures" },
-        "plantingReminders": { "title": "Rappels de Plantation", "description": "Rappels pour les périodes de plantation optimales" },
-        "trainingRecommendations": { "title": "Recommandations de Formation", "description": "Suggestions de nouveaux cours" }
+        "weatherAlerts": {
+          "title": "Alertes Météo",
+          "description": "Soyez informé des conditions météorologiques sévères"
+        },
+        "diseaseAlerts": {
+          "title": "Alertes Maladies",
+          "description": "Recevez des alertes sur les épidémies de maladies dans votre région"
+        },
+        "marketPriceUpdates": {
+          "title": "Mises à Jour des Prix du Marché",
+          "description": "Mises à jour quotidiennes sur les prix des cultures"
+        },
+        "plantingReminders": {
+          "title": "Rappels de Plantation",
+          "description": "Rappels pour les périodes de plantation optimales"
+        },
+        "trainingRecommendations": {
+          "title": "Recommandations de Formation",
+          "description": "Suggestions de nouveaux cours"
+        }
       },
       "languageCard": {
         "title": "Langue et Région",
@@ -979,12 +1152,38 @@
       "mockStoreNotice": "Modifications enregistrées uniquement dans le stockage simulé — À FAIRE : connecter à l'API réelle"
     },
     "ai": {
-      "trainingStatus": { "queued": "En file d'attente", "running": "En cours", "completed": "Terminé", "failed": "Échoué" },
-      "modelStatus": { "staged": "En préparation", "deployed": "Déployé", "archived": "Archivé" },
-      "reviewStatus": { "pending": "En attente", "approved": "Approuvé", "corrected": "Corrigé", "rejected": "Rejeté" },
-      "reviewActions": { "approve": "Approuver", "correct": "Corriger", "reject": "Rejeter" },
-      "optimizationType": { "planting": "Plantation", "harvesting": "Récolte", "resource": "Ressource" },
-      "optimizationStatus": { "pending": "En attente", "applied": "Appliqué", "dismissed": "Ignoré" },
+      "trainingStatus": {
+        "queued": "En file d'attente",
+        "running": "En cours",
+        "completed": "Terminé",
+        "failed": "Échoué"
+      },
+      "modelStatus": {
+        "staged": "En préparation",
+        "deployed": "Déployé",
+        "archived": "Archivé"
+      },
+      "reviewStatus": {
+        "pending": "En attente",
+        "approved": "Approuvé",
+        "corrected": "Corrigé",
+        "rejected": "Rejeté"
+      },
+      "reviewActions": {
+        "approve": "Approuver",
+        "correct": "Corriger",
+        "reject": "Rejeter"
+      },
+      "optimizationType": {
+        "planting": "Plantation",
+        "harvesting": "Récolte",
+        "resource": "Ressource"
+      },
+      "optimizationStatus": {
+        "pending": "En attente",
+        "applied": "Appliqué",
+        "dismissed": "Ignoré"
+      },
       "overview": {
         "title": "Aperçu de l'IA",
         "subtitle": "Modèle de maladies des cultures · Statut d'entraînement et de déploiement",
@@ -1278,12 +1477,30 @@
         "title": "Activité Récente",
         "description": "Événements de la plateforme et actions des utilisateurs",
         "items": [
-          { "text": "Nouvel agriculteur inscrit — District de Nyagatare", "time": "il y a 12 min" },
-          { "text": "La précision du modèle IA v3.0.0 a atteint 93,4 %", "time": "il y a 1 h" },
-          { "text": "La Coopérative ABIRUHA a ajouté 24 nouveaux membres", "time": "il y a 2 h" },
-          { "text": "L'agronome Patrick Nkurunziza s'est connecté", "time": "il y a 3 h" },
-          { "text": "Plateforme : 8 utilisateurs actifs aujourd'hui", "time": "il y a 4 h" },
-          { "text": "3 nouveaux utilisateurs inscrits cette semaine", "time": "il y a 6 h" }
+          {
+            "text": "Nouvel agriculteur inscrit — District de Nyagatare",
+            "time": "il y a 12 min"
+          },
+          {
+            "text": "La précision du modèle IA v3.0.0 a atteint 93,4 %",
+            "time": "il y a 1 h"
+          },
+          {
+            "text": "La Coopérative ABIRUHA a ajouté 24 nouveaux membres",
+            "time": "il y a 2 h"
+          },
+          {
+            "text": "L'agronome Patrick Nkurunziza s'est connecté",
+            "time": "il y a 3 h"
+          },
+          {
+            "text": "Plateforme : 8 utilisateurs actifs aujourd'hui",
+            "time": "il y a 4 h"
+          },
+          {
+            "text": "3 nouveaux utilisateurs inscrits cette semaine",
+            "time": "il y a 6 h"
+          }
         ]
       }
     },
@@ -1293,12 +1510,35 @@
       "searchPlaceholder": "Rechercher par nom ou e-mail…",
       "allRoles": "Tous les Rôles",
       "tableTitle": "Utilisateurs",
-      "empty": { "title": "Aucun utilisateur trouvé", "description": "Essayez d'ajuster vos filtres" },
-      "columns": { "user": "Utilisateur", "role": "Rôle", "status": "Statut", "joined": "Inscrit le", "lastLogin": "Dernière Connexion" },
-      "actions": { "editRole": "Modifier le Rôle", "deactivate": "Désactiver", "activate": "Activer" },
-      "pagination": { "showing": "Affichage de {{from}}–{{to}} sur {{total}}" },
-      "editRoleDialog": { "title": "Modifier le Rôle — {{name}}", "prompt": "Sélectionnez le nouveau rôle pour cet utilisateur :", "saveRole": "Enregistrer le Rôle" },
-      "deleteDialog": { "title": "Supprimer {{name}} ?", "description": "Cela supprimera définitivement cet utilisateur et toutes ses données. Cette action est irréversible.", "deleting": "Suppression en cours…" },
+      "empty": {
+        "title": "Aucun utilisateur trouvé",
+        "description": "Essayez d'ajuster vos filtres"
+      },
+      "columns": {
+        "user": "Utilisateur",
+        "role": "Rôle",
+        "status": "Statut",
+        "joined": "Inscrit le",
+        "lastLogin": "Dernière Connexion"
+      },
+      "actions": {
+        "editRole": "Modifier le Rôle",
+        "deactivate": "Désactiver",
+        "activate": "Activer"
+      },
+      "pagination": {
+        "showing": "Affichage de {{from}}–{{to}} sur {{total}}"
+      },
+      "editRoleDialog": {
+        "title": "Modifier le Rôle — {{name}}",
+        "prompt": "Sélectionnez le nouveau rôle pour cet utilisateur :",
+        "saveRole": "Enregistrer le Rôle"
+      },
+      "deleteDialog": {
+        "title": "Supprimer {{name}} ?",
+        "description": "Cela supprimera définitivement cet utilisateur et toutes ses données. Cette action est irréversible.",
+        "deleting": "Suppression en cours…"
+      },
       "toast": {
         "loadFailed": "Échec du chargement des utilisateurs",
         "activated": "{{name}} activé",
@@ -1313,14 +1553,25 @@
     "cooperatives": {
       "title": "Coopératives",
       "subtitle": "Gérez les coopératives enregistrées et leurs membres",
-      "kpis": { "total": "Total des Coopératives", "active": "Actives", "totalMembers": "Total des Membres" },
+      "kpis": {
+        "total": "Total des Coopératives",
+        "active": "Actives",
+        "totalMembers": "Total des Membres"
+      },
       "listTitle": "Coopératives Enregistrées",
       "listDescription": "Tous les comptes de coopératives sur la plateforme IMARA",
       "registerButton": "Enregistrer une Coopérative",
-      "empty": { "title": "Aucune coopérative pour le moment", "description": "Enregistrez la première coopérative pour commencer." },
+      "empty": {
+        "title": "Aucune coopérative pour le moment",
+        "description": "Enregistrez la première coopérative pour commencer."
+      },
       "membersCount": "{{count}}/{{capacity}} membres",
       "joinedLabel": "Inscrite le",
-      "actions": { "editDetails": "Modifier les Détails", "deactivate": "Désactiver", "activate": "Activer" },
+      "actions": {
+        "editDetails": "Modifier les Détails",
+        "deactivate": "Désactiver",
+        "activate": "Activer"
+      },
       "dialog": {
         "editTitle": "Modifier la Coopérative",
         "createTitle": "Enregistrer une Coopérative",
@@ -1357,6 +1608,43 @@
         "statusUpdateFailed": "Échec de la mise à jour du statut.",
         "deleted": "{{name}} retirée de la plateforme.",
         "deleteFailed": "Échec de la suppression de la coopérative."
+      },
+      "approvals": {
+        "title": "Approbation des coopératives",
+        "subtitle": "Examinez et approuvez les comptes coopératives en attente",
+        "tabPending": "En attente",
+        "tabActive": "Actives",
+        "tabRejected": "Refusées",
+        "tabAll": "Toutes",
+        "empty": "Rien à examiner",
+        "emptyHint": "Les nouvelles inscriptions apparaîtront ici.",
+        "colName": "Coopérative",
+        "colLeader": "Responsable",
+        "colDistrict": "District",
+        "colMembers": "Membres",
+        "colRegistered": "Inscrite le",
+        "colStatus": "Statut",
+        "colActions": "Actions",
+        "review": "Examiner",
+        "approve": "Approuver",
+        "reject": "Refuser",
+        "approveConfirm": "Approuver cette coopérative ? Son responsable aura accès au tableau de bord.",
+        "rejectTitle": "Refuser cette inscription",
+        "rejectReasonLabel": "Motif (visible par le responsable)",
+        "rejectReasonPlaceholder": "Expliquez ce qui doit être corrigé",
+        "rejectReasonRequired": "Un motif est requis",
+        "approved": "Coopérative approuvée",
+        "rejected": "Coopérative refusée",
+        "detailTitle": "Détails de la coopérative",
+        "registrationNumber": "Numéro d'enregistrement",
+        "contactEmail": "E-mail de contact",
+        "contactPhone": "Téléphone de contact",
+        "farmsOwned": "Fermes des membres",
+        "farmsLinked": "Fermes enregistrées",
+        "loadError": "Impossible de charger les coopératives",
+        "actionError": "Action échouée",
+        "cancel": "Annuler",
+        "close": "Fermer"
       }
     },
     "crops": {
@@ -1371,10 +1659,21 @@
         "totalInCategory": "{{count}} cultures dans « {{category}} »",
         "totalInCategoryMatching": "{{count}} cultures dans « {{category}} » correspondant à « {{search}} »"
       },
-      "empty": { "title": "Aucune culture trouvée", "description": "Essayez d'ajuster la recherche ou le filtre." },
-      "columns": { "crop": "Culture", "category": "Catégorie", "growingSeason": "Saison de Croissance", "duration": "Durée", "status": "Statut" },
+      "empty": {
+        "title": "Aucune culture trouvée",
+        "description": "Essayez d'ajuster la recherche ou le filtre."
+      },
+      "columns": {
+        "crop": "Culture",
+        "category": "Catégorie",
+        "growingSeason": "Saison de Croissance",
+        "duration": "Durée",
+        "status": "Statut"
+      },
       "durationDays": "{{count}}j",
-      "pagination": { "showing": "{{from}}–{{to}} sur {{total}}" },
+      "pagination": {
+        "showing": "{{from}}–{{to}} sur {{total}}"
+      },
       "dialog": {
         "editTitle": "Modifier la Culture",
         "createTitle": "Ajouter une Culture",
@@ -1419,10 +1718,14 @@
       "title": "Analytique de la Plateforme",
       "subtitle": "Performance des cultures, santé du sol, finances et durabilité",
       "tabs": {
-        "cropPerformance": "Performance des Cultures", "cropPerformanceShort": "Cultures",
-        "soilEnvironmental": "Sol et Environnement", "soilEnvironmentalShort": "Sol",
-        "financialResource": "Finances et Ressources", "financialResourceShort": "Finances",
-        "sustainability": "Durabilité", "sustainabilityShort": "Durabilité"
+        "cropPerformance": "Performance des Cultures",
+        "cropPerformanceShort": "Cultures",
+        "soilEnvironmental": "Sol et Environnement",
+        "soilEnvironmentalShort": "Sol",
+        "financialResource": "Finances et Ressources",
+        "financialResourceShort": "Finances",
+        "sustainability": "Durabilité",
+        "sustainabilityShort": "Durabilité"
       },
       "crop": {
         "kpis": {
@@ -1435,8 +1738,20 @@
           "bestYieldRate": "Meilleur Taux de Rendement",
           "aboveTarget": "+{{percent}}% au-dessus de l'objectif"
         },
-        "yieldChart": { "title": "Rendement des Cultures vs Objectif", "description": "Tonnes par culture cette saison", "actual": "Réel (t)", "target": "Objectif (t)" },
-        "detectionChart": { "title": "Tendances de Détection des Maladies", "description": "Détections mensuelles par l'IA selon le type de maladie", "blight": "Brûlure", "rust": "Rouille", "mosaic": "Mosaïque", "blast": "Pyriculariose" }
+        "yieldChart": {
+          "title": "Rendement des Cultures vs Objectif",
+          "description": "Tonnes par culture cette saison",
+          "actual": "Réel (t)",
+          "target": "Objectif (t)"
+        },
+        "detectionChart": {
+          "title": "Tendances de Détection des Maladies",
+          "description": "Détections mensuelles par l'IA selon le type de maladie",
+          "blight": "Brûlure",
+          "rust": "Rouille",
+          "mosaic": "Mosaïque",
+          "blast": "Pyriculariose"
+        }
       },
       "soil": {
         "kpis": {
@@ -1449,8 +1764,19 @@
           "lowNitrogenZones": "Zones à Faible Azote",
           "needIntervention": "nécessitent une intervention"
         },
-        "climateChart": { "title": "Tendances Climatiques (12 Mois)", "description": "Précipitations (mm) et température (°C)", "rainfall": "Précipitations (mm)", "temp": "Température (°C)" },
-        "nutrientsChart": { "title": "Nutriments du Sol par Zone", "description": "Indice Azote / Phosphore / Potassium (0–100)", "nitrogen": "Azote", "phosphorus": "Phosphore", "potassium": "Potassium" }
+        "climateChart": {
+          "title": "Tendances Climatiques (12 Mois)",
+          "description": "Précipitations (mm) et température (°C)",
+          "rainfall": "Précipitations (mm)",
+          "temp": "Température (°C)"
+        },
+        "nutrientsChart": {
+          "title": "Nutriments du Sol par Zone",
+          "description": "Indice Azote / Phosphore / Potassium (0–100)",
+          "nitrogen": "Azote",
+          "phosphorus": "Phosphore",
+          "potassium": "Potassium"
+        }
       },
       "finance": {
         "kpis": {
@@ -1462,9 +1788,24 @@
           "revenueGrowth": "Croissance des Revenus",
           "vsSamePeriod": "par rapport à la même période {{year}}"
         },
-        "revenueChart": { "title": "Revenus par Culture", "description": "Millions de RWF, toutes saisons à ce jour", "revenue": "Revenu" },
-        "costChart": { "title": "Répartition des Coûts des Intrants", "description": "Millions de RWF par catégorie de coût et par saison", "seeds": "Semences", "fertilizer": "Engrais", "pesticide": "Pesticide", "labor": "Main-d'œuvre" },
-        "priceChart": { "title": "Tendances des Prix du Marché", "description": "RWF par kg — Maïs, Haricots, Café (÷10 pour l'échelle)", "coffeeScaled": "Café (÷10)" }
+        "revenueChart": {
+          "title": "Revenus par Culture",
+          "description": "Millions de RWF, toutes saisons à ce jour",
+          "revenue": "Revenu"
+        },
+        "costChart": {
+          "title": "Répartition des Coûts des Intrants",
+          "description": "Millions de RWF par catégorie de coût et par saison",
+          "seeds": "Semences",
+          "fertilizer": "Engrais",
+          "pesticide": "Pesticide",
+          "labor": "Main-d'œuvre"
+        },
+        "priceChart": {
+          "title": "Tendances des Prix du Marché",
+          "description": "RWF par kg — Maïs, Haricots, Café (÷10 pour l'échelle)",
+          "coffeeScaled": "Café (÷10)"
+        }
       },
       "sustainability": {
         "kpis": {
@@ -1476,8 +1817,19 @@
           "certifiedFarms": "fermes certifiées",
           "waterEfficiency": "Efficacité de l'Eau"
         },
-        "carbonChart": { "title": "Tendance de l'Empreinte Carbone", "description": "Tonnes de CO₂e mensuelles par source", "machinery": "Machinerie", "fertilizer": "Engrais", "transport": "Transport" },
-        "scoresChart": { "title": "Scores de Durabilité", "description": "Actuel vs objectif pour tous les indicateurs", "current": "Actuel", "target": "Objectif" }
+        "carbonChart": {
+          "title": "Tendance de l'Empreinte Carbone",
+          "description": "Tonnes de CO₂e mensuelles par source",
+          "machinery": "Machinerie",
+          "fertilizer": "Engrais",
+          "transport": "Transport"
+        },
+        "scoresChart": {
+          "title": "Scores de Durabilité",
+          "description": "Actuel vs objectif pour tous les indicateurs",
+          "current": "Actuel",
+          "target": "Objectif"
+        }
       }
     },
     "profile": {
@@ -1496,7 +1848,11 @@
         "deleteAccount": "Supprimer le Compte",
         "deleteWarning": "La suppression du compte administrateur retirera définitivement l'accès à la plateforme. Assurez-vous qu'un autre compte administrateur existe avant de continuer."
       },
-      "activity": { "title": "Activité Récente", "description": "Vos actions administratives récentes sur cette plateforme", "empty": "Aucune activité récente enregistrée." },
+      "activity": {
+        "title": "Activité Récente",
+        "description": "Vos actions administratives récentes sur cette plateforme",
+        "empty": "Aucune activité récente enregistrée."
+      },
       "preferences": {
         "title": "Préférences",
         "description": "Préférences de thème et de notification",
@@ -1506,10 +1862,22 @@
         "themeSystem": "Système",
         "notificationsHeading": "Notifications Admin",
         "notifications": {
-          "platformAlerts": { "title": "Alertes de la Plateforme", "description": "Événements système critiques et avis de sécurité" },
-          "aiModelUpdates": { "title": "Mises à Jour des Modèles IA", "description": "Fin d'entraînement, événements de déploiement" },
-          "newUserRegistrations": { "title": "Nouvelles Inscriptions d'Utilisateurs", "description": "Résumé quotidien des nouvelles inscriptions" },
-          "cooperativeActivity": { "title": "Activité des Coopératives", "description": "Changements de membres et mises à jour des coopératives" }
+          "platformAlerts": {
+            "title": "Alertes de la Plateforme",
+            "description": "Événements système critiques et avis de sécurité"
+          },
+          "aiModelUpdates": {
+            "title": "Mises à Jour des Modèles IA",
+            "description": "Fin d'entraînement, événements de déploiement"
+          },
+          "newUserRegistrations": {
+            "title": "Nouvelles Inscriptions d'Utilisateurs",
+            "description": "Résumé quotidien des nouvelles inscriptions"
+          },
+          "cooperativeActivity": {
+            "title": "Activité des Coopératives",
+            "description": "Changements de membres et mises à jour des coopératives"
+          }
         }
       }
     }
@@ -1531,7 +1899,10 @@
         "market": "Marché",
         "aiInsights": "Insights IA",
         "cropAdvisory": "Conseils Agricoles",
-        "diseaseAlerts": "Alertes Maladies"
+        "diseaseAlerts": "Alertes Maladies",
+        "profile": "Profil",
+        "plan": "Plan",
+        "agronomists": "Agronomes"
       }
     },
     "overview": {
@@ -1587,110 +1958,404 @@
           "1d": "Il y a 1 jour"
         },
         "items": {
-          "lateBlight":  "Risque de mildiou tardif sur 14 fermes de pommes de terre. Envoyez une alerte maintenant.",
-          "maizePrice":  "Prix du maïs en hausse de 18% dans 3 semaines. Coordonnez une vente en gros.",
+          "lateBlight": "Risque de mildiou tardif sur 14 fermes de pommes de terre. Envoyez une alerte maintenant.",
+          "maizePrice": "Prix du maïs en hausse de 18% dans 3 semaines. Coordonnez une vente en gros.",
           "soilAcidity": "3 fermes présentent une acidité du sol. L'application groupée de chaux économise 40% des coûts."
         }
       },
       "bottomNav": {
-        "home": "Accueil", "farms": "Fermes", "market": "Marché",
-        "alerts": "Alertes", "settings": "Paramètres"
-      }
+        "home": "Accueil",
+        "farms": "Fermes",
+        "market": "Marché",
+        "alerts": "Alertes",
+        "settings": "Paramètres"
+      },
+      "loadError": "Impossible de charger les donnees de la cooperative. Veuillez reessayer."
     },
     "farms": {
-      "title": "Mes Fermes", "subtitle": "Gérer toutes les fermes de votre coopérative",
+      "title": "Mes Fermes",
+      "subtitle": "Gérer toutes les fermes de votre coopérative",
       "searchPlaceholder": "Rechercher par ferme, agriculteur ou lieu…",
-      "filterAll": "Tout", "filterPending": "En attente", "filterGood": "Bien",
-      "filterFair": "Moyen", "filterLow": "Faible", "filterInactive": "Inactive",
-      "statTotal": "Total", "statGood": "Bien", "statFair": "Moyen",
-      "statLow": "Faible", "statInactive": "Inactive", "statPending": "En révision",
+      "filterAll": "Tout",
+      "filterPending": "En attente",
+      "filterGood": "Bien",
+      "filterFair": "Moyen",
+      "filterLow": "Faible",
+      "filterInactive": "Inactive",
+      "statTotal": "Total",
+      "statGood": "Bien",
+      "statFair": "Moyen",
+      "statLow": "Faible",
+      "statInactive": "Inactive",
+      "statPending": "En révision",
       "noResults": "Aucune ferme ne correspond à votre recherche.",
-      "lastYield": "Dernier rendement", "lastActive": "Dernière activité",
+      "lastYield": "Dernier rendement",
+      "lastActive": "Dernière activité",
       "pendingBadge": "En attente",
-      "status": { "good": "Bien", "fair": "Moyen", "low": "Faible", "inactive": "Inactive" },
-      "viewDetails": "Voir Détails", "reviewStatus": "Réviser Statut", "contactFarmer": "Contacter Agriculteur",
-      "reviewSaved": "Statut de la ferme mis à jour.", "reviewError": "Échec de la mise à jour.",
-      "reviewDialog": { "title": "Réviser le Statut", "selectStatus": "Sélectionner le nouveau statut" },
-      "contactDialog": { "title": "Contacter l'Agriculteur", "call": "Appeler" }
+      "status": {
+        "good": "Bien",
+        "fair": "Moyen",
+        "low": "Faible",
+        "inactive": "Inactive"
+      },
+      "viewDetails": "Voir Détails",
+      "reviewStatus": "Réviser Statut",
+      "contactFarmer": "Contacter Agriculteur",
+      "reviewSaved": "Statut de la ferme mis à jour.",
+      "reviewError": "Échec de la mise à jour.",
+      "reviewDialog": {
+        "title": "Réviser le Statut",
+        "selectStatus": "Sélectionner le nouveau statut"
+      },
+      "contactDialog": {
+        "title": "Contacter l'Agriculteur",
+        "call": "Appeler"
+      }
     },
     "members": {
-      "title": "Membres", "subtitle": "Gestion des membres de la coopérative",
+      "title": "Membres",
+      "subtitle": "Gestion des membres de la coopérative",
       "searchPlaceholder": "Rechercher des membres…",
-      "addBtn": "Ajouter Membre", "listTitle": "Tous les Membres", "noResults": "Aucun membre trouvé.",
-      "statTotal": "Total Membres", "statActive": "Actifs", "statFarms": "Total Fermes",
+      "addBtn": "Ajouter Membre",
+      "listTitle": "Tous les Membres",
+      "noResults": "Aucun membre trouvé.",
+      "statTotal": "Total Membres",
+      "statActive": "Actifs",
+      "statFarms": "Total Fermes",
       "farmsLabel": "fermes",
-      "role": { "leader": "Leader", "treasurer": "Trésorier", "secretary": "Secrétaire", "member": "Membre" },
-      "actionContact": "Contacter", "actionViewFarms": "Voir Fermes", "actionRemove": "Retirer",
-      "addSuccess": "Membre ajouté.", "addError": "Échec de l'ajout.", "removeSuccess": "Membre retiré.", "removeError": "Échec du retrait.",
-      "addDialog": { "title": "Ajouter un Nouveau Membre", "name": "Nom complet", "phone": "Téléphone", "email": "Email", "location": "Lieu", "role": "Rôle", "validation": "Nom et téléphone requis.", "submit": "Ajouter" },
-      "contactDialog": { "title": "Contact du Membre" },
-      "removeDialog": { "title": "Retirer le Membre", "description": "Retirer {{name}} de la coopérative?", "confirm": "Retirer" }
+      "role": {
+        "leader": "Leader",
+        "treasurer": "Trésorier",
+        "secretary": "Secrétaire",
+        "member": "Membre"
+      },
+      "actionContact": "Contacter",
+      "actionViewFarms": "Voir Fermes",
+      "actionRemove": "Retirer",
+      "addSuccess": "Membre ajouté.",
+      "addError": "Échec de l'ajout.",
+      "removeSuccess": "Membre retiré.",
+      "removeError": "Échec du retrait.",
+      "addDialog": {
+        "title": "Ajouter un Nouveau Membre",
+        "name": "Nom complet",
+        "phone": "Téléphone",
+        "email": "Email",
+        "location": "Lieu",
+        "role": "Rôle",
+        "validation": "Nom et téléphone requis.",
+        "submit": "Ajouter"
+      },
+      "contactDialog": {
+        "title": "Contact du Membre"
+      },
+      "removeDialog": {
+        "title": "Retirer le Membre",
+        "description": "Retirer {{name}} de la coopérative?",
+        "confirm": "Retirer"
+      },
+      "addFlow": {
+        "title": "Ajouter un membre",
+        "searchLabel": "Rechercher un agriculteur existant",
+        "searchPlaceholder": "E-mail, téléphone ou nom",
+        "searchHint": "Saisissez au moins 3 caractères",
+        "searching": "Recherche…",
+        "noResults": "Aucun agriculteur trouvé",
+        "alreadyMember": "Déjà dans votre coopérative",
+        "otherCooperative": "Appartient à une autre coopérative",
+        "add": "Ajouter comme membre",
+        "adding": "Ajout…",
+        "added": "Membre ajouté",
+        "selectFarmsTitle": "Enregistrer ses fermes",
+        "selectFarmsText": "Choisissez les fermes existantes de cet agriculteur à enregistrer sous votre coopérative. Vous n'êtes pas obligé de toutes les sélectionner et vous pourrez modifier ce choix plus tard.",
+        "noFarms": "Cet agriculteur n'a encore enregistré aucune ferme",
+        "noFarmsHint": "Vous pourrez les enregistrer dès qu'il en ajoutera.",
+        "linked": "Enregistrée",
+        "linkSelected": "Enregistrer la sélection",
+        "linking": "Enregistrement…",
+        "linkedToast": "Fermes enregistrées sous votre coopérative",
+        "unlink": "Retirer",
+        "unlinked": "Ferme retirée de votre coopérative",
+        "skip": "Passer",
+        "done": "Terminé",
+        "farmSize": "Superficie",
+        "farmCrop": "Culture",
+        "hectares": "ha",
+        "linkedFarmsCount": "enregistrées",
+        "ofOwned": "sur {{count}} possédées",
+        "error": "Une erreur est survenue"
+      }
     },
     "market": {
-      "title": "Marché", "subtitle": "Prix des cultures et coordination des ventes en gros",
-      "kpiStock": "Notre Stock Total", "kpiBuyers": "Acheteurs Vérifiés", "kpiAvgChange": "Variation Moy. Prix", "kpiRevenue": "Revenu Confirmé",
-      "chartTitle": "Tendance des Prix (RWF/kg)", "chartSubtitle": "Mouvement hebdomadaire des prix",
-      "ordersTitle": "Commandes en Gros", "newOrder": "Nouvelle",
-      "pricesTitle": "Prix du Marché", "pricesSubtitle": "Prix actuels des cultures",
-      "colCrop": "Culture", "colPrice": "Prix", "colChange": "Variation", "colStock": "Notre Stock", "colDemand": "Demande", "sellBtn": "Vendre",
-      "demand": { "high": "Haute", "medium": "Moyenne", "low": "Faible" },
-      "orderStatus": { "pending": "En attente", "confirmed": "Confirmée", "completed": "Complétée" },
-      "buyersTitle": "Acheteurs Vérifiés", "verified": "Vérifié", "minQty": "Qté min.",
-      "bulkSubmitted": "Commande en gros créée.", "bulkError": "Échec de la création.",
-      "bulkDialog": { "title": "Coordonner une Vente en Gros", "crop": "Sélectionner Culture", "quantity": "Quantité", "price": "Prix Cible", "buyer": "Sélectionner Acheteur", "summary": "Revenu estimé:", "validation": "Veuillez sélectionner culture, quantité et acheteur.", "noBuyers": "Aucun acheteur disponible.", "submit": "Soumettre" }
+      "title": "Marché",
+      "subtitle": "Prix des cultures et coordination des ventes en gros",
+      "kpiStock": "Notre Stock Total",
+      "kpiBuyers": "Acheteurs Vérifiés",
+      "kpiAvgChange": "Variation Moy. Prix",
+      "kpiRevenue": "Revenu Confirmé",
+      "chartTitle": "Tendance des Prix (RWF/kg)",
+      "chartSubtitle": "Mouvement hebdomadaire des prix",
+      "ordersTitle": "Commandes en Gros",
+      "newOrder": "Nouvelle",
+      "pricesTitle": "Prix du Marché",
+      "pricesSubtitle": "Prix actuels des cultures",
+      "colCrop": "Culture",
+      "colPrice": "Prix",
+      "colChange": "Variation",
+      "colStock": "Notre Stock",
+      "colDemand": "Demande",
+      "sellBtn": "Vendre",
+      "demand": {
+        "high": "Haute",
+        "medium": "Moyenne",
+        "low": "Faible"
+      },
+      "orderStatus": {
+        "pending": "En attente",
+        "confirmed": "Confirmée",
+        "completed": "Complétée"
+      },
+      "buyersTitle": "Acheteurs Vérifiés",
+      "verified": "Vérifié",
+      "minQty": "Qté min.",
+      "bulkSubmitted": "Commande en gros créée.",
+      "bulkError": "Échec de la création.",
+      "bulkDialog": {
+        "title": "Coordonner une Vente en Gros",
+        "crop": "Sélectionner Culture",
+        "quantity": "Quantité",
+        "price": "Prix Cible",
+        "buyer": "Sélectionner Acheteur",
+        "summary": "Revenu estimé:",
+        "validation": "Veuillez sélectionner culture, quantité et acheteur.",
+        "noBuyers": "Aucun acheteur disponible.",
+        "submit": "Soumettre"
+      }
     },
     "aiInsights": {
-      "pageTitle": "Insights IA", "pageSubtitle": "Recommandations IA pour votre coopérative",
-      "filterAll": "Tout", "filterAlert": "Alertes", "filterMarket": "Marché", "filterSoil": "Sol", "filterWeather": "Météo",
-      "noInsights": "Aucun insight actif.", "farmsAffected": "fermes concernées",
-      "dismissBtn": "Ignorer", "dismissed": "Insight ignoré.", "dismissedSection": "Insights ignorés",
-      "severity": { "critical": "Critique", "high": "Élevé", "medium": "Moyen", "low": "Faible" }
+      "pageTitle": "Insights IA",
+      "pageSubtitle": "Recommandations IA pour votre coopérative",
+      "filterAll": "Tout",
+      "filterAlert": "Alertes",
+      "filterMarket": "Marché",
+      "filterSoil": "Sol",
+      "filterWeather": "Météo",
+      "noInsights": "Aucun insight actif.",
+      "farmsAffected": "fermes concernées",
+      "dismissBtn": "Ignorer",
+      "dismissed": "Insight ignoré.",
+      "dismissedSection": "Insights ignorés",
+      "severity": {
+        "critical": "Critique",
+        "high": "Élevé",
+        "medium": "Moyen",
+        "low": "Faible"
+      }
     },
     "cropAdvisory": {
-      "title": "Conseils Agricoles", "subtitle": "Recommandations IA par culture",
-      "currentStage": "Stade Actuel", "seasonProgress": "Avancement Saison", "nextAction": "Prochaine Action",
-      "daysToHarvest": "Jours avant Récolte", "expectedYield": "Rendement Prévu", "irrigation": "Irrigation",
+      "title": "Conseils Agricoles",
+      "subtitle": "Recommandations IA par culture",
+      "currentStage": "Stade Actuel",
+      "seasonProgress": "Avancement Saison",
+      "nextAction": "Prochaine Action",
+      "daysToHarvest": "Jours avant Récolte",
+      "expectedYield": "Rendement Prévu",
+      "irrigation": "Irrigation",
       "everyDays": "Tous les {{n}}j",
-      "fertilizerTitle": "Programme de Fertilisation", "fertName": "Engrais", "fertAmount": "Quantité", "fertTiming": "Moment",
-      "risksTitle": "Risques Actuels", "calendarTitle": "Calendrier Saisonnier"
+      "fertilizerTitle": "Programme de Fertilisation",
+      "fertName": "Engrais",
+      "fertAmount": "Quantité",
+      "fertTiming": "Moment",
+      "risksTitle": "Risques Actuels",
+      "calendarTitle": "Calendrier Saisonnier"
     },
     "diseaseAlerts": {
-      "title": "Alertes Maladies", "subtitle": "Surveiller et répondre aux menaces de maladies",
+      "title": "Alertes Maladies",
+      "subtitle": "Surveiller et répondre aux menaces de maladies",
       "sendGroupBtn": "Envoyer Alerte Groupe",
-      "activeSection": "Alertes Actives", "resolvedSection": "Alertes Résolues",
+      "activeSection": "Alertes Actives",
+      "resolvedSection": "Alertes Résolues",
       "noActive": "Aucune alerte active. Toutes les fermes sont saines!",
-      "farmsAffected": "fermes concernées", "detected": "Détectée", "symptoms": "Symptômes", "prevention": "Prévention",
-      "broadcastTag": "Alerte Envoyée", "broadcastBtn": "Diffuser l'Alerte", "broadcastDone": "Diffusion Envoyée",
-      "viewDetails": "Voir Détails", "markResolved": "Marquer Résolu", "sending": "Envoi…", "resolved": "Résolu",
-      "broadcastSent": "Alerte diffusée pour {{disease}}.", "broadcastError": "Échec de la diffusion.",
-      "resolveSuccess": "Alerte marquée comme résolue.", "resolveError": "Échec de la résolution.",
-      "groupSent": "Alerte groupe envoyée.", "groupError": "Échec de l'envoi.",
-      "severity": { "critical": "Critique", "high": "Élevé", "medium": "Moyen", "low": "Faible" },
-      "resolveDialog": { "title": "Marquer comme Résolu", "description": "Confirmer que {{disease}} a été traité.", "confirm": "Résoudre" },
-      "groupDialog": { "title": "Envoyer Alerte Groupe", "type": "Type d'Alerte", "typeDisease": "Maladie", "typeWeather": "Météo", "typeMarket": "Marché", "urgency": "Urgence", "message": "Message", "messagePlaceholder": "Décrivez la situation et les actions recommandées…", "target": "Envoyer À", "allMembers": "Tous les Membres", "affectedOnly": "Concernés Seulement", "submit": "Envoyer" }
+      "farmsAffected": "fermes concernées",
+      "detected": "Détectée",
+      "symptoms": "Symptômes",
+      "prevention": "Prévention",
+      "broadcastTag": "Alerte Envoyée",
+      "broadcastBtn": "Diffuser l'Alerte",
+      "broadcastDone": "Diffusion Envoyée",
+      "viewDetails": "Voir Détails",
+      "markResolved": "Marquer Résolu",
+      "sending": "Envoi…",
+      "resolved": "Résolu",
+      "broadcastSent": "Alerte diffusée pour {{disease}}.",
+      "broadcastError": "Échec de la diffusion.",
+      "resolveSuccess": "Alerte marquée comme résolue.",
+      "resolveError": "Échec de la résolution.",
+      "groupSent": "Alerte groupe envoyée.",
+      "groupError": "Échec de l'envoi.",
+      "severity": {
+        "critical": "Critique",
+        "high": "Élevé",
+        "medium": "Moyen",
+        "low": "Faible"
+      },
+      "resolveDialog": {
+        "title": "Marquer comme Résolu",
+        "description": "Confirmer que {{disease}} a été traité.",
+        "confirm": "Résoudre"
+      },
+      "groupDialog": {
+        "title": "Envoyer Alerte Groupe",
+        "type": "Type d'Alerte",
+        "typeDisease": "Maladie",
+        "typeWeather": "Météo",
+        "typeMarket": "Marché",
+        "urgency": "Urgence",
+        "message": "Message",
+        "messagePlaceholder": "Décrivez la situation et les actions recommandées…",
+        "target": "Envoyer À",
+        "allMembers": "Tous les Membres",
+        "affectedOnly": "Concernés Seulement",
+        "submit": "Envoyer"
+      }
     },
     "settings": {
-      "title": "Paramètres", "subtitle": "Gérer le profil et les préférences",
-      "profileSection": "Profil de la Coopérative", "profileDesc": "Mettre à jour les informations officielles.",
-      "profileSaved": "Profil mis à jour.", "profileError": "Échec de la mise à jour.",
-      "languageSection": "Langue", "languageDesc": "Sélectionnez votre langue préférée.",
-      "notifsSection": "Notifications", "notifsDesc": "Contrôler les notifications reçues.",
-      "notifSaved": "Préférences enregistrées.", "notifError": "Échec de l'enregistrement.",
-      "accessSection": "Accès & Confidentialité", "accessDesc": "Contrôler ce que les membres peuvent voir.",
-      "accessSaved": "Paramètres d'accès enregistrés.", "accessError": "Échec.",
-      "profileFields": { "name": "Nom de la Coopérative", "location": "Lieu", "district": "District", "regNumber": "Numéro d'Enregistrement", "email": "Email de Contact", "phone": "Téléphone de Contact", "foundedYear": "Année de Fondation", "description": "Description" },
+      "title": "Paramètres",
+      "subtitle": "Gérer le profil et les préférences",
+      "profileSection": "Profil de la Coopérative",
+      "profileDesc": "Mettre à jour les informations officielles.",
+      "profileSaved": "Profil mis à jour.",
+      "profileError": "Échec de la mise à jour.",
+      "languageSection": "Langue",
+      "languageDesc": "Sélectionnez votre langue préférée.",
+      "notifsSection": "Notifications",
+      "notifsDesc": "Contrôler les notifications reçues.",
+      "notifSaved": "Préférences enregistrées.",
+      "notifError": "Échec de l'enregistrement.",
+      "accessSection": "Accès & Confidentialité",
+      "accessDesc": "Contrôler ce que les membres peuvent voir.",
+      "accessSaved": "Paramètres d'accès enregistrés.",
+      "accessError": "Échec.",
+      "profileFields": {
+        "name": "Nom de la Coopérative",
+        "location": "Lieu",
+        "district": "District",
+        "regNumber": "Numéro d'Enregistrement",
+        "email": "Email de Contact",
+        "phone": "Téléphone de Contact",
+        "foundedYear": "Année de Fondation",
+        "description": "Description"
+      },
       "notif": {
-        "diseaseAlerts":     { "label": "Alertes Maladies",         "desc": "Notification lors de nouvelles menaces détectées." },
-        "marketUpdates":     { "label": "Mises à Jour Marché",      "desc": "Changements de prix et opportunités de vente." },
-        "weatherWarnings":   { "label": "Alertes Météo",            "desc": "Alertes météo sévères affectant Musanze." },
-        "aiRecommendations": { "label": "Recommandations IA",       "desc": "Nouveaux insights IA et conseils agricoles." },
-        "weeklyReport":      { "label": "Rapport Hebdomadaire",     "desc": "Résumé hebdomadaire des performances." }
+        "diseaseAlerts": {
+          "label": "Alertes Maladies",
+          "desc": "Notification lors de nouvelles menaces détectées."
+        },
+        "marketUpdates": {
+          "label": "Mises à Jour Marché",
+          "desc": "Changements de prix et opportunités de vente."
+        },
+        "weatherWarnings": {
+          "label": "Alertes Météo",
+          "desc": "Alertes météo sévères affectant Musanze."
+        },
+        "aiRecommendations": {
+          "label": "Recommandations IA",
+          "desc": "Nouveaux insights IA et conseils agricoles."
+        },
+        "weeklyReport": {
+          "label": "Rapport Hebdomadaire",
+          "desc": "Résumé hebdomadaire des performances."
+        }
       },
       "access": {
-        "membersCanViewPrices": { "label": "Membres Voient les Prix",      "desc": "Autoriser tous les membres à voir les prix." },
-        "requireFarmApproval":  { "label": "Approbation Fermes Requise",   "desc": "Les nouvelles fermes doivent être approuvées." },
-        "shareDataWithGov":     { "label": "Partager Données Gouvernement","desc": "Permettre au MINAGRI d'accéder aux données." }
+        "membersCanViewPrices": {
+          "label": "Membres Voient les Prix",
+          "desc": "Autoriser tous les membres à voir les prix."
+        },
+        "requireFarmApproval": {
+          "label": "Approbation Fermes Requise",
+          "desc": "Les nouvelles fermes doivent être approuvées."
+        },
+        "shareDataWithGov": {
+          "label": "Partager Données Gouvernement",
+          "desc": "Permettre au MINAGRI d'accéder aux données."
+        }
       }
+    },
+    "profile": {
+      "title": "Profil de la coopérative",
+      "subtitle": "Les informations d'enregistrement de votre coopérative",
+      "name": "Nom",
+      "district": "District",
+      "location": "Localisation",
+      "registrationNumber": "Numéro d'enregistrement",
+      "status": "Statut",
+      "registeredAt": "Inscrite le",
+      "approvedAt": "Approuvée le",
+      "leader": "Responsable",
+      "members": "Membres",
+      "activeMembers": "Membres actifs",
+      "registeredFarms": "Fermes enregistrées",
+      "contactEmail": "E-mail de contact",
+      "contactPhone": "Téléphone de contact",
+      "description": "À propos",
+      "descriptionPlaceholder": "Présentez votre coopérative",
+      "edit": "Modifier",
+      "save": "Enregistrer",
+      "saving": "Enregistrement…",
+      "cancel": "Annuler",
+      "saved": "Profil mis à jour",
+      "lockedHint": "Le nom, le district et le numéro d'enregistrement ont été approuvés par un administrateur et ne peuvent pas être modifiés ici.",
+      "loadError": "Impossible de charger le profil",
+      "notSet": "Non renseigné"
+    },
+    "plan": {
+      "title": "Plan de la coopérative",
+      "subtitle": "Plans de culture de vos fermes enregistrées",
+      "allSeasons": "Toutes les saisons",
+      "seasonLabel": "Saison",
+      "plans": "Plans",
+      "farms": "Fermes",
+      "activePlans": "Actifs",
+      "tasksDue": "Tâches à faire",
+      "byCrop": "Par culture",
+      "crop": "Culture",
+      "area": "Superficie",
+      "expectedYield": "Rendement attendu",
+      "harvested": "Récolté",
+      "planList": "Tous les plans",
+      "farmName": "Ferme",
+      "member": "Membre",
+      "progress": "Tâches",
+      "status": "Statut",
+      "empty": "Aucun plan de culture",
+      "emptyHint": "Les plans apparaîtront ici lorsque vos membres en créeront pour les fermes enregistrées.",
+      "loadError": "Impossible de charger les plans"
+    },
+    "agronomists": {
+      "title": "Agronomes",
+      "subtitle": "Agronomes vérifiés disponibles pour votre coopérative",
+      "inDistrict": "À {{district}}",
+      "showAll": "Tous les districts",
+      "showDistrict": "Mon district uniquement",
+      "specialization": "Spécialisation",
+      "experience": "Expérience",
+      "years": "ans",
+      "contact": "Contacter",
+      "empty": "Aucun agronome trouvé",
+      "emptyHint": "Essayez d'afficher tous les districts.",
+      "loadError": "Impossible de charger les agronomes"
+    },
+    "marketplace": {
+      "matchedCrops": "Correspond à vos cultures",
+      "showAll": "Voir tout le catalogue",
+      "showMatched": "Filtrer sur mes cultures",
+      "empty": "Aucun produit trouvé",
+      "emptyHint": "Essayez d'afficher tout le catalogue.",
+      "dealer": "Revendeur",
+      "price": "Prix",
+      "loadError": "Impossible de charger le marché"
     }
   }
 }

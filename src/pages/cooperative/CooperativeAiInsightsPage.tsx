@@ -13,6 +13,7 @@ import {
 } from "lucide-react"
 import { toast } from "sonner"
 import { cooperativeService, type FullAiInsight, type InsightType, type InsightSeverity } from "@/services/cooperativeMock"
+import { cooperativeApi } from "@/services/cooperative.service"
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -66,7 +67,7 @@ export default function CooperativeAiInsightsPage() {
 
   async function handleDismiss(id: string) {
     // TODO: PATCH /api/cooperative/ai-insights/:id/dismiss
-    await cooperativeService.dismissInsight(id)
+    await cooperativeApi.dismissInsight(id)
     setInsights(prev => prev.map(i => i.id === id ? { ...i, dismissed: true } : i))
     toast.success(t('cooperative.aiInsights.dismissed'))
   }

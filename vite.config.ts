@@ -38,6 +38,14 @@ export default defineConfig(({ mode }) => {
         },
         workbox: {
           importScripts: ['push-sw.js'],
+          // The main bundle crossed workbox's 2 MiB default when the
+          // cooperative membership screens landed. Left at the default the
+          // build FAILS rather than degrading: the chunk is skipped and the
+          // app stops working offline, which is the whole point of the PWA.
+          // 4 MiB leaves room before this needs revisiting; the real fix when
+          // it does is route-level code splitting, since every page in
+          // App.tsx is currently a static import.
+          maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
           globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
           globIgnores: ['**/vecteezy_3d-weather-icon-day-with-rain_24825195 (1).png'],
           runtimeCaching: [

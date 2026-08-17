@@ -25,8 +25,9 @@ import {
 } from "lucide-react"
 import { toast } from "sonner"
 import {
-  cooperativeService, type CooperativeFarm, type FarmStatus,
+  type CooperativeFarm, type FarmStatus,
 } from "@/services/cooperativeMock"
+import { cooperativeApi } from "@/services/cooperative.service"
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -80,7 +81,7 @@ export default function CooperativeFarmsPage() {
   const [savingReview, setSavingReview] = useState(false)
 
   useEffect(() => {
-    cooperativeService.getFarms()
+    cooperativeApi.getFarms()
       .then(setFarms)
       .finally(() => setLoading(false))
   }, [])
@@ -109,7 +110,7 @@ export default function CooperativeFarmsPage() {
     setSavingReview(true)
     try {
       // TODO: PATCH /api/cooperative/farms/:id/status
-      await cooperativeService.updateFarmStatus(reviewFarm.id, reviewStatus)
+      await cooperativeApi.updateFarmStatus(reviewFarm.id, reviewStatus)
       setFarms(prev => prev.map(f =>
         f.id === reviewFarm.id ? { ...f, status: reviewStatus, pendingReview: false } : f
       ))

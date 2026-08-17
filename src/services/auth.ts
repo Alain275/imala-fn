@@ -6,6 +6,18 @@ export interface RegisterData {
   location?: string;
   farmSize?: number;
   role?: 'farmer' | 'agro-dealer' | 'agronomist' | 'admin' | 'cooperative';
+  /**
+   * Preferred alias for `role` on the API. Both are accepted; when both are
+   * sent the server takes `accountType`. Kept optional so existing callers
+   * that only send `role` are unaffected.
+   */
+  accountType?: 'farmer' | 'agro-dealer' | 'agronomist' | 'cooperative';
+  // Cooperative signups only.
+  cooperativeName?: string;
+  district?: string;
+  registrationNumber?: string;
+  contactEmail?: string;
+  contactPhone?: string;
 }
 
 export interface LoginData {
@@ -40,6 +52,14 @@ export interface RegisterResponse {
     name: string;
     role: string;
     isEmailVerified: boolean;
+    /** Present only for cooperative signups. */
+    status?: 'pending_approval';
+    cooperative?: {
+      id: string;
+      name: string;
+      district: string | null;
+      status: 'pending' | 'active' | 'rejected' | 'suspended';
+    };
   };
 }
 
