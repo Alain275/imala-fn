@@ -487,7 +487,15 @@
       "signOut": "Déconnexion"
     },
     "header": {
-      "searchPlaceholder": "Rechercher..."
+      "searchPlaceholder": "Rechercher...",
+      "workspaceLabel": {
+        "farmer": "Espace Agriculteur",
+        "agro-dealer": "Espace Distributeur",
+        "agronomist": "Console Agronome",
+        "admin": "Espace Administrateur",
+        "cooperative": "Espace Coopérative",
+        "default": "Espace IMARA"
+      }
     },
     "overview": {
       "title": "Tableau de Bord",
@@ -908,6 +916,10 @@
         "confirmLabel": "Confirmer le Nouveau Mot de Passe",
         "mismatchError": "Les mots de passe ne correspondent pas",
         "lengthError": "Le mot de passe doit contenir au moins 8 caractères",
+        "strengthLabel": "Force du mot de passe",
+        "strengthWeak": "Faible",
+        "strengthMedium": "Moyen",
+        "strengthStrong": "Fort",
         "changing": "Changement en cours…",
         "submit": "Changer le Mot de Passe"
       },

@@ -34,12 +34,43 @@ export interface AgronomistDirectoryEntry {
   };
 }
 
-export interface AgronomistProfilePayload {
+// district/sector/yearsOfExperience/bio are the only fields PATCH /profile accepts.
+// specialization and certificationNumber are set at registration and are read-only here.
+export interface AgronomistProfileUpdatePayload {
+  district?: string;
+  sector?: string;
+  yearsOfExperience?: number;
+  bio?: string;
+}
+
+export interface AgronomistProfileDetails {
+  id: string;
+  userId: string;
   district: string;
   sector: string;
   specialization: string;
   yearsOfExperience: number;
-  bio?: string;
+  certificationNumber: string;
+  bio?: string | null;
+  isVerified: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AgronomistFullProfile {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  role: string;
+  location?: string | null;
+  farmSize?: number | null;
+  isEmailVerified: boolean;
+  isActive: boolean;
+  lastLogin: string;
+  createdAt: string;
+  updatedAt: string;
+  agronomistProfile: AgronomistProfileDetails | null;
 }
 
 export const agronomistService = {
@@ -51,17 +82,17 @@ export const agronomistService = {
     return parseResponse<AgronomistDirectoryEntry[]>(response);
   },
 
-  async getMyProfile() {
+  async getMyProfile(): Promise<AgronomistFullProfile> {
     const response = await fetch(`${API_URL}/profile`, { headers: authHeaders() });
-    return parseResponse<any>(response);
+    return parseResponse<AgronomistFullProfile>(response);
   },
 
-  async updateMyProfile(payload: AgronomistProfilePayload) {
+  async updateMyProfile(payload: AgronomistProfileUpdatePayload): Promise<AgronomistProfileDetails> {
     const response = await fetch(`${API_URL}/profile`, {
       method: 'PATCH',
       headers: authHeaders(),
       body: JSON.stringify(payload),
     });
-    return parseResponse<any>(response);
+    return parseResponse<AgronomistProfileDetails>(response);
   },
 };

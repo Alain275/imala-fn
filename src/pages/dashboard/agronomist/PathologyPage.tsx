@@ -1,87 +1,195 @@
-import { useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { Header } from "@/components/header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Icon3D } from "@/components/icon-3d"
+import { Button } from "@/components/ui/button"
+import { Skeleton } from "@/components/ui/skeleton"
 import {
   FlaskConical, Camera, CheckCircle2,
   Search, Send,
   Pill, Shield, FileText, Microscope, Leaf,
-  AlertCircle, Printer
+  ImageOff, BrainCircuit, AlertTriangle,
+  XCircle, User, MapPin, X, Sparkles,
 } from "lucide-react"
-
-interface DiseaseMatch {
-  id: number
-  name: string
-  pathogen: string
-  matchPct: number
-  symptoms: string[]
-  severity: "low" | "moderate" | "high" | "critical"
-}
-
-interface TreatmentEntry {
-  id: number
-  product: string
-  type: "organic" | "chemical"
-  activeIngredient: string
-  dosage: string
-  targetDisease: string
-  rwandaCompliant: boolean
-  organic: boolean
-  withdrawalDays: number
-  stock: "in_stock" | "low" | "out"
-}
-
-const diseaseMatches: DiseaseMatch[] = [
-  { id: 1, name: "Maize Leaf Blight", pathogen: "Exserohilum turcicum", matchPct: 94, symptoms: ["Cigar-shaped lesions", "Tan-gray necrotic spots", "Starts on lower leaves"], severity: "high" },
-  { id: 2, name: "Northern Corn Leaf Blight", pathogen: "Helminthosporium turcicum", matchPct: 87, symptoms: ["Long elliptical lesions", "Grayish-green color", "Spreads upward"], severity: "moderate" },
-  { id: 3, name: "Common Rust", pathogen: "Puccinia sorghi", matchPct: 72, symptoms: ["Brick-red pustules", "Both leaf surfaces", "Powdery spores"], severity: "low" },
-]
-
-const treatmentLedger: TreatmentEntry[] = [
-  { id: 1, product: "Mancozeb 80WP", type: "chemical", activeIngredient: "Mancozeb 80%", dosage: "2.5g/L water", targetDisease: "Leaf Blight, Rust", rwandaCompliant: true, organic: false, withdrawalDays: 7, stock: "in_stock" },
-  { id: 2, product: "Neem Extract Oil", type: "organic", activeIngredient: "Azadirachtin 3000ppm", dosage: "5ml/L water", targetDisease: "Aphids, Leaf Miners", rwandaCompliant: true, organic: true, withdrawalDays: 0, stock: "in_stock" },
-  { id: 3, product: "Ridomil Gold MZ", type: "chemical", activeIngredient: "Metalaxyl-M 4% + Mancozeb 64%", dosage: "2.5g/L water", targetDisease: "Downy Mildew, Blight", rwandaCompliant: true, organic: false, withdrawalDays: 14, stock: "low" },
-  { id: 4, product: "Copper Hydroxide WP", type: "organic", activeIngredient: "Copper Hydroxide 77%", dosage: "3g/L water", targetDisease: "Bacterial Leaf Spot", rwandaCompliant: true, organic: true, withdrawalDays: 0, stock: "in_stock" },
-  { id: 5, product: "Dithane M-45", type: "chemical", activeIngredient: "Mancozeb 80%", dosage: "2g/L water", targetDisease: "Powdery Mildew, Late Blight", rwandaCompliant: true, organic: false, withdrawalDays: 10, stock: "out" },
-  { id: 6, product: "Kaolin Clay Spray", type: "organic", activeIngredient: "Kaolin Clay 95%", dosage: "30g/L water", targetDisease: "Thrips, Leaf Burns", rwandaCompliant: true, organic: true, withdrawalDays: 0, stock: "in_stock" },
-]
+import { toast } from "sonner"
+import {
+  agronomistPathologyService, type Treatment, type DiseaseDetection,
+} from "@/services/agronomistPathology.service"
+import { agronomistFarmersService, type FarmerListEntry, type FarmerDetail } from "@/services/agronomistFarmers.service"
 
 export default function PathologyPage() {
-  const [selectedMatch, setSelectedMatch] = useState<DiseaseMatch>(diseaseMatches[0])
-  const [selectedTreatment, setSelectedTreatment] = useState<TreatmentEntry | null>(null)
+  const [treatments, setTreatments] = useState<Treatment[]>([])
+  const [treatmentsTotal, setTreatmentsTotal] = useState(0)
+  const [treatmentsLoading, setTreatmentsLoading] = useState(true)
+  const [selectedTreatment, setSelectedTreatment] = useState<Treatment | null>(null)
   const [showOnlyOrganic, setShowOnlyOrganic] = useState(false)
   const [showOnlyCompliant, setShowOnlyCompliant] = useState(true)
   const [treatmentSearch, setTreatmentSearch] = useState("")
-  const [prescriptionFarmer, setPrescriptionFarmer] = useState("Uwimana Esperance")
-  const [prescriptionCrop, setPrescriptionCrop] = useState("Maize")
-  const [prescriptionDistrict, setPrescriptionDistrict] = useState("Bugesera")
+
+  const [farmers, setFarmers] = useState<FarmerListEntry[]>([])
+  const [prescriptionFarmerId, setPrescriptionFarmerId] = useState("")
+  const [prescriptionCrop, setPrescriptionCrop] = useState("")
+  const [prescriptionDistrict, setPrescriptionDistrict] = useState("")
+  const [prescriptionDiagnosis, setPrescriptionDiagnosis] = useState("")
+  const [prescriptionPathogen, setPrescriptionPathogen] = useState("")
+  const [prescriptionDosageOverride, setPrescriptionDosageOverride] = useState("")
   const [prescriptionNotes, setPrescriptionNotes] = useState("")
-  const [generated, setGenerated] = useState(false)
-  const [activePanel, setActivePanel] = useState<"ledger" | "prescription">("ledger")
+  const [prescriptionDetectionId, setPrescriptionDetectionId] = useState("")
+  const [sending, setSending] = useState(false)
+  const [sentResult, setSentResult] = useState<{ smsText: string; sentAt: string; deliveredVia: string } | null>(null)
+  const [activePanel, setActivePanel] = useState<"queue" | "ledger" | "prescription">("queue")
 
-  const filteredTreatments = treatmentLedger.filter(t => {
-    const matchSearch = t.product.toLowerCase().includes(treatmentSearch.toLowerCase()) || t.targetDisease.toLowerCase().includes(treatmentSearch.toLowerCase())
-    const matchOrganic = !showOnlyOrganic || t.organic
-    const matchCompliant = !showOnlyCompliant || t.rwandaCompliant
-    return matchSearch && matchOrganic && matchCompliant
-  })
+  const [detections, setDetections] = useState<DiseaseDetection[]>([])
+  const [detectionsTotal, setDetectionsTotal] = useState(0)
+  const [detectionsLoading, setDetectionsLoading] = useState(true)
+  const [selectedDetection, setSelectedDetection] = useState<DiseaseDetection | null>(null)
+  const [selectedFarmer, setSelectedFarmer] = useState<FarmerDetail | null>(null)
+  const [farmerLoading, setFarmerLoading] = useState(false)
+  const [verifiedDisease, setVerifiedDisease] = useState("")
+  const [verifiedTreatment, setVerifiedTreatment] = useState("")
+  const [agronomistComment, setAgronomistComment] = useState("")
+  const [verifying, setVerifying] = useState(false)
+  const [imageFailed, setImageFailed] = useState(false)
 
-  const severityStyle = (s: string) => {
-    if (s === "critical") return "bg-rose-500/10 border-rose-500/20 text-rose-600 dark:text-rose-400"
-    if (s === "high") return "bg-orange-500/10 border-orange-500/20 text-orange-600 dark:text-orange-400"
-    if (s === "moderate") return "bg-amber-500/10 border-amber-500/20 text-amber-600 dark:text-amber-400"
-    return "bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-400"
-  }
+  const loadTreatments = useCallback(() => {
+    setTreatmentsLoading(true)
+    agronomistPathologyService.getTreatments({
+      search: treatmentSearch || undefined,
+      organicOnly: showOnlyOrganic || undefined,
+      rwandaCompliantOnly: showOnlyCompliant || undefined,
+      limit: 50,
+    })
+      .then(({ treatments, pagination }) => { setTreatments(treatments); setTreatmentsTotal(pagination.total) })
+      .catch(() => toast.error("Failed to load treatments"))
+      .finally(() => setTreatmentsLoading(false))
+  }, [showOnlyOrganic, showOnlyCompliant])
 
-  const stockBadge = (s: string) => {
+  useEffect(() => { loadTreatments() }, [loadTreatments])
+
+  // Debounce the free-text search separately so we don't fire a request per keystroke.
+  useEffect(() => {
+    const t = setTimeout(() => loadTreatments(), 300)
+    return () => clearTimeout(t)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [treatmentSearch])
+
+  useEffect(() => {
+    if (activePanel === "prescription" && farmers.length === 0) {
+      agronomistFarmersService.getFarmers({ limit: 200 })
+        .then(({ farmers }) => setFarmers(farmers))
+        .catch(() => toast.error("Failed to load farmers list"))
+    }
+  }, [activePanel, farmers.length])
+
+  const loadDetections = useCallback(() => {
+    setDetectionsLoading(true)
+    agronomistPathologyService.getPendingDetections({ limit: 50 })
+      .then(({ detections, pagination }) => { setDetections(detections); setDetectionsTotal(pagination.total) })
+      .catch(() => toast.error("Failed to load pending disease detections"))
+      .finally(() => setDetectionsLoading(false))
+  }, [])
+
+  useEffect(() => { loadDetections() }, [loadDetections])
+
+  // Reset the verify form + fetch the submitting farmer whenever selection changes.
+  useEffect(() => {
+    if (!selectedDetection) { setSelectedFarmer(null); return }
+    setVerifiedDisease(selectedDetection.aiDisease.trim())
+    setVerifiedTreatment(selectedDetection.treatment)
+    setAgronomistComment("")
+    setImageFailed(false)
+    setSelectedFarmer(null)
+    setFarmerLoading(true)
+    agronomistFarmersService.getFarmerDetail(selectedDetection.userId)
+      .then(setSelectedFarmer)
+      .catch(() => toast.error("Failed to load the submitting farmer's details"))
+      .finally(() => setFarmerLoading(false))
+  }, [selectedDetection])
+
+  const stockBadge = (s: Treatment["stock"]) => {
     if (s === "in_stock") return "text-emerald-600 dark:text-emerald-400"
     if (s === "low") return "text-amber-600 dark:text-amber-400"
     return "text-rose-600 dark:text-rose-400"
   }
 
-  const smsTemplate = selectedTreatment
-    ? `Dear ${prescriptionFarmer}, our agronomist has diagnosed ${selectedMatch.name} (${selectedMatch.pathogen}) on your ${prescriptionCrop} crop in ${prescriptionDistrict}. TREATMENT: Apply ${selectedTreatment.product} (${selectedTreatment.dosage}) every 7 days for 3 applications. ${selectedTreatment.organic ? "This is an organic, safe solution." : `Observe ${selectedTreatment.withdrawalDays}-day pre-harvest withdrawal.`} ${prescriptionNotes ? `Notes: ${prescriptionNotes}` : ""} Contact *321# for support. — IMARA Agro`
-    : ""
+  const confidenceBadge = (c: number) => {
+    if (c >= 90) return "bg-emerald-50 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/40"
+    if (c >= 65) return "bg-amber-50 dark:bg-amber-950/20 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800/40"
+    return "bg-rose-50 dark:bg-rose-950/20 text-rose-700 dark:text-rose-400 border-rose-200 dark:border-rose-800/40"
+  }
+
+  const handleVerify = async (status: "verified" | "rejected") => {
+    if (!selectedDetection) return
+    setVerifying(true)
+    try {
+      await agronomistPathologyService.verifyDetection(selectedDetection.id, {
+        status,
+        verifiedDisease: verifiedDisease || undefined,
+        verifiedTreatment: verifiedTreatment || undefined,
+        agronomistComment: agronomistComment || undefined,
+      })
+      toast.success(status === "verified" ? "Detection verified" : "Detection rejected")
+      setSelectedDetection(null)
+      loadDetections()
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to submit verification")
+    } finally {
+      setVerifying(false)
+    }
+  }
+
+  const handleUseForPrescription = () => {
+    if (!selectedDetection) return
+    setPrescriptionDiagnosis(selectedDetection.aiDisease.trim())
+    setPrescriptionCrop(selectedDetection.aiCrop)
+    setPrescriptionDetectionId(selectedDetection.id)
+    if (selectedFarmer) {
+      setFarmers(prev => prev.some(f => f.id === selectedFarmer.id) ? prev : [...prev, {
+        id: selectedFarmer.id, name: selectedFarmer.name, email: selectedFarmer.email, phone: selectedFarmer.phone,
+        location: selectedFarmer.location, farmSize: selectedFarmer.farmSize, isEmailVerified: selectedFarmer.isEmailVerified,
+        isActive: selectedFarmer.isActive, lastLogin: selectedFarmer.lastLogin, createdAt: selectedFarmer.createdAt,
+      }])
+      setPrescriptionFarmerId(selectedFarmer.id)
+      setPrescriptionDistrict(selectedFarmer.location || "")
+    }
+    setActivePanel("prescription")
+    toast.info("Diagnosis pre-filled from the AI detection — review before sending.")
+  }
+
+  const handleSendPrescription = async () => {
+    if (!prescriptionFarmerId || !prescriptionCrop || !prescriptionDiagnosis || !selectedTreatment) {
+      toast.error("Farmer, crop, diagnosis, and a selected treatment are required")
+      return
+    }
+    setSending(true)
+    setSentResult(null)
+    try {
+      const result = await agronomistPathologyService.createPrescription({
+        farmerId: prescriptionFarmerId,
+        cropType: prescriptionCrop,
+        district: prescriptionDistrict || undefined,
+        diagnosisName: prescriptionDiagnosis,
+        pathogenName: prescriptionPathogen || undefined,
+        diseaseDetectionId: prescriptionDetectionId || undefined,
+        treatmentId: selectedTreatment.id,
+        dosageOverride: prescriptionDosageOverride || undefined,
+        notes: prescriptionNotes || undefined,
+      })
+      setSentResult({ smsText: result.smsText, sentAt: result.sentAt, deliveredVia: result.deliveredVia })
+      toast.success("Prescription delivered to the farmer")
+      setPrescriptionDetectionId("")
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed to send prescription")
+    } finally {
+      setSending(false)
+    }
+  }
+
+  const deliveredViaLabel = (via: string) => {
+    if (via === "realtime") return "Delivered in real-time"
+    if (via === "notification-only") return "Delivered via notification"
+    return via
+  }
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -93,119 +201,40 @@ export default function PathologyPage() {
       <div className="flex-1 overflow-y-auto p-3 sm:p-6 space-y-6">
 
         {/* Stats row */}
-        <div className="grid grid-cols-3 gap-4">
-          {[
-            { label: "Cases Today", val: "8", gradient: "earth" as const },
-            { label: "Avg Match Accuracy", val: "88%", gradient: "green" as const },
-            { label: "Treatments Available", val: `${treatmentLedger.length}`, gradient: "leaf" as const },
-          ].map(s => (
-            <Card key={s.label} className="border-0 shadow-md">
-              <CardContent className="p-4 flex items-center gap-4">
-                <Icon3D gradient={s.gradient} size="md">
-                  <FlaskConical className="w-5 h-5" />
-                </Icon3D>
-                <div>
-                  <p className="text-2xl font-black text-foreground">{s.val}</p>
-                  <p className="text-xs text-muted-foreground">{s.label}</p>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {/* Diagnostic split view */}
-        <div className="grid grid-cols-2 gap-6">
-          {/* Farmer image */}
+        <div className="grid grid-cols-2 gap-4">
           <Card className="border-0 shadow-md">
-            <CardHeader className="pb-3 border-b border-border">
-              <CardTitle className="flex items-center gap-3 text-sm">
-                <Icon3D gradient="earth" size="sm">
-                  <Camera className="w-4 h-4" />
-                </Icon3D>
-                Farmer Submitted Image
-                <span className="ml-auto text-xs text-muted-foreground font-normal">Uwimana E. · Bugesera · Maize</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-4">
-              <div className="relative flex items-center justify-center bg-muted/30 rounded-xl overflow-hidden h-52">
-                <div className="relative w-40 h-48 rounded-lg overflow-hidden border border-border shadow-lg">
-                  <div className="w-full h-full" style={{ background: "linear-gradient(135deg, #1a3a1a 0%, #2d5a2d 30%, #1f4a1f 60%, #2a5a2a 100%)" }}>
-                    <div className="absolute" style={{ top: "20%", left: "15%", width: "60px", height: "20px", borderRadius: "50%", background: "rgba(180, 120, 60, 0.8)", filter: "blur(2px)", transform: "rotate(-15deg)" }} />
-                    <div className="absolute" style={{ top: "35%", left: "40%", width: "45px", height: "15px", borderRadius: "50%", background: "rgba(160, 100, 40, 0.7)", filter: "blur(1.5px)", transform: "rotate(10deg)" }} />
-                    <div className="absolute" style={{ top: "55%", left: "20%", width: "70px", height: "18px", borderRadius: "50%", background: "rgba(140, 80, 30, 0.75)", filter: "blur(2px)", transform: "rotate(-5deg)" }} />
-                    <svg className="absolute inset-0 w-full h-full opacity-20" viewBox="0 0 160 192">
-                      <line x1="80" y1="0" x2="80" y2="192" stroke="#4ade80" strokeWidth="1.5" />
-                      <line x1="80" y1="50" x2="20" y2="90" stroke="#4ade80" strokeWidth="0.8" />
-                      <line x1="80" y1="90" x2="140" y2="130" stroke="#4ade80" strokeWidth="0.8" />
-                    </svg>
-                  </div>
-                  <div className="absolute bottom-0 left-0 right-0 bg-black/60 px-2 py-1 text-center">
-                    <p className="text-[10px] text-white/70">Sample BUG-2026-047</p>
-                  </div>
-                </div>
-                <div className="absolute top-3 right-3 bg-rose-500/20 border border-rose-500/30 rounded-lg px-2 py-1.5">
-                  <p className="text-[10px] text-rose-600 dark:text-rose-400 font-bold">STRESS DETECTED</p>
-                  <p className="text-[10px] text-rose-500">3 lesion zones</p>
-                </div>
+            <CardContent className="p-4 flex items-center gap-4">
+              <Icon3D gradient="leaf" size="md">
+                <FlaskConical className="w-5 h-5" />
+              </Icon3D>
+              <div>
+                <p className="text-2xl font-black text-foreground">{treatmentsLoading ? "…" : treatmentsTotal}</p>
+                <p className="text-xs text-muted-foreground">Treatments Available</p>
               </div>
             </CardContent>
           </Card>
-
-          {/* AI matches */}
           <Card className="border-0 shadow-md">
-            <CardHeader className="pb-3 border-b border-border">
-              <CardTitle className="flex items-center gap-3 text-sm">
-                <Icon3D gradient="leaf" size="sm">
-                  <Microscope className="w-4 h-4" />
-                </Icon3D>
-                AI Dataset Matches
-                <span className="ml-auto text-xs text-muted-foreground font-normal">Trained on 847k images</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-4 space-y-3">
-              {diseaseMatches.map(match => (
-                <button key={match.id} onClick={() => setSelectedMatch(match)}
-                  className={`w-full text-left p-3 rounded-xl border transition-all ${
-                    selectedMatch.id === match.id
-                      ? "bg-primary/5 border-primary"
-                      : "bg-muted/40 border-border hover:bg-muted hover:border-muted-foreground/30"
-                  }`}>
-                  <div className="flex items-start justify-between gap-2 mb-2">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <Leaf className="w-3.5 h-3.5 text-emerald-500" />
-                        <span className="text-sm font-bold text-foreground">{match.name}</span>
-                        {match.id === 1 && <span className="text-[10px] bg-primary/10 border border-primary/20 text-primary px-1.5 py-0.5 rounded font-bold">BEST MATCH</span>}
-                      </div>
-                      <p className="text-xs text-muted-foreground italic mt-0.5">{match.pathogen}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className={`text-xl font-black ${match.matchPct >= 90 ? "text-emerald-500" : match.matchPct >= 75 ? "text-amber-500" : "text-rose-500"}`}>{match.matchPct}%</p>
-                      <p className="text-[10px] text-muted-foreground">match</p>
-                    </div>
-                  </div>
-                  <div className="h-1.5 bg-muted rounded-full overflow-hidden mb-2">
-                    <div className={`h-full rounded-full ${match.matchPct >= 90 ? "bg-emerald-500" : match.matchPct >= 75 ? "bg-amber-500" : "bg-rose-500"}`}
-                      style={{ width: `${match.matchPct}%` }} />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex flex-wrap gap-1">
-                      {match.symptoms.slice(0, 2).map(s => (
-                        <span key={s} className="text-[10px] bg-muted border border-border text-muted-foreground px-1.5 py-0.5 rounded">{s}</span>
-                      ))}
-                    </div>
-                    <span className={`text-[10px] px-1.5 py-0.5 rounded border font-medium ${severityStyle(match.severity)}`}>{match.severity}</span>
-                  </div>
-                </button>
-              ))}
+            <CardContent className="p-4 flex items-center gap-4">
+              <Icon3D gradient="gold" size="md">
+                <BrainCircuit className="w-5 h-5" />
+              </Icon3D>
+              <div>
+                <p className="text-2xl font-black text-foreground">{detectionsLoading ? "…" : detectionsTotal}</p>
+                <p className="text-xs text-muted-foreground">Pending AI Detections</p>
+              </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Treatment Ledger + Prescription Builder */}
+        {/* Tabs */}
         <Card className="border-0 shadow-md">
-          {/* Tabs */}
           <div className="flex border-b border-border">
+            <button onClick={() => setActivePanel("queue")}
+              className={`flex items-center gap-2 px-5 py-3.5 text-sm font-medium border-b-2 transition-colors ${
+                activePanel === "queue" ? "border-amber-500 text-amber-600 dark:text-amber-400" : "border-transparent text-muted-foreground hover:text-foreground"
+              }`}>
+              <Microscope className="w-4 h-4" /> Detection Queue
+            </button>
             <button onClick={() => setActivePanel("ledger")}
               className={`flex items-center gap-2 px-5 py-3.5 text-sm font-medium border-b-2 transition-colors ${
                 activePanel === "ledger" ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"
@@ -220,10 +249,198 @@ export default function PathologyPage() {
             </button>
           </div>
 
+          {activePanel === "queue" && (
+            <CardContent className="p-5">
+              <div className="flex flex-col lg:flex-row gap-4 h-auto lg:h-[560px]">
+                {/* Left: queue list */}
+                <Card className="w-full lg:w-[36%] border-border/60 shadow-sm flex flex-col overflow-hidden">
+                  <CardHeader className="p-3 border-b border-border/50">
+                    <CardTitle className="text-xs font-bold text-foreground">
+                      {detectionsLoading ? "Loading…" : `${detections.length} pending review`}
+                    </CardTitle>
+                  </CardHeader>
+                  <div className="flex-1 overflow-y-auto p-3 space-y-2 max-h-[420px] lg:max-h-none">
+                    {detectionsLoading ? (
+                      Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-20 w-full rounded-xl" />)
+                    ) : detections.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center py-12 text-center">
+                        <CheckCircle2 className="w-8 h-8 text-emerald-500 mb-2" />
+                        <p className="text-sm font-semibold text-foreground">Queue cleared</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">No pending AI disease detections need review.</p>
+                      </div>
+                    ) : detections.map(d => (
+                      <button key={d.id} onClick={() => setSelectedDetection(d)}
+                        className={`w-full text-left p-3 rounded-xl border transition-all ${
+                          selectedDetection?.id === d.id ? "bg-amber-500/10 border-amber-500/30" : "bg-muted/40 border-border hover:bg-muted hover:border-muted-foreground/20"
+                        }`}>
+                        <div className="flex items-start justify-between gap-2 mb-1">
+                          <p className="text-xs font-bold text-foreground">{d.aiDisease.trim()}</p>
+                          <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full border flex-shrink-0 ${confidenceBadge(d.aiConfidence)}`}>
+                            {d.aiConfidence}%
+                          </span>
+                        </div>
+                        <p className="text-[10px] text-muted-foreground">{d.aiCrop}</p>
+                        <p className="text-[9px] text-muted-foreground/70 mt-1">{new Date(d.createdAt).toLocaleDateString()}</p>
+                      </button>
+                    ))}
+                  </div>
+                </Card>
+
+                {/* Right: detail */}
+                <Card className="flex-1 border-border/60 shadow-sm flex flex-col overflow-hidden">
+                  {!selectedDetection ? (
+                    <div className="flex flex-col items-center justify-center h-full p-8 text-center">
+                      <div className="w-16 h-16 rounded-2xl bg-muted border border-border flex items-center justify-center mb-4">
+                        <Microscope className="w-8 h-8 text-muted-foreground" />
+                      </div>
+                      <p className="text-foreground font-bold text-base mb-1">Select a Detection to Review</p>
+                      <p className="text-xs text-muted-foreground max-w-xs leading-relaxed">
+                        Click any pending detection from the queue to see the submitted photo and AI prediction.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                      {/* Farmer identity */}
+                      <div className="flex items-center gap-3 p-3 bg-muted/40 border border-border rounded-xl">
+                        <div className="w-9 h-9 rounded-full bg-muted border border-border flex items-center justify-center flex-shrink-0">
+                          <User className="w-4 h-4 text-muted-foreground" />
+                        </div>
+                        {farmerLoading ? (
+                          <Skeleton className="h-8 w-40" />
+                        ) : selectedFarmer ? (
+                          <div>
+                            <p className="text-xs font-bold text-foreground">{selectedFarmer.name}</p>
+                            <p className="text-[10px] text-muted-foreground flex items-center gap-1">
+                              <MapPin className="w-2.5 h-2.5" /> {selectedFarmer.location || "Location not set"}
+                            </p>
+                          </div>
+                        ) : (
+                          <p className="text-xs text-muted-foreground">Farmer details unavailable</p>
+                        )}
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {/* Farmer image */}
+                        <Card className="border-border/60 shadow-sm">
+                          <CardHeader className="pb-2 p-3 border-b border-border/50">
+                            <CardTitle className="flex items-center gap-2 text-xs">
+                              <Camera className="w-3.5 h-3.5" /> Submitted Image
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="p-3">
+                            {selectedDetection.imageUrl && !imageFailed ? (
+                              <img
+                                src={selectedDetection.imageUrl}
+                                alt="Farmer-submitted diagnostic photo"
+                                onError={() => setImageFailed(true)}
+                                className="w-full h-44 object-cover rounded-lg border border-border"
+                              />
+                            ) : (
+                              <div className="flex flex-col items-center justify-center gap-2 bg-muted/30 border-2 border-dashed border-border rounded-lg h-44 text-center px-4">
+                                <ImageOff className="w-6 h-6 text-muted-foreground" />
+                                <p className="text-[10px] text-muted-foreground">
+                                  {imageFailed ? "Image failed to load" : "No photo was submitted with this detection"}
+                                </p>
+                              </div>
+                            )}
+                          </CardContent>
+                        </Card>
+
+                        {/* AI prediction — single result, not a ranked list */}
+                        <Card className="border-border/60 shadow-sm">
+                          <CardHeader className="pb-2 p-3 border-b border-border/50">
+                            <CardTitle className="flex items-center gap-2 text-xs">
+                              <Sparkles className="w-3.5 h-3.5" /> AI Prediction
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="p-3 space-y-2">
+                            <div className="flex items-center justify-between">
+                              <p className="text-sm font-bold text-foreground">{selectedDetection.aiDisease.trim()}</p>
+                              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${confidenceBadge(selectedDetection.aiConfidence)}`}>
+                                {selectedDetection.aiConfidence}% confidence
+                              </span>
+                            </div>
+                            <p className="text-[10px] text-muted-foreground">Crop: {selectedDetection.aiCrop}</p>
+                            {!selectedDetection.aiConfidenceReliable && (
+                              <div className="flex items-start gap-1.5 bg-amber-500/10 border border-amber-500/20 rounded-lg p-2">
+                                <AlertTriangle className="w-3 h-3 text-amber-500 flex-shrink-0 mt-0.5" />
+                                <p className="text-[9px] text-amber-700 dark:text-amber-400 leading-relaxed">
+                                  Model flagged this confidence estimate as unreliable — verify manually before confirming.
+                                </p>
+                              </div>
+                            )}
+                          </CardContent>
+                        </Card>
+                      </div>
+
+                      {/* Symptoms / treatment / prevention */}
+                      <Card className="border-border/60 shadow-sm">
+                        <CardContent className="p-3 grid grid-cols-1 md:grid-cols-3 gap-2 text-[10px]">
+                          <div>
+                            <p className="text-muted-foreground font-semibold uppercase tracking-wide mb-0.5">Symptoms</p>
+                            <p className="text-foreground">{selectedDetection.symptoms}</p>
+                          </div>
+                          <div>
+                            <p className="text-muted-foreground font-semibold uppercase tracking-wide mb-0.5">Treatment</p>
+                            <p className="text-foreground">{selectedDetection.treatment}</p>
+                          </div>
+                          <div>
+                            <p className="text-muted-foreground font-semibold uppercase tracking-wide mb-0.5">Prevention</p>
+                            <p className="text-foreground">{selectedDetection.prevention}</p>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      {/* Verify form */}
+                      <Card className="border-border/60 shadow-sm">
+                        <CardContent className="p-3 space-y-2">
+                          <div>
+                            <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest block mb-1">Verified Disease</label>
+                            <input value={verifiedDisease} onChange={e => setVerifiedDisease(e.target.value)}
+                              className="w-full bg-muted border border-border text-foreground text-xs px-2.5 py-2 rounded-lg focus:outline-none" />
+                          </div>
+                          <div>
+                            <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest block mb-1">Verified Treatment</label>
+                            <input value={verifiedTreatment} onChange={e => setVerifiedTreatment(e.target.value)}
+                              className="w-full bg-muted border border-border text-foreground text-xs px-2.5 py-2 rounded-lg focus:outline-none" />
+                          </div>
+                          <div>
+                            <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest block mb-1">Comment (optional)</label>
+                            <textarea value={agronomistComment} onChange={e => setAgronomistComment(e.target.value)} rows={2}
+                              className="w-full bg-muted border border-border text-foreground text-xs px-2.5 py-2 rounded-lg resize-none focus:outline-none" />
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      {/* Actions */}
+                      <div className="grid grid-cols-2 gap-3">
+                        <Button onClick={() => handleVerify("verified")} disabled={verifying} variant="outline"
+                          className="h-12 flex items-center justify-center gap-2 border-emerald-200 hover:bg-emerald-50 dark:border-emerald-900/30 dark:hover:bg-emerald-950/20">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                          <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">Verify</span>
+                        </Button>
+                        <Button onClick={() => handleVerify("rejected")} disabled={verifying} variant="outline"
+                          className="h-12 flex items-center justify-center gap-2 border-rose-200 hover:bg-rose-50 dark:border-rose-900/30 dark:hover:bg-rose-950/20">
+                          <XCircle className="w-4 h-4 text-rose-600 dark:text-rose-400" />
+                          <span className="text-xs font-bold text-rose-600 dark:text-rose-400">Reject</span>
+                        </Button>
+                      </div>
+
+                      <button onClick={handleUseForPrescription}
+                        className="w-full flex items-center justify-center gap-2 py-2 rounded-xl font-semibold text-xs border border-sky-200 dark:border-sky-900/30 text-sky-600 dark:text-sky-400 hover:bg-sky-50 dark:hover:bg-sky-950/20 transition-colors">
+                        <FileText className="w-3.5 h-3.5" /> Use This Diagnosis for a Prescription
+                      </button>
+                    </div>
+                  )}
+                </Card>
+              </div>
+            </CardContent>
+          )}
+
           {activePanel === "ledger" && (
             <CardContent className="p-5">
               {/* Filters */}
-              <div className="flex items-center gap-4 mb-4">
+              <div className="flex items-center gap-4 mb-4 flex-wrap">
                 <div className="relative flex-1 max-w-xs">
                   <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
                   <input value={treatmentSearch} onChange={e => setTreatmentSearch(e.target.value)}
@@ -240,93 +457,128 @@ export default function PathologyPage() {
                 </label>
               </div>
 
-              <div className="bg-primary/5 border border-primary/20 rounded-xl p-3 flex items-start gap-2 mb-4">
-                <AlertCircle className="w-4 h-4 text-primary flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-xs font-semibold text-foreground">Treatments for: <span className="text-primary">{selectedMatch.name}</span></p>
-                  <p className="text-[10px] text-muted-foreground mt-0.5">Pathogen: {selectedMatch.pathogen} · Severity: {selectedMatch.severity}</p>
+              {treatmentsLoading ? (
+                <div className="grid grid-cols-2 gap-3">
+                  {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-28 w-full rounded-xl" />)}
                 </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                {filteredTreatments.map(t => (
-                  <button key={t.id} onClick={() => setSelectedTreatment(selectedTreatment?.id === t.id ? null : t)}
-                    disabled={t.stock === "out"}
-                    className={`text-left p-3.5 rounded-xl border transition-all ${
-                      t.stock === "out" ? "opacity-40 cursor-not-allowed bg-muted/30 border-border" :
-                      selectedTreatment?.id === t.id ? "bg-emerald-500/10 border-emerald-500/20" :
-                      "bg-muted/40 border-border hover:bg-muted hover:border-muted-foreground/30"
-                    }`}>
-                    <div className="flex items-start justify-between gap-2 mb-2">
-                      <div className="flex items-center gap-2">
-                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center border ${t.organic ? "bg-emerald-500/10 border-emerald-500/20" : "bg-muted border-border"}`}>
-                          {t.organic ? <Leaf className="w-4 h-4 text-emerald-500" /> : <Pill className="w-4 h-4 text-muted-foreground" />}
+              ) : treatments.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                  <Pill className="w-8 h-8 text-muted-foreground mb-2 opacity-40" />
+                  <p className="text-sm text-muted-foreground">No treatments match your filters.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-3">
+                  {treatments.map(t => (
+                    <button key={t.id} onClick={() => setSelectedTreatment(selectedTreatment?.id === t.id ? null : t)}
+                      disabled={t.stock === "out"}
+                      className={`text-left p-3.5 rounded-xl border transition-all ${
+                        t.stock === "out" ? "opacity-40 cursor-not-allowed bg-muted/30 border-border" :
+                        selectedTreatment?.id === t.id ? "bg-emerald-500/10 border-emerald-500/20" :
+                        "bg-muted/40 border-border hover:bg-muted hover:border-muted-foreground/30"
+                      }`}>
+                      <div className="flex items-start justify-between gap-2 mb-2">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center border ${t.organic ? "bg-emerald-500/10 border-emerald-500/20" : "bg-muted border-border"}`}>
+                            {t.organic ? <Leaf className="w-4 h-4 text-emerald-500" /> : <Pill className="w-4 h-4 text-muted-foreground" />}
+                          </div>
+                          <div>
+                            <p className="text-sm font-bold text-foreground">{t.product}</p>
+                            <p className="text-[10px] text-muted-foreground italic">{t.activeIngredient}</p>
+                          </div>
+                        </div>
+                        <div className="flex flex-col items-end gap-1">
+                          {t.organic && <span className="text-[10px] bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-1.5 py-0.5 rounded font-bold">ORGANIC</span>}
+                          {t.rwandaCompliant && <span className="flex items-center gap-0.5 text-[10px] text-emerald-600 dark:text-emerald-400"><Shield className="w-3 h-3" /> RW✓</span>}
+                        </div>
+                      </div>
+                      <p className="text-[10px] text-muted-foreground mb-2">Targets: {t.targetDisease}</p>
+                      <div className="grid grid-cols-3 gap-2 text-xs">
+                        <div>
+                          <p className="text-[10px] text-muted-foreground mb-0.5">Dosage</p>
+                          <p className="text-foreground font-medium text-xs">{t.dosage}</p>
                         </div>
                         <div>
-                          <p className="text-sm font-bold text-foreground">{t.product}</p>
-                          <p className="text-[10px] text-muted-foreground italic">{t.activeIngredient}</p>
+                          <p className="text-[10px] text-muted-foreground mb-0.5">Withdrawal</p>
+                          <p className={`font-medium text-xs ${t.withdrawalDays === 0 ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"}`}>
+                            {t.withdrawalDays === 0 ? "None" : `${t.withdrawalDays} days`}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] text-muted-foreground mb-0.5">Stock</p>
+                          <p className={`font-medium text-xs ${stockBadge(t.stock)}`}>{t.stock.replace("_", " ")}</p>
                         </div>
                       </div>
-                      <div className="flex flex-col items-end gap-1">
-                        {t.organic && <span className="text-[10px] bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-1.5 py-0.5 rounded font-bold">ORGANIC</span>}
-                        {t.rwandaCompliant && <span className="flex items-center gap-0.5 text-[10px] text-emerald-600 dark:text-emerald-400"><Shield className="w-3 h-3" /> RW✓</span>}
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-3 gap-2 text-xs">
-                      <div>
-                        <p className="text-[10px] text-muted-foreground mb-0.5">Dosage</p>
-                        <p className="text-foreground font-medium text-xs">{t.dosage}</p>
-                      </div>
-                      <div>
-                        <p className="text-[10px] text-muted-foreground mb-0.5">Withdrawal</p>
-                        <p className={`font-medium text-xs ${t.withdrawalDays === 0 ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"}`}>
-                          {t.withdrawalDays === 0 ? "None" : `${t.withdrawalDays} days`}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-[10px] text-muted-foreground mb-0.5">Stock</p>
-                        <p className={`font-medium text-xs ${stockBadge(t.stock)}`}>{t.stock.replace("_", " ")}</p>
-                      </div>
-                    </div>
-                    {selectedTreatment?.id === t.id && (
-                      <div className="mt-2 pt-2 border-t border-emerald-500/20 flex items-center gap-1.5">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                        <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">Selected for prescription</span>
-                      </div>
-                    )}
-                  </button>
-                ))}
-              </div>
+                      <p className="text-[9px] text-muted-foreground/70 mt-2">Added {new Date(t.createdAt).toLocaleDateString()}</p>
+                      {selectedTreatment?.id === t.id && (
+                        <div className="mt-2 pt-2 border-t border-emerald-500/20 flex items-center gap-1.5">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                          <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">Selected for prescription</span>
+                        </div>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
             </CardContent>
           )}
 
           {activePanel === "prescription" && (
             <CardContent className="p-5 space-y-4">
-              <div className="grid grid-cols-3 gap-3">
-                {[
-                  { label: "Farmer Name", val: prescriptionFarmer, setter: setPrescriptionFarmer },
-                  { label: "Crop Type", val: prescriptionCrop, setter: setPrescriptionCrop },
-                  { label: "District", val: prescriptionDistrict, setter: setPrescriptionDistrict },
-                ].map(f => (
-                  <div key={f.label}>
-                    <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest block mb-1">{f.label}</label>
-                    <input value={f.val} onChange={e => f.setter(e.target.value)}
-                      className="w-full bg-muted border border-border text-foreground text-xs px-2.5 py-2 rounded-lg focus:outline-none" />
-                  </div>
-                ))}
+              {prescriptionDetectionId && (
+                <div className="flex items-center justify-between gap-2 bg-sky-500/10 border border-sky-500/20 rounded-xl px-3 py-2">
+                  <p className="text-[11px] text-sky-700 dark:text-sky-400 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5" /> Linked to an AI detection — diagnosis and crop were pre-filled
+                  </p>
+                  <button onClick={() => setPrescriptionDetectionId("")} className="text-sky-600 dark:text-sky-400 hover:opacity-70">
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest block mb-1">Farmer</label>
+                  <select value={prescriptionFarmerId} onChange={e => setPrescriptionFarmerId(e.target.value)}
+                    className="w-full bg-muted border border-border text-foreground text-xs px-2.5 py-2 rounded-lg focus:outline-none">
+                    <option value="">Select a farmer…</option>
+                    {farmers.map(f => <option key={f.id} value={f.id}>{f.name}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest block mb-1">Crop Type</label>
+                  <input value={prescriptionCrop} onChange={e => setPrescriptionCrop(e.target.value)}
+                    placeholder="e.g. Maize"
+                    className="w-full bg-muted border border-border text-foreground text-xs px-2.5 py-2 rounded-lg focus:outline-none" />
+                </div>
+                <div>
+                  <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest block mb-1">District (optional)</label>
+                  <input value={prescriptionDistrict} onChange={e => setPrescriptionDistrict(e.target.value)}
+                    className="w-full bg-muted border border-border text-foreground text-xs px-2.5 py-2 rounded-lg focus:outline-none" />
+                </div>
+                <div>
+                  <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest block mb-1">Diagnosis</label>
+                  <input value={prescriptionDiagnosis} onChange={e => setPrescriptionDiagnosis(e.target.value)}
+                    placeholder="e.g. Late Blight"
+                    className="w-full bg-muted border border-border text-foreground text-xs px-2.5 py-2 rounded-lg focus:outline-none" />
+                </div>
+                <div className="col-span-2">
+                  <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest block mb-1">Pathogen (optional)</label>
+                  <input value={prescriptionPathogen} onChange={e => setPrescriptionPathogen(e.target.value)}
+                    placeholder="e.g. Uromyces appendiculatus"
+                    className="w-full bg-muted border border-border text-foreground text-xs px-2.5 py-2 rounded-lg focus:outline-none" />
+                </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div className="bg-muted/50 border border-border rounded-xl p-3">
-                  <p className="text-[10px] text-muted-foreground mb-0.5">Diagnosis</p>
-                  <p className="text-sm font-semibold text-primary">{selectedMatch.name}</p>
-                  <p className="text-[10px] text-muted-foreground italic">{selectedMatch.pathogen}</p>
-                </div>
-                <div className="bg-muted/50 border border-border rounded-xl p-3">
-                  <p className="text-[10px] text-muted-foreground mb-0.5">Treatment</p>
-                  <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">{selectedTreatment?.product ?? "— Not selected —"}</p>
-                  <p className="text-[10px] text-muted-foreground">{selectedTreatment?.dosage ?? "Select from ledger"}</p>
-                </div>
+              <div className="bg-muted/50 border border-border rounded-xl p-3">
+                <p className="text-[10px] text-muted-foreground mb-0.5">Treatment</p>
+                <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">{selectedTreatment?.product ?? "— Not selected —"}</p>
+                <p className="text-[10px] text-muted-foreground">{selectedTreatment?.dosage ?? "Select a treatment from the Treatment Ledger tab"}</p>
+              </div>
+
+              <div>
+                <label className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest block mb-1">Dosage override (optional)</label>
+                <input value={prescriptionDosageOverride} onChange={e => setPrescriptionDosageOverride(e.target.value)}
+                  placeholder={selectedTreatment?.dosage || "Uses the treatment's default dosage if left blank"}
+                  className="w-full bg-muted border border-border text-foreground text-xs px-2.5 py-2 rounded-lg focus:outline-none" />
               </div>
 
               <div>
@@ -336,33 +588,25 @@ export default function PathologyPage() {
                   className="w-full bg-muted border border-border text-foreground text-xs px-2.5 py-2 rounded-lg resize-none focus:outline-none placeholder:text-muted-foreground/50" />
               </div>
 
-              <button onClick={() => setGenerated(true)} disabled={!selectedTreatment}
+              <button onClick={handleSendPrescription} disabled={sending || !selectedTreatment}
                 className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl font-semibold text-sm transition-all ${
                   selectedTreatment ? "bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20" : "bg-muted border border-border text-muted-foreground cursor-not-allowed"
                 }`}>
-                <FileText className="w-4 h-4" /> Generate SMS Prescription
+                <Send className="w-4 h-4" /> {sending ? "Sending…" : "Send Prescription to Farmer"}
               </button>
 
-              {generated && selectedTreatment && (
+              {sentResult && (
                 <div className="border border-emerald-500/20 rounded-xl p-4">
-                  <div className="flex items-center justify-between gap-2 mb-3">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                      <h4 className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">SMS Prescription Generated</h4>
-                    </div>
-                    <div className="flex gap-2">
-                      <button className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground bg-muted px-2.5 py-1.5 rounded-lg border border-border transition-colors">
-                        <Printer className="w-3.5 h-3.5" /> Print
-                      </button>
-                      <button className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1.5 rounded-lg transition-colors hover:bg-emerald-500/20">
-                        <Send className="w-3.5 h-3.5" /> Send via SMS
-                      </button>
-                    </div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                    <h4 className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">Message sent to farmer</h4>
                   </div>
-                  <div className="bg-muted/50 border border-border rounded-xl p-3 font-mono text-xs text-foreground leading-relaxed">
-                    {smsTemplate}
+                  <div className="bg-muted/50 border border-border rounded-xl p-3 font-mono text-xs text-foreground leading-relaxed whitespace-pre-wrap">
+                    {sentResult.smsText}
                   </div>
-                  <p className="text-[10px] text-muted-foreground mt-2">{smsTemplate.length} characters · {Math.ceil(smsTemplate.length / 160)} SMS segment(s) · Rwanda compliant</p>
+                  <p className="text-[10px] text-muted-foreground mt-2">
+                    {deliveredViaLabel(sentResult.deliveredVia)} · {new Date(sentResult.sentAt).toLocaleString()}
+                  </p>
                 </div>
               )}
             </CardContent>

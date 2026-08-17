@@ -22,12 +22,19 @@ import AgronomistProfilePage from './pages/agronomist/AgronomistProfilePage'
 // Agronomist Portal
 import AgronomistLayout from './pages/agronomist/AgronomistLayout'
 import AgronomistOverviewPage from './pages/agronomist/AgronomistOverviewPage'
+import AgronomistFarmersPage from './pages/agronomist/AgronomistFarmersPage'
+import AgronomistFarmerDetailPage from './pages/agronomist/AgronomistFarmerDetailPage'
+import AgronomistFarmVisitsPage from './pages/agronomist/AgronomistFarmVisitsPage'
+import AgronomistAdvicePage from './pages/agronomist/AgronomistAdvicePage'
+import AgronomistQuestionsPage from './pages/agronomist/AgronomistQuestionsPage'
+import AgronomistSupportTicketsPage from './pages/agronomist/AgronomistSupportTicketsPage'
+import AgronomistTrainingMaterialsPage from './pages/agronomist/AgronomistTrainingMaterialsPage'
+import AgronomistTrainingMaterialDetailPage from './pages/agronomist/AgronomistTrainingMaterialDetailPage'
 import GISPage from './pages/dashboard/agronomist/GISPage'
 import AIValidationPage from './pages/dashboard/agronomist/AIValidationPage'
 import CommsPage from './pages/dashboard/agronomist/CommsPage'
 import PathologyPage from './pages/dashboard/agronomist/PathologyPage'
-import AdvisoryPage from './pages/dashboard/agronomist/AdvisoryPage'
-import WorkforcePage from './pages/dashboard/agronomist/WorkforcePage'
+import AgronomistAnalyticsPage from './pages/agronomist/AgronomistAnalyticsPage'
 
 // Admin Portal
 import AdminLayout from './pages/admin/AdminLayout'
@@ -64,19 +71,39 @@ import VerifyEmailPage from './pages/auth/VerifyEmailPage'
 import EmailVerifiedPage from './pages/auth/EmailVerifiedPage'
 
 import { NotificationsProvider } from './context/NotificationsContext'
-import { ProtectedRoute } from './components/ProtectedRoute'
+import { ProtectedRoute, roleToHome } from './components/ProtectedRoute'
 import { PublicLayout } from './components/PublicLayout'
 import { authService } from './services/auth'
 
 import DealerOverviewPage from './pages/dashboard/agrodealer/DealerOverViewPage'
 import DealerOrdersPage from './pages/dashboard/agrodealer/DealerOrdersPage'
 
+// The /dashboard index route is intentionally public (see the route below) so
+// anonymous visitors can see the marketing overview. Its role handling only
+// ever special-cased agro-dealer; every other authenticated role (agronomist,
+// admin, cooperative) silently fell through to the farmer DashboardPage. This
+// sends every non-farmer, non-dealer role to its own portal home instead.
+function DashboardIndexRoute() {
+  if (!authService.isAuthenticated()) return <PublicOverviewPage />
+  const role = authService.getCurrentUser()?.role
+  if (role === 'agro-dealer') return <DealerOverviewPage />
+  if (role === 'farmer') return <DashboardPage />
+  return <Navigate to={roleToHome(role ?? '')} replace />
+}
+
 function App() {
   return (
     <NotificationsProvider>
       <Routes>
         <Route element={<PublicLayout />}>
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route
+            path="/"
+            element={
+              authService.isAuthenticated()
+                ? <Navigate to={roleToHome(authService.getCurrentUser()?.role ?? '')} replace />
+                : <Navigate to="/dashboard" replace />
+            }
+          />
           <Route path="/sign-in" element={<SignInPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
@@ -87,17 +114,8 @@ function App() {
         <Route path="/dashboard" element={<DashboardLayout />}>
           
 
-          // PUBLIC ROUTES 
-          <Route
-              index
-              element={
-                !authService.isAuthenticated()
-                  ? <PublicOverviewPage />
-                  : authService.getCurrentUser()?.role === 'agro-dealer'
-                    ? <DealerOverviewPage />
-                    : <DashboardPage />
-              }
-            />
+          // PUBLIC ROUTES
+          <Route index element={<DashboardIndexRoute />} />
           <Route path="crops" element={<AIPage />} />
           <Route path="ai" element={<AIPage />} />
           <Route path="disease" element={<DiseasePage />} />
@@ -132,12 +150,19 @@ function App() {
           <Route path="/agronomist" element={<AgronomistLayout />}>
             <Route index element={<AgronomistOverviewPage />} />
             <Route path="profile" element={<AgronomistProfilePage />} />
+            <Route path="farmers" element={<AgronomistFarmersPage />} />
+            <Route path="farmers/:farmerId" element={<AgronomistFarmerDetailPage />} />
+            <Route path="farm-visits" element={<AgronomistFarmVisitsPage />} />
+            <Route path="advice" element={<AgronomistAdvicePage />} />
+            <Route path="questions" element={<AgronomistQuestionsPage />} />
+            <Route path="support-tickets" element={<AgronomistSupportTicketsPage />} />
+            <Route path="training-materials" element={<AgronomistTrainingMaterialsPage />} />
+            <Route path="training-materials/:materialId" element={<AgronomistTrainingMaterialDetailPage />} />
             <Route path="gis" element={<GISPage />} />
             <Route path="ai-validation" element={<AIValidationPage />} />
             <Route path="comms" element={<CommsPage />} />
             <Route path="pathology" element={<PathologyPage />} />
-            <Route path="advisory" element={<AdvisoryPage />} />
-            <Route path="workforce" element={<WorkforcePage />} />
+            <Route path="analytics" element={<AgronomistAnalyticsPage />} />
             <Route path="settings" element={<SettingsPage />} />
             <Route path="notifications" element={<NotificationsPage />} />
           </Route>
