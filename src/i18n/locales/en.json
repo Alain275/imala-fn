@@ -265,7 +265,7 @@
       "title": "Farm registration",
       "description": "",
       "name": "Farm name",
-      "size":"Farm size (hectares)",
+      "size":"Farm size (m²)",
       "location": "Farm location",
       "cropType": "Type of crop",
       "selectCrop": "Select a crop",
@@ -887,7 +887,7 @@
         "description": "Set your preferred language and regional settings"
       },
       "unitsLabel": "Units",
-      "unitsMetric": "Metric (kg, hectares)",
+      "unitsMetric": "Metric (kg, m²)",
       "unitsImperial": "Imperial (lbs, acres)",
       "securityCard": {
         "title": "Security",
