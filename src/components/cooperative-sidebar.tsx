@@ -15,6 +15,9 @@ import {
   UserCog,
   Lightbulb,
   Sprout,
+  ClipboardList,
+  UserSearch,
+  Building2,
 } from "lucide-react"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
@@ -29,6 +32,9 @@ const platformNav = [
   { key: "myFarms",     href: "/cooperative/farms",         icon: MapPin },
   { key: "members",     href: "/cooperative/members",       icon: Users },
   { key: "market",      href: "/cooperative/market",        icon: Store },
+  { key: "plan",        href: "/cooperative/plan",          icon: ClipboardList },
+  { key: "agronomists", href: "/cooperative/agronomists",   icon: UserSearch },
+  { key: "profile",     href: "/cooperative/profile",       icon: Building2 },
 ]
 
 const aiNav = [

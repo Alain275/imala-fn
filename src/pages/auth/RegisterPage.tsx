@@ -16,6 +16,7 @@ import {
   Phone,
   Sprout,
   User,
+  Users,
 } from "lucide-react";
 import { toast } from "sonner";
 import { authService } from "../../services/auth";
@@ -32,18 +33,49 @@ const buildRegisterSchema = (t: TFunction) =>
       phone: z.string().regex(phoneRegex, t("auth.register.phoneError")),
       password: z.string().min(6, t("auth.register.passwordError")),
       confirmPassword: z.string().min(6, t("auth.register.confirmPasswordError")),
-      role: z.enum(["farmer", "agro-dealer"]),
+      role: z.enum(["farmer", "agro-dealer", "cooperative"]),
       location: z.string().optional(),
       farmSize: z.string().optional(),
+      // Cooperative-only. Optional at the field level and enforced by the
+      // superRefine below, so a farmer signup is validated exactly as before.
+      cooperativeName: z.string().optional(),
+      district: z.string().optional(),
+      registrationNumber: z.string().optional(),
+      contactEmail: z.string().optional(),
+      contactPhone: z.string().optional(),
       agree: z.boolean().refine((value) => value, { message: t("auth.register.agreeError") }),
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: t("auth.register.passwordsMismatchError"),
       path: ["confirmPassword"],
+    })
+    .superRefine((data, ctx) => {
+      if (data.role !== "cooperative") return;
+      if (!data.cooperativeName || data.cooperativeName.trim().length < 2) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: t("auth.register.cooperativeNameError"),
+          path: ["cooperativeName"],
+        });
+      }
+      if (!data.district || !data.district.trim()) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: t("auth.register.districtError"),
+          path: ["district"],
+        });
+      }
+      if (data.contactEmail && !z.string().email().safeParse(data.contactEmail).success) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: t("auth.register.emailError"),
+          path: ["contactEmail"],
+        });
+      }
     });
 
 type RegisterFormValues = z.infer<ReturnType<typeof buildRegisterSchema>>;
-const registerRoleOptions = ["farmer", "agro-dealer"] as const;
+const registerRoleOptions = ["farmer", "agro-dealer", "cooperative"] as const;
 
 const fieldClass =
   "h-12 w-full rounded-[6px] border border-[#cbdccf] bg-white pl-11 pr-4 text-sm text-[#17231b] outline-none transition placeholder:text-[#789082] focus:border-[#477326] focus:ring-4 focus:ring-[#9bf52e]/15";
@@ -55,6 +87,9 @@ export default function RegisterPage() {
   const [submitting, setSubmitting] = useState(false);
   const [registeredEmail, setRegisteredEmail] = useState("");
   const [resending, setResending] = useState(false);
+  // Cooperative signups land in `pending` — the confirmation screen says so
+  // rather than implying the account is ready to use.
+  const [pendingApproval, setPendingApproval] = useState(false);
 
   const registerSchema = useMemo(() => buildRegisterSchema(t), [t, i18n.language]);
   const {
@@ -73,6 +108,11 @@ export default function RegisterPage() {
       role: "farmer",
       location: "",
       farmSize: "",
+      cooperativeName: "",
+      district: "",
+      registrationNumber: "",
+      contactEmail: "",
+      contactPhone: "",
       agree: false,
     },
   });
@@ -83,6 +123,7 @@ export default function RegisterPage() {
   const onSubmit = async (data: RegisterFormValues) => {
     setSubmitting(true);
     try {
+      const isCooperative = data.role === "cooperative";
       const response = await authService.register({
         name: data.name.trim(),
         email: data.email.trim().toLowerCase(),
@@ -91,8 +132,19 @@ export default function RegisterPage() {
         location: data.location?.trim() || undefined,
         farmSize: data.farmSize ? parseFloat(data.farmSize) : undefined,
         role: data.role,
+        // Sent only for cooperative signups; the farmer/agro-dealer request
+        // body is byte-for-byte what it was before.
+        ...(isCooperative && {
+          accountType: "cooperative" as const,
+          cooperativeName: data.cooperativeName?.trim(),
+          district: data.district?.trim(),
+          registrationNumber: data.registrationNumber?.trim() || undefined,
+          contactEmail: data.contactEmail?.trim().toLowerCase() || undefined,
+          contactPhone: data.contactPhone?.replace(/\s+/g, "") || undefined,
+        }),
       });
       toast.success(response.message || t("auth.register.successToast"));
+      setPendingApproval(response.data?.status === "pending_approval");
       setRegisteredEmail(response.data.email);
     } catch (error: any) {
       const message =
@@ -136,6 +188,16 @@ export default function RegisterPage() {
             <strong className="break-all text-[#294535]">{registeredEmail}</strong>
           </p>
           <p className="mt-2 text-xs text-[#789082]">{t("auth.register.checkSpamText")}</p>
+          {pendingApproval && (
+            <div className="mt-5 rounded-[6px] border border-[#e2d3a8] bg-[#fdf8e9] p-4 text-left">
+              <p className="text-sm font-bold text-[#6b5514]">
+                {t("auth.register.cooperativeSubmittedTitle")}
+              </p>
+              <p className="mt-1 text-xs leading-5 text-[#7d6a2f]">
+                {t("auth.register.cooperativeSubmittedText")}
+              </p>
+            </div>
+          )}
           <Link
             to="/sign-in"
             className="mt-7 flex h-12 w-full items-center justify-center rounded-[6px] bg-[#315900] px-4 text-xs font-black uppercase tracking-[0.12em] text-[#b5ff62] hover:bg-[#254500]"
@@ -192,7 +254,8 @@ export default function RegisterPage() {
             <div className="grid gap-3 sm:grid-cols-2">
               {registerRoleOptions.map((roleOption) => {
                 const selected = selectedRole === roleOption;
-                const RoleIcon = roleOption === "farmer" ? Sprout : Building2;
+                const RoleIcon =
+                  roleOption === "farmer" ? Sprout : roleOption === "cooperative" ? Users : Building2;
                 return (
                   <label
                     key={roleOption}
@@ -281,6 +344,68 @@ export default function RegisterPage() {
                 </div>
                 {renderError(errors.farmSize?.message)}
               </div>
+            )}
+
+            {/* Cooperative-only fields. Rendered alongside the existing inputs
+                rather than on a separate page, so the farmer flow above is
+                untouched. */}
+            {selectedRole === "cooperative" && (
+              <>
+                <div>
+                  <label htmlFor="register-cooperative-name" className="mb-2 block text-xs font-bold text-[#294535]">
+                    {t("auth.register.cooperativeNameLabel")}
+                  </label>
+                  <div className="relative">
+                    <Users className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#64806e]" />
+                    <input {...register("cooperativeName")} id="register-cooperative-name" type="text" placeholder={t("auth.register.cooperativeNamePlaceholder")} className={fieldClass} />
+                  </div>
+                  {renderError(errors.cooperativeName?.message)}
+                </div>
+
+                <div>
+                  <label htmlFor="register-district" className="mb-2 block text-xs font-bold text-[#294535]">
+                    {t("auth.register.districtLabel")}
+                  </label>
+                  <div className="relative">
+                    <MapPin className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#64806e]" />
+                    <input {...register("district")} id="register-district" type="text" placeholder={t("auth.register.districtPlaceholder")} className={fieldClass} />
+                  </div>
+                  {renderError(errors.district?.message)}
+                </div>
+
+                <div>
+                  <label htmlFor="register-registration-number" className="mb-2 block text-xs font-bold text-[#294535]">
+                    {t("auth.register.registrationNumberLabel")}
+                  </label>
+                  <div className="relative">
+                    <Building2 className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#64806e]" />
+                    <input {...register("registrationNumber")} id="register-registration-number" type="text" placeholder={t("auth.register.registrationNumberPlaceholder")} className={fieldClass} />
+                  </div>
+                  {renderError(errors.registrationNumber?.message)}
+                </div>
+
+                <div>
+                  <label htmlFor="register-contact-email" className="mb-2 block text-xs font-bold text-[#294535]">
+                    {t("auth.register.contactEmailLabel")}
+                  </label>
+                  <div className="relative">
+                    <Mail className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#64806e]" />
+                    <input {...register("contactEmail")} id="register-contact-email" type="email" placeholder={t("auth.register.contactEmailPlaceholder")} className={fieldClass} />
+                  </div>
+                  {renderError(errors.contactEmail?.message)}
+                </div>
+
+                <div>
+                  <label htmlFor="register-contact-phone" className="mb-2 block text-xs font-bold text-[#294535]">
+                    {t("auth.register.contactPhoneLabel")}
+                  </label>
+                  <div className="relative">
+                    <Phone className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#64806e]" />
+                    <input {...register("contactPhone")} id="register-contact-phone" type="tel" placeholder={t("auth.register.contactPhonePlaceholder")} className={fieldClass} />
+                  </div>
+                  {renderError(errors.contactPhone?.message)}
+                </div>
+              </>
             )}
 
             <div>

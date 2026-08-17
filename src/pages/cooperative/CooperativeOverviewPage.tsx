@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import { Header } from "@/components/header"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
+import { toast } from "sonner"
 import {
   MapPin, Users, Package, Sprout, AlertTriangle,
   Calendar, TrendingUp, Eye, Bell, ShoppingCart,
@@ -16,12 +17,12 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
   PieChart, Pie, Cell,
 } from "recharts"
-import {
-  cooperativeService,
-  type CooperativeStats,
-  type YieldDataPoint,
-  type FarmStatusItem,
-  type AiInsightItem,
+import { cooperativeApi } from "@/services/cooperative.service"
+import type {
+  CooperativeStats,
+  YieldDataPoint,
+  FarmStatusItem,
+  AiInsightItem,
 } from "@/services/cooperativeMock"
 
 // ─── Design tokens ───────────────────────────────────────────────────────────
@@ -122,19 +123,29 @@ export default function CooperativeOverviewPage() {
   const [loading, setLoading]     = useState(true)
 
   useEffect(() => {
-    // TODO: Replace with real API calls when backend is ready
+    // Live data. Each call is scoped server-side to the signed-in leader's own
+    // cooperative; nothing is passed from the client.
+    // GET /api/cooperative/{metrics,yield-trend,farm-status,ai-insights}
+    let cancelled = false
     Promise.all([
-      cooperativeService.getStats(),
-      cooperativeService.getYieldTrend(),
-      cooperativeService.getFarmStatus(),
-      cooperativeService.getAiInsights(),
+      cooperativeApi.getStats(),
+      cooperativeApi.getYieldTrend(),
+      cooperativeApi.getFarmStatus(),
+      cooperativeApi.getAiInsights(),
     ]).then(([s, y, f, a]) => {
+      if (cancelled) return
       setStats(s)
       setYieldData(y)
       setFarmStatus(f)
       setInsights(a)
-    }).finally(() => setLoading(false))
-  }, [])
+    }).catch(() => {
+      // Leave the cards at their zero state rather than showing stale numbers.
+      if (!cancelled) toast.error(t('cooperative.overview.loadError'))
+    }).finally(() => {
+      if (!cancelled) setLoading(false)
+    })
+    return () => { cancelled = true }
+  }, [t])
 
   const location = useLocation()
   const quickActions = buildQuickActions(t)

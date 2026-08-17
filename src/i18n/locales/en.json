@@ -204,7 +204,12 @@
     "title": "Farm Plan & Management",
     "subtitle": "Plan the season, record daily work, and understand your profit.",
     "newPlan": "New plan",
-    "tabs": { "plan": "Plan", "today": "Today", "records": "Records", "results": "Results" }
+    "tabs": {
+      "plan": "Plan",
+      "today": "Today",
+      "records": "Records",
+      "results": "Results"
+    }
   },
   "farmerProfile": {
     "title": "Complete farmer profile",
@@ -302,17 +307,32 @@
       "cropAdvisory": {
         "title": "Crop Advisory",
         "description": "Match the right crop to your soil, climate, and yield goals.",
-        "details": ["Soil-based matching", "Climate analysis", "Yield optimization", "Planting schedules"]
+        "details": [
+          "Soil-based matching",
+          "Climate analysis",
+          "Yield optimization",
+          "Planting schedules"
+        ]
       },
       "diseaseDetection": {
         "title": "Disease Detection",
         "description": "Catch crop issues early with guided photo diagnosis and action steps.",
-        "details": ["Photo diagnosis", "Early detection", "Treatment recommendations", "History tracking"]
+        "details": [
+          "Photo diagnosis",
+          "Early detection",
+          "Treatment recommendations",
+          "History tracking"
+        ]
       },
       "weatherIntelligence": {
         "title": "Weather Intelligence",
         "description": "Stay ahead of changing conditions with localized farm alerts.",
-        "details": ["Hyperlocal forecasts", "Real-time alerts", "Task scheduling", "Irrigation sync"]
+        "details": [
+          "Hyperlocal forecasts",
+          "Real-time alerts",
+          "Task scheduling",
+          "Irrigation sync"
+        ]
       }
     },
     "howItWorks": {
@@ -430,7 +450,8 @@
       "accountTypeLabel": "Account Type",
       "accountTypeHelp": {
         "farmer": "Register as a farmer to manage crops, disease detection, weather, and farm guidance.",
-        "agro-dealer": "Register as an agro-dealer to supply medicines, manure, and other agricultural inputs."
+        "agro-dealer": "Register as an agro-dealer to supply medicines, manure, and other agricultural inputs.",
+        "cooperative": "Register a cooperative and manage its members"
       },
       "locationLabel": "Location (Optional)",
       "locationPlaceholder": "e.g. Kigali, Gasabo",
@@ -453,7 +474,35 @@
       "checkSpamText": "Open the link to activate your account. Check your spam folder if you cannot find it.",
       "continueToLogin": "Continue to login",
       "resend": "Resend verification email",
-      "resending": "Sending email..."
+      "resending": "Sending email...",
+      "cooperativeNameLabel": "Cooperative name",
+      "cooperativeNamePlaceholder": "e.g. Musanze North Cooperative",
+      "cooperativeNameError": "Cooperative name must contain at least 2 characters",
+      "districtLabel": "District",
+      "districtPlaceholder": "e.g. Musanze",
+      "districtError": "District is required",
+      "registrationNumberLabel": "Registration number (optional)",
+      "registrationNumberPlaceholder": "e.g. RCA/2026/0417",
+      "contactEmailLabel": "Cooperative contact email (optional)",
+      "contactEmailPlaceholder": "info@cooperative.rw",
+      "contactPhoneLabel": "Cooperative contact phone (optional)",
+      "contactPhonePlaceholder": "+250 788 000 000",
+      "cooperativeSubmittedTitle": "Registration submitted",
+      "cooperativeSubmittedText": "Verify your email, then wait for an administrator to approve your cooperative. You can sign in at any time to check the status."
+    },
+    "pending": {
+      "title": "Awaiting approval",
+      "text": "Your cooperative account is awaiting administrator approval. You will be notified as soon as a decision is made.",
+      "rejectedTitle": "Registration declined",
+      "rejectedText": "Your cooperative registration was not approved.",
+      "reasonLabel": "Reason",
+      "registeredLabel": "Submitted",
+      "statusLabel": "Status",
+      "refresh": "Check again",
+      "refreshing": "Checking…",
+      "signOut": "Sign out",
+      "stillPending": "Still awaiting approval",
+      "approved": "Approved — opening your dashboard"
     }
   },
   "dashboard": {
@@ -517,15 +566,29 @@
         "beans": "Beans",
         "rice": "Rice"
       },
-      "soilHealth": { "title": "Soil Health Overview" },
+      "soilHealth": {
+        "title": "Soil Health Overview"
+      },
       "recentAlerts": {
         "title": "Recent Alerts",
         "viewAll": "View All",
         "items": [
-          { "message": "Heavy rainfall expected in Kigali tomorrow", "time": "2 hours ago" },
-          { "message": "Maize leaf blight detected in Eastern Province", "time": "5 hours ago" },
-          { "message": "Bean prices increased by 15% this week", "time": "1 day ago" },
-          { "message": "Optimal planting time for tomatoes begins next week", "time": "1 day ago" }
+          {
+            "message": "Heavy rainfall expected in Kigali tomorrow",
+            "time": "2 hours ago"
+          },
+          {
+            "message": "Maize leaf blight detected in Eastern Province",
+            "time": "5 hours ago"
+          },
+          {
+            "message": "Bean prices increased by 15% this week",
+            "time": "1 day ago"
+          },
+          {
+            "message": "Optimal planting time for tomatoes begins next week",
+            "time": "1 day ago"
+          }
         ]
       },
       "quickActions": {
@@ -665,10 +728,26 @@
       "potassiumHeader": "Potassium",
       "applicationTimingHeader": "Application Timing",
       "tips": {
-        "maize": ["Plant in well-drained soil after the first rains", "Space rows 75cm apart for best yields", "Apply nitrogen fertilizer 4 weeks after planting"],
-        "beans": ["Rotate with cereals to help fix nitrogen in the soil", "Avoid waterlogged fields to prevent root rot", "Harvest once pods turn yellow and dry"],
-        "irishPotatoes": ["Plant in cool, well-drained, loose soil", "Hill soil around stems as plants grow", "Store harvested tubers in a dark, cool, ventilated place"],
-        "tomatoes": ["Stake or cage plants to support healthy growth", "Water consistently to avoid blossom end rot", "Watch lower leaves closely for early signs of blight"]
+        "maize": [
+          "Plant in well-drained soil after the first rains",
+          "Space rows 75cm apart for best yields",
+          "Apply nitrogen fertilizer 4 weeks after planting"
+        ],
+        "beans": [
+          "Rotate with cereals to help fix nitrogen in the soil",
+          "Avoid waterlogged fields to prevent root rot",
+          "Harvest once pods turn yellow and dry"
+        ],
+        "irishPotatoes": [
+          "Plant in cool, well-drained, loose soil",
+          "Hill soil around stems as plants grow",
+          "Store harvested tubers in a dark, cool, ventilated place"
+        ],
+        "tomatoes": [
+          "Stake or cage plants to support healthy growth",
+          "Water consistently to avoid blossom end rot",
+          "Watch lower leaves closely for early signs of blight"
+        ]
       }
     },
     "disease": {
@@ -700,9 +779,18 @@
       "databaseDescription": "Browse common crop diseases and their treatments",
       "symptomsLabel": "Symptoms:",
       "detections": {
-        "maizeLeafBlight": { "name": "Maize Leaf Blight", "treatment": "Apply fungicide and remove affected leaves to prevent spread." },
-        "beanRust": { "name": "Bean Rust", "treatment": "Apply sulfur-based fungicide and improve air circulation between plants." },
-        "tomatoEarlyBlight": { "name": "Tomato Early Blight", "treatment": "Remove infected leaves and apply copper-based fungicide weekly." }
+        "maizeLeafBlight": {
+          "name": "Maize Leaf Blight",
+          "treatment": "Apply fungicide and remove affected leaves to prevent spread."
+        },
+        "beanRust": {
+          "name": "Bean Rust",
+          "treatment": "Apply sulfur-based fungicide and improve air circulation between plants."
+        },
+        "tomatoEarlyBlight": {
+          "name": "Tomato Early Blight",
+          "treatment": "Remove infected leaves and apply copper-based fungicide weekly."
+        }
       },
       "relativeDates": {
         "twoDaysAgo": "2 days ago",
@@ -710,11 +798,31 @@
         "oneWeekAgo": "1 week ago"
       },
       "commonDiseases": {
-        "maizeStreakVirus": { "name": "Maize Streak Virus", "symptoms": "Yellow streaks along leaf veins and stunted growth.", "prevention": "Use resistant varieties and control leafhopper vectors." },
-        "cassavaMosaic": { "name": "Cassava Mosaic Disease", "symptoms": "Mottled yellow-green leaf patterns and leaf distortion.", "prevention": "Plant virus-free cuttings and remove infected plants early." },
-        "bananaBacterialWilt": { "name": "Banana Bacterial Wilt", "symptoms": "Yellowing and wilting of leaves with premature ripening of fruit.", "prevention": "Disinfect tools between plants and remove infected stems." },
-        "coffeeBerryDisease": { "name": "Coffee Berry Disease", "symptoms": "Dark, sunken lesions on berries and premature berry drop.", "prevention": "Prune for airflow and apply copper fungicide during flowering." },
-        "riceBlast": { "name": "Rice Blast", "symptoms": "Diamond-shaped lesions on leaves with white to gray centers.", "prevention": "Use resistant varieties and avoid excess nitrogen fertilizer." }
+        "maizeStreakVirus": {
+          "name": "Maize Streak Virus",
+          "symptoms": "Yellow streaks along leaf veins and stunted growth.",
+          "prevention": "Use resistant varieties and control leafhopper vectors."
+        },
+        "cassavaMosaic": {
+          "name": "Cassava Mosaic Disease",
+          "symptoms": "Mottled yellow-green leaf patterns and leaf distortion.",
+          "prevention": "Plant virus-free cuttings and remove infected plants early."
+        },
+        "bananaBacterialWilt": {
+          "name": "Banana Bacterial Wilt",
+          "symptoms": "Yellowing and wilting of leaves with premature ripening of fruit.",
+          "prevention": "Disinfect tools between plants and remove infected stems."
+        },
+        "coffeeBerryDisease": {
+          "name": "Coffee Berry Disease",
+          "symptoms": "Dark, sunken lesions on berries and premature berry drop.",
+          "prevention": "Prune for airflow and apply copper fungicide during flowering."
+        },
+        "riceBlast": {
+          "name": "Rice Blast",
+          "symptoms": "Diamond-shaped lesions on leaves with white to gray centers.",
+          "prevention": "Use resistant varieties and avoid excess nitrogen fertilizer."
+        }
       }
     },
     "weather": {
@@ -774,9 +882,18 @@
         "exporter": "Exporter"
       },
       "insights": {
-        "peakSellingSeason": { "title": "Peak Selling Season", "description": "Maize and bean prices typically rise 15-20% between June and August." },
-        "bestMarkets": { "title": "Best Markets Nearby", "description": "Kigali and Rwamagana markets are currently offering the highest prices for your crops." },
-        "exportOpportunity": { "title": "Export Opportunity", "description": "Coffee and tea exporters are actively seeking new suppliers this quarter." }
+        "peakSellingSeason": {
+          "title": "Peak Selling Season",
+          "description": "Maize and bean prices typically rise 15-20% between June and August."
+        },
+        "bestMarkets": {
+          "title": "Best Markets Nearby",
+          "description": "Kigali and Rwamagana markets are currently offering the highest prices for your crops."
+        },
+        "exportOpportunity": {
+          "title": "Export Opportunity",
+          "description": "Coffee and tea exporters are actively seeking new suppliers this quarter."
+        }
       }
     },
     "training": {
@@ -800,15 +917,42 @@
       "achievementsTitle": "Achievements",
       "achievementsSubtitle": "Track your learning milestones",
       "courses": {
-        "modernMaizeFarming": { "title": "Modern Maize Farming Techniques", "description": "Learn modern techniques to maximize your maize yield, from planting to harvest." },
-        "integratedPestManagement": { "title": "Integrated Pest Management", "description": "Identify and manage common pests using safe, effective, and sustainable methods." },
-        "soilHealthFertility": { "title": "Soil Health & Fertility", "description": "Understand soil composition and learn how to maintain and improve fertility." },
-        "waterManagement": { "title": "Water Management for Farms", "description": "Efficient irrigation techniques to conserve water and improve crop yields." },
-        "postHarvestHandling": { "title": "Post-Harvest Handling", "description": "Best practices for storing and handling crops after harvest to reduce losses." },
-        "organicFarmingPractices": { "title": "Organic Farming Practices", "description": "Transition to organic methods that improve soil health and produce quality." },
-        "climateSmartAgriculture": { "title": "Climate-Smart Agriculture", "description": "Adapt your farming practices to build resilience against climate change." },
-        "livestockIntegration": { "title": "Livestock Integration", "description": "Combine crop and livestock farming for a more sustainable, profitable farm." },
-        "farmBusinessManagement": { "title": "Farm Business Management", "description": "Manage your farm like a business — budgeting, record-keeping, and growth planning." }
+        "modernMaizeFarming": {
+          "title": "Modern Maize Farming Techniques",
+          "description": "Learn modern techniques to maximize your maize yield, from planting to harvest."
+        },
+        "integratedPestManagement": {
+          "title": "Integrated Pest Management",
+          "description": "Identify and manage common pests using safe, effective, and sustainable methods."
+        },
+        "soilHealthFertility": {
+          "title": "Soil Health & Fertility",
+          "description": "Understand soil composition and learn how to maintain and improve fertility."
+        },
+        "waterManagement": {
+          "title": "Water Management for Farms",
+          "description": "Efficient irrigation techniques to conserve water and improve crop yields."
+        },
+        "postHarvestHandling": {
+          "title": "Post-Harvest Handling",
+          "description": "Best practices for storing and handling crops after harvest to reduce losses."
+        },
+        "organicFarmingPractices": {
+          "title": "Organic Farming Practices",
+          "description": "Transition to organic methods that improve soil health and produce quality."
+        },
+        "climateSmartAgriculture": {
+          "title": "Climate-Smart Agriculture",
+          "description": "Adapt your farming practices to build resilience against climate change."
+        },
+        "livestockIntegration": {
+          "title": "Livestock Integration",
+          "description": "Combine crop and livestock farming for a more sustainable, profitable farm."
+        },
+        "farmBusinessManagement": {
+          "title": "Farm Business Management",
+          "description": "Manage your farm like a business — budgeting, record-keeping, and growth planning."
+        }
       },
       "category": {
         "all": "All Courses",
@@ -828,10 +972,22 @@
         "advanced": "Advanced"
       },
       "achievementsList": {
-        "firstCourse": { "title": "First Course Completed", "description": "You completed your first training course" },
-        "quickLearner": { "title": "Quick Learner", "description": "Completed a course in under a week" },
-        "expertFarmer": { "title": "Expert Farmer", "description": "Completed 10 or more courses" },
-        "communityHelper": { "title": "Community Helper", "description": "Helped 5 other farmers in the community forum" }
+        "firstCourse": {
+          "title": "First Course Completed",
+          "description": "You completed your first training course"
+        },
+        "quickLearner": {
+          "title": "Quick Learner",
+          "description": "Completed a course in under a week"
+        },
+        "expertFarmer": {
+          "title": "Expert Farmer",
+          "description": "Completed 10 or more courses"
+        },
+        "communityHelper": {
+          "title": "Community Helper",
+          "description": "Helped 5 other farmers in the community forum"
+        }
       }
     },
     "notifications": {
@@ -860,7 +1016,9 @@
     "settings": {
       "title": "Settings",
       "subtitle": "Manage your account preferences and notification settings",
-      "profileErrorCard": { "title": "Profile Information" },
+      "profileErrorCard": {
+        "title": "Profile Information"
+      },
       "farmLocationLabel": "Farm Location",
       "profileDescription": "Update your personal information and farm details",
       "notificationsCard": {
@@ -868,11 +1026,26 @@
         "description": "Configure how you receive alerts and updates"
       },
       "notificationToggles": {
-        "weatherAlerts": { "title": "Weather Alerts", "description": "Get notified about severe weather conditions" },
-        "diseaseAlerts": { "title": "Disease Alerts", "description": "Receive alerts about disease outbreaks in your area" },
-        "marketPriceUpdates": { "title": "Market Price Updates", "description": "Daily updates on crop prices" },
-        "plantingReminders": { "title": "Planting Reminders", "description": "Reminders for optimal planting times" },
-        "trainingRecommendations": { "title": "Training Recommendations", "description": "Suggestions for new courses" }
+        "weatherAlerts": {
+          "title": "Weather Alerts",
+          "description": "Get notified about severe weather conditions"
+        },
+        "diseaseAlerts": {
+          "title": "Disease Alerts",
+          "description": "Receive alerts about disease outbreaks in your area"
+        },
+        "marketPriceUpdates": {
+          "title": "Market Price Updates",
+          "description": "Daily updates on crop prices"
+        },
+        "plantingReminders": {
+          "title": "Planting Reminders",
+          "description": "Reminders for optimal planting times"
+        },
+        "trainingRecommendations": {
+          "title": "Training Recommendations",
+          "description": "Suggestions for new courses"
+        }
       },
       "languageCard": {
         "title": "Language & Region",
@@ -979,12 +1152,38 @@
       "mockStoreNotice": "Changes saved to mock store only — TODO: wire to real API"
     },
     "ai": {
-      "trainingStatus": { "queued": "Queued", "running": "Running", "completed": "Completed", "failed": "Failed" },
-      "modelStatus": { "staged": "Staged", "deployed": "Deployed", "archived": "Archived" },
-      "reviewStatus": { "pending": "Pending", "approved": "Approved", "corrected": "Corrected", "rejected": "Rejected" },
-      "reviewActions": { "approve": "Approve", "correct": "Correct", "reject": "Reject" },
-      "optimizationType": { "planting": "Planting", "harvesting": "Harvesting", "resource": "Resource" },
-      "optimizationStatus": { "pending": "Pending", "applied": "Applied", "dismissed": "Dismissed" },
+      "trainingStatus": {
+        "queued": "Queued",
+        "running": "Running",
+        "completed": "Completed",
+        "failed": "Failed"
+      },
+      "modelStatus": {
+        "staged": "Staged",
+        "deployed": "Deployed",
+        "archived": "Archived"
+      },
+      "reviewStatus": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "corrected": "Corrected",
+        "rejected": "Rejected"
+      },
+      "reviewActions": {
+        "approve": "Approve",
+        "correct": "Correct",
+        "reject": "Reject"
+      },
+      "optimizationType": {
+        "planting": "Planting",
+        "harvesting": "Harvesting",
+        "resource": "Resource"
+      },
+      "optimizationStatus": {
+        "pending": "Pending",
+        "applied": "Applied",
+        "dismissed": "Dismissed"
+      },
       "overview": {
         "title": "AI Overview",
         "subtitle": "Crop disease model · Training & deployment status",
@@ -1278,12 +1477,30 @@
         "title": "Recent Activity",
         "description": "Platform events and user actions",
         "items": [
-          { "text": "New farmer registered — Nyagatare District", "time": "12m ago" },
-          { "text": "AI model v3.0.0 accuracy reached 93.4%", "time": "1h ago" },
-          { "text": "ABIRUHA Cooperative added 24 new members", "time": "2h ago" },
-          { "text": "Agronomist Patrick Nkurunziza logged in", "time": "3h ago" },
-          { "text": "Platform: 8 active users today", "time": "4h ago" },
-          { "text": "3 new users registered this week", "time": "6h ago" }
+          {
+            "text": "New farmer registered — Nyagatare District",
+            "time": "12m ago"
+          },
+          {
+            "text": "AI model v3.0.0 accuracy reached 93.4%",
+            "time": "1h ago"
+          },
+          {
+            "text": "ABIRUHA Cooperative added 24 new members",
+            "time": "2h ago"
+          },
+          {
+            "text": "Agronomist Patrick Nkurunziza logged in",
+            "time": "3h ago"
+          },
+          {
+            "text": "Platform: 8 active users today",
+            "time": "4h ago"
+          },
+          {
+            "text": "3 new users registered this week",
+            "time": "6h ago"
+          }
         ]
       }
     },
@@ -1293,12 +1510,35 @@
       "searchPlaceholder": "Search by name or email…",
       "allRoles": "All Roles",
       "tableTitle": "Users",
-      "empty": { "title": "No users found", "description": "Try adjusting your filters" },
-      "columns": { "user": "User", "role": "Role", "status": "Status", "joined": "Joined", "lastLogin": "Last Login" },
-      "actions": { "editRole": "Edit Role", "deactivate": "Deactivate", "activate": "Activate" },
-      "pagination": { "showing": "Showing {{from}}–{{to}} of {{total}}" },
-      "editRoleDialog": { "title": "Edit Role — {{name}}", "prompt": "Select new role for this user:", "saveRole": "Save Role" },
-      "deleteDialog": { "title": "Delete {{name}}?", "description": "This will permanently remove this user and all their data. This action cannot be undone.", "deleting": "Deleting…" },
+      "empty": {
+        "title": "No users found",
+        "description": "Try adjusting your filters"
+      },
+      "columns": {
+        "user": "User",
+        "role": "Role",
+        "status": "Status",
+        "joined": "Joined",
+        "lastLogin": "Last Login"
+      },
+      "actions": {
+        "editRole": "Edit Role",
+        "deactivate": "Deactivate",
+        "activate": "Activate"
+      },
+      "pagination": {
+        "showing": "Showing {{from}}–{{to}} of {{total}}"
+      },
+      "editRoleDialog": {
+        "title": "Edit Role — {{name}}",
+        "prompt": "Select new role for this user:",
+        "saveRole": "Save Role"
+      },
+      "deleteDialog": {
+        "title": "Delete {{name}}?",
+        "description": "This will permanently remove this user and all their data. This action cannot be undone.",
+        "deleting": "Deleting…"
+      },
       "toast": {
         "loadFailed": "Failed to load users",
         "activated": "{{name}} activated",
@@ -1313,14 +1553,25 @@
     "cooperatives": {
       "title": "Cooperatives",
       "subtitle": "Manage registered cooperatives and their members",
-      "kpis": { "total": "Total Cooperatives", "active": "Active", "totalMembers": "Total Members" },
+      "kpis": {
+        "total": "Total Cooperatives",
+        "active": "Active",
+        "totalMembers": "Total Members"
+      },
       "listTitle": "Registered Cooperatives",
       "listDescription": "All cooperative accounts on the IMARA platform",
       "registerButton": "Register Cooperative",
-      "empty": { "title": "No cooperatives yet", "description": "Register the first cooperative to get started." },
+      "empty": {
+        "title": "No cooperatives yet",
+        "description": "Register the first cooperative to get started."
+      },
       "membersCount": "{{count}}/{{capacity}} members",
       "joinedLabel": "Joined",
-      "actions": { "editDetails": "Edit Details", "deactivate": "Deactivate", "activate": "Activate" },
+      "actions": {
+        "editDetails": "Edit Details",
+        "deactivate": "Deactivate",
+        "activate": "Activate"
+      },
       "dialog": {
         "editTitle": "Edit Cooperative",
         "createTitle": "Register Cooperative",
@@ -1357,6 +1608,43 @@
         "statusUpdateFailed": "Failed to update status.",
         "deleted": "{{name}} removed from the platform.",
         "deleteFailed": "Failed to delete cooperative."
+      },
+      "approvals": {
+        "title": "Cooperative approvals",
+        "subtitle": "Review and approve cooperative accounts awaiting activation",
+        "tabPending": "Pending",
+        "tabActive": "Active",
+        "tabRejected": "Rejected",
+        "tabAll": "All",
+        "empty": "Nothing awaiting review",
+        "emptyHint": "New cooperative registrations will appear here.",
+        "colName": "Cooperative",
+        "colLeader": "Leader",
+        "colDistrict": "District",
+        "colMembers": "Members",
+        "colRegistered": "Registered",
+        "colStatus": "Status",
+        "colActions": "Actions",
+        "review": "Review",
+        "approve": "Approve",
+        "reject": "Decline",
+        "approveConfirm": "Approve this cooperative? Its leader will get access to the Cooperative Dashboard.",
+        "rejectTitle": "Decline this registration",
+        "rejectReasonLabel": "Reason (shown to the leader)",
+        "rejectReasonPlaceholder": "Explain what was wrong so they can correct it",
+        "rejectReasonRequired": "A reason is required",
+        "approved": "Cooperative approved",
+        "rejected": "Cooperative declined",
+        "detailTitle": "Cooperative details",
+        "registrationNumber": "Registration number",
+        "contactEmail": "Contact email",
+        "contactPhone": "Contact phone",
+        "farmsOwned": "Farms owned by members",
+        "farmsLinked": "Farms registered to cooperative",
+        "loadError": "Could not load cooperatives",
+        "actionError": "Action failed",
+        "cancel": "Cancel",
+        "close": "Close"
       }
     },
     "crops": {
@@ -1371,10 +1659,21 @@
         "totalInCategory": "{{count}} crops in \"{{category}}\"",
         "totalInCategoryMatching": "{{count}} crops in \"{{category}}\" matching \"{{search}}\""
       },
-      "empty": { "title": "No crops found", "description": "Try adjusting the search or filter." },
-      "columns": { "crop": "Crop", "category": "Category", "growingSeason": "Growing Season", "duration": "Duration", "status": "Status" },
+      "empty": {
+        "title": "No crops found",
+        "description": "Try adjusting the search or filter."
+      },
+      "columns": {
+        "crop": "Crop",
+        "category": "Category",
+        "growingSeason": "Growing Season",
+        "duration": "Duration",
+        "status": "Status"
+      },
       "durationDays": "{{count}}d",
-      "pagination": { "showing": "{{from}}–{{to}} of {{total}}" },
+      "pagination": {
+        "showing": "{{from}}–{{to}} of {{total}}"
+      },
       "dialog": {
         "editTitle": "Edit Crop",
         "createTitle": "Add Crop",
@@ -1419,10 +1718,14 @@
       "title": "Platform Analytics",
       "subtitle": "Crop performance, soil health, financials & sustainability",
       "tabs": {
-        "cropPerformance": "Crop Performance", "cropPerformanceShort": "Crops",
-        "soilEnvironmental": "Soil & Environmental", "soilEnvironmentalShort": "Soil",
-        "financialResource": "Financial & Resource", "financialResourceShort": "Finance",
-        "sustainability": "Sustainability", "sustainabilityShort": "Sustain"
+        "cropPerformance": "Crop Performance",
+        "cropPerformanceShort": "Crops",
+        "soilEnvironmental": "Soil & Environmental",
+        "soilEnvironmentalShort": "Soil",
+        "financialResource": "Financial & Resource",
+        "financialResourceShort": "Finance",
+        "sustainability": "Sustainability",
+        "sustainabilityShort": "Sustain"
       },
       "crop": {
         "kpis": {
@@ -1435,8 +1738,20 @@
           "bestYieldRate": "Best Yield Rate",
           "aboveTarget": "+{{percent}}% above target"
         },
-        "yieldChart": { "title": "Crop Yield vs Target", "description": "Tons per crop this season", "actual": "Actual (t)", "target": "Target (t)" },
-        "detectionChart": { "title": "Disease Detection Trends", "description": "Monthly AI detections by disease type", "blight": "Blight", "rust": "Rust", "mosaic": "Mosaic", "blast": "Blast" }
+        "yieldChart": {
+          "title": "Crop Yield vs Target",
+          "description": "Tons per crop this season",
+          "actual": "Actual (t)",
+          "target": "Target (t)"
+        },
+        "detectionChart": {
+          "title": "Disease Detection Trends",
+          "description": "Monthly AI detections by disease type",
+          "blight": "Blight",
+          "rust": "Rust",
+          "mosaic": "Mosaic",
+          "blast": "Blast"
+        }
       },
       "soil": {
         "kpis": {
@@ -1449,8 +1764,19 @@
           "lowNitrogenZones": "Low-Nitrogen Zones",
           "needIntervention": "need intervention"
         },
-        "climateChart": { "title": "Climate Trends (12-Month)", "description": "Rainfall (mm) and temperature (°C)", "rainfall": "Rainfall (mm)", "temp": "Temp (°C)" },
-        "nutrientsChart": { "title": "Soil Nutrients by Zone", "description": "Nitrogen / Phosphorus / Potassium index (0–100)", "nitrogen": "Nitrogen", "phosphorus": "Phosphorus", "potassium": "Potassium" }
+        "climateChart": {
+          "title": "Climate Trends (12-Month)",
+          "description": "Rainfall (mm) and temperature (°C)",
+          "rainfall": "Rainfall (mm)",
+          "temp": "Temp (°C)"
+        },
+        "nutrientsChart": {
+          "title": "Soil Nutrients by Zone",
+          "description": "Nitrogen / Phosphorus / Potassium index (0–100)",
+          "nitrogen": "Nitrogen",
+          "phosphorus": "Phosphorus",
+          "potassium": "Potassium"
+        }
       },
       "finance": {
         "kpis": {
@@ -1462,9 +1788,24 @@
           "revenueGrowth": "Revenue Growth",
           "vsSamePeriod": "vs same period {{year}}"
         },
-        "revenueChart": { "title": "Revenue by Crop", "description": "Million RWF, all seasons to date", "revenue": "Revenue" },
-        "costChart": { "title": "Input Cost Breakdown", "description": "RWF millions per cost category by season", "seeds": "Seeds", "fertilizer": "Fertilizer", "pesticide": "Pesticide", "labor": "Labor" },
-        "priceChart": { "title": "Market Price Trends", "description": "RWF per kg — Maize, Beans, Coffee (÷10 for scale)", "coffeeScaled": "Coffee (÷10)" }
+        "revenueChart": {
+          "title": "Revenue by Crop",
+          "description": "Million RWF, all seasons to date",
+          "revenue": "Revenue"
+        },
+        "costChart": {
+          "title": "Input Cost Breakdown",
+          "description": "RWF millions per cost category by season",
+          "seeds": "Seeds",
+          "fertilizer": "Fertilizer",
+          "pesticide": "Pesticide",
+          "labor": "Labor"
+        },
+        "priceChart": {
+          "title": "Market Price Trends",
+          "description": "RWF per kg — Maize, Beans, Coffee (÷10 for scale)",
+          "coffeeScaled": "Coffee (÷10)"
+        }
       },
       "sustainability": {
         "kpis": {
@@ -1476,8 +1817,19 @@
           "certifiedFarms": "certified farms",
           "waterEfficiency": "Water Efficiency"
         },
-        "carbonChart": { "title": "Carbon Footprint Trend", "description": "Monthly CO₂e tonnes by source", "machinery": "Machinery", "fertilizer": "Fertilizer", "transport": "Transport" },
-        "scoresChart": { "title": "Sustainability Scores", "description": "Current vs target across all indicators", "current": "Current", "target": "Target" }
+        "carbonChart": {
+          "title": "Carbon Footprint Trend",
+          "description": "Monthly CO₂e tonnes by source",
+          "machinery": "Machinery",
+          "fertilizer": "Fertilizer",
+          "transport": "Transport"
+        },
+        "scoresChart": {
+          "title": "Sustainability Scores",
+          "description": "Current vs target across all indicators",
+          "current": "Current",
+          "target": "Target"
+        }
       }
     },
     "profile": {
@@ -1496,7 +1848,11 @@
         "deleteAccount": "Delete Account",
         "deleteWarning": "Deleting the admin account will permanently remove access to the platform. Ensure another admin account exists before proceeding."
       },
-      "activity": { "title": "Recent Activity", "description": "Your recent administrative actions on this platform", "empty": "No recent activity recorded." },
+      "activity": {
+        "title": "Recent Activity",
+        "description": "Your recent administrative actions on this platform",
+        "empty": "No recent activity recorded."
+      },
       "preferences": {
         "title": "Preferences",
         "description": "Theme and notification preferences",
@@ -1506,10 +1862,22 @@
         "themeSystem": "System",
         "notificationsHeading": "Admin Notifications",
         "notifications": {
-          "platformAlerts": { "title": "Platform Alerts", "description": "Critical system events and security notices" },
-          "aiModelUpdates": { "title": "AI Model Updates", "description": "Training completion, deployment events" },
-          "newUserRegistrations": { "title": "New User Registrations", "description": "Daily digest of new registrations" },
-          "cooperativeActivity": { "title": "Cooperative Activity", "description": "Member changes and cooperative updates" }
+          "platformAlerts": {
+            "title": "Platform Alerts",
+            "description": "Critical system events and security notices"
+          },
+          "aiModelUpdates": {
+            "title": "AI Model Updates",
+            "description": "Training completion, deployment events"
+          },
+          "newUserRegistrations": {
+            "title": "New User Registrations",
+            "description": "Daily digest of new registrations"
+          },
+          "cooperativeActivity": {
+            "title": "Cooperative Activity",
+            "description": "Member changes and cooperative updates"
+          }
         }
       }
     }
@@ -1531,7 +1899,10 @@
         "market": "Market",
         "aiInsights": "AI Insights",
         "cropAdvisory": "Crop Advisory",
-        "diseaseAlerts": "Disease Alerts"
+        "diseaseAlerts": "Disease Alerts",
+        "profile": "Profile",
+        "plan": "Plan",
+        "agronomists": "Agronomists"
       }
     },
     "overview": {
@@ -1587,8 +1958,8 @@
           "1d": "1 day ago"
         },
         "items": {
-          "lateBlight":  "Late blight risk on 14 potato farms. Send broadcast alert now.",
-          "maizePrice":  "Maize prices rising 18% in 3 weeks. Coordinate bulk sale.",
+          "lateBlight": "Late blight risk on 14 potato farms. Send broadcast alert now.",
+          "maizePrice": "Maize prices rising 18% in 3 weeks. Coordinate bulk sale.",
           "soilAcidity": "3 farms show soil acidity. Group lime application saves 40% cost."
         }
       },
@@ -1598,28 +1969,48 @@
         "market": "Market",
         "alerts": "Alerts",
         "settings": "Settings"
-      }
+      },
+      "loadError": "Could not load cooperative data. Please try again."
     },
     "farms": {
       "title": "My Farms",
       "subtitle": "Manage all farms in your cooperative",
       "searchPlaceholder": "Search by farm, farmer or location…",
-      "filterAll": "All", "filterPending": "Pending", "filterGood": "Good",
-      "filterFair": "Fair", "filterLow": "Low", "filterInactive": "Inactive",
-      "statTotal": "Total", "statGood": "Good", "statFair": "Fair",
-      "statLow": "Low", "statInactive": "Inactive", "statPending": "Pending Review",
+      "filterAll": "All",
+      "filterPending": "Pending",
+      "filterGood": "Good",
+      "filterFair": "Fair",
+      "filterLow": "Low",
+      "filterInactive": "Inactive",
+      "statTotal": "Total",
+      "statGood": "Good",
+      "statFair": "Fair",
+      "statLow": "Low",
+      "statInactive": "Inactive",
+      "statPending": "Pending Review",
       "noResults": "No farms match your search or filter.",
-      "lastYield": "Last yield", "lastActive": "Last active",
+      "lastYield": "Last yield",
+      "lastActive": "Last active",
       "pendingBadge": "Pending",
-      "status": { "good": "Good", "fair": "Fair", "low": "Low", "inactive": "Inactive" },
-      "viewDetails": "View Details", "reviewStatus": "Review Status", "contactFarmer": "Contact Farmer",
+      "status": {
+        "good": "Good",
+        "fair": "Fair",
+        "low": "Low",
+        "inactive": "Inactive"
+      },
+      "viewDetails": "View Details",
+      "reviewStatus": "Review Status",
+      "contactFarmer": "Contact Farmer",
       "reviewSaved": "Farm status updated successfully.",
       "reviewError": "Failed to update farm status.",
       "reviewDialog": {
         "title": "Review Farm Status",
         "selectStatus": "Select new status"
       },
-      "contactDialog": { "title": "Contact Farmer", "call": "Call Now" }
+      "contactDialog": {
+        "title": "Contact Farmer",
+        "call": "Call Now"
+      }
     },
     "members": {
       "title": "Members",
@@ -1628,48 +2019,114 @@
       "addBtn": "Add Member",
       "listTitle": "All Members",
       "noResults": "No members found.",
-      "statTotal": "Total Members", "statActive": "Active", "statFarms": "Total Farms",
+      "statTotal": "Total Members",
+      "statActive": "Active",
+      "statFarms": "Total Farms",
       "farmsLabel": "farms",
-      "role": { "leader": "Leader", "treasurer": "Treasurer", "secretary": "Secretary", "member": "Member" },
-      "actionContact": "Contact", "actionViewFarms": "View Farms", "actionRemove": "Remove",
+      "role": {
+        "leader": "Leader",
+        "treasurer": "Treasurer",
+        "secretary": "Secretary",
+        "member": "Member"
+      },
+      "actionContact": "Contact",
+      "actionViewFarms": "View Farms",
+      "actionRemove": "Remove",
       "addSuccess": "Member added successfully.",
       "addError": "Failed to add member.",
       "removeSuccess": "Member removed.",
       "removeError": "Failed to remove member.",
       "addDialog": {
         "title": "Add New Member",
-        "name": "Full Name", "phone": "Phone Number", "email": "Email",
-        "location": "Location", "role": "Role",
+        "name": "Full Name",
+        "phone": "Phone Number",
+        "email": "Email",
+        "location": "Location",
+        "role": "Role",
         "validation": "Name and phone are required.",
         "submit": "Add Member"
       },
-      "contactDialog": { "title": "Member Contact" },
+      "contactDialog": {
+        "title": "Member Contact"
+      },
       "removeDialog": {
         "title": "Remove Member",
         "description": "Are you sure you want to remove {{name}} from the cooperative? This cannot be undone.",
         "confirm": "Remove"
+      },
+      "addFlow": {
+        "title": "Add a member",
+        "searchLabel": "Find an existing farmer",
+        "searchPlaceholder": "Search by email, phone or name",
+        "searchHint": "Enter at least 3 characters",
+        "searching": "Searching…",
+        "noResults": "No farmer found with those details",
+        "alreadyMember": "Already in your cooperative",
+        "otherCooperative": "Belongs to another cooperative",
+        "add": "Add as member",
+        "adding": "Adding…",
+        "added": "Member added",
+        "selectFarmsTitle": "Register their farms",
+        "selectFarmsText": "Choose which of this farmer's existing farms to register under your cooperative. You do not have to select all of them, and you can change this later.",
+        "noFarms": "This farmer has not registered any farms yet",
+        "noFarmsHint": "You can register their farms once they add them.",
+        "linked": "Registered",
+        "linkSelected": "Register selected",
+        "linking": "Registering…",
+        "linkedToast": "Farms registered under your cooperative",
+        "unlink": "Remove",
+        "unlinked": "Farm removed from your cooperative",
+        "skip": "Skip for now",
+        "done": "Done",
+        "farmSize": "Size",
+        "farmCrop": "Crop",
+        "hectares": "ha",
+        "linkedFarmsCount": "registered",
+        "ofOwned": "of {{count}} owned",
+        "error": "Something went wrong"
       }
     },
     "market": {
       "title": "Market",
       "subtitle": "Crop prices & bulk sale coordination",
-      "kpiStock": "Our Total Stock", "kpiBuyers": "Verified Buyers",
-      "kpiAvgChange": "Avg Price Change", "kpiRevenue": "Confirmed Revenue",
-      "chartTitle": "Price Trend (RWF/kg)", "chartSubtitle": "Weekly crop price movement",
-      "ordersTitle": "Bulk Orders", "newOrder": "New Order",
-      "pricesTitle": "Current Market Prices", "pricesSubtitle": "Live prices for cooperative crops",
-      "colCrop": "Crop", "colPrice": "Price", "colChange": "Change",
-      "colStock": "Our Stock", "colDemand": "Demand", "sellBtn": "Sell",
-      "demand": { "high": "High", "medium": "Medium", "low": "Low" },
-      "orderStatus": { "pending": "Pending", "confirmed": "Confirmed", "completed": "Completed" },
+      "kpiStock": "Our Total Stock",
+      "kpiBuyers": "Verified Buyers",
+      "kpiAvgChange": "Avg Price Change",
+      "kpiRevenue": "Confirmed Revenue",
+      "chartTitle": "Price Trend (RWF/kg)",
+      "chartSubtitle": "Weekly crop price movement",
+      "ordersTitle": "Bulk Orders",
+      "newOrder": "New Order",
+      "pricesTitle": "Current Market Prices",
+      "pricesSubtitle": "Live prices for cooperative crops",
+      "colCrop": "Crop",
+      "colPrice": "Price",
+      "colChange": "Change",
+      "colStock": "Our Stock",
+      "colDemand": "Demand",
+      "sellBtn": "Sell",
+      "demand": {
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low"
+      },
+      "orderStatus": {
+        "pending": "Pending",
+        "confirmed": "Confirmed",
+        "completed": "Completed"
+      },
       "buyersTitle": "Verified Buyers",
-      "verified": "Verified", "minQty": "Min. qty",
+      "verified": "Verified",
+      "minQty": "Min. qty",
       "bulkSubmitted": "Bulk sale order created successfully.",
       "bulkError": "Failed to create bulk sale order.",
       "bulkDialog": {
         "title": "Coordinate Bulk Sale",
-        "crop": "Select Crop", "quantity": "Quantity", "price": "Target Price",
-        "buyer": "Select Buyer", "summary": "Estimated revenue:",
+        "crop": "Select Crop",
+        "quantity": "Quantity",
+        "price": "Target Price",
+        "buyer": "Select Buyer",
+        "summary": "Estimated revenue:",
         "validation": "Please select crop, quantity and buyer.",
         "noBuyers": "No buyers available for this crop.",
         "submit": "Submit Order"
@@ -1678,24 +2135,37 @@
     "aiInsights": {
       "pageTitle": "AI Insights",
       "pageSubtitle": "AI-powered recommendations for your cooperative",
-      "filterAll": "All", "filterAlert": "Alerts", "filterMarket": "Market",
-      "filterSoil": "Soil", "filterWeather": "Weather",
+      "filterAll": "All",
+      "filterAlert": "Alerts",
+      "filterMarket": "Market",
+      "filterSoil": "Soil",
+      "filterWeather": "Weather",
       "noInsights": "No active insights for the selected filter.",
       "farmsAffected": "farms affected",
       "dismissBtn": "Dismiss",
       "dismissed": "Insight dismissed.",
       "dismissedSection": "Dismissed insights",
-      "severity": { "critical": "Critical", "high": "High", "medium": "Medium", "low": "Low" }
+      "severity": {
+        "critical": "Critical",
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low"
+      }
     },
     "cropAdvisory": {
       "title": "Crop Advisory",
       "subtitle": "AI-powered recommendations per crop",
-      "currentStage": "Current Stage", "seasonProgress": "Season Progress",
-      "nextAction": "Next Action", "daysToHarvest": "Days to Harvest",
-      "expectedYield": "Expected Yield", "irrigation": "Irrigation",
+      "currentStage": "Current Stage",
+      "seasonProgress": "Season Progress",
+      "nextAction": "Next Action",
+      "daysToHarvest": "Days to Harvest",
+      "expectedYield": "Expected Yield",
+      "irrigation": "Irrigation",
       "everyDays": "Every {{n}}d",
       "fertilizerTitle": "Fertilizer Schedule",
-      "fertName": "Fertilizer", "fertAmount": "Amount", "fertTiming": "Timing",
+      "fertName": "Fertilizer",
+      "fertAmount": "Amount",
+      "fertTiming": "Timing",
       "risksTitle": "Current Risks",
       "calendarTitle": "Season Calendar"
     },
@@ -1723,7 +2193,12 @@
       "resolveError": "Failed to resolve alert.",
       "groupSent": "Group alert sent to all members.",
       "groupError": "Failed to send group alert.",
-      "severity": { "critical": "Critical", "high": "High", "medium": "Medium", "low": "Low" },
+      "severity": {
+        "critical": "Critical",
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low"
+      },
       "resolveDialog": {
         "title": "Mark Alert as Resolved",
         "description": "Confirm that {{disease}} has been contained and treated on all affected farms.",
@@ -1732,7 +2207,9 @@
       "groupDialog": {
         "title": "Send Group Alert",
         "type": "Alert Type",
-        "typeDisease": "Disease", "typeWeather": "Weather", "typeMarket": "Market",
+        "typeDisease": "Disease",
+        "typeWeather": "Weather",
+        "typeMarket": "Market",
         "urgency": "Urgency Level",
         "message": "Message",
         "messagePlaceholder": "Describe the situation and recommended actions for all members…",
@@ -1760,22 +2237,125 @@
       "accessSaved": "Access settings saved.",
       "accessError": "Failed to save access settings.",
       "profileFields": {
-        "name": "Cooperative Name", "location": "Location", "district": "District",
-        "regNumber": "Registration Number", "email": "Contact Email", "phone": "Contact Phone",
-        "foundedYear": "Founded Year", "description": "Description"
+        "name": "Cooperative Name",
+        "location": "Location",
+        "district": "District",
+        "regNumber": "Registration Number",
+        "email": "Contact Email",
+        "phone": "Contact Phone",
+        "foundedYear": "Founded Year",
+        "description": "Description"
       },
       "notif": {
-        "diseaseAlerts":    { "label": "Disease Alerts",        "desc": "Get notified when new disease threats are detected on farms." },
-        "marketUpdates":    { "label": "Market Updates",        "desc": "Price changes and bulk sale opportunities." },
-        "weatherWarnings":  { "label": "Weather Warnings",      "desc": "Severe weather alerts affecting Musanze district." },
-        "aiRecommendations":{ "label": "AI Recommendations",    "desc": "New AI insights and crop advisory updates." },
-        "weeklyReport":     { "label": "Weekly Summary Report", "desc": "Receive a weekly digest of cooperative performance." }
+        "diseaseAlerts": {
+          "label": "Disease Alerts",
+          "desc": "Get notified when new disease threats are detected on farms."
+        },
+        "marketUpdates": {
+          "label": "Market Updates",
+          "desc": "Price changes and bulk sale opportunities."
+        },
+        "weatherWarnings": {
+          "label": "Weather Warnings",
+          "desc": "Severe weather alerts affecting Musanze district."
+        },
+        "aiRecommendations": {
+          "label": "AI Recommendations",
+          "desc": "New AI insights and crop advisory updates."
+        },
+        "weeklyReport": {
+          "label": "Weekly Summary Report",
+          "desc": "Receive a weekly digest of cooperative performance."
+        }
       },
       "access": {
-        "membersCanViewPrices": { "label": "Members Can View Market Prices", "desc": "Allow all members to see current crop prices." },
-        "requireFarmApproval":  { "label": "Require Approval for New Farms", "desc": "New farm registrations must be reviewed by the leader." },
-        "shareDataWithGov":     { "label": "Share Data with Government",     "desc": "Allow MINAGRI to access cooperative yield and production data." }
+        "membersCanViewPrices": {
+          "label": "Members Can View Market Prices",
+          "desc": "Allow all members to see current crop prices."
+        },
+        "requireFarmApproval": {
+          "label": "Require Approval for New Farms",
+          "desc": "New farm registrations must be reviewed by the leader."
+        },
+        "shareDataWithGov": {
+          "label": "Share Data with Government",
+          "desc": "Allow MINAGRI to access cooperative yield and production data."
+        }
       }
+    },
+    "profile": {
+      "title": "Cooperative profile",
+      "subtitle": "Your cooperative's registration details",
+      "name": "Name",
+      "district": "District",
+      "location": "Location",
+      "registrationNumber": "Registration number",
+      "status": "Status",
+      "registeredAt": "Registered",
+      "approvedAt": "Approved",
+      "leader": "Leader",
+      "members": "Members",
+      "activeMembers": "Active members",
+      "registeredFarms": "Registered farms",
+      "contactEmail": "Contact email",
+      "contactPhone": "Contact phone",
+      "description": "About",
+      "descriptionPlaceholder": "Tell members and partners about your cooperative",
+      "edit": "Edit details",
+      "save": "Save changes",
+      "saving": "Saving…",
+      "cancel": "Cancel",
+      "saved": "Profile updated",
+      "lockedHint": "Name, district and registration number were approved by an administrator and cannot be changed here.",
+      "loadError": "Could not load the profile",
+      "notSet": "Not set"
+    },
+    "plan": {
+      "title": "Cooperative plan",
+      "subtitle": "Cultivation plans across your registered farms",
+      "allSeasons": "All seasons",
+      "seasonLabel": "Season",
+      "plans": "Plans",
+      "farms": "Farms",
+      "activePlans": "Active",
+      "tasksDue": "Tasks due",
+      "byCrop": "By crop",
+      "crop": "Crop",
+      "area": "Area",
+      "expectedYield": "Expected yield",
+      "harvested": "Harvested",
+      "planList": "All plans",
+      "farmName": "Farm",
+      "member": "Member",
+      "progress": "Tasks",
+      "status": "Status",
+      "empty": "No cultivation plans yet",
+      "emptyHint": "Plans appear here once your members create them for farms registered under this cooperative.",
+      "loadError": "Could not load plans"
+    },
+    "agronomists": {
+      "title": "Agronomists",
+      "subtitle": "Verified agronomists available to your cooperative",
+      "inDistrict": "In {{district}}",
+      "showAll": "Show all districts",
+      "showDistrict": "Only my district",
+      "specialization": "Specialisation",
+      "experience": "Experience",
+      "years": "years",
+      "contact": "Contact",
+      "empty": "No agronomists found",
+      "emptyHint": "Try showing all districts.",
+      "loadError": "Could not load agronomists"
+    },
+    "marketplace": {
+      "matchedCrops": "Matched to your crops",
+      "showAll": "Show full catalogue",
+      "showMatched": "Match my crops",
+      "empty": "No products found",
+      "emptyHint": "Try showing the full catalogue.",
+      "dealer": "Dealer",
+      "price": "Price",
+      "loadError": "Could not load the marketplace"
     }
   }
 }

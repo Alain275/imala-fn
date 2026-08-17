@@ -56,6 +56,11 @@ import CooperativeAiInsightsPage from './pages/cooperative/CooperativeAiInsights
 import CooperativeCropAdvisoryPage from './pages/cooperative/CooperativeCropAdvisoryPage'
 import CooperativeDiseaseAlertsPage from './pages/cooperative/CooperativeDiseaseAlertsPage'
 import CooperativeSettingsPage from './pages/cooperative/CooperativeSettingsPage'
+import CooperativeProfilePage from './pages/cooperative/CooperativeProfilePage'
+import CooperativePlanPage from './pages/cooperative/CooperativePlanPage'
+import CooperativeAgronomistsPage from './pages/cooperative/CooperativeAgronomistsPage'
+import CooperativePendingPage from './pages/cooperative/CooperativePendingPage'
+import { CooperativeApprovalGuard } from './components/cooperative/CooperativeApprovalGuard'
 
 // Auth Pages
 import SignInPage from './pages/auth/SignInPage'
@@ -157,15 +162,23 @@ function App() {
 
         {/* Cooperative portal */}
         <Route element={<ProtectedRoute allowedRoles={['cooperative']} />}>
-          <Route path="/cooperative" element={<CooperativeLayout />}>
-            <Route index element={<CooperativeOverviewPage />} />
-            <Route path="farms" element={<CooperativeFarmsPage />} />
-            <Route path="members" element={<CooperativeMembersPage />} />
-            <Route path="market" element={<CooperativeMarketPage />} />
-            <Route path="ai-insights" element={<CooperativeAiInsightsPage />} />
-            <Route path="crop-advisory" element={<CooperativeCropAdvisoryPage />} />
-            <Route path="disease-alerts" element={<CooperativeDiseaseAlertsPage />} />
-            <Route path="settings" element={<CooperativeSettingsPage />} />
+          {/* Outside the layout: an unapproved leader has no dashboard to
+              frame, and every data endpoint would 403. */}
+          <Route path="/cooperative/pending" element={<CooperativePendingPage />} />
+          <Route element={<CooperativeApprovalGuard />}>
+            <Route path="/cooperative" element={<CooperativeLayout />}>
+              <Route index element={<CooperativeOverviewPage />} />
+              <Route path="farms" element={<CooperativeFarmsPage />} />
+              <Route path="members" element={<CooperativeMembersPage />} />
+              <Route path="market" element={<CooperativeMarketPage />} />
+              <Route path="plan" element={<CooperativePlanPage />} />
+              <Route path="agronomists" element={<CooperativeAgronomistsPage />} />
+              <Route path="profile" element={<CooperativeProfilePage />} />
+              <Route path="ai-insights" element={<CooperativeAiInsightsPage />} />
+              <Route path="crop-advisory" element={<CooperativeCropAdvisoryPage />} />
+              <Route path="disease-alerts" element={<CooperativeDiseaseAlertsPage />} />
+              <Route path="settings" element={<CooperativeSettingsPage />} />
+            </Route>
           </Route>
         </Route>
       </Routes>
