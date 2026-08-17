@@ -151,7 +151,7 @@ export default function AIValidationPage() {
                   <CheckCircle2 className="w-6 h-6 text-emerald-500" />
                 </div>
                 <p className="text-foreground font-bold">Queue Cleared</p>
-                <p className="text-xs text-muted-foreground mt-0.5">All pending crop advisories have been validated</p>
+                <p className="text-xs text-muted-foreground mt-0.5 max-w-xs">No deficient soil tests have triggered a recommendation recently — new items appear here automatically when a farmer's nitrogen, phosphorus, potassium, or pH reading falls outside a healthy range.</p>
               </div>
             ) : pendingQueue.map(item => {
               const cb = confidenceBand(item.confidence)
@@ -232,15 +232,24 @@ export default function AIValidationPage() {
                   </div>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-xs">
                     {[
-                      { label: "pH Level", val: selected.soilPH, ideal: "6.0 - 7.0", ok: selected.soilPH >= 6.0 && selected.soilPH <= 7.0 },
-                      { label: "Nitrogen", val: `${selected.nitrogenPPM}ppm`, ideal: "50-80ppm", ok: selected.nitrogenPPM >= 50 && selected.nitrogenPPM <= 80 },
-                      { label: "Phosphorus", val: `${selected.phosphorusPPM}ppm`, ideal: "25-45ppm", ok: selected.phosphorusPPM >= 25 && selected.phosphorusPPM <= 45 },
-                      { label: "Potassium", val: `${selected.potassiumPPM}ppm`, ideal: "150-220ppm", ok: selected.potassiumPPM >= 150 && selected.potassiumPPM <= 220 },
-                      { label: "Moisture", val: `${selected.moisturePct}%`, ideal: "60-75%", ok: selected.moisturePct >= 60 && selected.moisturePct <= 75 },
+                      { label: "pH Level", val: String(selected.soilPH), ideal: "6.0 - 7.0", ok: selected.soilPH >= 6.0 && selected.soilPH <= 7.0, neutral: false },
+                      { label: "Nitrogen", val: `${selected.nitrogenPPM}ppm`, ideal: "50-80ppm", ok: selected.nitrogenPPM >= 50 && selected.nitrogenPPM <= 80, neutral: false },
+                      { label: "Phosphorus", val: `${selected.phosphorusPPM}ppm`, ideal: "25-45ppm", ok: selected.phosphorusPPM >= 25 && selected.phosphorusPPM <= 45, neutral: false },
+                      { label: "Potassium", val: `${selected.potassiumPPM}ppm`, ideal: "150-220ppm", ok: selected.potassiumPPM >= 150 && selected.potassiumPPM <= 220, neutral: false },
+                      // moisturePct is null for every rules-based recommendation (the SoilTest model
+                      // this pipeline reads from has no moisture field) — show it as genuinely absent,
+                      // never as a fabricated 0% or a false "out of range" reading.
+                      selected.moisturePct === null
+                        ? { label: "Moisture", val: "Not recorded", ideal: "60-75%", ok: false, neutral: true }
+                        : { label: "Moisture", val: `${selected.moisturePct}%`, ideal: "60-75%", ok: selected.moisturePct >= 60 && selected.moisturePct <= 75, neutral: false },
                     ].map(t => (
-                      <div key={t.label} className={`p-2 rounded-lg border ${t.ok ? "bg-emerald-500/5 border-emerald-200 dark:border-emerald-900/30" : "bg-rose-500/5 border-rose-200 dark:border-rose-900/30"}`}>
+                      <div key={t.label} className={`p-2 rounded-lg border ${
+                        t.neutral ? "bg-muted/30 border-border" :
+                        t.ok ? "bg-emerald-500/5 border-emerald-200 dark:border-emerald-900/30" :
+                        "bg-rose-500/5 border-rose-200 dark:border-rose-900/30"
+                      }`}>
                         <p className="text-[10px] text-muted-foreground">{t.label}</p>
-                        <p className="text-sm font-bold text-foreground mt-0.5">{t.val}</p>
+                        <p className={`text-sm font-bold mt-0.5 ${t.neutral ? "text-muted-foreground italic" : "text-foreground"}`}>{t.val}</p>
                         <p className="text-[9px] text-muted-foreground font-mono">Target: {t.ideal}</p>
                       </div>
                     ))}

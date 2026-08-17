@@ -36,7 +36,10 @@ export interface AiValidationItem {
   nitrogenPPM: number;
   phosphorusPPM: number;
   potassiumPPM: number;
-  moisturePct: number;
+  // Always null for rules-based recommendations generated from a SoilTest —
+  // that model has no moisture field. Confirmed live: the key is present with
+  // value null, not omitted and not a fabricated 0.
+  moisturePct: number | null;
   soilType: string;
   telemetryAge: string;
   status: AiValidationStatus;
