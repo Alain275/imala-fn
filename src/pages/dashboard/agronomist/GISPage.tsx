@@ -12,10 +12,10 @@ import { toast } from "sonner"
 import { agronomistGisService, type GisDistrict } from "@/services/agronomistGis.service"
 import { agronomistFarmVisitsService, type FarmVisit, type FarmVisitType } from "@/services/agronomistFarmVisits.service"
 
-// Not "unbuilt" — severity + coordinates already exist on the real FarmVisit
-// model (wired in the Farm Visits page). There's no GIS-specific map view of
-// that data yet, but the data itself is real, so this points there instead
-// of claiming the feature doesn't exist.
+// Intentional design choice, not a deferred feature: severity + coordinates
+// already exist on the real FarmVisit model (wired in the Farm Visits page).
+// A dedicated GIS map view isn't on the roadmap — current data volume
+// doesn't justify one — so this cross-links to the real data instead.
 function CrossLinkBanner() {
   return (
     <Card className="border-0 shadow-md">
@@ -25,7 +25,7 @@ function CrossLinkBanner() {
         </div>
         <div className="flex-1 text-center sm:text-left">
           <p className="text-sm font-semibold text-foreground">Visit location data lives in Farm Visits</p>
-          <p className="text-xs text-muted-foreground mt-0.5">Severity and GPS coordinates for each field visit are already tracked there — a dedicated map view here hasn't been built yet.</p>
+          <p className="text-xs text-muted-foreground mt-0.5">GPS coordinates and severity for each field visit are tracked in Farm Visits — view full visit details there.</p>
         </div>
         <Button variant="outline" size="sm" className="gap-1.5 flex-shrink-0" asChild>
           <Link to="/agronomist/farm-visits">
