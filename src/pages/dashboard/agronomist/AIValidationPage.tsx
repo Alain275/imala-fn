@@ -95,7 +95,7 @@ export default function AIValidationPage() {
         {[
           { label: "Pending Review", val: loading ? "…" : pendingQueue.length, gradient: "gold" as const, icon: BrainCircuit },
           { label: "Processed Today", val: loading ? "…" : processedCount, gradient: "green" as const, icon: CheckCircle2 },
-          { label: "Confidence Threshold", val: `>${filterMin}%`, gradient: "sky" as const, icon: Sliders },
+          { label: "Min Confidence Filter", val: `≥${filterMin}%`, gradient: "sky" as const, icon: Sliders },
         ].map(s => (
           <Card key={s.label} className="border-0 shadow-sm">
             <CardContent className="p-4 flex items-center gap-4">
