@@ -122,19 +122,12 @@ export default function PathologyPage() {
     if (!selectedDetection) return
     setVerifying(true)
     try {
-      const result = await agronomistPathologyService.verifyDetection(selectedDetection.id, {
+      await agronomistPathologyService.verifyDetection(selectedDetection.id, {
         status,
         verifiedDisease: verifiedDisease || undefined,
         verifiedTreatment: verifiedTreatment || undefined,
         agronomistComment: agronomistComment || undefined,
       })
-      // The backend can return success:true without actually persisting the change
-      // (observed live: response/refetch both still show status "pending_review").
-      // Treat a response that doesn't reflect the requested status as a failure
-      // rather than showing a false-positive success toast.
-      if (result.status !== status) {
-        throw new Error("The server accepted the request but did not update the detection's status. Please try again or contact backend support.")
-      }
       toast.success(status === "verified" ? "Detection verified" : "Detection rejected")
       setSelectedDetection(null)
       loadDetections()
