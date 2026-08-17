@@ -33,14 +33,17 @@ export interface AnalyticsTicketsSummary {
   dailyBreakdown: AnalyticsDailyBreakdownPoint[];
 }
 
-// byProvince is always empty in the captured sample (no qualifying data yet),
-// so its per-item field names are entirely unconfirmed — rendered generically
-// rather than assuming named fields. weeklyCurve is only PARTIALLY unconfirmed:
-// `week` (a date string, e.g. "2026-06-22") is real and confirmed on every
-// point — only the per-region percentage fields are unconfirmed, since none
-// were present yet in the sample (no qualifying yield data). The `week` field
-// is typed explicitly below, not folded into the generic fallback.
-export type YieldByProvinceEntry = Record<string, unknown>;
+// Confirmed via live data: created a real FarmerProfile+FarmPlan+FarmHarvest
+// chain and inspected the response directly.
+export interface YieldByProvinceEntry {
+  province: string;
+  pctImprovement: number;
+}
+
+// weeklyCurve's per-region fields are still unconfirmed — province names are
+// dynamic object keys here (one per region with qualifying data that week),
+// which is inherently generic by design, unlike byProvince's fixed shape.
+// `week` (a date string, e.g. "2026-06-22") is the one confirmed, named field.
 export type YieldWeeklyCurvePoint = { week: string } & Record<string, unknown>;
 
 export interface AnalyticsYieldSummary {

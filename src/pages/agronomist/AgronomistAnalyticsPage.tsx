@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Icon3D } from "@/components/icon-3d"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
-  Award, Clock, Map, AlertTriangle, TrendingUp, Info, BarChart2,
+  Award, Clock, Map, AlertTriangle, TrendingUp, Info, BarChart2, MapPin, ArrowDownRight, ArrowUpRight,
 } from "lucide-react"
 import {
   BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -40,7 +40,6 @@ export default function AgronomistAnalyticsPage() {
     ? Array.from(new Set(yieldData.weeklyCurve.flatMap(p => Object.keys(p).filter(k => k !== "week"))))
     : []
   const hasWeeklyCurveData = weeklyCurveKeys.length > 0
-  const byProvinceKeys = yieldData?.byProvince.length ? Object.keys(yieldData.byProvince[0]) : []
 
   return (
     <div className="min-h-screen bg-background">
@@ -146,14 +145,18 @@ export default function AgronomistAnalyticsPage() {
                   <p className="text-sm text-muted-foreground text-center py-6">No regional yield data recorded yet.</p>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    {yieldData.byProvince.map((entry, i) => (
-                      <div key={i} className="p-3 rounded-xl border border-border bg-muted/30 text-xs grid grid-cols-2 gap-2">
-                        {byProvinceKeys.map(k => (
-                          <div key={k}>
-                            <p className="text-muted-foreground capitalize">{k}</p>
-                            <p className="font-medium text-foreground">{String(entry[k] ?? "—")}</p>
-                          </div>
-                        ))}
+                    {yieldData.byProvince.map(entry => (
+                      <div key={entry.province} className="p-3 rounded-xl border border-border bg-muted/30 flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-muted border border-border flex items-center justify-center flex-shrink-0">
+                          <MapPin className="w-3.5 h-3.5 text-emerald-500" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-semibold text-foreground">{entry.province}</p>
+                          <p className={`flex items-center gap-1 text-xs font-medium ${entry.pctImprovement >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"}`}>
+                            {entry.pctImprovement >= 0 ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
+                            {entry.pctImprovement >= 0 ? "+" : ""}{entry.pctImprovement}% vs planned
+                          </p>
+                        </div>
                       </div>
                     ))}
                   </div>
