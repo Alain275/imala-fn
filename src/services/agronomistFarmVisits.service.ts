@@ -80,11 +80,14 @@ function sanitizeVisit(visit: FarmVisit): FarmVisit {
 }
 
 export const agronomistFarmVisitsService = {
-  async getFarmVisits(params: { page?: number; limit?: number; status?: FarmVisitStatus } = {}): Promise<FarmVisitsListResponse> {
+  async getFarmVisits(params: { page?: number; limit?: number; status?: FarmVisitStatus; date?: string } = {}): Promise<FarmVisitsListResponse> {
     const qs = new URLSearchParams();
     if (params.page) qs.set('page', String(params.page));
     if (params.limit) qs.set('limit', String(params.limit));
     if (params.status) qs.set('status', params.status);
+    // Confirmed live: the backend parses this as an actual date (YYYY-MM-DD),
+    // not the literal string "today" — pass a real date, not "today".
+    if (params.date) qs.set('date', params.date);
     const query = qs.toString();
     const response = await fetch(`${API_URL}/farm-visits${query ? `?${query}` : ''}`, { headers: authHeaders() });
     const data = await parseResponse<FarmVisitsListResponse>(response);
