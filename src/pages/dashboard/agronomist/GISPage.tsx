@@ -6,41 +6,28 @@ import { Icon3D } from "@/components/icon-3d"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
 import {
-  MapPin, Layers, Ruler, Sprout, MapPinned, Camera, Navigation, ArrowRight, Clock, Home,
+  MapPin, Layers, Ruler, Sprout, MapPinned, Navigation, ArrowRight, Clock, Home,
 } from "lucide-react"
 import { toast } from "sonner"
 import { agronomistGisService, type GisDistrict } from "@/services/agronomistGis.service"
 import { agronomistFarmVisitsService, type FarmVisit, type FarmVisitType } from "@/services/agronomistFarmVisits.service"
 
-function ComingSoonCard({ icon: Icon, title, description }: { icon: typeof Camera; title: string; description: string }) {
-  return (
-    <Card className="border-0 shadow-md border-dashed">
-      <CardContent className="p-6 flex flex-col items-center justify-center text-center gap-3 h-full min-h-52">
-        <Icon className="w-8 h-8 text-muted-foreground" />
-        <span className="text-[10px] bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 px-2 py-0.5 rounded-full font-bold uppercase tracking-wide">Coming Soon</span>
-        <div>
-          <p className="text-sm font-semibold text-foreground">{title}</p>
-          <p className="text-xs text-muted-foreground mt-1 max-w-xs">{description}</p>
-        </div>
-      </CardContent>
-    </Card>
-  )
-}
-
 // Not "unbuilt" — severity + coordinates already exist on the real FarmVisit
 // model (wired in the Farm Visits page). There's no GIS-specific map view of
 // that data yet, but the data itself is real, so this points there instead
 // of claiming the feature doesn't exist.
-function CrossLinkCard() {
+function CrossLinkBanner() {
   return (
     <Card className="border-0 shadow-md">
-      <CardContent className="p-6 flex flex-col items-center justify-center text-center gap-3 h-full min-h-52">
-        <MapPinned className="w-8 h-8 text-emerald-500" />
-        <div>
-          <p className="text-sm font-semibold text-foreground">Visit location data lives in Farm Visits</p>
-          <p className="text-xs text-muted-foreground mt-1 max-w-xs">Severity and GPS coordinates for each field visit are already tracked there — a dedicated map view here hasn't been built yet.</p>
+      <CardContent className="p-5 flex flex-col sm:flex-row items-center gap-4">
+        <div className="w-11 h-11 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center flex-shrink-0">
+          <MapPinned className="w-5 h-5 text-emerald-500" />
         </div>
-        <Button variant="outline" size="sm" className="gap-1.5" asChild>
+        <div className="flex-1 text-center sm:text-left">
+          <p className="text-sm font-semibold text-foreground">Visit location data lives in Farm Visits</p>
+          <p className="text-xs text-muted-foreground mt-0.5">Severity and GPS coordinates for each field visit are already tracked there — a dedicated map view here hasn't been built yet.</p>
+        </div>
+        <Button variant="outline" size="sm" className="gap-1.5 flex-shrink-0" asChild>
           <Link to="/agronomist/farm-visits">
             View Farm Visits <ArrowRight className="w-3.5 h-3.5" />
           </Link>
@@ -172,15 +159,8 @@ export default function GISPage() {
           </CardContent>
         </Card>
 
-        {/* Geo-tagged data is real (see Farm Visits) — drone upload genuinely has no backend yet */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <CrossLinkCard />
-          <ComingSoonCard
-            icon={Camera}
-            title="Drone Scan Upload isn't available yet"
-            description="Uploading and processing GeoTIFF/KMZ/SHP drone scans requires backend file storage that hasn't been built yet."
-          />
-        </div>
+        {/* Geo-tagged data is real (see Farm Visits) */}
+        <CrossLinkBanner />
 
         {/* Today's itinerary — real scheduled visits, sorted by time. Not a route-sequencing
             algorithm, just an ordered list of what's already on the calendar for today. */}
