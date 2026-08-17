@@ -6,9 +6,18 @@ import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Icon3D } from "@/components/icon-3d"
 import {
-  ArrowLeft, CheckCircle2, AlertCircle, Sprout, MapPin, Calendar, AlertTriangle,
+  ArrowLeft, CheckCircle2, AlertCircle, Sprout, MapPin, Calendar, AlertTriangle, Ruler,
 } from "lucide-react"
 import { useAgronomistFarmerDetail } from "@/hooks/useAgronomistFarmerDetail"
+import type { FarmerCropStatus } from "@/services/agronomistFarmers.service"
+
+const cropStatusBadge: Record<FarmerCropStatus, string> = {
+  planned: "bg-sky-500/10 text-sky-700 dark:text-sky-400 border-sky-200 dark:border-sky-800/40",
+  planted: "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800/40",
+  growing: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/40",
+  harvested: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/40",
+  failed: "bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-200 dark:border-rose-800/40",
+}
 
 function getInitials(name: string) {
   return name.split(' ').map(w => w[0]).filter(Boolean).join('').slice(0, 2).toUpperCase()
@@ -158,20 +167,43 @@ export default function AgronomistFarmerDetailPage() {
                   </CardContent>
                 </Card>
               ) : (
-                <Card className="border-0 shadow-md">
-                  <CardContent className="p-4 space-y-3">
-                    {farmer.farmerCrops.map((crop, i) => (
-                      <div key={i} className="p-3 rounded-xl border border-border bg-muted/30 text-xs grid grid-cols-2 md:grid-cols-3 gap-2">
-                        {Object.entries(crop).map(([key, value]) => (
-                          <div key={key}>
-                            <p className="text-muted-foreground capitalize">{key}</p>
-                            <p className="font-medium text-foreground">{value == null || value === "" ? "Not recorded" : String(value)}</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {farmer.farmerCrops.map(crop => (
+                    <Card key={crop.id} className="border-0 shadow-md">
+                      <CardHeader className="pb-3 border-b border-border">
+                        <CardTitle className="flex items-center gap-3 text-sm">
+                          <Icon3D gradient="green" size="sm">
+                            <Sprout className="w-4 h-4" />
+                          </Icon3D>
+                          {crop.crop.name}
+                          <span className={`ml-auto text-[10px] px-2 py-0.5 rounded-full border font-medium capitalize ${cropStatusBadge[crop.status]}`}>
+                            {crop.status}
+                          </span>
+                        </CardTitle>
+                        <CardDescription className="flex items-center gap-1.5">
+                          <Calendar className="w-3 h-3" /> Planted {new Date(crop.plantingDate).toLocaleDateString()}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="p-4 grid grid-cols-2 gap-3 text-xs">
+                        <div className="flex items-center gap-1">
+                          <Ruler className="w-3 h-3 text-muted-foreground" />
+                          <div><p className="text-muted-foreground">Area planted</p><p className="font-medium text-foreground">{field(crop.areaPlanted, " ha")}</p></div>
+                        </div>
+                        <div><p className="text-muted-foreground">Category</p><p className="font-medium text-foreground">{field(crop.crop.category)}</p></div>
+                        <div><p className="text-muted-foreground">Expected harvest</p><p className="font-medium text-foreground">{field(crop.expectedHarvestDate && new Date(crop.expectedHarvestDate).toLocaleDateString())}</p></div>
+                        <div><p className="text-muted-foreground">Actual harvest</p><p className="font-medium text-foreground">{field(crop.actualHarvestDate && new Date(crop.actualHarvestDate).toLocaleDateString())}</p></div>
+                        <div><p className="text-muted-foreground">Yield</p><p className="font-medium text-foreground">{field(crop.yield)}</p></div>
+                        <div><p className="text-muted-foreground">Water need</p><p className="font-medium text-foreground">{field(crop.crop.waterNeed)}</p></div>
+                        {crop.notes && (
+                          <div className="col-span-2">
+                            <p className="text-muted-foreground">Notes</p>
+                            <p className="font-medium text-foreground">{crop.notes}</p>
                           </div>
-                        ))}
-                      </div>
-                    ))}
-                  </CardContent>
-                </Card>
+                        )}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
               )}
             </div>
           </>

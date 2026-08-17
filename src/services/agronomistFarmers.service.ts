@@ -40,11 +40,46 @@ export interface FarmerListEntry {
   createdAt: string;
 }
 
+export type FarmerCropStatus = 'planned' | 'planted' | 'growing' | 'harvested' | 'failed';
+
+export interface CropCatalogEntry {
+  id: string;
+  name: string;
+  scientificName: string | null;
+  category: string;
+  description: string | null;
+  growthPeriod: number | null;
+  waterNeed: string | null;
+  soilType: string | null;
+  optimalTemp: string | null;
+  season: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Confirmed via live data: created a real FarmerCrop row and inspected the
+// agronomist-side response directly.
+export interface FarmerCropRecord {
+  id: string;
+  userId: string;
+  farmId: string | null;
+  cropId: string;
+  plantingDate: string;
+  expectedHarvestDate: string | null;
+  actualHarvestDate: string | null;
+  areaPlanted: number;
+  status: FarmerCropStatus;
+  yield: number | null;
+  notes: string | null;
+  createdAt: string;
+  updatedAt: string;
+  crop: CropCatalogEntry;
+}
+
 export interface FarmerDetail extends FarmerListEntry {
   updatedAt?: string;
   farms: Farm[];
-  // Shape beyond "may be empty" is not documented by the backend spec — rendered generically.
-  farmerCrops: Record<string, unknown>[];
+  farmerCrops: FarmerCropRecord[];
 }
 
 export interface FarmersListResponse {
