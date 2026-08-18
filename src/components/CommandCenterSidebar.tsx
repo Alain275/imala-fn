@@ -52,6 +52,7 @@ const dealerItems: NavItem[] = [
   { key: "dealerProfile", href: "/dashboard/dealer-profile", icon: BadgeCheck, fallback: "Dealer profile" },
   { key: "dealerOrders", href: "/dashboard/dealer-orders", icon: ShoppingBag, fallback: "Orders" },
   { key: "dealerProducts", href: "/dashboard/dealer-products", icon: Package, fallback: "My products" },
+   { key: "dealerDiseaseTreatments", href: "/dashboard/dealer-disease-treatments", icon: Bug, fallback: "Disease treatments" },
   { key: "dealerMessages", href: "/dashboard/dealer-messages", icon: MessageSquare, fallback: "Messages" },
 ]
 

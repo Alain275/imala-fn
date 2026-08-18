@@ -70,6 +70,7 @@ import { authService } from './services/auth'
 
 import DealerOverviewPage from './pages/dashboard/agrodealer/DealerOverViewPage'
 import DealerOrdersPage from './pages/dashboard/agrodealer/DealerOrdersPage'
+import DealerDiseaseTreatmentsPage from './pages/agro-dealer/Dealerdiseasetreatmentspage '
 
 function App() {
   return (
@@ -120,6 +121,7 @@ function App() {
             <Route path="settings" element={<SettingsPage />} />
             <Route path="notifications" element={<NotificationsPage />} />
             <Route path="farmer-profile" element={<FarmerProfileCompletionPage />} />
+            <Route path="dealer-disease-treatments" element={<DealerDiseaseTreatmentsPage />} />
           </Route>
         </Route>
 
