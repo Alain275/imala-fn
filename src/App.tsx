@@ -77,6 +77,7 @@ import { authService } from './services/auth'
 
 import DealerOverviewPage from './pages/dashboard/agrodealer/DealerOverViewPage'
 import DealerOrdersPage from './pages/dashboard/agrodealer/DealerOrdersPage'
+import DealerDiseaseTreatmentsPage from './pages/agro-dealer/Dealerdiseasetreatmentspage '
 
 // The /dashboard index route is intentionally public (see the route below) so
 // anonymous visitors can see the marketing overview. Its role handling only
@@ -138,6 +139,7 @@ function App() {
             <Route path="settings" element={<SettingsPage />} />
             <Route path="notifications" element={<NotificationsPage />} />
             <Route path="farmer-profile" element={<FarmerProfileCompletionPage />} />
+            <Route path="dealer-disease-treatments" element={<DealerDiseaseTreatmentsPage />} />
           </Route>
         </Route>
 

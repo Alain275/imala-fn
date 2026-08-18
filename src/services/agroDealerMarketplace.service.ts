@@ -103,6 +103,31 @@ export interface CreateProductInput {
   images?: File[];
 }
 
+
+export interface DiseaseTreatment {
+  id: string;
+  diseaseName: string;
+  cropId?: string;
+  agroDealerId: string;
+  productId: string;
+  dosage?: string;
+  applicationNotes?: string;
+  product?: AgroDealerProduct;
+  createdAt: string;
+  updatedAt: string;
+}
+ 
+export interface CreateDiseaseTreatmentInput {
+  diseaseName: string;
+  cropId?: string;
+  productId: string;
+  dosage?: string;
+  applicationNotes?: string;
+}
+
+
+
+
 export const agroDealerMarketplaceService = {
   getImageUrl(path?: string) {
     return buildAssetUrl(path);
@@ -210,4 +235,48 @@ async updateProduct(productId: string, payload: Partial<Pick<AgroDealerProduct,
     });
     return parseResponse<DealerMessage>(response);
   },
+
+
+  
+async getMyDiseaseTreatments(): Promise<DiseaseTreatment[]> {
+  const response = await fetch(`${API_BASE_URL}/disease-treatments`, {
+    headers: getAuthHeaders(),
+    cache: 'no-store',
+  });
+  return parseResponse<DiseaseTreatment[]>(response);
+},
+ 
+async createDiseaseTreatment(input: CreateDiseaseTreatmentInput): Promise<DiseaseTreatment> {
+  const response = await fetch(`${API_BASE_URL}/disease-treatments`, {
+    method: 'POST',
+    headers: getAuthHeaders(),
+    body: JSON.stringify(input),
+  });
+  return parseResponse<DiseaseTreatment>(response);
+},
+ 
+async updateDiseaseTreatment(
+  treatmentId: string,
+  payload: Partial<Pick<CreateDiseaseTreatmentInput, 'diseaseName' | 'cropId' | 'dosage' | 'applicationNotes'>>
+): Promise<DiseaseTreatment> {
+  const response = await fetch(`${API_BASE_URL}/disease-treatments/${treatmentId}`, {
+    method: 'PATCH',
+    headers: getAuthHeaders(),
+    body: JSON.stringify(payload),
+  });
+  return parseResponse<DiseaseTreatment>(response);
+},
+ 
+async deleteDiseaseTreatment(treatmentId: string): Promise<void> {
+  const response = await fetch(`${API_BASE_URL}/disease-treatments/${treatmentId}`, {
+    method: 'DELETE',
+    headers: getAuthHeaders(),
+  });
+  const result = await response.json();
+  if (!response.ok) {
+    throw new Error(result?.message || 'Failed to delete disease treatment');
+  }
+},
 };
+
+
