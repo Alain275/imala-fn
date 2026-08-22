@@ -62,10 +62,13 @@ export interface CreateFarmPlanPayload {
   inputEstimates?: EditableFarmInput[];
 }
 
+
 export type EditableFarmInput = Pick<
   FarmInputEstimate,
   'inputName' | 'inputType' | 'quantity' | 'unit' | 'unitCost' | 'recommendedTiming' | 'notes'
->;
+> & {
+  totalCost?: number;
+};
 
 export interface FarmPlanInputEstimateResponse {
   inputEstimates: EditableFarmInput[];

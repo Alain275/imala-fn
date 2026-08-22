@@ -98,7 +98,7 @@ export default function FarmPlanPage() {
   const [management, setManagement] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [downloading, setDownloading] = useState(false) // NEW
+  const [downloading, setDownloading] = useState(false)
   const [wizardOpen, setWizardOpen] = useState(false)
   const [editingPlanId, setEditingPlanId] = useState<string | null>(null)
   const [step, setStep] = useState(1)
@@ -145,6 +145,17 @@ export default function FarmPlanPage() {
     catch (error) { toast.error(message(error, "Could not load farm records")) }
   }
 
+  // Synchronise priceOverrides with the selected plan's stored totalCost
+  useEffect(() => {
+    if (selectedPlan?.inputEstimates) {
+      const overrides: Record<string, number> = {}
+      selectedPlan.inputEstimates.forEach((input) => {
+        overrides[input.inputName] = Number(input.totalCost) || 0
+      })
+      setPriceOverrides(overrides)
+    }
+  }, [selectedPlan])
+
   useEffect(() => { void loadPlans() }, [])
   useEffect(() => {
     if (selectedPlan?.id) void loadManagement(selectedPlan.id)
@@ -183,42 +194,42 @@ export default function FarmPlanPage() {
   }
 
   const calculatePlan = async () => {
-    if (!selectedFarm) {
-      toast.error("Please select a farm first")
-      return
-    }
-    setSaving(true)
-    try {
-      const data = await farmPlanService.recommend({
-        seasonId,
-        seasonYear,
-        cropName: selectedFarm.cropType,
-        farmSize: selectedFarm.farmSize,
-        locationName: selectedFarm.farmLocation,
-        soilType: undefined,
-        irrigationAvailable: false,
-      })
-      setRecommendation(data)
-      // Pre‑fill price overrides with backend total costs so user can edit them
-      if (data.preview) {
-        const initialPrices = Object.fromEntries(
-          data.preview.inputEstimates.map(input => [input.inputName, input.quantity * input.unitCost])
-        )
-        setPriceOverrides(initialPrices)
-      }
-      setStep(3)
-    } catch (error) { toast.error(message(error, "Could not calculate the farm plan")) }
-    finally { setSaving(false) }
+  if (!selectedFarm) {
+    toast.error("Please select a farm first")
+    return
   }
+  setSaving(true)
+  try {
+    const data = await farmPlanService.recommend({
+      seasonId,
+      seasonYear,
+      cropName: selectedFarm.cropType,
+      farmSize: selectedFarm.farmSize,
+      locationName: selectedFarm.farmLocation,
+      soilType: undefined,
+      irrigationAvailable: false,
+    })
+    setRecommendation(data)
+    if (data.preview) {
+      const initialPrices = Object.fromEntries(
+        data.preview.inputEstimates.map(input => [input.inputName, Number(input.totalCost) || 0])
+      )
+      setPriceOverrides(initialPrices)
+    }
+    setStep(3)
+  } catch (error) { toast.error(message(error, "Could not calculate the farm plan")) }
+  finally { setSaving(false) }
+}
 
   const savePlan = async () => {
     if (!preview || !selectedFarm) return
     setSaving(true)
     try {
-      // Use user‑entered prices (fallback to backend total cost)
+      // Use user‑entered prices (fallback to backend totalCost)
       const updatedInputEstimates = preview.inputEstimates.map(input => {
-        const totalCost = priceOverrides[input.inputName] ?? (input.quantity * input.unitCost)
-        const unitCost = input.quantity > 0 ? totalCost / input.quantity : 0
+        const totalCost = priceOverrides[input.inputName] ?? input.totalCost
+        // Round unitCost to 2 decimals to avoid floating‑point noise
+        const unitCost = input.quantity > 0 ? Number((totalCost / input.quantity).toFixed(2)) : 0
         return { ...input, unitCost }
       })
 
@@ -288,44 +299,88 @@ export default function FarmPlanPage() {
     finally { setSaving(false) }
   }
 
-  // ---- NEW: Report Handlers ----
   const handleDownloadReport = async () => {
-    if (!selectedPlan) return
-    setDownloading(true)
-    try {
-      const token = authService.getToken()
-      const response = await fetch(`/api/farm-plans/${selectedPlan.id}/report`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      })
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.message || 'Failed to generate report')
-      }
-      const blob = await response.blob()
-      const url = window.URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = `farm-report-${selectedPlan.id}.pdf`
-      document.body.appendChild(a)
-      a.click()
-      a.remove()
-      window.URL.revokeObjectURL(url)
-      toast.success('Report downloaded successfully')
-    } catch (error) {
-      toast.error(message(error, 'Could not download report'))
-    } finally {
-      setDownloading(false)
+  if (!selectedPlan) return;
+
+  setDownloading(true);
+
+  try {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      throw new Error("You are not authenticated. Please log in again.");
     }
+
+    const response = await fetch(
+  `/api/farm-reports/${selectedPlan.id}/report`,
+  {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   }
+);
+
+    if (!response.ok) {
+      const contentType = response.headers.get("content-type") || "";
+
+      let errorMessage = `Failed to generate report (${response.status})`;
+
+      if (contentType.includes("application/json")) {
+        const errorData = await response.json();
+        errorMessage = errorData?.message || errorMessage;
+      } else {
+        const errorText = await response.text();
+
+        if (errorText) {
+          errorMessage = errorText;
+        }
+      }
+
+      throw new Error(errorMessage);
+    }
+
+    const blob = await response.blob();
+
+    if (!blob.size) {
+      throw new Error("The backend returned an empty PDF.");
+    }
+
+    const contentType = blob.type || "";
+
+    if (!contentType.includes("pdf")) {
+      throw new Error("The backend did not return a PDF file.");
+    }
+
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `farm-report-${selectedPlan.id}.pdf`;
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    window.URL.revokeObjectURL(url);
+
+    toast.success("Report downloaded successfully");
+  } catch (error) {
+    console.error("Download report error:", error);
+
+    toast.error(
+      error instanceof Error
+        ? error.message
+        : "Could not download report"
+    );
+  } finally {
+    setDownloading(false);
+  }
+};
 
   const handlePrintReport = () => {
     window.print()
   }
-  // ---- End of new handlers ----
 
   const saveActivity = async (event: React.FormEvent) => {
     event.preventDefault()
@@ -550,9 +605,10 @@ export default function FarmPlanPage() {
                                   type="number"
                                   min="0"
                                   step="100"
-                                  value={priceOverrides[input.inputName] ?? (input.quantity * input.unitCost)}
+                                  value={priceOverrides[input.inputName] ?? input.totalCost}
                                   onChange={(e) => setPriceOverrides(prev => ({ ...prev, [input.inputName]: Number(e.target.value) }))}
                                   className="h-8 w-32 text-sm"
+                                  // Editable in wizard
                                 />
                               </div>
                             </div>
@@ -600,7 +656,7 @@ export default function FarmPlanPage() {
                     <CardDescription>Mark each task when the work is completed.</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    {/* What you should prepare (same block as wizard) */}
+                    {/* What you should prepare (same block as wizard) – now read‑only */}
                     {selectedPlan.inputEstimates && selectedPlan.inputEstimates.length > 0 && (
                       <div>
                         <h4 className="mb-3 font-bold">What you should prepare</h4>
@@ -630,7 +686,8 @@ export default function FarmPlanPage() {
                                     step="100"
                                     value={
                                       priceOverrides[input.inputName] ??
-                                      input.quantity * input.unitCost
+                                      input.totalCost ??
+                                      0
                                     }
                                     onChange={(e) =>
                                       setPriceOverrides((prev) => ({
@@ -639,6 +696,7 @@ export default function FarmPlanPage() {
                                       }))
                                     }
                                     className="h-8 w-32 text-sm"
+                                    disabled // Not editable in the main view
                                   />
                                 </div>
                               </div>
