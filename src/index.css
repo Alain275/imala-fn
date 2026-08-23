@@ -306,3 +306,20 @@ html {
     padding-inline: 1rem;
   }
 }
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  .farmer-workspace-page .mx-auto {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+  .farmer-workspace-page .space-y-5 > * + * {
+    margin-top: 0.5rem !important;
+  }
+  /* make sure cards are not cut */
+  .farmer-workspace-page .card {
+    break-inside: avoid;
+  }
+}

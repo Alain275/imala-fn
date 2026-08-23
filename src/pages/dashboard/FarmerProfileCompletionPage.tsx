@@ -401,16 +401,15 @@ farmerProfileService
               required
             />
             <Field
-              label={t('farmerProfile.farm.size')}
-              name="farmSize"
-              type="number"
-              min="0.01"
-              step="0.01"
-              value={farm.farmSize}
-              onChange={(e) => setFarm((prev) => ({ ...prev, farmSize: e.target.value }))}
-              required
-            />
-
+  label={t('farmerProfile.farm.size')}
+  name="farmSize"
+  type="number"
+  min="0.01"
+  step="0.01"
+  value={farm.farmSize}
+  onChange={(e) => setFarm((prev) => ({ ...prev, farmSize: e.target.value }))}
+  required
+/>
             {/* Recommended crops chips */}
             {recommendedCrops.length > 0 && (
               <div className="md:col-span-2 space-y-3">

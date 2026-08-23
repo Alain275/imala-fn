@@ -887,7 +887,7 @@
         "description": "Définissez votre langue préférée et vos paramètres régionaux"
       },
       "unitsLabel": "Unités",
-      "unitsMetric": "Métrique (kg, hectares)",
+      "unitsMetric": "Métrique (kg, m²)",
       "unitsImperial": "Impérial (lbs, acres)",
       "securityCard": {
         "title": "Sécurité",
