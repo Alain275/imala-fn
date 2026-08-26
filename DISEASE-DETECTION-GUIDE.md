@@ -14,7 +14,7 @@ Your disease detection functionality is complete and ready to use!
 ✅ **Drag & Drop**: Drag image files directly onto the upload area
 
 ### 2. **API Integration**
-✅ **Endpoint**: `https://2-56-212-171.sslip.io/api/disease/detect`
+✅ **Endpoint**: `http://localhost:5000/api/disease/detect`
 ✅ **Method**: POST with multipart/form-data
 ✅ **Authentication**: Bearer token from localStorage
 ✅ **File Field**: `file` (as per API spec)
@@ -100,7 +100,7 @@ async function detectDisease(file: File): Promise<Detection> {
 
 ### API endpoint
 
-The frontend uses the fixed API endpoint `https://2-56-212-171.sslip.io/api`.
+The frontend uses the fixed API endpoint `http://localhost:5000/api`.
 
 ### File Constraints
 - **Max Size**: 10 MB
@@ -113,7 +113,7 @@ The frontend uses the fixed API endpoint `https://2-56-212-171.sslip.io/api`.
 
 ### Request
 ```http
-POST https://2-56-212-171.sslip.io/api/disease/detect
+POST http://localhost:5000/api/disease/detect
 Content-Type: multipart/form-data
 Authorization: Bearer {token}
 
@@ -229,7 +229,7 @@ The feature requires a valid authentication token:
 **Solution**: Check the browser console for errors.
 
 ### Issue: API returns 404
-**Solution**: Verify that `https://2-56-212-171.sslip.io/api` is reachable.
+**Solution**: Verify that `http://localhost:5000/api` is reachable.
 
 ### Issue: CORS error
 **Solution**: Backend must allow frontend origin. Check server CORS config.
@@ -331,7 +331,7 @@ imala-fn/
 - ✅ Mobile-responsive design
 
 **Just ensure:**
-1. Backend API is running at `https://2-56-212-171.sslip.io/api`
+1. Backend API is running at `http://localhost:5000/api`
 2. Users have valid authentication tokens
 
 **Ready to detect crop diseases! 🌱🔬**
