@@ -14,7 +14,7 @@ Your disease detection functionality is complete and ready to use!
 ✅ **Drag & Drop**: Drag image files directly onto the upload area
 
 ### 2. **API Integration**
-✅ **Endpoint**: `https://imara-bn.onrender.com/api/disease/detect`
+✅ **Endpoint**: `https://2-56-212-171.sslip.io/api/disease/detect`
 ✅ **Method**: POST with multipart/form-data
 ✅ **Authentication**: Bearer token from localStorage
 ✅ **File Field**: `file` (as per API spec)
@@ -98,10 +98,9 @@ async function detectDisease(file: File): Promise<Detection> {
 
 ## 🔧 Configuration
 
-### Environment Variables (`.env`)
-```env
-VITE_API_BASE_URL=https://imara-bn.onrender.com
-```
+### API endpoint
+
+The frontend uses the fixed API endpoint `https://2-56-212-171.sslip.io/api`.
 
 ### File Constraints
 - **Max Size**: 10 MB
@@ -114,7 +113,7 @@ VITE_API_BASE_URL=https://imara-bn.onrender.com
 
 ### Request
 ```http
-POST https://imara-bn.onrender.com/api/disease/detect
+POST https://2-56-212-171.sslip.io/api/disease/detect
 Content-Type: multipart/form-data
 Authorization: Bearer {token}
 
@@ -227,10 +226,10 @@ The feature requires a valid authentication token:
 **Solution**: Ensure you're logged in. Check localStorage for `token` key.
 
 ### Issue: Upload button does nothing
-**Solution**: Check browser console for errors. Verify `.env` file exists.
+**Solution**: Check the browser console for errors.
 
 ### Issue: API returns 404
-**Solution**: Verify `VITE_API_BASE_URL` in `.env` is correct.
+**Solution**: Verify that `https://2-56-212-171.sslip.io/api` is reachable.
 
 ### Issue: CORS error
 **Solution**: Backend must allow frontend origin. Check server CORS config.
@@ -332,8 +331,7 @@ imala-fn/
 - ✅ Mobile-responsive design
 
 **Just ensure:**
-1. Backend API is running at `https://imara-bn.onrender.com`
+1. Backend API is running at `https://2-56-212-171.sslip.io/api`
 2. Users have valid authentication tokens
-3. `.env` file is present with `VITE_API_BASE_URL`
 
 **Ready to detect crop diseases! 🌱🔬**

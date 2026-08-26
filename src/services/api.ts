@@ -1,13 +1,8 @@
-const configuredApiBase = (
-  import.meta.env.VITE_API_BASE_URL ??
-  import.meta.env.VITE_BASE_API_URL ??
-  '/api'
-).replace(/\/$/, '');
-
-export const API_URL = configuredApiBase.endsWith('/api')
-  ? configuredApiBase
-  : `${configuredApiBase}/api`;
-export const API_ROOT = API_URL.slice(0, -4);
+// The production API endpoint is deliberately fixed here. Do not move this
+// value to a VITE_ environment variable: Vite embeds those values into the
+// public frontend bundle and this application always uses this API host.
+export const API_ROOT = 'https://2-56-212-171.sslip.io';
+export const API_URL = `${API_ROOT}/api`;
 
 export function buildApiUrl(path: string): string {
   if (!path) {
