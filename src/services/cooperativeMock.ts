@@ -1,4 +1,29 @@
-// TODO: Replace every method with real API calls once backend endpoints are ready
+// MOCK DATA — SHRINKING. See IMARA-bn/FEATURE_INVENTORY.md for the full audit.
+//
+// The following are now LIVE and served by imala-fn/src/services/cooperative.service.ts
+// (real endpoints under /api/cooperative). The mock methods for them below are DEAD
+// CODE kept only so the TYPE definitions in this file keep compiling — the page
+// components import their types from here:
+//   Overview  : getStats, getYieldTrend, getFarmStatus, getAiInsights
+//   Members   : getMembers, addMember, removeMember
+//   Farms     : getFarms, updateFarmStatus
+//   Market    : getBulkOrders, createBulkOrder
+//   Insights  : dismissInsight
+//
+// STILL MOCK — no backend exists for these yet:
+//   getMarketCrops, getMarketBuyers, getMarketPriceHistory  (see /api/market/prices)
+//   getFullInsights          (Overview uses the real endpoint; this page does not)
+//   getCropAdvisories        (no advisory tables)
+//   getDiseaseAlerts, resolveAlert, broadcastAlert, sendGroupAlert  (no tables, no SMS gateway)
+//   getSettings, saveProfile, saveNotifications, saveAccess         (no settings columns)
+//
+// Sidebar/topbar context, not mocked here: GET /api/cooperative/me and
+// GET /api/cooperative/season-status. The season badge is still the hardcoded
+// i18n string cooperative.overview.seasonBadge and should be wired to the latter.
+//
+// Bell count reuses the existing, unchanged notifications API:
+//   GET /api/notifications?scope=cooperative&unread=true
+//   GET /api/notifications/unread-count
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -64,6 +89,12 @@ export interface CooperativeMember {
   location: string
   role: MemberRole
   farmsCount: number
+  /**
+   * How many of `farmsCount` are actually registered under this cooperative.
+   * Optional because the fixtures below predate the field; the real API always
+   * sends it.
+   */
+  linkedFarmsCount?: number
   status: 'active' | 'inactive'
   joinedDate: string
 }
@@ -403,14 +434,50 @@ const delay = (ms = 500) => new Promise(r => setTimeout(r, ms))
 export const cooperativeService = {
 
   // ── Overview ──────────────────────────────────────────────────────────────
+  //
+  // The four methods below are the ONLY ones on this page with real backend
+  // endpoints today (IMARA-bn, mounted at /api/cooperative). Everything after
+  // the Overview block is still mock-only.
+  //
+  // All of them need `Authorization: Bearer <token>` and the caller must be a
+  // `cooperative` user with an active row in `cooperative_members`. The
+  // cooperativeId is derived from the token — there is nothing to pass.
+  // Envelope is the app-wide `{ success, data }`; use api.ts's fetch helper.
 
-  // TODO: GET /api/cooperative/stats
+  // TODO: replace with GET /api/cooperative/metrics?season=<label>
+  //   Backend: IMARA-bn/src/controllers/cooperative.controller.ts -> getMetrics
+  //   Response -> CooperativeStats:
+  //     totalFarms:     d.totalFarms.value
+  //     pendingReview:  d.totalFarms.pendingReview
+  //     activeMembers:  d.activeMembers.value
+  //     totalYield:     d.totalYield.value          // tonnes, already rounded
+  //     cropsPlanted:   d.cropsPlanted.value
+  //     aiAlerts:       d.aiAlerts.value
+  //     seasonProgress: d.seasonProgress.value ?? 0 // null when no season row
+  //   Ignore every `subtext` — those are English fallbacks. The raw numbers
+  //   next to them feed the existing i18n strings this page already uses.
+  //   Omit ?season= to use the active season; d.meta.season echoes what was used.
   async getStats(): Promise<CooperativeStats> {
     await delay()
     return { totalFarms: 47, pendingReview: 3, activeMembers: 12, totalYield: 182, cropsPlanted: 6, aiAlerts: 3, seasonProgress: 68 }
   },
 
-  // TODO: GET /api/cooperative/yield-trend?season=B2026
+  // TODO: replace with GET /api/cooperative/yield-trend?season=<label>&granularity=month
+  //   Backend: IMARA-bn/src/controllers/cooperative.controller.ts -> getYieldTrend
+  //   Response is column-oriented ({ months, series[] }); pivot it into the
+  //   row-oriented YieldDataPoint[] the AreaChart binds to:
+  //     d.months.map((month, i) => ({
+  //       month,
+  //       maize:  d.series.find(s => s.crop === 'Maize')?.values[i]  ?? 0,
+  //       beans:  d.series.find(s => s.crop === 'Beans')?.values[i]  ?? 0,
+  //       potato: d.series.find(s => s.crop === 'Potato')?.values[i] ?? 0,
+  //     }))
+  //   Note: `series` is whatever the top crops actually are for this
+  //   cooperative — it is NOT guaranteed to be maize/beans/potato, and the
+  //   window is the season length (up to 12 months), not always 6. Driving the
+  //   <Area> elements off d.series (using s.color for the stroke) is the
+  //   sturdier swap than keeping the three hardcoded dataKeys.
+  //   Values are tonnes (d.unit === 't').
   async getYieldTrend(): Promise<YieldDataPoint[]> {
     await delay()
     return [
@@ -423,7 +490,15 @@ export const cooperativeService = {
     ]
   },
 
-  // TODO: GET /api/cooperative/farm-status
+  // TODO: replace with GET /api/cooperative/farm-status
+  //   Backend: IMARA-bn/src/controllers/cooperative.controller.ts -> getFarmStatus
+  //   Response -> FarmStatusItem[]:
+  //     d.segments.map(s => ({ key: s.status, value: s.count }))
+  //   Segments always arrive in good/fair/low/inactive order, so the existing
+  //   FARM_STATUS_COLORS index lookup keeps working unchanged.
+  //   `d.unclassified` counts farms whose performanceStatus has not been set
+  //   yet (the backfill is a separate job) — worth surfacing rather than
+  //   letting the donut silently under-report against d.total.
   async getFarmStatus(): Promise<FarmStatusItem[]> {
     await delay()
     return [
@@ -434,7 +509,20 @@ export const cooperativeService = {
     ]
   },
 
-  // TODO: GET /api/cooperative/ai-insights?limit=3
+  // TODO: replace with GET /api/cooperative/ai-insights?limit=3
+  //   Backend: IMARA-bn/src/controllers/cooperative.controller.ts -> getAiInsights
+  //   Response -> AiInsightItem[]:
+  //     id:      i.id
+  //     type:    i.type       // 'alert' | 'market' | 'soil' | 'weather'
+  //     textKey: i.textKey ?? — fall back to rendering i.text verbatim when the
+  //              key is null; the server never sends localised copy.
+  //     time:    derive client-side from i.timestamp (ISO). The '2h' / '5h' /
+  //              '1d' values here are i18n keys, not data — the server has no
+  //              business formatting relative time in the user's locale.
+  //   NOTE: INSIGHT_META in CooperativeOverviewPage only maps alert/market/soil.
+  //   The API can also return 'weather'; add a meta entry or filter with
+  //   ?type= before shipping, otherwise that row throws on render.
+  //   Also returns i.actionUrl for the "Take action" button.
   async getAiInsights(): Promise<AiInsightItem[]> {
     await delay()
     return [

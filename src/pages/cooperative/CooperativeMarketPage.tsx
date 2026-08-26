@@ -22,6 +22,7 @@ import {
   cooperativeService,
   type MarketCrop, type MarketBuyer, type MarketPriceHistory, type BulkSaleOrder,
 } from "@/services/cooperativeMock"
+import { cooperativeApi, type CooperativeMarketplace } from "@/services/cooperative.service"
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -60,17 +61,28 @@ export default function CooperativeMarketPage() {
   const [bulkPrice, setBulkPrice]   = useState('')
   const [bulkBuyer, setBulkBuyer]   = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [marketplace, setMarketplace] = useState<CooperativeMarketplace | null>(null)
+  const [showAllProducts, setShowAllProducts] = useState(false)
 
   useEffect(() => {
     Promise.all([
       cooperativeService.getMarketCrops(),
       cooperativeService.getMarketBuyers(),
       cooperativeService.getMarketPriceHistory(),
-      cooperativeService.getBulkOrders(),
+      cooperativeApi.getBulkOrders(),
     ]).then(([c, b, h, o]) => {
       setCrops(c); setBuyers(b); setHistory(h); setOrders(o)
     }).finally(() => setLoading(false))
   }, [])
+
+  // Separate request: a slow catalogue must not hold up the rest of the page.
+  useEffect(() => {
+    let cancelled = false
+    cooperativeApi.getMarketplace(showAllProducts)
+      .then(data => { if (!cancelled) setMarketplace(data) })
+      .catch(() => { if (!cancelled) toast.error(t('cooperative.marketplace.loadError')) })
+    return () => { cancelled = true }
+  }, [showAllProducts, t])
 
   const totalStock = crops.reduce((s, c) => s + c.ourStockTons, 0)
   const avgPriceChange = crops.length ? (crops.reduce((s, c) => s + c.change, 0) / crops.length).toFixed(1) : '0'
@@ -90,10 +102,10 @@ export default function CooperativeMarketPage() {
     }
     setSubmitting(true)
     try {
-      // TODO: POST /api/cooperative/bulk-orders
+      // POST /api/cooperative/bulk-orders - persisted in cooperative_bulk_orders.
       const cropName = crops.find(c => c.id === bulkCrop)?.name ?? bulkCrop
       const buyerName = buyers.find(b => b.id === bulkBuyer)?.companyName ?? bulkBuyer
-      const order = await cooperativeService.createBulkOrder({
+      const order = await cooperativeApi.createBulkOrder({
         crop: cropName,
         quantityTons: Number(bulkQty),
         targetPricePerKg: Number(bulkPrice),
@@ -317,6 +329,59 @@ export default function CooperativeMarketPage() {
                 ))
               }
             </div>
+          </CardContent>
+        </Card>
+
+        {/* ── Agro-dealer catalogue (real data) ──────────────────────────────
+            The existing agro_dealer_products catalog, filtered server-side to
+            the crops this cooperative's registered farms actually grow. Not a
+            second marketplace — the same rows /api/agro-dealer-marketplace
+            serves, scoped. */}
+        <Card className="border border-border bg-card shadow-none">
+          <CardHeader className="flex-row items-start justify-between gap-3 space-y-0">
+            <div>
+              <CardTitle className="text-[16px] text-foreground">
+                {t('cooperative.marketplace.matchedCrops')}
+              </CardTitle>
+              {marketplace?.filteredByCrops && marketplace.matchedCrops.length > 0 && (
+                <CardDescription className="text-[13px] text-muted-foreground">
+                  {marketplace.matchedCrops.join(', ')}
+                </CardDescription>
+              )}
+            </div>
+            <Button variant="outline" size="sm" onClick={() => setShowAllProducts(v => !v)}>
+              {showAllProducts
+                ? t('cooperative.marketplace.showMatched')
+                : t('cooperative.marketplace.showAll')}
+            </Button>
+          </CardHeader>
+          <CardContent>
+            {!marketplace ? (
+              <Skeleton className="h-32 w-full" />
+            ) : marketplace.products.length === 0 ? (
+              <div className="py-10 text-center">
+                <p className="font-medium text-foreground">{t('cooperative.marketplace.empty')}</p>
+                <p className="mt-1 text-[13px] text-muted-foreground">
+                  {t('cooperative.marketplace.emptyHint')}
+                </p>
+              </div>
+            ) : (
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {marketplace.products.map(product => (
+                  <div key={product.id} className="rounded-md border border-border p-3">
+                    <p className="text-sm font-medium text-foreground">{product.name}</p>
+                    <p className="mt-0.5 text-[12px] text-muted-foreground">{product.category}</p>
+                    <p className="mt-2 text-sm font-semibold text-green-500">
+                      {product.price.toLocaleString()} {product.currency}
+                    </p>
+                    <p className="mt-1 text-[12px] text-muted-foreground">
+                      {t('cooperative.marketplace.dealer')}: {product.dealer.name}
+                      {product.dealer.location ? ` · ${product.dealer.location}` : ''}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { cn } from "@/lib/utils"
 import { Header } from "@/components/header"
@@ -24,8 +24,10 @@ import {
 } from "lucide-react"
 import { toast } from "sonner"
 import {
-  cooperativeService, type CooperativeMember, type MemberRole, type NewMemberData,
+  type CooperativeMember, type MemberRole, type NewMemberData,
 } from "@/services/cooperativeMock"
+import { AddMemberDialog } from "@/components/cooperative/AddMemberDialog"
+import { cooperativeApi } from "@/services/cooperative.service"
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -66,17 +68,20 @@ export default function CooperativeMembersPage() {
   const [loading, setLoading]         = useState(true)
   const [search, setSearch]           = useState('')
   const [addOpen, setAddOpen]         = useState(false)
-  const [form, setForm]               = useState<NewMemberData>(EMPTY_FORM)
-  const [saving, setSaving]           = useState(false)
   const [removeTarget, setRemoveTarget] = useState<CooperativeMember | null>(null)
   const [removing, setRemoving]       = useState(false)
   const [contactTarget, setContactTarget] = useState<CooperativeMember | null>(null)
 
-  useEffect(() => {
-    cooperativeService.getMembers()
+  // Refetch rather than splice locally: adding a member can also register
+  // farms, which changes linkedFarmsCount on the row and the header totals.
+  const load = useCallback(() => {
+    setLoading(true)
+    return cooperativeApi.getMembers()
       .then(setMembers)
       .finally(() => setLoading(false))
   }, [])
+
+  useEffect(() => { void load() }, [load])
 
   const visible = members.filter(m => {
     const q = search.toLowerCase()
@@ -89,36 +94,13 @@ export default function CooperativeMembersPage() {
     farms:    members.reduce((sum, m) => sum + m.farmsCount, 0),
   }
 
-  function handleFormChange(key: keyof NewMemberData, val: string) {
-    setForm(prev => ({ ...prev, [key]: val }))
-  }
-
-  async function handleAddMember() {
-    if (!form.name.trim() || !form.phone.trim()) {
-      toast.error(t('cooperative.members.addDialog.validation'))
-      return
-    }
-    setSaving(true)
-    try {
-      // TODO: POST /api/cooperative/members
-      const newM = await cooperativeService.addMember(form)
-      setMembers(prev => [...prev, newM])
-      setForm(EMPTY_FORM)
-      setAddOpen(false)
-      toast.success(t('cooperative.members.addSuccess'))
-    } catch {
-      toast.error(t('cooperative.members.addError'))
-    } finally {
-      setSaving(false)
-    }
-  }
-
   async function handleRemoveMember() {
     if (!removeTarget) return
     setRemoving(true)
     try {
-      // TODO: DELETE /api/cooperative/members/:id
-      await cooperativeService.removeMember(removeTarget.id)
+      // DELETE /api/cooperative/members/:id - drops the membership only; the
+      // user account, their farms and harvest history are left intact.
+      await cooperativeApi.removeMember(removeTarget.id)
       setMembers(prev => prev.filter(m => m.id !== removeTarget.id))
       setRemoveTarget(null)
       toast.success(t('cooperative.members.removeSuccess'))
@@ -207,7 +189,14 @@ export default function CooperativeMembersPage() {
                         <MapPin className="w-3 h-3 flex-shrink-0" />
                         <span className="truncate">{member.location}</span>
                         <span className="text-border">·</span>
-                        <span>{member.farmsCount} {t('cooperative.members.farmsLabel')}</span>
+                        <span>
+                          {member.farmsCount} {t('cooperative.members.farmsLabel')}
+                          {member.linkedFarmsCount != null && (
+                            <span className="ml-1 text-green-500">
+                              · {member.linkedFarmsCount} {t('cooperative.members.addFlow.linkedFarmsCount')}
+                            </span>
+                          )}
+                        </span>
                       </div>
                     </div>
 
@@ -268,67 +257,8 @@ export default function CooperativeMembersPage() {
         </Card>
       </div>
 
-      {/* ── Add Member Dialog ─────────────────────────────────────────────────── */}
-      <Dialog open={addOpen} onOpenChange={open => { if (!open) { setAddOpen(false); setForm(EMPTY_FORM) } }}>
-        <DialogContent className="bg-card border-border text-foreground max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-foreground">{t('cooperative.members.addDialog.title')}</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 py-2">
-            <div className="space-y-1.5">
-              <label className="text-[12px] text-muted-foreground">{t('cooperative.members.addDialog.name')} *</label>
-              <Input placeholder="Alexis Uwimana" value={form.name} onChange={e => handleFormChange('name', e.target.value)}
-                className="bg-background border-border text-foreground focus-visible:ring-green-500" />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-[12px] text-muted-foreground">{t('cooperative.members.addDialog.phone')} *</label>
-              <Input placeholder="+250788000000" value={form.phone} onChange={e => handleFormChange('phone', e.target.value)}
-                className="bg-background border-border text-foreground focus-visible:ring-green-500" />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-[12px] text-muted-foreground">{t('cooperative.members.addDialog.email')}</label>
-              <Input placeholder="member@coop.rw" value={form.email} onChange={e => handleFormChange('email', e.target.value)}
-                className="bg-background border-border text-foreground focus-visible:ring-green-500" />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-[12px] text-muted-foreground">{t('cooperative.members.addDialog.location')}</label>
-              <Input placeholder="Musanze, Cyuve" value={form.location} onChange={e => handleFormChange('location', e.target.value)}
-                className="bg-background border-border text-foreground focus-visible:ring-green-500" />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-[12px] text-muted-foreground">{t('cooperative.members.addDialog.role')}</label>
-              <div className="grid grid-cols-2 gap-2">
-                {ROLES.map(r => {
-                  const I = ROLE_STYLES[r].icon
-                  return (
-                    <button
-                      key={r}
-                      onClick={() => handleFormChange('role', r)}
-                      className={cn(
-                        "flex items-center gap-2 px-3 py-2.5 rounded-xl border text-left text-[13px] transition-all",
-                        form.role === r
-                          ? "border-green-500 bg-green-500/10 text-foreground"
-                          : "border-border text-muted-foreground hover:border-muted-foreground/40"
-                      )}
-                    >
-                      <I className={cn("w-4 h-4 flex-shrink-0", ROLE_STYLES[r].color)} />
-                      {t(`cooperative.members.role.${r}`)}
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="ghost" className="text-muted-foreground" onClick={() => { setAddOpen(false); setForm(EMPTY_FORM) }}>
-              {t('common.actions.cancel')}
-            </Button>
-            <Button disabled={saving} onClick={handleAddMember} className="bg-green-500 hover:bg-green-600 text-black font-semibold">
-              {saving ? t('common.actions.saving') : t('cooperative.members.addDialog.submit')}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {/* ── Add Member: search an existing farmer, then register their farms ── */}
+      <AddMemberDialog open={addOpen} onOpenChange={setAddOpen} onMemberAdded={load} />
 
       {/* ── Contact Dialog ────────────────────────────────────────────────────── */}
       <AlertDialog open={!!contactTarget} onOpenChange={open => !open && setContactTarget(null)}>
