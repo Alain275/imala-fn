@@ -5,7 +5,7 @@ import path from 'path'
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  const apiProxyTarget = env.VITE_DEV_API_TARGET || 'http://localhost:5000'
+  const apiProxyTarget = env.VITE_DEV_API_TARGET || 'https://2-56-212-171.sslip.io'
 
   return {
     plugins: [
