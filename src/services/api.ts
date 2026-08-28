@@ -6,7 +6,7 @@ export const API_URL = `${API_ROOT}/api`;
 
 export function buildApiUrl(path: string): string {
   if (!path) {
-    return API_URL;
+    return API_URL;     
   }
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
   return `${API_URL}${normalizedPath}`;
